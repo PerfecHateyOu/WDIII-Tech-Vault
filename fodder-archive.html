@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069) -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fodder Archive · Consumer Tech Documentation</title>
+    <style>
+        :root {
+            --color-bg-base: #0f0f0f;
+            --color-bg-surface: #1a1a1a;
+            --color-bg-surface-elevated: #2d2d2d;
+            --color-bg-card: #252525;
+            --color-text-primary: #e0e0e0;
+            --color-text-secondary: #aaa;
+            --color-text-muted: #666;
+            --color-text-success: #4ade80;
+            --color-border: #333;
+            --color-border-subtle: #444;
+            --color-success: #4ade80;
+            --color-success-bg: #1a2e1f;
+            --color-error: #ef4444;
+            --color-error-bg: #2e1a1a;
+            --color-warning: #fbbf24;
+            --color-info: #60a5fa;
+            --color-info-bg: #1a2a3f;
+            --spacing-xs: 0.4rem;
+            --spacing-sm: 0.8rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, var(--color-bg-surface) 0%, var(--color-bg-surface-elevated) 100%);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+            text-align: center;
+        }
+        header h1 { font-size: 2.5rem; color: #fff; font-weight: 700; margin-bottom: var(--spacing-xs); }
+        header p { color: var(--color-text-secondary); font-size: 1.1rem; margin-bottom: var(--spacing-lg); }
+
+        /* ===== NAVIGATION ===== */
+        .nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--color-bg-surface);
+            border-bottom: 1px solid var(--color-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .nav-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            gap: var(--spacing-sm);
+            transition: color 0.2s ease;
+        }
+        .nav-toggle:hover { color: var(--color-info); }
+        .nav-toggle:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .nav-toggle .toggle-icon { font-size: 1.5rem; transition: transform 0.3s ease; }
+        .nav-toggle .toggle-icon.open { transform: rotate(180deg); }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease;
+        }
+        .nav-tabs.collapsed {
+            max-height: 0 !important;
+            padding: 0 var(--spacing-lg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .nav-tab {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 20px;
+            border: 1px solid var(--color-border-subtle);
+            background: var(--color-bg-card);
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .nav-tab:hover { border-color: var(--color-info); color: var(--color-info); background: var(--color-info-bg); transform: translateY(-1px); }
+        .nav-tab:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .nav-tab .tab-icon { font-size: 1rem; }
+        .nav-tab .tab-label { font-weight: 600; }
+        .nav-tab .tab-sub { color: var(--color-text-muted); font-size: 0.75rem; }
+
+        /* ===== ACTIVE NAV STATE (scrollspy) ===== */
+        .nav-tab.active {
+            border-color: var(--color-info);
+            background: var(--color-info-bg);
+            color: var(--color-info);
+        }
+        .nav-tab.active .tab-sub { color: var(--color-info); opacity: 0.75; }
+
+        /* ===== CATEGORY ACCENTS ===== */
+        .experiment[data-category="repair"] .experiment-header { border-bottom-color: var(--color-info); }
+        .experiment[data-category="support"] .experiment-header { border-bottom-color: var(--color-warning); }
+        .experiment[data-category="software"] .experiment-header { border-bottom-color: #a78bfa; }
+        .experiment[data-category="legal"] .experiment-header { border-bottom-color: var(--color-error); }
+        .experiment[data-category="hardware"] .experiment-header { border-bottom-color: var(--color-success); }
+
+        .category-label {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-xs);
+        }
+        .experiment[data-category="repair"] .category-label { background: var(--color-info-bg); color: var(--color-info); }
+        .experiment[data-category="support"] .category-label { background: #3f2f0f; color: var(--color-warning); }
+        .experiment[data-category="software"] .category-label { background: #2a1f3f; color: #a78bfa; }
+        .experiment[data-category="legal"] .category-label { background: var(--color-error-bg); color: var(--color-error); }
+        .experiment[data-category="hardware"] .category-label { background: var(--color-success-bg); color: var(--color-success); }
+
+        /* ===== SAMPLE-SIZE / SCOPE NOTE ===== */
+        .scope-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            background: var(--color-bg-card);
+            border: 1px dashed var(--color-border-subtle);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            margin-top: var(--spacing-sm);
+        }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 1000px; margin: 0 auto; padding: var(--spacing-lg); }
+
+        /* ===== EXPERIMENT BLOCKS ===== */
+        .experiment {
+            margin-bottom: var(--spacing-xl);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--color-bg-surface);
+            transition: box-shadow 0.3s ease;
+            scroll-margin-top: 80px;
+            content-visibility: auto;
+        }
+        .experiment:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .experiment-header { background: var(--color-bg-surface-elevated); padding: var(--spacing-md); border-bottom: 2px solid var(--color-border-subtle); }
+        .experiment-header h2 { font-size: 1.8rem; color: #fff; margin-bottom: var(--spacing-sm); }
+        .experiment-content { padding: var(--spacing-lg); }
+        .experiment-content > p { color: var(--color-text-secondary); margin-bottom: var(--spacing-lg); }
+        .experiment-tag { display: inline-block; background: var(--color-border-subtle); color: var(--color-text-secondary); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-size: 0.85rem; margin-top: var(--spacing-sm); margin-right: var(--spacing-xs); }
+
+        /* ===== UTILITY ===== */
+        .card { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); }
+        .card-success { background: var(--color-success-bg); border: 1px solid var(--color-success); border-left: 3px solid var(--color-success); }
+        .card-error { background: var(--color-error-bg); border: 1px solid var(--color-error); border-left: 3px solid var(--color-error); }
+        .card-warning { background: var(--color-bg-card); border-left: 3px solid var(--color-warning); }
+        .card-info { background: var(--color-info-bg); border-left: 4px solid var(--color-info); border-radius: var(--radius-md); }
+        .mb-sm { margin-bottom: var(--spacing-sm); }
+        .mb-md { margin-bottom: var(--spacing-md); }
+        .mb-lg { margin-bottom: var(--spacing-lg); }
+        .mt-lg { margin-top: var(--spacing-lg); }
+
+        /* ===== GRIDS ===== */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
+        .three-column { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+
+        .comparison-card { padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); transition: transform 0.2s ease; }
+        .comparison-card:hover { transform: translateY(-2px); }
+        .comparison-card:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .comparison-card.winner { border-left-color: var(--color-success); background: var(--color-success-bg); }
+        .comparison-card.loser { border-left-color: var(--color-error); background: var(--color-error-bg); }
+        .comparison-card h3 { margin-bottom: var(--spacing-md); font-size: 1.2rem; color: #fff; }
+
+        /* ===== METRICS ===== */
+        .metric { margin-bottom: var(--spacing-sm); display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-xs) 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .metric:last-child { border-bottom: none; }
+        .metric-label { color: var(--color-text-secondary); font-size: 0.9rem; }
+        .metric-value { font-weight: 600; color: #fff; }
+        .metric-value.success { color: var(--color-success); }
+        .metric-value.error { color: var(--color-error); }
+        .metric-value.warning { color: var(--color-warning); }
+
+        /* ===== REPAIR OPTIONS ===== */
+        .repair-option { padding: var(--spacing-md); border-radius: var(--radius-md); border-top: 3px solid var(--color-border-subtle); background: var(--color-bg-card); transition: transform 0.2s ease; }
+        .repair-option:hover { transform: translateY(-3px); }
+        .repair-option:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .repair-option.apple { border-top-color: var(--color-info); }
+        .repair-option.thirdparty { border-top-color: var(--color-warning); }
+        .repair-option.cheap { border-top-color: var(--color-error); }
+        .repair-option h3 { margin-bottom: var(--spacing-md); font-size: 1.1rem; color: #fff; }
+
+        /* ===== PROS / CONS ===== */
+        .pros { margin-bottom: var(--spacing-md); }
+        .pros-label { color: var(--color-success); font-size: 0.85rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
+        .pros ul, .cons ul { list-style: none; padding-left: 0; }
+        .pros li, .cons li { color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-xs); padding-left: 1.2rem; position: relative; }
+        .pros li:before { content: "✓"; position: absolute; left: 0; color: var(--color-success); font-weight: bold; }
+        .cons { margin-bottom: 0; }
+        .cons-label { color: var(--color-error); font-size: 0.85rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
+        .cons li:before { content: "✗"; position: absolute; left: 0; color: var(--color-error); font-weight: bold; }
+
+        /* ===== RANKING ROWS ===== */
+        .ranking-row { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .ranking-row:hover { transform: translateX(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .ranking-row:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .ranking-row.success { border-left-color: var(--color-success); }
+        .ranking-row.warning { border-left-color: var(--color-warning); }
+        .ranking-row.error { border-left-color: var(--color-error); }
+        .ranking-row .rank-content strong { display: block; margin-bottom: 0.2rem; color: #fff; }
+        .ranking-row .rank-content p { color: var(--color-text-secondary); font-size: 0.9rem; margin: 0; }
+
+        .rating-value { font-size: 1.4rem; font-weight: bold; min-width: 60px; text-align: center; }
+        .rating-value.success { color: var(--color-success); }
+        .rating-value.warning { color: var(--color-warning); }
+        .rating-value.error { color: var(--color-error); }
+        .rating-value.neutral { color: #f87171; }
+
+        /* ===== EMPHASIS BLOCKS ===== */
+        .key-finding { padding: var(--spacing-md); margin: var(--spacing-md) 0; border-radius: var(--radius-sm); background: var(--color-bg-surface-elevated); border-left: 4px solid var(--color-info); }
+        .key-finding strong { color: var(--color-info); display: block; margin-bottom: var(--spacing-xs); }
+        .key-finding p { color: var(--color-text-secondary); margin: 0; }
+
+        .conclusion { background: var(--color-success-bg); border: 1px solid var(--color-success); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg); }
+        .conclusion h4 { color: var(--color-success); margin-bottom: var(--spacing-sm); }
+        .conclusion p { color: var(--color-text-secondary); line-height: 1.7; }
+
+        /* ===== TIMELINE ===== */
+        .timeline { position: relative; padding: var(--spacing-md) 0; }
+        .timeline-item { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-md); padding: var(--spacing-sm); border-radius: var(--radius-sm); transition: background 0.2s ease; }
+        .timeline-item:hover { background: var(--color-bg-surface-elevated); }
+        .timeline-marker { width: 12px; height: 12px; background: var(--color-info); border-radius: 50%; margin-top: 0.3rem; flex-shrink: 0; border: 2px solid var(--color-bg-surface); box-shadow: 0 0 0 2px var(--color-info); }
+        .timeline-marker.success { background: var(--color-success); box-shadow: 0 0 0 2px var(--color-success); }
+        .timeline-marker.warning { background: var(--color-warning); box-shadow: 0 0 0 2px var(--color-warning); }
+        .timeline-marker.error { background: var(--color-error); box-shadow: 0 0 0 2px var(--color-error); }
+        .timeline-content { flex: 1; }
+        .timeline-content strong { color: #fff; display: block; margin-bottom: var(--spacing-xs); }
+        .timeline-content p { color: var(--color-text-secondary); font-size: 0.9rem; margin: 0; }
+
+        /* ===== TABLES ===== */
+        .table-wrap { background: var(--color-bg-card); border-radius: var(--radius-md); overflow: hidden; margin-bottom: var(--spacing-lg); }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .data-table caption { text-align: left; padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-secondary); font-size: 0.85rem; }
+        .data-table thead tr { background: var(--color-bg-surface-elevated); }
+        .data-table th { padding: var(--spacing-sm) var(--spacing-md); text-align: left; color: #fff; font-weight: 600; border-bottom: 2px solid var(--color-border-subtle); }
+        .data-table th.center { text-align: center; }
+        .data-table td { padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); }
+        .data-table td.center { text-align: center; }
+        .data-table th.primary { color: var(--color-text-primary); font-weight: normal; border-bottom: 1px solid var(--color-border); }
+        .data-table tr.highlight { background: rgba(96,165,250,0.05); }
+        .data-table tr:last-child td, .data-table tr:last-child th { border-bottom: none; }
+        .data-table .badge-success { color: var(--color-success); font-weight: 600; }
+        .data-table .badge-warning { color: var(--color-warning); font-weight: 600; }
+        .data-table .badge-error { color: var(--color-error); font-weight: 600; }
+        .data-table .badge-info { color: var(--color-info); font-weight: 600; }
+        .data-table .chip { display: inline-block; font-size: 0.75rem; color: var(--color-text-muted); }
+
+        /* ===== INSIGHT BLOCKS ===== */
+        .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin: var(--spacing-lg) 0; }
+        .insight-card { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); transition: transform 0.2s ease; }
+        .insight-card:hover { transform: translateX(4px); }
+        .insight-card:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .insight-card h4 { color: #fff; margin-bottom: var(--spacing-sm); }
+        .insight-card p { color: var(--color-text-secondary); font-size: 0.9rem; margin: 0; }
+        .insight-card.success { border-left-color: var(--color-success); }
+        .insight-card.info { border-left-color: var(--color-info); }
+        .insight-card.warning { border-left-color: var(--color-warning); }
+        .insight-card.error { border-left-color: var(--color-error); }
+
+        .recommendation-box { margin-top: var(--spacing-lg); padding: var(--spacing-lg); background: var(--color-bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+        .recommendation-box h3 { color: #fff; margin-bottom: var(--spacing-md); }
+        .recommendation-box ul { list-style: none; padding: 0; }
+        .recommendation-box li { padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary); display: flex; align-items: center; gap: var(--spacing-sm); }
+        .recommendation-box li:last-child { border-bottom: none; }
+        .recommendation-box .check { color: var(--color-success); font-weight: bold; font-size: 1.2rem; }
+        .recommendation-box .cross { color: var(--color-error); font-weight: bold; font-size: 1.2rem; }
+        .recommendation-box .warning-icon { color: var(--color-warning); font-weight: bold; font-size: 1.2rem; }
+
+        /* ===== SUMMARY CARDS ===== */
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .summary-card { padding: var(--spacing-md); border-radius: var(--radius-md); }
+        .summary-card-success { background: var(--color-success-bg); border: 1px solid var(--color-success); }
+        .summary-card-failure { background: var(--color-error-bg); border: 1px solid var(--color-error); }
+        .summary-card h3 { margin-bottom: var(--spacing-md); font-size: 1.1rem; }
+        .summary-card-success h3 { color: var(--color-success); }
+        .summary-card-failure h3 { color: var(--color-error); }
+        .perf-row { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .perf-row:last-child { border-bottom: none; }
+        .perf-score-badge { font-size: 1.5rem; font-weight: bold; min-width: 55px; }
+        .perf-score-badge.success { color: var(--color-success); }
+        .perf-score-badge.error { color: var(--color-error); }
+
+        /* ===== RANKING LIST ===== */
+        .overall-rank { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+        .rank-item { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-sm); background: var(--color-bg-card); }
+        .rank-item.gold { background: rgba(74,222,128,0.1); }
+        .rank-item.red { background: rgba(239,68,68,0.1); }
+        .rank-num { font-weight: 700; font-size: 1.2rem; min-width: 30px; }
+        .rank-num.success { color: var(--color-success); }
+        .rank-num.warning { color: var(--color-warning); }
+        .rank-num.error { color: var(--color-error); }
+        .rank-label { color: #fff; flex: 1; }
+        .rank-sub { color: var(--color-text-muted); font-size: 0.85rem; }
+
+        /* ===== SECTION HEADER ===== */
+        .section-h3 { color: #fff; margin-bottom: var(--spacing-md); margin-top: var(--spacing-lg); font-size: 1.2rem; }
+        .section-h3:first-child { margin-top: 0; }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-info); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; opacity: 0; pointer-events: none; box-shadow: 0 4px 12px rgba(96,165,250,0.3); z-index: 1000; }
+        .scroll-top.visible { opacity: 1; pointer-events: auto; }
+        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(96,165,250,0.5); }
+        .scroll-top:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+
+        /* ===== FOOTER ===== */
+        footer { text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); border-top: 1px solid var(--color-border); margin-top: var(--spacing-xl); font-size: 0.9rem; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .comparison-grid, .three-column, .two-column, .insight-grid, .summary-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.8rem; }
+            .container { padding: var(--spacing-md); }
+            .ranking-row { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
+            .experiment-header h2 { font-size: 1.4rem; }
+            .experiment-content { padding: var(--spacing-md); }
+            .rating-value { min-width: auto; align-self: flex-start; }
+            .timeline-item { flex-direction: column; gap: var(--spacing-xs); }
+            .timeline-marker { margin-top: 0; }
+            .scroll-top { bottom: 1rem; right: 1rem; width: 40px; height: 40px; font-size: 1.2rem; }
+            .nav-tabs { flex-direction: column; align-items: stretch; gap: var(--spacing-xs); }
+            .nav-tab { justify-content: center; padding: 0.6rem 1rem; }
+        }
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.4rem; }
+            .experiment-tag { font-size: 0.75rem; }
+            .nav-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+            .data-table { font-size: 0.82rem; }
+            .data-table th, .data-table td { padding: var(--spacing-xs) var(--spacing-sm); }
+            .nav-tab .tab-sub { display: none; }
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            .nav-wrapper { display: none; }
+            .scroll-top { display: none; }
+            .experiment { break-inside: avoid; border: 1px solid #444; content-visibility: visible; }
+            .experiment:hover { box-shadow: none; }
+            body { background: white; color: #222; }
+            .experiment-content, .experiment-header { background: white; }
+            .experiment-header h2 { color: #222; }
+            .card, .ranking-row, .repair-option, .comparison-card, .insight-card { background: #f5f5f5; border-color: #ccc; }
+            .key-finding { background: #f0f0f0; border-left-color: #60a5fa; }
+            .conclusion { background: #e8f5e9; border-color: #4ade80; }
+            .ranking-row.success { border-left-color: #4ade80; }
+            .ranking-row.warning { border-left-color: #fbbf24; }
+            .ranking-row.error { border-left-color: #ef4444; }
+            .data-table thead tr { background: #e0e0e0; }
+            .data-table th { color: #222; border-bottom-color: #999; }
+            .data-table td { color: #444; border-bottom-color: #ddd; }
+            .data-table tr.highlight { background: rgba(96,165,250,0.08); }
+            .metric-value { color: #222; }
+            .metric-value.success { color: #2e7d32; }
+            .metric-value.error { color: #c62828; }
+            .metric-value.warning { color: #f57f17; }
+            .summary-card-success { background: #e8f5e9; }
+            .summary-card-failure { background: #ffebee; }
+            .rank-item.gold { background: rgba(74,222,128,0.08); }
+            .rank-item.red { background: rgba(239,68,68,0.08); }
+            .rank-label { color: #222; }
+            .recommendation-box { background: #f5f5f5; border-color: #ccc; }
+            .recommendation-box h3 { color: #222; }
+            .recommendation-box li { border-bottom-color: #ddd; color: #444; }
+        }
+    </style>
+<body>
+
+<header>
+    <h1>🗂️ Fodder Archive</h1>
+    <p>Side experiments, informal observations, and content that doesn't fit the structured documentation format — separated out so it doesn't crowd the consumer tech research.</p>
+</header>
+
+<div class="nav-wrapper">
+    <a href="Document V5.2.3.htm" class="nav-toggle" style="display:flex; text-decoration:none;">
+        <span>&larr; Back to Documentation</span>
+    </a>
+</div>
+
+<div class="container">
+
+    <article class="experiment" id="fodder" aria-labelledby="fodder-title">
+        <div class="experiment-header">
+            <h2 id="fodder-title">🗂️ Fodder Archive</h2>
+            <span class="experiment-tag">Side Experiments</span>
+            <span class="experiment-tag">Informal Observations</span>
+            <span class="experiment-tag">Non-Tech &amp; Fun</span>
+        </div>
+        <div class="experiment-content">
+            <p>A space for lighter experiments, informal observations, and content that doesn't fit the structured format of the main documentation. Less rigorous, more curious — everything from AI comparisons to random discoveries worth noting.</p>
+
+            <!-- FODDER ENTRY FA-01 — COMPLETE -->
+            <div class="card" style="border-left: 3px solid var(--color-success); margin-bottom: var(--spacing-lg);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-sm);">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1.1rem; margin-bottom: 0.3rem;">FA-01 — Which AI Builds Our Website Best?</strong>
+                        <span style="color: var(--color-text-muted); font-size: 0.8rem;">Complete · AI Comparison · 5 Models Tested</span>
+                    </div>
+                    <span style="background: var(--color-success); color: #000; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);">DONE</span>
+                </div>
+
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md);">Five AI assistants — DeepSeek, Gemini, Grok, ChatGPT, and Claude — were each given the same blind prompt: <em style="color: var(--color-text-primary);">"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software."</em> No examples, no reference to this site, no guidance beyond the bare prompt. Rated on design execution, code quality, structure, and functionality. Inspired by ChatGPT's earlier attempt to rebuild this site and calling it "Version 6."</p>
+
+                <div class="scope-note" style="margin-bottom: var(--spacing-md);">⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Click "view submitted file" to judge the raw output yourself.</div>
+
+                <!-- SETUP -->
+                <h3 class="section-h3" style="margin-top: 0;">Experiment Setup</h3>
+                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
+                    <div class="metric"><span class="metric-label">Prompt</span><span class="metric-value" style="font-size:0.9rem; text-align:right; max-width:65%;">"Build a consumer tech documentation website in HTML for real-world smartphone, repair, and software experiments"</span></div>
+                    <div class="metric"><span class="metric-label">Models Tested</span><span class="metric-value">Claude · ChatGPT · Gemini · Grok · DeepSeek</span></div>
+                    <div class="metric"><span class="metric-label">Guidance Given</span><span class="metric-value error">None — cold prompt only</span></div>
+                    <div class="metric"><span class="metric-label">Content Requirement</span><span class="metric-value">Each AI invented its own placeholder content</span></div>
+                    <div class="metric"><span class="metric-label">Judged On</span><span class="metric-value">Design · Code quality · Structure · Functionality</span></div>
+                </div>
+
+                <!-- FULL RANKINGS -->
+                <h3 class="section-h3">Full Rankings — Owner Assessment</h3>
+                <div style="display:grid; gap:var(--spacing-sm); margin-bottom: var(--spacing-lg);">
+
+                    <div class="ranking-row success">
+                        <div class="rank-content">
+                            <strong>🥇 Grok — 9.0/10</strong>
+                            <a href="fa01-entries/FA01_Grok.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                            <p>Full SPA with working JS view-routing, a real light/dark toggle with persisted state, hero stats, timeline component, and per-experiment detail pages. The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized.</p>
+                        </div>
+                        <div class="rating-value success">9.0</div>
+                    </div>
+
+                    <div class="ranking-row warning">
+                        <div class="rank-content">
+                            <strong>🥈 ChatGPT — 7.0/10</strong>
+                            <a href="fa01-entries/FA01_ChatGPT.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                            <p>Sidebar doc layout with a working theme toggle and a live search bar that filters page sections by typed text — a genuinely useful feature none of the others attempted. Let down by sloppy markup (stray &lt;br&gt; tags instead of CSS spacing) and fairly generic visual styling.</p>
+                        </div>
+                        <div class="rating-value warning">7.0</div>
+                    </div>
+
+                    <div class="ranking-row warning">
+                        <div class="rank-content">
+                            <strong>🥈 DeepSeek — 7.0/10</strong>
+                            <a href="fa01-entries/FA01_DeepSeek.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                            <p>The most visually refined of the five — soft light theme, gradient-text logo, polished card and code-block styling, genuinely nice sidebar/grid layout. Purely static though: nav tabs and links don't go anywhere, no interactivity at all.</p>
+                        </div>
+                        <div class="rating-value warning">7.0</div>
+                    </div>
+
+                    <div class="ranking-row error">
+                        <div class="rank-content">
+                            <strong>4th — Gemini — 6.5/10</strong>
+                            <a href="fa01-entries/FA01_Gemini.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                            <p>Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections.</p>
+                        </div>
+                        <div class="rating-value error">6.5</div>
+                    </div>
+
+                    <div class="ranking-row error">
+                        <div class="rank-content">
+                            <strong>5th — Claude — 4.5/10</strong>
+                            <a href="fa01-entries/FA01_Claude.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                            <p>Plain dark card layout, static table, zero interactivity, and the thinnest content of the five. Functional and clean but clearly the least effort — kept here for transparency. The data is the data.</p>
+                        </div>
+                        <div class="rating-value error">4.5</div>
+                    </div>
+                </div>
+
+                <!-- CLAUDE'S INDEPENDENT ASSESSMENT -->
+                <h3 class="section-h3">Claude's Independent Assessment</h3>
+                <p style="color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-md); font-style: italic;">Note: this assessment was generated separately by Claude before seeing the owner's rankings above. Scores differ — make of that what you will.</p>
+                <div style="display:grid; gap:var(--spacing-sm); margin-bottom: var(--spacing-lg);">
+
+                    <div class="ranking-row success">
+                        <div class="rank-content">
+                            <strong>🥇 Claude — Editorial Foundation</strong>
+                            <p>Three intentional font families (Playfair Display, Inter, IBM Plex Mono), full design token system with semantic naming, sticky sidebar with active state navigation, status badges (COMPLETE / PENDING / ON HOLD), light/dark pill toggle, and responsive typography via <code>clamp()</code>. Most architecturally sophisticated of the five. Missing: no actual experiment data — a polished shell rather than a completed document.</p>
+                        </div>
+                        <div class="rating-value success" style="font-size:0.9rem;">1st</div>
+                    </div>
+
+                    <div class="ranking-row success">
+                        <div class="rank-content">
+                            <strong>🥈 Gemini — Functional Dashboard</strong>
+                            <p>Fixed sidebar, live search filtering nav items, <code>[data-theme]</code> attribute toggle with localStorage, copy-to-clipboard on code blocks, JS tab routing with fadeIn animations, status dots, and a <code>.callout</code> component system with modifiers. Structurally well-built. Fatal flaw: content went completely off-brief (OpenWrt router flashing, VLAN containment) — nothing to do with smartphones or repair.</p>
+                        </div>
+                        <div class="rating-value success" style="font-size:0.9rem;">2nd</div>
+                    </div>
+
+                    <div class="ranking-row warning">
+                        <div class="rank-content">
+                            <strong>3rd — DeepSeek — Most Visually Distinctive</strong>
+                            <p>Light theme by default, gradient text headline, branded icon in header, clean card system, sidebar meta-info section with active experiment count and maintainer handles, syntax-highlighted code blocks. Went off-brief (developer docs portal via npm, not consumer tech). No dark mode, no accessibility attributes, no print styles.</p>
+                        </div>
+                        <div class="rating-value warning" style="font-size:0.9rem;">3rd</div>
+                    </div>
+
+                    <div class="ranking-row warning">
+                        <div class="rank-content">
+                            <strong>4th — Grok — Most Ambitious, Most Dependent</strong>
+                            <p>Space Grotesk headings, yellow accent scheme, large hero section, animated pulse indicator, category filter buttons, JS-populated experiment cards. Relies entirely on Tailwind CSS and Font Awesome CDNs — if either goes down, the entire design collapses. Content is fabricated ("9 devices bricked temporarily", "47 hours logged"). Visually impressive but not self-contained.</p>
+                        </div>
+                        <div class="rating-value warning" style="font-size:0.9rem;">4th</div>
+                    </div>
+
+                    <div class="ranking-row error">
+                        <div class="rank-content">
+                            <strong>5th — ChatGPT — Recycled, Not Built</strong>
+                            <p>Three conflicting <code>:root</code> blocks that contradict each other, CSS variables defined but never actually used, Experiment 3 rating bars rendering as empty (no width values), content stopping at Experiment 3, title still reading "v3". Essentially recycled the original version of this site and called it a new submission. Least original, least complete, most structurally broken.</p>
+                        </div>
+                        <div class="rating-value error" style="font-size:0.9rem;">5th</div>
+                    </div>
+                </div>
+
+                <!-- WHERE ASSESSMENTS DIVERGE -->
+                <h3 class="section-h3">Where The Two Assessments Diverge</h3>
+                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
+                    <div class="metric"><span class="metric-label">Grok</span><span class="metric-value warning">Owner: 🥇 1st · Claude: 4th</span></div>
+                    <div class="metric"><span class="metric-label">ChatGPT</span><span class="metric-value warning">Owner: 🥈 2nd · Claude: 5th</span></div>
+                    <div class="metric"><span class="metric-label">DeepSeek</span><span class="metric-value">Owner: 🥈 2nd · Claude: 3rd</span></div>
+                    <div class="metric"><span class="metric-label">Gemini</span><span class="metric-value warning">Owner: 4th · Claude: 2nd</span></div>
+                    <div class="metric"><span class="metric-label">Claude</span><span class="metric-value warning">Owner: 5th · Claude: 1st</span></div>
+                </div>
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-lg);">The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing, persisted state, and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does.</p>
+
+                <!-- KEY FINDINGS -->
+                <div class="key-finding">
+                    <strong>Architecture Beat Aesthetics (Owner's View)</strong>
+                    <p>The deciding factor wasn't color palette or typography — every entry looked reasonably professional. What separated Grok from the pack was building actual information architecture (routable views, reusable detail templates, real state) rather than a single static scroll of cards.</p>
+                </div>
+                <div class="key-finding">
+                    <strong>Content Interpretation Varied Wildly</strong>
+                    <p>Only Claude and Grok stayed close to the brief. Gemini built a network admin dashboard. DeepSeek built a developer docs portal. ChatGPT recycled existing work. "Consumer tech documentation website" meant five completely different things to five different models.</p>
+                </div>
+                <div class="key-finding">
+                    <strong>Interactivity Was Rare</strong>
+                    <p>Only Grok (view routing + persisted theme) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only.</p>
+                </div>
+                <div class="key-finding">
+                    <strong>Self-Containment Matters</strong>
+                    <p>Grok's entry depends on two external CDNs (Tailwind + Font Awesome). Every other submission was fully self-contained. For a documentation site meant to be archived and shared, CDN dependency is a real long-term risk.</p>
+                </div>
+
+                <div class="conclusion">
+                    <h4>Owner's Winner: Grok · Claude's Winner: Claude · Honest Winner: Probably Grok</h4>
+                    <p>The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation and persistent state. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running.</p>
+                </div>
+            </div>
+
+            <!-- FODDER ENTRY FA-02 — COMPLETE -->
+            <div class="card" style="border-left: 3px solid var(--color-error); margin-bottom: var(--spacing-lg);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-md);">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1.1rem; margin-bottom: 0.3rem;">FA-02 — One Month Out of the Apple Ecosystem</strong>
+                        <span style="color: var(--color-text-muted); font-size: 0.8rem;">Complete · Friction Log · Ecosystem Lock-In Study</span>
+                    </div>
+                    <span style="background: var(--color-error); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);">COMPLETED</span>
+                </div>
+
+                <div class="insight-card warning mb-lg">
+                    <strong>Executive Summary</strong><br/>
+                    <span style="color: var(--color-text-secondary);">One month away from Apple revealed a painful truth: the ecosystem works so well when all parts align that you don't realize how much it's doing for you until it's gone. The friction wasn't insurmountable, but it was relentless. Every single task involved a workaround, a subscription, or a compromise that iOS/Mac handled transparently.</span>
+                </div>
+
+                <!-- SETUP -->
+                <h3 class="section-h3">Setup & Baseline</h3>
+                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
+                    <div class="metric"><span class="metric-label">Duration</span><span class="metric-value">30 days</span></div>
+                    <div class="metric"><span class="metric-label">Primary Device</span><span class="metric-value">Pixel 10 Pro</span></div>
+                    <div class="metric"><span class="metric-label">Desktop</span><span class="metric-value">Windows laptop (new purchase, specs comparable to MacBook Air)</span></div>
+                    <div class="metric"><span class="metric-label">Baseline (Before)</span><span class="metric-value">iPhone 16e + MacBook Air</span></div>
+                    <div class="metric"><span class="metric-label">Scope</span><span class="metric-value">Complete ecosystem exit: phone, desktop, cloud storage, accessories, auth systems</span></div>
+                </div>
+
+                <!-- KEY FINDINGS -->
+                <h3 class="section-h3">The Friction Log</h3>
+
+                <div class="insight-card error mb-lg">
+                    <strong>1. Account Migration Was Deceptive</strong><br/>
+                    <span style="color: var(--color-text-secondary);">Backing up photos, apps, and data seemed straightforward until the moment of truth. Each account linked to Apple ID required a 5–10 minute reconfiguration to switch to Google accounts. But worse: when transferring data, the system only preserved the most recent portion of each account. All historical data from when accounts were first created on Apple ID was lost. This wasn't obvious upfront.</span>
+                </div>
+
+                <div class="insight-card warning mb-lg">
+                    <strong>2. App Quality on Pixel vs iPhone</strong><br/>
+                    <span style="color: var(--color-text-secondary);"><strong>The finding:</strong> Apps on Pixel 10 Pro work, but with consistent quality issues compared to iPhone.<br/>
+                    • Apps don't fit the Pixel 10 Pro's screen ratio properly<br/>
+                    • Occasional lag and UI glitches<br/>
+                    • Forgetting account logins mid-session<br/>
+                    • Failure to send authentication codes<br/>
+                    • Even Google's own apps aren't optimized for their hardware<br/><br/>
+                    <strong>iPhone contrast:</strong> Same apps work flawlessly. 4K resolution, layout, configuration—all polished. The difference is stark. It's not a dealbreaker for a few weeks, but living with it full-time is wearing.</span>
+                </div>
+
+                <div class="insight-card error mb-lg">
+                    <strong>3. Desktop Transition: The Breaking Point</strong><br/>
+                    <span style="color: var(--color-text-secondary);">This is where the experiment fell apart. Switching to a Windows laptop (with specs comparable to MacBook Air) revealed:<br/>
+                    • <strong>Setup was atrocious:</strong> 30 minutes just to log in for the first time<br/>
+                    • <strong>Bloatware:</strong> System cluttered with unnecessary software<br/>
+                    • <strong>Subscriptions required:</strong> Had to pay to store files, access features that are free on Mac<br/>
+                    • <strong>Battery life:</strong> Requires constant charging to match MacBook Air performance. Unplugged, it's "like a laggy Android tablet from 20 years ago"<br/>
+                    • <strong>Pairing Pixel with Windows was broken:</strong> Required downloading an app just for the OS to recognize the phone. Manual linking failed repeatedly with generic error codes before finally working<br/>
+                    • <strong>Syncing:</strong> No harmony. Every integration felt like a workaround, not a feature.<br/><br/>
+                    <strong>Mac comparison:</strong> Simple setup, immediate login, automatic account transfer to iCloud, seamless synergy. The difference is night and day.</span>
+                </div>
+
+                <div class="insight-card warning mb-lg">
+                    <strong>4. Accessory Ecosystem Collapse</strong><br/>
+                    <span style="color: var(--color-text-secondary);">iPhone has ~100 brands worth of accessories. Pixel has 3 notable options. Windows laptop had almost nothing. Customization—a core desire—became impossible. This isn't just convenience; it's a meaningful reduction in how you can personalize your devices.</span>
+                </div>
+
+                <div class="insight-card warning mb-lg">
+                    <strong>5. Peripheral Hardware (Watch, Earphones)</strong><br/>
+                    <span style="color: var(--color-text-secondary);"><strong>Earphones:</strong> Easy swap to Sony WF (good pairing, good sound). Google Buds were "okay"—adequate but not exceptional. Sony met requirements.<br/>
+                    <strong>Watch:</strong> Google Watch paired well but health metrics were wildly inaccurate. Heartbeat, step count, calorie burn—all significantly off compared to Apple Watch. However, daily use was just for time + notifications, so this didn't matter much.<br/><br/>
+                    <strong>Verdict:</strong> Replaceable, not show-stoppers.</span>
+                </div>
+
+                <div class="insight-card info mb-lg">
+                    <strong>6. Pixel 10 Pro: The Phone Itself</strong><br/>
+                    <span style="color: var(--color-text-secondary);"><strong>The good:</strong> Stock Android offers features and customization that iOS simply doesn't have. Camera (rear) is exceptional.<br/>
+                    <strong>The bad:</strong> Front-facing camera is poor—not comparable to rear cameras or iPhone's selfie quality. This matters when documenting findings or recording yourself.<br/>
+                    <strong>Gaming:</strong> Heats up quickly despite new chipset. Unexpected, since efficiency was the selling point.<br/>
+                    <strong>Overall:</strong> Pixel 10 Pro is genuinely good, but it can't carry the entire ecosystem on its own.</span>
+                </div>
+
+                <div class="insight-card error mb-lg">
+                    <strong>7. Authentication Hell: The Final Straw</strong><br/>
+                    <span style="color: var(--color-text-secondary);">Most accounts require two-factor authentication via iPhone. To use Google Pixel as the only phone, you must:<br/>
+                    1. Log in to accounts on iPhone<br/>
+                    2. Re-authenticate to Google Pixel<br/>
+                    3. Re-authenticate everything else to work only on Pixel<br/><br/>
+                    Even after all this, "it barely works." This created a dependency loop where you can't fully leave the iPhone behind. The bridge is crumbling.</span>
+                </div>
+
+                <!-- BROADER IMPLICATIONS -->
+                <h3 class="section-h3">What This Reveals About Ecosystem Lock-In</h3>
+
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>The paradox:</strong> Apple's ecosystem is so seamless when you're inside it that you never notice how much integration is happening. Phone, watch, MacBook, iPad, Apple TV—they all work in harmony. You rely on that harmony without thinking about it.
+                    </div>
+                </div>
+
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>Google's counter-offer:</strong> Individual features that outclass Apple. Stock Android customization, Pixel camera software, hardware options. But these don't integrate. Each one requires a workaround to the next.
+                    </div>
+                </div>
+
+                <div class="ranking-row error">
+                    <div class="rank-content">
+                        <strong>Windows is brutal:</strong> It's not just "different." It's bloated, subscription-gated, and requires you to solve puzzles to do things that Mac handles automatically. This was the true deal-breaker.
+                    </div>
+                </div>
+
+                <div class="ranking-row success">
+                    <div class="rank-content">
+                        <strong>Returning was easier than leaving:</strong> After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow.
+                    </div>
+                </div>
+
+                <!-- FINAL VERDICT -->
+                <h3 class="section-h3">Final Verdict</h3>
+
+                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
+                    <strong style="color: #fff; display: block; margin-bottom: var(--spacing-sm);">Going Forward</strong>
+                    <p style="color: var(--color-text-secondary); margin-bottom: var(--spacing-sm);">Keeping Pixel 10 Pro as part of daily rotation—it's genuinely good as a phone and reliable on Android stock. Everything else (Windows, Google ecosystem beyond the phone, desktop integration, accessories) was "completely tolerable but just so annoying." The experiment confirmed: <strong>Apple's lock-in isn't just marketing. The ecosystem actually works better when all parts are in harmony.</strong></p>
+                    <p style="color: var(--color-text-secondary);">Never doing a full ecosystem exit again. The compromises weren't insurmountable, but they were relentless. Now it's clear why people stay.</p>
+                </div>
+
+                <div class="insight-card info">
+                    <strong>Key Takeaway for Consumer Tech Lab</strong><br/>
+                    <span style="color: var(--color-text-secondary);">Ecosystem lock-in is real, but it's not sinister—it's a side effect of design coherence. Apple makes you stay because leaving is so much harder than staying. Google has the individual parts but not the glue. Windows is still playing catch-up. The best ecosystem is the one you don't notice you're in until you leave.</span>
+                </div>
+
+            </div>
+
+            <div style="text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); font-size: 0.9rem; border: 1px dashed var(--color-border); border-radius: var(--radius-md);">
+                More entries coming as experiments are completed. This archive grows alongside the main documentation.
+            </div>
+        </div>
+    </article>
+</div>
+</body>
+</html>

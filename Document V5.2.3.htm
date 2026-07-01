@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Tech Documentation</title>
+    <style>
+        :root {
+            --color-bg-base: #0f0f0f;
+            --color-bg-surface: #1a1a1a;
+            --color-bg-surface-elevated: #2d2d2d;
+            --color-bg-card: #252525;
+            --color-text-primary: #e0e0e0;
+            --color-text-secondary: #aaa;
+            --color-text-muted: #666;
+            --color-text-success: #4ade80;
+            --color-border: #333;
+            --color-border-subtle: #444;
+            --color-success: #4ade80;
+            --color-success-bg: #1a2e1f;
+            --color-error: #ef4444;
+            --color-error-bg: #2e1a1a;
+            --color-warning: #fbbf24;
+            --color-info: #60a5fa;
+            --color-info-bg: #1a2a3f;
+            --spacing-xs: 0.4rem;
+            --spacing-sm: 0.8rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, var(--color-bg-surface) 0%, var(--color-bg-surface-elevated) 100%);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+            text-align: center;
+        }
+        header h1 { font-size: 2.5rem; color: #fff; font-weight: 700; margin-bottom: var(--spacing-xs); }
+        header p { color: var(--color-text-secondary); font-size: 1.1rem; margin-bottom: var(--spacing-lg); }
+
+        /* ===== NAVIGATION ===== */
+        .nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--color-bg-surface);
+            border-bottom: 1px solid var(--color-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .nav-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            gap: var(--spacing-sm);
+            transition: color 0.2s ease;
+        }
+        .nav-toggle:hover { color: var(--color-info); }
+        .nav-toggle:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .nav-toggle .toggle-icon { font-size: 1.5rem; transition: transform 0.3s ease; }
+        .nav-toggle .toggle-icon.open { transform: rotate(180deg); }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease;
+        }
+        .nav-tabs.collapsed {
+            max-height: 0 !important;
+            padding: 0 var(--spacing-lg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .nav-tab {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 20px;
+            border: 1px solid var(--color-border-subtle);
+            background: var(--color-bg-card);
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .nav-tab:hover { border-color: var(--color-info); color: var(--color-info); background: var(--color-info-bg); transform: translateY(-1px); }
+        .nav-tab:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .nav-tab .tab-icon { font-size: 1rem; }
+        .nav-tab .tab-label { font-weight: 600; }
+        .nav-tab .tab-sub { color: var(--color-text-muted); font-size: 0.75rem; }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 1000px; margin: 0 auto; padding: var(--spacing-lg); }
+
+        /* ===== EXPERIMENT BLOCKS ===== */
+        .experiment {
+            margin-bottom: var(--spacing-xl);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--color-bg-surface);
+            transition: box-shadow 0.3s ease;
+            scroll-margin-top: 80px;
+            content-visibility: auto;
+        }
+        .experiment:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .experiment-header { background: var(--color-bg-surface-elevated); padding: var(--spacing-md); border-bottom: 2px solid var(--color-border-subtle); }
+        .experiment-header h2 { font-size: 1.8rem; color: #fff; margin-bottom: var(--spacing-sm); }
+        .experiment-content { padding: var(--spacing-lg); }
+        .experiment-content > p { color: var(--color-text-secondary); margin-bottom: var(--spacing-lg); }
+        .experiment-tag { display: inline-block; background: var(--color-border-subtle); color: var(--color-text-secondary); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-size: 0.85rem; margin-top: var(--spacing-sm); margin-right: var(--spacing-xs); }
+
+        /* ===== UTILITY ===== */
+        .card { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); }
+        .card-success { background: var(--color-success-bg); border: 1px solid var(--color-success); border-left: 3px solid var(--color-success); }
+        .card-error { background: var(--color-error-bg); border: 1px solid var(--color-error); border-left: 3px solid var(--color-error); }
+        .card-warning { background: var(--color-bg-card); border-left: 3px solid var(--color-warning); }
+        .card-info { background: var(--color-info-bg); border-left: 4px solid var(--color-info); border-radius: var(--radius-md); }
+        .mb-sm { margin-bottom: var(--spacing-sm); }
+        .mb-md { margin-bottom: var(--spacing-md); }
+        .mb-lg { margin-bottom: var(--spacing-lg); }
+        .mt-lg { margin-top: var(--spacing-lg); }
+
+        /* ===== GRIDS ===== */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
+        .three-column { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+
+        .comparison-card { padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); transition: transform 0.2s ease; }
+        .comparison-card:hover { transform: translateY(-2px); }
+        .comparison-card:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .comparison-card.winner { border-left-color: var(--color-success); background: var(--color-success-bg); }
+        .comparison-card.loser { border-left-color: var(--color-error); background: var(--color-error-bg); }
+        .comparison-card h3 { margin-bottom: var(--spacing-md); font-size: 1.2rem; color: #fff; }
+
+        /* ===== METRICS ===== */
+        .metric { margin-bottom: var(--spacing-sm); display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-xs) 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .metric:last-child { border-bottom: none; }
+        .metric-label { color: var(--color-text-secondary); font-size: 0.9rem; }
+        .metric-value { font-weight: 600; color: #fff; }
+        .metric-value.success { color: var(--color-success); }
+        .metric-value.error { color: var(--color-error); }
+        .metric-value.warning { color: var(--color-warning); }
+
+        /* ===== REPAIR OPTIONS ===== */
+        .repair-option { padding: var(--spacing-md); border-radius: var(--radius-md); border-top: 3px solid var(--color-border-subtle); background: var(--color-bg-card); transition: transform 0.2s ease; }
+        .repair-option:hover { transform: translateY(-3px); }
+        .repair-option:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .repair-option.apple { border-top-color: var(--color-info); }
+        .repair-option.thirdparty { border-top-color: var(--color-warning); }
+        .repair-option.cheap { border-top-color: var(--color-error); }
+        .repair-option h3 { margin-bottom: var(--spacing-md); font-size: 1.1rem; color: #fff; }
+
+        /* ===== PROS / CONS ===== */
+        .pros { margin-bottom: var(--spacing-md); }
+        .pros-label { color: var(--color-success); font-size: 0.85rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
+        .pros ul, .cons ul { list-style: none; padding-left: 0; }
+        .pros li, .cons li { color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-xs); padding-left: 1.2rem; position: relative; }
+        .pros li:before { content: "✓"; position: absolute; left: 0; color: var(--color-success); font-weight: bold; }
+        .cons { margin-bottom: 0; }
+        .cons-label { color: var(--color-error); font-size: 0.85rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
+        .cons li:before { content: "✗"; position: absolute; left: 0; color: var(--color-error); font-weight: bold; }
+
+        /* ===== RANKING ROWS ===== */
+        .ranking-row { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .ranking-row:hover { transform: translateX(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .ranking-row:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .ranking-row.success { border-left-color: var(--color-success); }
+        .ranking-row.warning { border-left-color: var(--color-warning); }
+        .ranking-row.error { border-left-color: var(--color-error); }
+        .ranking-row .rank-content strong { display: block; margin-bottom: 0.2rem; color: #fff; }
+        .ranking-row .rank-content p { color: var(--color-text-secondary); font-size: 0.9rem; margin: 0; }
+
+        .rating-value { font-size: 1.4rem; font-weight: bold; min-width: 60px; text-align: center; }
+        .rating-value.success { color: var(--color-success); }
+        .rating-value.warning { color: var(--color-warning); }
+        .rating-value.error { color: var(--color-error); }
+        .rating-value.neutral { color: #f87171; }
+
+        /* ===== EMPHASIS BLOCKS ===== */
+        .key-finding { padding: var(--spacing-md); margin: var(--spacing-md) 0; border-radius: var(--radius-sm); background: var(--color-bg-surface-elevated); border-left: 4px solid var(--color-info); }
+        .key-finding strong { color: var(--color-info); display: block; margin-bottom: var(--spacing-xs); }
+        .key-finding p { color: var(--color-text-secondary); margin: 0; }
+
+        .conclusion { background: var(--color-success-bg); border: 1px solid var(--color-success); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-lg); }
+        .conclusion h4 { color: var(--color-success); margin-bottom: var(--spacing-sm); }
+        .conclusion p { color: var(--color-text-secondary); line-height: 1.7; }
+
+        /* ===== TIMELINE ===== */
+        .timeline { position: relative; padding: var(--spacing-md) 0; }
+        .timeline-item { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-md); padding: var(--spacing-sm); border-radius: var(--radius-sm); transition: background 0.2s ease; }
+        .timeline-item:hover { background: var(--color-bg-surface-elevated); }
+        .timeline-marker { width: 12px; height: 12px; background: var(--color-info); border-radius: 50%; margin-top: 0.3rem; flex-shrink: 0; border: 2px solid var(--color-bg-surface); box-shadow: 0 0 0 2px var(--color-info); }
+        .timeline-marker.success { background: var(--color-success); box-shadow: 0 0 0 2px var(--color-success); }
+        .timeline-marker.warning { background: var(--color-warning); box-shadow: 0 0 0 2px var(--color-warning); }
+        .timeline-marker.error { background: var(--color-error); box-shadow: 0 0 0 2px var(--color-error); }
+        .timeline-content { flex: 1; }
+        .timeline-content strong { color: #fff; display: block; margin-bottom: var(--spacing-xs); }
+        .timeline-content p { color: var(--color-text-secondary); font-size: 0.9rem; margin: 0; }
+
+        /* ===== TABLES ===== */
+        .table-wrap { background: var(--color-bg-card); border-radius: var(--radius-md); overflow: hidden; margin-bottom: var(--spacing-lg); }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .data-table caption { text-align: left; padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-secondary); font-size: 0.85rem; }
+        .data-table thead tr { background: var(--color-bg-surface-elevated); }
+        .data-table th { padding: var(--spacing-sm) var(--spacing-md); text-align: left; color: #fff; font-weight: 600; border-bottom: 2px solid var(--color-border-subtle); }
+        .data-table th.center { text-align: center; }
+        .data-table td { padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); }
+        .data-table td.center { text-align: center; }
+        .data-table th.primary { color: var(--color-text-primary); font-weight: normal; border-bottom: 1px solid var(--color-border); }
+        .data-table tr.highlight { background: rgba(96,165,250,0.05); }
+        .data-table tr:last-child td, .data-table tr:last-child th { border-bottom: none; }
+        .data-table .badge-success { color: var(--color-success); font-weight: 600; }
+        .data-table .badge-warning { color: var(--color-warning); font-weight: 600; }
+        .data-table .badge-error { color: var(--color-error); font-weight: 600; }
+        .data-table .badge-info { color: var(--color-info); font-weight: 600; }
+        .data-table .chip { display: inline-block; font-size: 0.75rem; color: var(--color-text-muted); }
+
+        /* ===== INSIGHT BLOCKS ===== */
+        .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin: var(--spacing-lg) 0; }
+        .insight-card { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); transition: transform 0.2s ease; }
+        .insight-card:hover { transform: translateX(4px); }
+        .insight-card:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .insight-card h4 { color: #fff; margin-bottom: var(--spacing-sm); }
+        .insight-card p { color: var(--color-text-secondary); font-size: 0.9rem; margin: 0; }
+        .insight-card.success { border-left-color: var(--color-success); }
+        .insight-card.info { border-left-color: var(--color-info); }
+        .insight-card.warning { border-left-color: var(--color-warning); }
+        .insight-card.error { border-left-color: var(--color-error); }
+
+        .recommendation-box { margin-top: var(--spacing-lg); padding: var(--spacing-lg); background: var(--color-bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+        .recommendation-box h3 { color: #fff; margin-bottom: var(--spacing-md); }
+        .recommendation-box ul { list-style: none; padding: 0; }
+        .recommendation-box li { padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary); display: flex; align-items: center; gap: var(--spacing-sm); }
+        .recommendation-box li:last-child { border-bottom: none; }
+        .recommendation-box .check { color: var(--color-success); font-weight: bold; font-size: 1.2rem; }
+        .recommendation-box .cross { color: var(--color-error); font-weight: bold; font-size: 1.2rem; }
+        .recommendation-box .warning-icon { color: var(--color-warning); font-weight: bold; font-size: 1.2rem; }
+
+        /* ===== SUMMARY CARDS ===== */
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .summary-card { padding: var(--spacing-md); border-radius: var(--radius-md); }
+        .summary-card-success { background: var(--color-success-bg); border: 1px solid var(--color-success); }
+        .summary-card-failure { background: var(--color-error-bg); border: 1px solid var(--color-error); }
+        .summary-card h3 { margin-bottom: var(--spacing-md); font-size: 1.1rem; }
+        .summary-card-success h3 { color: var(--color-success); }
+        .summary-card-failure h3 { color: var(--color-error); }
+        .perf-row { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .perf-row:last-child { border-bottom: none; }
+        .perf-score-badge { font-size: 1.5rem; font-weight: bold; min-width: 55px; }
+        .perf-score-badge.success { color: var(--color-success); }
+        .perf-score-badge.error { color: var(--color-error); }
+
+        /* ===== RANKING LIST ===== */
+        .overall-rank { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+        .rank-item { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-sm); background: var(--color-bg-card); }
+        .rank-item.gold { background: rgba(74,222,128,0.1); }
+        .rank-item.red { background: rgba(239,68,68,0.1); }
+        .rank-num { font-weight: 700; font-size: 1.2rem; min-width: 30px; }
+        .rank-num.success { color: var(--color-success); }
+        .rank-num.warning { color: var(--color-warning); }
+        .rank-num.error { color: var(--color-error); }
+        .rank-label { color: #fff; flex: 1; }
+        .rank-sub { color: var(--color-text-muted); font-size: 0.85rem; }
+
+        /* ===== SECTION HEADER ===== */
+        .section-h3 { color: #fff; margin-bottom: var(--spacing-md); margin-top: var(--spacing-lg); font-size: 1.2rem; }
+        .section-h3:first-child { margin-top: 0; }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top { position: fixed; bottom: 2rem; right: 2rem; background: var(--color-info); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; opacity: 0; pointer-events: none; box-shadow: 0 4px 12px rgba(96,165,250,0.3); z-index: 1000; }
+        .scroll-top.visible { opacity: 1; pointer-events: auto; }
+        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(96,165,250,0.5); }
+        .scroll-top:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+
+        /* ===== FOOTER ===== */
+        footer { text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); border-top: 1px solid var(--color-border); margin-top: var(--spacing-xl); font-size: 0.9rem; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .comparison-grid, .three-column, .two-column, .insight-grid, .summary-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.8rem; }
+            .container { padding: var(--spacing-md); }
+            .ranking-row { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
+            .experiment-header h2 { font-size: 1.4rem; }
+            .experiment-content { padding: var(--spacing-md); }
+            .rating-value { min-width: auto; align-self: flex-start; }
+            .timeline-item { flex-direction: column; gap: var(--spacing-xs); }
+            .timeline-marker { margin-top: 0; }
+            .scroll-top { bottom: 1rem; right: 1rem; width: 40px; height: 40px; font-size: 1.2rem; }
+            .nav-tabs { flex-direction: column; align-items: stretch; gap: var(--spacing-xs); }
+            .nav-tab { justify-content: center; padding: 0.6rem 1rem; }
+        }
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.4rem; }
+            .experiment-tag { font-size: 0.75rem; }
+            .nav-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+            .data-table { font-size: 0.82rem; }
+            .data-table th, .data-table td { padding: var(--spacing-xs) var(--spacing-sm); }
+            .nav-tab .tab-sub { display: none; }
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            .nav-wrapper { display: none; }
+            .scroll-top { display: none; }
+            .experiment { break-inside: avoid; border: 1px solid #444; content-visibility: visible; }
+            .experiment:hover { box-shadow: none; }
+            body { background: white; color: #222; }
+            .experiment-content, .experiment-header { background: white; }
+            .experiment-header h2 { color: #222; }
+            .card, .ranking-row, .repair-option, .comparison-card, .insight-card { background: #f5f5f5; border-color: #ccc; }
+            .key-finding { background: #f0f0f0; border-left-color: #60a5fa; }
+            .conclusion { background: #e8f5e9; border-color: #4ade80; }
+            .ranking-row.success { border-left-color: #4ade80; }
+            .ranking-row.warning { border-left-color: #fbbf24; }
+            .ranking-row.error { border-left-color: #ef4444; }
+            .data-table thead tr { background: #e0e0e0; }
+            .data-table th { color: #222; border-bottom-color: #999; }
+            .data-table td { color: #444; border-bottom-color: #ddd; }
+            .data-table tr.highlight { background: rgba(96,165,250,0.08); }
+            .metric-value { color: #222; }
+            .metric-value.success { color: #2e7d32; }
+            .metric-value.error { color: #c62828; }
+            .metric-value.warning { color: #f57f17; }
+            .summary-card-success { background: #e8f5e9; }
+            .summary-card-failure { background: #ffebee; }
+            .rank-item.gold { background: rgba(74,222,128,0.08); }
+            .rank-item.red { background: rgba(239,68,68,0.08); }
+            .rank-label { color: #222; }
+            .recommendation-box { background: #f5f5f5; border-color: #ccc; }
+            .recommendation-box h3 { color: #222; }
+            .recommendation-box li { border-bottom-color: #ddd; color: #444; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Consumer Tech Documentation</h1>
+    <p>Real-world experiments, case studies, and documented findings across repair, service, software, and hardware</p>
+</header>
+
+<div class="nav-wrapper">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="true" style="display: flex;">
+        <span>📑 Sections</span>
+        <span class="toggle-icon" id="toggleIcon">▲</span>
+    </button>
+    <nav class="nav-tabs" id="navTabs" aria-label="Documentation sections">
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp1" class="nav-tab" aria-label="Experiment 1: Apple vs Samsung Repair"><span class="tab-icon">🔧</span><span><span class="tab-label">Exp 1</span><br><span class="tab-sub">Apple vs Samsung Repair</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp2" class="nav-tab" aria-label="Experiment 2: Repair Channel Tiers"><span class="tab-icon">⚙️</span><span><span class="tab-label">Exp 2</span><br><span class="tab-sub">Repair Channel Tiers</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp3" class="nav-tab" aria-label="Experiment 3: Customer Service Test"><span class="tab-icon">📞</span><span><span class="tab-label">Exp 3</span><br><span class="tab-sub">Customer Service Test</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp4" class="nav-tab" aria-label="Experiment 4: iOS 18 vs iOS 26"><span class="tab-icon">📱</span><span><span class="tab-label">Exp 4</span><br><span class="tab-sub">iOS 18 vs iOS 26</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#casestudy" class="nav-tab" aria-label="Case Study: Samsung Battery Settlement"><span class="tab-icon">⚖️</span><span><span class="tab-label">Case Study</span><br><span class="tab-sub">Samsung Battery Settlement</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp5" class="nav-tab" aria-label="Experiment 5: Pixel vs iPhone Battery"><span class="tab-icon">🔋</span><span><span class="tab-label">Exp 5</span><br><span class="tab-sub">Pixel vs iPhone Battery</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp6" class="nav-tab" aria-label="Experiment 6: AASP Repair Test"><span class="tab-icon">🏪</span><span><span class="tab-label">Exp 6</span><br><span class="tab-sub">AASP Repair Test</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#exp7" class="nav-tab" aria-label="Experiment 7: Pixel Pro Generation Comparison"><span class="tab-icon">📷</span><span><span class="tab-label">Exp 7</span><br><span class="tab-sub">Pixel Pro Generations</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/repair_experiment_docs_1.html#insights" class="nav-tab" aria-label="Key Insights and Recommendations"><span class="tab-icon">💡</span><span><span class="tab-label">Insights</span><br><span class="tab-sub">Key Takeaways</span></span></a>
+        <a href="file:///Users/williamsdebeiii/Downloads/Fodder%20Archive%20V2.htm" class="nav-tab" aria-label="Fodder Archive: Side experiments and observations"><span class="tab-icon">🗂️</span><span><span class="tab-label">Fodder Archive</span><br><span class="tab-sub">Side Experiments</span></span></a>
+    </nav>
+</div>
+
+<div class="container">
+
+    <!-- EXP 1 -->
+    <article class="experiment" id="exp1" aria-labelledby="exp1-title">
+        <div class="experiment-header">
+            <h2 id="exp1-title">Experiment 1: Apple vs Samsung Mail-In Repair</h2>
+            <span class="experiment-tag">1 month duration</span>
+            <span class="experiment-tag">Level 9 screen damage</span>
+            <span class="experiment-tag">Official channels only</span>
+        </div>
+        <div class="experiment-content">
+            <p>Same level 9 cracked screen damage sent via mail-in to official repair centers for both Apple (iPhone 17 Pro Max) and Samsung (Galaxy S26 Ultra). Testing cost, turnaround time, communication quality, and repair quality.</p>
+            <div class="comparison-grid">
+                <div class="comparison-card winner">
+                    <h3>Apple — iPhone 17 Pro Max</h3>
+                    <div class="metric"><span class="metric-label">Repair Cost</span><span class="metric-value">$600</span></div>
+                    <div class="metric"><span class="metric-label">Turnaround</span><span class="metric-value">2 days</span></div>
+                    <div class="metric"><span class="metric-label">Quality</span><span class="metric-value">Pristine</span></div>
+                    <div class="metric"><span class="metric-label">Communication</span><span class="metric-value">Proactive texts/calls</span></div>
+                    <div class="metric"><span class="metric-label">Issues</span><span class="metric-value">None</span></div>
+                </div>
+                <div class="comparison-card loser">
+                    <h3>Samsung — Galaxy S26 Ultra</h3>
+                    <div class="metric"><span class="metric-label">Repair Cost</span><span class="metric-value">$289–$300</span></div>
+                    <div class="metric"><span class="metric-label">Turnaround</span><span class="metric-value">~1 month</span></div>
+                    <div class="metric"><span class="metric-label">Quality</span><span class="metric-value">Pristine</span></div>
+                    <div class="metric"><span class="metric-label">Communication</span><span class="metric-value">Text updates only</span></div>
+                    <div class="metric"><span class="metric-label">Issues</span><span class="metric-value">Critical admin failure</span></div>
+                </div>
+            </div>
+            <div class="key-finding"><strong>Critical Failure — Samsung Admin Error</strong><p>Samsung wrote the email address incorrectly and sent no payment link. After 14 days, the phone was returned unrepaired. The process had to restart entirely, wasting an additional 14 days.</p></div>
+            <div class="key-finding"><strong>Repair Quality Was Identical</strong><p>Both phones returned pristine — screen tight, crystal clean, polished. Quality is not the differentiator. Process, speed, and communication are.</p></div>
+            <div class="conclusion"><h4>Winner: Apple</h4><p>Apple charges double ($600 vs $300) but delivers in 2 days with zero friction. Samsung's administrative failure erased every cost advantage. When repair quality is equal, execution determines the winner.</p></div>
+        </div>
+    </article>
+
+    <!-- EXP 2 -->
+    <article class="experiment" id="exp2" aria-labelledby="exp2-title">
+        <div class="experiment-header">
+            <h2 id="exp2-title">Experiment 2: Repair Channel Comparison</h2>
+            <span class="experiment-tag">3 iPhone 15s</span>
+            <span class="experiment-tag">Level 9 screen + back glass damage</span>
+            <span class="experiment-tag">Identical damage across all devices</span>
+        </div>
+        <div class="experiment-content">
+            <p>Three identical iPhone 15 models with identical level 9 damage (screen + back glass) sent to three different repair channels: Official Apple, third-party using genuine parts, and cheap unauthorized using generic parts.</p>
+            <div class="three-column">
+                <div class="repair-option apple">
+                    <h3>Official Apple</h3>
+                    <div class="pros"><div class="pros-label">Pros</div><ul><li>Pristine quality — looks brand new</li><li>Genuine parts, fully authenticated</li><li>Waterproofing maintained</li><li>Extended warranty (if near end)</li><li>Full quality checks</li><li>3-day repair turnaround</li></ul></div>
+                    <div class="cons"><div class="cons-label">Cons</div><ul><li>$399 for screen + back glass</li><li>5-day scheduling buffer</li></ul></div>
+                </div>
+                <div class="repair-option thirdparty">
+                    <h3>Third-Party (Genuine Parts)</h3>
+                    <div class="pros"><div class="pros-label">Pros</div><ul><li>Attempts to use genuine Apple parts</li></ul></div>
+                    <div class="cons"><div class="cons-label">Cons</div><ul><li>More expensive than Apple</li><li>No quality checks</li><li>Back glass glued → lost waterproofing</li><li>No warranty</li><li>Parts flagged as non-genuine in software</li><li>Resale value destroyed</li><li>Couldn't source parts — repair abandoned</li></ul></div>
+                </div>
+                <div class="repair-option cheap">
+                    <h3>Cheap Unauthorized</h3>
+                    <div class="pros"><div class="pros-label">Pros</div><ul><li>$220 total — cheapest option</li><li>1-day turnaround</li><li>Same-day possible if parts in stock</li></ul></div>
+                    <div class="cons"><div class="cons-label">Cons</div><ul><li>Generic parts only</li><li>Back glass super-glued → lost waterproofing</li><li>Screen noticeably thicker than Apple's</li><li>No warranty</li></ul></div>
+                </div>
+            </div>
+            <div class="key-finding"><strong>Third-Party With Genuine Parts Is A Trap</strong><p>Costs more than Apple, delivers worse results, can't authenticate parts in software, loses waterproofing, voids warranty, and destroys resale value. The worst of all options.</p></div>
+            <div class="key-finding"><strong>Why Genuine Parts Aren't Enough</strong><p>Only Apple and authorized service providers have the software required to authenticate parts. Without it, even genuine parts are flagged as counterfeit by the device.</p></div>
+            <div class="conclusion"><h4>Winner: Official Apple ($399, 8 days total)</h4><p>The only option that preserves waterproofing, warranty, resale value, and part authenticity. Third-party shops charge more for less. Cheap repairs are fast but fundamentally compromise the device.</p></div>
+        </div>
+    </article>
+
+    <!-- EXP 3 -->
+    <article class="experiment" id="exp3" aria-labelledby="exp3-title">
+        <div class="experiment-header">
+            <h2 id="exp3-title">Experiment 3: Customer Service Quality Test</h2>
+            <span class="experiment-tag">7 companies tested</span>
+            <span class="experiment-tag">Same-day testing</span>
+            <span class="experiment-tag">7–15 minutes per call</span>
+            <span class="experiment-tag">Calls recorded</span>
+        </div>
+        <div class="experiment-content">
+            <p>Identical question asked via phone call to customer support at 7 major smartphone brands: "My phone screen is going black." Testing speed to correct answer, troubleshooting quality, accuracy, and helpfulness. Correct answer: battery draining / needs charging.</p>
+            <div class="summary-grid">
+                <div class="summary-card summary-card-success">
+                    <h3>Top Performers</h3>
+                    <div class="perf-row"><div class="perf-score-badge success">4.5★</div><div><strong style="color:#fff;display:block;">Huawei</strong><span style="color:var(--color-text-secondary);font-size:0.9rem;">Fast, direct, no friction. Resolved immediately.</span></div></div>
+                    <div class="perf-row"><div class="perf-score-badge success">4.5★</div><div><strong style="color:#fff;display:block;">Xiaomi</strong><span style="color:var(--color-text-secondary);font-size:0.9rem;">Friendly, efficient, best overall experience.</span></div></div>
+                </div>
+                <div class="summary-card summary-card-failure">
+                    <h3>Complete Failures</h3>
+                    <div class="perf-row"><div class="perf-score-badge error">0★</div><div><strong style="color:#fff;display:block;">Samsung</strong><span style="color:var(--color-text-secondary);font-size:0.9rem;">Automated loop, then hung up on by system.</span></div></div>
+                    <div class="perf-row"><div class="perf-score-badge error">0★</div><div><strong style="color:#fff;display:block;">BlackBerry</strong><span style="color:var(--color-text-secondary);font-size:0.9rem;">Paywall to speak to human. No support without fee.</span></div></div>
+                </div>
+            </div>
+            <h3 class="section-h3">Full Rankings</h3>
+            <div>
+                <div class="ranking-row success"><div class="rank-content"><strong>Huawei</strong><p>Excellent. Fast, direct, no unnecessary steps.</p></div><div class="rating-value success">4.5/5</div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>Xiaomi</strong><p>Friendly and efficient. Best user experience overall.</p></div><div class="rating-value success">4.5/5</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>OPPO</strong><p>Over-complicated initially, but persistent and correct.</p></div><div class="rating-value warning">3.5/5</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>OnePlus</strong><p>Correct answer but roundabout. Audible background noise.</p></div><div class="rating-value warning">3/5</div></div>
+                <div class="ranking-row"><div class="rank-content"><strong>Apple</strong><p>Long wait, automated system struggled, required physical device presence.</p></div><div class="rating-value neutral">2.5/5</div></div>
+                <div class="ranking-row"><div class="rank-content"><strong>Vivo</strong><p>No phone support available. Email only, no guaranteed response time.</p></div><div class="rating-value neutral">1/5</div></div>
+                <div class="ranking-row error"><div class="rank-content"><strong>Samsung</strong><p>Redirected into automated loop, system hung up.</p></div><div class="rating-value error">0/5</div></div>
+                <div class="ranking-row error"><div class="rank-content"><strong>BlackBerry</strong><p>Incident fee required to speak with a human. No out-of-warranty support.</p></div><div class="rating-value error">0/5</div></div>
+            </div>
+            <div class="key-finding" style="margin-top:var(--spacing-lg);"><strong>Shocking Result — Big Brands Failed</strong><p>Apple and Samsung both failed this test. Huawei and Xiaomi, often stereotyped as having poor support, delivered the best experiences. Brand recognition does not equal support quality.</p></div>
+            <div class="key-finding"><strong>Speed ≠ Helpfulness</strong><p>Vivo answered quickly but refuses to help over the phone. The fastest answer means nothing if the channel is useless or the answer is wrong.</p></div>
+            <div class="conclusion"><h4>Winners: Huawei &amp; Xiaomi (Tied at 4.5/5)</h4><p>Both delivered fast, direct, friendly support that actually solved the problem without friction. Avoid Samsung and BlackBerry entirely — their support infrastructure either doesn't function or is deliberately inaccessible.</p></div>
+        </div>
+    </article>
+
+    <!-- EXP 4 -->
+    <article class="experiment" id="exp4" aria-labelledby="exp4-title">
+        <div class="experiment-header">
+            <h2 id="exp4-title">Experiment 4: iOS Performance Comparison (Historical)</h2>
+            <span class="experiment-tag">iOS 18.6 vs iOS 26.0.1</span>
+            <span class="experiment-tag">iPhone 15 Pro</span>
+            <span class="experiment-tag">Comprehensive testing</span>
+        </div>
+        <div class="experiment-content">
+            <p>Long-term comparison between iOS 18.6 and iOS 26.0.1 across performance, battery life, stability, and day-to-day experience on the same hardware (iPhone 15 Pro).</p>
+            <h3 class="section-h3">Performance Metrics</h3>
+            <div class="card mb-lg">
+                <div class="metric"><span class="metric-label">Boot Speed</span><span class="metric-value success">iOS 26 faster by 1.7–2.7%</span></div>
+                <div class="metric"><span class="metric-label">Storage Transfer</span><span class="metric-value success">iOS 26 objectively faster; 26.4.2 even more so</span></div>
+                <div class="metric"><span class="metric-label">App Loading (16-app test)</span><span class="metric-value success">iOS 26 faster by 8–13%</span></div>
+                <div class="metric"><span class="metric-label">Browser (Speedometer 3.1 / JetStream 2.2)</span><span class="metric-value success">iOS 26 significantly better</span></div>
+                <div class="metric"><span class="metric-label">Thermal Stability (3DMark)</span><span class="metric-value error">iOS 18.6: 88.4% vs iOS 26: 70.9%</span></div>
+            </div>
+            <h3 class="section-h3">Battery Life — Same Workload</h3>
+            <div class="card-info" style="padding:var(--spacing-md);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--spacing-sm);">
+                    <div><p style="color:var(--color-text-secondary);font-weight:600;margin-bottom:0.2rem;">iOS 18.6</p><p style="color:var(--color-success);font-size:1.4rem;font-weight:bold;margin:0;">74% Retained</p></div>
+                    <div style="text-align:right;"><p style="color:var(--color-text-secondary);font-weight:600;margin-bottom:0.2rem;">iOS 26.0.1</p><p style="color:var(--color-error);font-size:1.4rem;font-weight:bold;margin:0;">66% Retained</p></div>
+                </div>
+                <p style="color:var(--color-text-secondary);font-size:0.9rem;margin:0;"><strong style="color:var(--color-info);">Note:</strong> iOS 26.4.2 improved to 71% — still ~9% worse than iOS 18.6.</p>
+            </div>
+            <h3 class="section-h3">Stability &amp; Day-to-Day</h3>
+            <div class="card mb-lg">
+                <div class="metric"><span class="metric-label">UI Fluidity (pre-26.3)</span><span class="metric-value error">Choppy ~30 FPS on home screen</span></div>
+                <div class="metric"><span class="metric-label">UI Fluidity (26.4.2+)</span><span class="metric-value success">Resolved — smooth and fluid</span></div>
+                <div class="metric"><span class="metric-label">CPU Idle Usage (launch)</span><span class="metric-value error">High background usage, causing slowdowns</span></div>
+                <div class="metric"><span class="metric-label">CPU Idle Usage (26.4.2)</span><span class="metric-value success">Resolved to expected levels</span></div>
+                <div class="metric"><span class="metric-label">Persistent Bugs</span><span class="metric-value error">Power button failures, Watch notifications</span></div>
+            </div>
+            <div class="key-finding"><strong>Don't Update At Launch — Wait For .2 or .3</strong><p>iOS 26.0.1 launched with significant CPU, battery, and UI issues that took until 26.4.2 to resolve. Wait at least 3–4 point releases before updating a daily driver.</p></div>
+            <div class="key-finding"><strong>Performance Gains Come At A Battery Cost</strong><p>iOS 26 is faster across every benchmark — but uses ~9% more battery doing it. Worth knowing before updating if battery life is a priority.</p></div>
+            <div class="conclusion"><h4>Summary: Progress With Caveats</h4><p>iOS 26 is objectively faster than iOS 18.6 across every performance benchmark. However, the launch version was unstable, thermally inconsistent, and meaningfully worse on battery. By iOS 26.4.2 most issues were resolved. Verdict: iOS 26 is the better OS — but only after the dust settled several months post-launch.</p></div>
+        </div>
+    </article>
+
+    <!-- CASE STUDY -->
+    <article class="experiment" id="casestudy" aria-labelledby="casestudy-title">
+        <div class="experiment-header">
+            <h2 id="casestudy-title">Case Study: Samsung Battery Failures &amp; Corporate Accountability</h2>
+            <span class="experiment-tag">April 30 – June 18, 2026</span>
+            <span class="experiment-tag">7 Devices Affected</span>
+            <span class="experiment-tag">Resolved: $1,020 Cash Settlement</span>
+            <span class="experiment-tag">No NDA</span>
+        </div>
+        <div class="experiment-content">
+            <p>A real-world consumer advocacy case documenting Samsung battery swelling across multiple device generations, corporate non-responsiveness, regulatory escalation, and eventual cash settlement. Not a planned experiment — it developed organically through consistent documentation habits.</p>
+            <div class="two-column mb-lg">
+                <div class="card" style="border-left:3px solid var(--color-error);">
+                    <p style="color:var(--color-error);font-weight:600;margin-bottom:var(--spacing-sm);">Swollen / Failed</p>
+                    <ul style="list-style:none;color:var(--color-text-secondary);font-size:0.95rem;">
+                        <li style="margin-bottom:0.4rem;">• Galaxy S8</li><li style="margin-bottom:0.4rem;">• Galaxy S10</li><li style="margin-bottom:0.4rem;">• Galaxy S10e</li><li style="margin-bottom:0.4rem;">• Galaxy Note 8 (×2)</li><li style="margin-bottom:0.4rem;">• Galaxy Z Fold 2</li><li style="margin-bottom:0.4rem;">• Galaxy S20 FE</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left:3px solid var(--color-success);">
+                    <p style="color:var(--color-success);font-weight:600;margin-bottom:var(--spacing-sm);">Unaffected — Same Storage</p>
+                    <ul style="list-style:none;color:var(--color-text-secondary);font-size:0.95rem;">
+                        <li style="margin-bottom:0.4rem;">• Galaxy S21 through S26</li><li style="margin-bottom:0.4rem;">• All non-Samsung devices</li><li style="margin-bottom:0.4rem;">• iPhone 5c (2013)</li><li style="margin-bottom:0.4rem;">• Multiple other brands</li>
+                    </ul>
+                </div>
+            </div>
+            <h3 class="section-h3">Timeline</h3>
+            <div class="timeline">
+                <div class="timeline-item"><div class="timeline-marker error" aria-hidden="true"></div><div class="timeline-content"><strong>April 30 — Discovery &amp; Social Media Post</strong><p>Battery swelling found across multiple Samsung devices (2016–2020 era). Batteries expanded enough to crack back glass and split phones in two. Samsung responded officially within hours requesting collection.</p></div></div>
+                <div class="timeline-item"><div class="timeline-marker warning" aria-hidden="true"></div><div class="timeline-content"><strong>Early May — Device Collection</strong><p>Initially declined. After Samsung pressed further, agreed to cooperate — only after full documentation. Two personnel collected 3 devices in person with reference and ID numbers. No tracking provided.</p></div></div>
+                <div class="timeline-item"><div class="timeline-marker error" aria-hidden="true"></div><div class="timeline-content"><strong>50 Days — Complete Silence</strong><p>All questions deflected with "we'll update you as soon as we have news." Four additional devices developed the same swelling during this period.</p></div></div>
+                <div class="timeline-item"><div class="timeline-marker warning" aria-hidden="true"></div><div class="timeline-content"><strong>Escalation — CPSC, BBB, and Attorney</strong><p>Formal complaints filed with CPSC (acknowledged) and BBB. Consumer rights attorney retained. CPSC placed Samsung under federal regulatory scrutiny.</p></div></div>
+                <div class="timeline-item"><div class="timeline-marker success" aria-hidden="true"></div><div class="timeline-content"><strong>June 18 — Full Cash Settlement</strong><p>Samsung agreed to full cash compensation: $1,020 across 7 devices. No NDA required — full public disclosure permitted.</p></div></div>
+            </div>
+            <h3 class="section-h3">Key Evidence That Won The Case</h3>
+            <div class="card mb-lg">
+                <div class="pros"><ul>
+                    <li>Photos and videos of all 7 affected devices documenting swelling and physical damage</li>
+                    <li>Samsung's own battery label claiming 5-year lifespan — S20 FE failed at just 18 months</li>
+                    <li>Samsung website documentation confirming the same 5-year claim</li>
+                    <li>Purchase receipt proving S20 FE was only 18 months old at time of failure</li>
+                    <li>Control group: non-Samsung devices, same era, same storage — zero swelling</li>
+                    <li>Full email trail showing Samsung's 50 days of non-responsiveness</li>
+                    <li>Reference and ID numbers from collection personnel, verified by Samsung</li>
+                    <li>CPSC complaint acknowledgment placing case under federal oversight</li>
+                </ul></div>
+            </div>
+            <div class="key-finding"><strong>The S20 FE Was The Decisive Evidence</strong><p>Only 18 months old. Controlled storage. Samsung's own label said 5-year lifespan. This one device dismantled every defense Samsung could make.</p></div>
+            <div class="key-finding"><strong>Defect Isolated To 2016–2020 Manufacturing Era</strong><p>S21 through S26 unaffected under identical conditions. Points to a specific battery supply chain defect — likely tied to the rushed post-Note 7 production period.</p></div>
+            <div class="key-finding"><strong>No NDA Was Unusual — And Telling</strong><p>Samsung typically requires NDAs in settlements. Waiving it suggests the CPSC complaint already made key details public record — the same playbook as the Note 7 recall.</p></div>
+            <h3 class="section-h3">Consumer Advice — If This Happens To You</h3>
+            <div style="display:grid;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+                <div class="ranking-row success"><div class="rank-content"><strong>1. Document Everything Before Anything Else</strong><p>Photos, video, receipts, screenshots. Your documentation is your only leverage.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>2. Don't Rush To Cooperate</strong><p>Push back initially. Get commitments in writing before handing over anything. A legitimate company will wait.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>3. Verify Everything Through Official Channels</strong><p>Reference numbers, personnel IDs — always verify by calling the company directly, not through numbers in the email.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>4. Escalate After 30 Days of Silence</strong><p>File CPSC and BBB complaints simultaneously. CPSC triggers federal oversight that corporations cannot ignore.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>5. Retain A Consumer Rights Attorney</strong><p>Many offer free consultations. Legal representation fundamentally changed the dynamic of this case.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>6. Use Social Media Strategically</strong><p>A public post triggered Samsung's response within hours. Corporations monitor social media for PR exposure far more than customer service inboxes.</p></div></div>
+            </div>
+            <div class="conclusion"><h4>Outcome: $1,020 Cash Settlement — No NDA</h4><p>A social media post became a federal regulatory complaint that resulted in full corporate compensation from one of the world's largest smartphone manufacturers. The key lesson: meticulous documentation and willingness to escalate gives individual consumers real leverage against major corporations.</p></div>
+        </div>
+    </article>
+
+    <!-- EXP 5 -->
+    <article class="experiment" id="exp5" aria-labelledby="exp5-title">
+        <div class="experiment-header">
+            <h2 id="exp5-title">Experiment 5: Battery Life — Google Pixel Pro vs iPhone</h2>
+            <span class="experiment-tag">5 Pixel Pro models</span>
+            <span class="experiment-tag">3 iPhone models</span>
+            <span class="experiment-tag">All devices at 100% battery health</span>
+            <span class="experiment-tag">Controlled storage environment</span>
+        </div>
+        <div class="experiment-content">
+            <p>Comprehensive battery endurance test across five generations of Google Pixel Pro models and three iPhone models. All devices started from 100% battery health under identical controlled storage conditions. Testing focused on real-world screen-on time and usage duration rather than synthetic benchmarks.</p>
+            <h3 class="section-h3">Google Pixel Pro — Generation Comparison</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Pixel Pro battery endurance by generation</caption>
+                    <thead><tr><th scope="col">Device</th><th scope="col" class="center">Battery</th><th scope="col" class="center">Screen-On Time</th><th scope="col" class="center">Endurance</th><th scope="col" class="center">Rank</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row" class="primary">Pixel 6 Pro <span class="chip">(Tensor G1)</span></th><td class="center">5003 mAh</td><td class="center">5–6 hrs</td><td class="center">~1 day</td><td class="center badge-error">5th</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 7 Pro <span class="chip">(Tensor G2)</span></th><td class="center">5000 mAh</td><td class="center">5–7 hrs</td><td class="center">~1 day</td><td class="center badge-error">4th</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 8 Pro <span class="chip">(Tensor G3)</span></th><td class="center">5050 mAh</td><td class="center">6.5–8.5 hrs</td><td class="center">1–1.5 days</td><td class="center badge-warning">3rd</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 9 Pro <span class="chip">(Tensor G4)</span></th><td class="center">4700 mAh</td><td class="center">7–9 hrs</td><td class="center">1–1.5 days</td><td class="center badge-success">2nd</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 10 Pro <span class="chip">(Tensor G5)</span></th><td class="center">4870 mAh</td><td class="center">7.5–9 hrs</td><td class="center">~1.5 days</td><td class="center badge-success">1st</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="key-finding"><strong>Chip Efficiency Beats Raw Capacity</strong><p>The Pixel 9 Pro (4700 mAh — smallest battery) achieved 2nd place endurance, outperforming the Pixel 6 Pro (5003 mAh) by a significant margin. Tensor chip efficiency from G1 to G4 tells a far clearer story than mAh numbers alone.</p></div>
+            <h3 class="section-h3">Cross-Platform — Pixel Pro vs iPhone</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Cross-platform battery comparison with iPhone 13 as baseline</caption>
+                    <thead><tr><th scope="col">Device</th><th scope="col" class="center">Screen-On Time</th><th scope="col" class="center">Duration</th><th scope="col" class="center">vs iPhone 13</th></tr></thead>
+                    <tbody>
+                        <tr class="highlight"><th scope="row" class="primary" style="font-weight:600;">iPhone 13 <span class="chip">Baseline</span></th><td class="center">6–7 hrs</td><td class="center">1 day</td><td class="center badge-info">Baseline</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 6 Pro</th><td class="center">5–6 hrs</td><td class="center">1 day</td><td class="center badge-error">Slightly worse</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 7 Pro</th><td class="center">5–7 hrs</td><td class="center">1 day</td><td class="center badge-warning">Similar</td></tr>
+                        <tr class="highlight"><th scope="row" class="primary">iPhone 15 Pro</th><td class="center">6–7 hrs</td><td class="center">1 day</td><td class="center badge-warning">Similar–slightly better</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 8 Pro</th><td class="center">6.5–8.5 hrs</td><td class="center">1–1.5 days</td><td class="center badge-success">Better</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 9 Pro</th><td class="center">7–9 hrs</td><td class="center">1–1.5 days</td><td class="center badge-success">Much better</td></tr>
+                        <tr class="highlight"><th scope="row" class="primary" style="font-weight:600;">iPhone 16e</th><td class="center">8–10 hrs</td><td class="center">1.5 days</td><td class="center badge-success">Noticeably better</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 10 Pro</th><td class="center">7.5–9+ hrs</td><td class="center">~1.5 days</td><td class="center badge-success">Significantly better</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 class="section-h3">Head-to-Head Results</h3>
+            <div style="display:grid;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+                <div class="ranking-row error"><div class="rank-content"><strong>Pixel 6 Pro vs iPhone 13</strong><p>iPhone 13 wins. Tensor G1's power inefficiency made the 6 Pro a battery downgrade for most iPhone 13 users.</p></div><div class="rating-value" style="color:#fff;font-size:1rem;">iPhone 13 ✓</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>Pixel 7 Pro vs iPhone 13 &amp; 15 Pro</strong><p>Rough tie with iPhone 13. Slightly behind 15 Pro on cellular. Wi-Fi narrows the gap considerably.</p></div><div class="rating-value warning" style="font-size:1rem;">Tie</div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>Pixel 8 Pro vs iPhone 15 Pro</strong><p>Pixel 8 Pro wins on mixed usage and streaming. iPhone 15 Pro still edges it in gaming workloads.</p></div><div class="rating-value success" style="font-size:1rem;">Pixel 8 ✓</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>Pixel 9 Pro vs iPhone 16e</strong><p>Very close. Pixel 9 Pro has brighter 120Hz display while approaching 16e endurance. iPhone 16e's C1 modem and 60Hz display give it an efficiency edge on lighter usage.</p></div><div class="rating-value warning" style="font-size:1rem;">Near Tie</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>Pixel 10 Pro vs iPhone 16e</strong><p>Usage dependent. Heavy camera/gaming/multitasking favors Pixel 10 Pro. Light messaging/social/video favors iPhone 16e due to modem efficiency.</p></div><div class="rating-value warning" style="font-size:1rem;">Depends</div></div>
+            </div>
+            <h3 class="section-h3">Overall Battery Ranking</h3>
+            <div class="overall-rank mb-lg">
+                <div class="rank-item gold"><span class="rank-num success">1</span><span class="rank-label">Pixel 10 Pro ≈ iPhone 16e</span><span class="rank-sub">~1.5 days</span></div>
+                <div class="rank-item"><span class="rank-num success">2</span><span class="rank-label">Pixel 9 Pro</span><span class="rank-sub">1–1.5 days</span></div>
+                <div class="rank-item"><span class="rank-num warning">3</span><span class="rank-label">Pixel 8 Pro</span><span class="rank-sub">1–1.5 days</span></div>
+                <div class="rank-item"><span class="rank-num warning">4</span><span class="rank-label">iPhone 15 Pro</span><span class="rank-sub">~1 day</span></div>
+                <div class="rank-item"><span class="rank-num warning">5</span><span class="rank-label">iPhone 13</span><span class="rank-sub">~1 day</span></div>
+                <div class="rank-item"><span class="rank-num error">6</span><span class="rank-label">Pixel 7 Pro</span><span class="rank-sub">~1 day</span></div>
+                <div class="rank-item red"><span class="rank-num error">7</span><span class="rank-label">Pixel 6 Pro</span><span class="rank-sub">~1 day (worst efficiency)</span></div>
+            </div>
+            <div class="key-finding"><strong>Apple's C1 Modem Is A Game Changer</strong><p>The iPhone 16e matches the Pixel 10 Pro despite a 60Hz display and smaller form factor — largely due to Apple's in-house C1 modem. The biggest reason the 16e punches above its price point.</p></div>
+            <div class="key-finding"><strong>iPhone to Pixel Migration Guide</strong><p>Pixel 6 Pro = battery downgrade. Pixel 7 Pro = familiar. Pixel 8 Pro = meaningful upgrade. Pixel 9 Pro, 10 Pro, or iPhone 16e = major endurance jump with charge remaining at bedtime.</p></div>
+            <div class="conclusion"><h4>Winner: Pixel 10 Pro &amp; iPhone 16e (Tied)</h4><p>Both deliver ~1.5 days of real-world endurance through fundamentally different approaches. The real story: chip efficiency has improved dramatically across both ecosystems over 4–5 generations — raw battery capacity is increasingly irrelevant.</p></div>
+        </div>
+    </article>
+
+    <!-- EXP 6 -->
+    <article class="experiment" id="exp6" aria-labelledby="exp6-title">
+        <div class="experiment-header">
+            <h2 id="exp6-title">Experiment 6: AASP Repair Test — iFix</h2>
+            <span class="experiment-tag">iPhone 16 Pro Max</span>
+            <span class="experiment-tag">Level 9 screen + back glass</span>
+            <span class="experiment-tag">Apple Authorized Service Provider</span>
+            <span class="experiment-tag">Contributor: MTA</span>
+        </div>
+        <div class="experiment-content">
+            <p>Testing the Apple Authorized Service Provider (AASP) repair channel — the missing fourth tier from Experiment 2. Data contributed by colleague MTA with permission. Device differs from Experiment 2 (iPhone 16 Pro Max vs iPhone 15), so direct cost comparisons should account for model differences. Repair performed at iFix, an Apple Authorized Service Provider.</p>
+            <p style="background:var(--color-bg-surface-elevated);border-left:3px solid var(--color-warning);padding:var(--spacing-sm) var(--spacing-md);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--spacing-lg);"><strong style="color:var(--color-warning);">Note:</strong> This entry uses data contributed by MTA (used with permission). The device tested is an iPhone 16 Pro Max, not an iPhone 15 as used in Experiment 2. Repair costs reflect the newer model's part pricing.</p>
+            <h3 class="section-h3">Repair Results</h3>
+            <div class="card mb-lg">
+                <div class="metric"><span class="metric-label">Device</span><span class="metric-value">iPhone 16 Pro Max</span></div>
+                <div class="metric"><span class="metric-label">Damage</span><span class="metric-value">Level 9 — Screen + Back Glass</span></div>
+                <div class="metric"><span class="metric-label">Repair Channel</span><span class="metric-value">iFix (Apple Authorized Service Provider)</span></div>
+                <div class="metric"><span class="metric-label">Total Cost</span><span class="metric-value warning">$599</span></div>
+                <div class="metric"><span class="metric-label">Repair Quality</span><span class="metric-value success">Identical to Official Apple</span></div>
+                <div class="metric"><span class="metric-label">Warranty Extension</span><span class="metric-value success">Yes — same as Official Apple</span></div>
+                <div class="metric"><span class="metric-label">Defects Found</span><span class="metric-value success">None</span></div>
+                <div class="metric"><span class="metric-label">Quality Control</span><span class="metric-value success">Same standard as Official Apple</span></div>
+            </div>
+            <h3 class="section-h3">How AASP Compares To Other Repair Channels</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Repair channel comparison across all four tiers tested</caption>
+                    <thead><tr><th scope="col">Channel</th><th scope="col" class="center">Cost</th><th scope="col" class="center">Quality</th><th scope="col" class="center">Warranty</th><th scope="col" class="center">Waterproofing</th><th scope="col" class="center">Parts Auth</th></tr></thead>
+                    <tbody>
+                        <tr class="highlight"><td class="primary">Official Apple</td><td class="center">$399 <span class="chip">(iPhone 15)</span></td><td class="center badge-success">Pristine</td><td class="center badge-success">Yes</td><td class="center badge-success">Yes</td><td class="center badge-success">Yes</td></tr>
+                        <tr class="highlight"><td class="primary">AASP — iFix <span class="chip">(MTA)</span></td><td class="center">$599 <span class="chip">(iPhone 16 Pro Max)</span></td><td class="center badge-success">Pristine</td><td class="center badge-success">Yes</td><td class="center badge-success">Yes</td><td class="center badge-success">Yes</td></tr>
+                        <tr><td class="primary">Third-Party (Genuine Parts)</td><td class="center badge-error">$399+</td><td class="center badge-warning">Unverified</td><td class="center badge-error">No</td><td class="center badge-error">No</td><td class="center badge-error">No</td></tr>
+                        <tr><td class="primary">Cheap Unauthorized</td><td class="center badge-success">$220</td><td class="center badge-warning">Functional</td><td class="center badge-error">No</td><td class="center badge-error">No</td><td class="center badge-error">No</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 class="section-h3">Contributor Perspective — MTA on the Authorized Repair Industry</h3>
+            <div style="background:var(--color-bg-card);border-radius:var(--radius-md);padding:var(--spacing-md);margin-bottom:var(--spacing-lg);border-left:3px solid var(--color-info);">
+                <p style="color:var(--color-text-muted);font-size:0.8rem;margin-bottom:var(--spacing-md);">The following reflects MTA's personal views on the authorized repair industry, shared alongside his repair data.</p>
+                <div class="ranking-row warning mb-sm"><div class="rank-content"><strong>"Authorized" Often Means "Outsourced"</strong><p>MTA argues that 'authorized' repair is frequently just 'branded' repair — devices passed through subcontractors, reducing accountability at each step despite the official label.</p></div></div>
+                <div class="ranking-row error mb-sm"><div class="rank-content"><strong>Working Conditions Inside AASP Contractors</strong><p>Citing a Business Insider report on CSAT Solutions (Apple contractor, Houston): reported broken A/C, inadequate facilities, wages below minimum via piecework, 13-hour workdays, phone bans, and speed-over-quality quotas.</p></div></div>
+                <div class="ranking-row warning mb-sm"><div class="rank-content"><strong>Intentional Design Makes Repair Harder</strong><p>Apple products are engineered to be difficult to open, requiring specialized tools that can damage devices if misused and cause physical strain on technicians over time.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>Independent Shops Often Do More</strong><p>Independent shops frequently perform board-level repairs that authorized centers deem impossible. MTA argues the "trust authorized, avoid independents" narrative is driven by brand prestige rather than quality reality.</p></div></div>
+            </div>
+            <div class="key-finding"><strong>AASP Delivers Official Apple Quality — At A Slight Premium</strong><p>MTA's iFix repair returned identical quality to Official Apple — same warranty extension, same quality control, zero defects. As a repair channel, AASP is a legitimate alternative to Apple's own stores.</p></div>
+            <div class="key-finding"><strong>The Gap Between Brand And Reality</strong><p>MTA's data confirms AASP quality matches Apple's — but his broader commentary raises valid questions about what "authorized" actually means at scale. The repair outcome was excellent. The systemic practices behind that outcome are a separate conversation worth having.</p></div>
+            <div class="conclusion"><h4>Verdict: AASP Is A Legitimate Apple Alternative</h4><p>When Official Apple isn't accessible, an AASP like iFix delivers the same repair quality, warranty extension, parts authentication, and waterproofing preservation — with potentially faster scheduling. MTA's critique of the industry is well-founded and worth consumer awareness, but it doesn't diminish the quality of the actual repair outcome documented here.</p></div>
+        </div>
+    </article>
+
+    <!-- EXP 7 -->
+    <article class="experiment" id="exp7" aria-labelledby="exp7-title">
+        <div class="experiment-header">
+            <h2 id="exp7-title">Experiment 7: Google Pixel Pro Generation Comparison</h2>
+            <span class="experiment-tag">Pixel 6 Pro → 10 Pro</span>
+            <span class="experiment-tag">5 Generations</span>
+            <span class="experiment-tag">Chip · Camera · Performance</span>
+            <span class="experiment-tag">All devices at 100% battery health</span>
+        </div>
+        <div class="experiment-content">
+            <p>A comprehensive generational comparison of Google's Pixel Pro lineup from the 6 Pro through the 10 Pro — tracking chip evolution, camera hardware, software intelligence, and real-world performance across five Tensor generations. All devices tested from the same controlled storage environment at 100% battery health.</p>
+
+            <h3 class="section-h3">Chipset Evolution — Tensor G1 to G5</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Tensor chip architecture comparison across five generations</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Feature</th>
+                            <th scope="col" class="center">Pixel 6 Pro</th>
+                            <th scope="col" class="center">Pixel 7 Pro</th>
+                            <th scope="col" class="center">Pixel 8 Pro</th>
+                            <th scope="col" class="center">Pixel 9 Pro</th>
+                            <th scope="col" class="center">Pixel 10 Pro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="primary">Chipset</th>
+                            <td class="center">Tensor G1</td><td class="center">Tensor G2</td><td class="center">Tensor G3</td><td class="center">Tensor G4</td>
+                            <td class="center badge-success">Tensor G5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="primary">Fab Process</th>
+                            <td class="center">5nm <span class="chip">(Samsung)</span></td><td class="center">5nm <span class="chip">(Samsung)</span></td><td class="center">4nm <span class="chip">(Samsung)</span></td><td class="center">4nm <span class="chip">(Samsung)</span></td>
+                            <td class="center badge-success">3nm <span class="chip">(TSMC)</span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="primary">CPU Focus</th>
+                            <td class="center">Efficiency / AI</td><td class="center">Refinement</td><td class="center">AI &amp; Multicore</td><td class="center">Optimized AI</td><td class="center">Peak Performance</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="primary">GPU</th>
+                            <td class="center">Mali-G78</td><td class="center">Mali-G710</td><td class="center">Immortalis-G715</td><td class="center">Mali-G715</td>
+                            <td class="center badge-success">PowerVR DXT</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="primary">Thermal Management</th>
+                            <td class="center badge-error">Poor</td><td class="center badge-warning">Improved</td><td class="center badge-warning">Moderate</td><td class="center badge-warning">Good</td>
+                            <td class="center badge-success">Excellent</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="primary">UI Fluidity</th>
+                            <td class="center badge-error">Inconsistent</td><td class="center badge-warning">Better</td><td class="center badge-warning">Fluid</td><td class="center badge-success">Very Fluid</td>
+                            <td class="center badge-success">Excellent</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-h3">Three Generational Eras</h3>
+            <div class="three-column">
+                <div class="card" style="border-top:3px solid var(--color-error);">
+                    <h3 style="color:#fff;margin-bottom:var(--spacing-sm);">The Foundation</h3>
+                    <p style="color:var(--color-info);font-size:0.85rem;font-weight:600;margin-bottom:var(--spacing-sm);">Pixel 6 Pro &amp; 7 Pro — Tensor G1/G2</p>
+                    <p style="color:var(--color-text-secondary);font-size:0.9rem;">Introduced Google's custom silicon era. Revolutionary for AI features like Magic Eraser but struggled with thermal management and power efficiency. The 7 Pro refined the architecture — improving modem stability and heat management.</p>
+                </div>
+                <div class="card" style="border-top:3px solid var(--color-warning);">
+                    <h3 style="color:#fff;margin-bottom:var(--spacing-sm);">The AI Pivot</h3>
+                    <p style="color:var(--color-info);font-size:0.85rem;font-weight:600;margin-bottom:var(--spacing-sm);">Pixel 8 Pro &amp; 9 Pro — Tensor G3/G4</p>
+                    <p style="color:var(--color-text-secondary);font-size:0.9rem;">Focus shifted toward on-device generative AI. The 9 Pro optimized this with smoother multitasking and better power distribution. Notably more fluid in day-to-day apps. Thermal issues improved but not fully resolved.</p>
+                </div>
+                <div class="card" style="border-top:3px solid var(--color-success);">
+                    <h3 style="color:#fff;margin-bottom:var(--spacing-sm);">The Paradigm Shift</h3>
+                    <p style="color:var(--color-info);font-size:0.85rem;font-weight:600;margin-bottom:var(--spacing-sm);">Pixel 10 Pro — Tensor G5 (TSMC 3nm)</p>
+                    <p style="color:var(--color-text-secondary);font-size:0.9rem;">The most significant technical departure in Pixel history. Switching from Samsung to TSMC fabrication finally resolved thermal bottlenecks present in all four previous generations. Better battery longevity and no throttling during extended recording.</p>
+                </div>
+            </div>
+
+            <h3 class="section-h3">Camera Hardware &amp; Software Evolution</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Camera system evolution across Pixel Pro generations</caption>
+                    <thead><tr><th scope="col">Generation</th><th scope="col">Key Camera Hardware</th><th scope="col">Primary Software Shift</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row" class="primary">Pixel 6 Pro</th><td>50MP Main / 48MP Tele <span class="chip">(4x)</span></td><td>Tensor G1 debut — Magic Eraser &amp; Real Tone introduced</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 7 Pro</th><td>50MP Main / 48MP Tele <span class="chip">(5x)</span></td><td>Macro Focus — improved low-light HDR processing</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 8 Pro</th><td>50MP Main / 48MP Tele <span class="chip">(5x)</span></td><td>Pro Controls — Video Boost — generative AI editing (Magic Editor)</td></tr>
+                        <tr><th scope="row" class="primary">Pixel 9 Pro</th><td>50MP Main / 48MP Tele <span class="chip">(5x)</span></td><td>Enhanced low-light detail — better color rendering</td></tr>
+                        <tr class="highlight"><th scope="row" class="primary" style="font-weight:600;">Pixel 10 Pro</th><td style="font-weight:600;">50MP Main / 48MP Tele <span class="chip">(5x)</span></td><td class="badge-success">Pro Res Zoom up to 100x — cloud-boosted 8K output — TSMC-fabbed AI processing</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-h3">Three Camera Evolution Pillars</h3>
+            <div style="display:grid;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+                <div class="ranking-row success"><div class="rank-content"><strong>1. From Computational to Generative</strong><p>The 6 Pro and 7 Pro relied on HDR+ stacking to compensate for smaller sensors. With the G3, G4, and G5 the shift moved to generative AI — features like Magic Editor and Pro Res Zoom reconstruct details not physically present in the sensor data, enabling usable 100x zoom on the 10 Pro.</p></div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>2. Hardware Refinements — Zoom &amp; Video</strong><p>The 6 Pro started with a 4x periscope lens. The 7 Pro moved to 5x optical — the gold standard maintained through the 10 Pro. Video improved significantly from the 8 Pro's Video Boost onward, maturing into professional-grade footage by the 10 Pro.</p></div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>3. TSMC Resolves Sensor Bottlenecks</strong><p>The 10 Pro is the first Pro model to escape Samsung fabrication's thermal constraints. Previous models (6–9) throttled during extended 4K recording or heavy HDR processing. The 10 Pro's improved efficiency means longer shooting sessions without dimming or camera shutdowns.</p></div></div>
+            </div>
+
+            <h3 class="section-h3">Real-World Daily Performance</h3>
+            <div class="card mb-lg">
+                <div class="metric"><span class="metric-label">Daily Tasks (all generations)</span><span class="metric-value">Social media, browsing, photography — all handle with ease</span></div>
+                <div class="metric"><span class="metric-label">UI Responsiveness</span><span class="metric-value success">9 Pro &amp; 10 Pro noticeably more responsive</span></div>
+                <div class="metric"><span class="metric-label">Biggest Day-to-Day Upgrade</span><span class="metric-value success">10 Pro — TSMC switch runs cooler, maintains performance all day</span></div>
+                <div class="metric"><span class="metric-label">Thermal Throttling Risk</span><span class="metric-value error">G1–G4: Present under heavy use / G5: Resolved</span></div>
+                <div class="metric"><span class="metric-label">Best Value Generation</span><span class="metric-value warning">Pixel 8 Pro — generative AI + reasonable efficiency</span></div>
+            </div>
+
+            <h3 class="section-h3">Upgrade Path Guide</h3>
+            <div style="display:grid;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+                <div class="ranking-row success"><div class="rank-content"><strong>From Pixel 6 Pro → 10 Pro: Night and Day</strong><p>Three specific leaps: zoom quality (4x → 5x + 100x AI), reliability (no thermal shutdowns), and video (casual → content creation). The most dramatic upgrade in the entire lineup.</p></div><div class="rating-value success" style="font-size:1rem;min-width:70px;">Strong ✓</div></div>
+                <div class="ranking-row success"><div class="rank-content"><strong>From Pixel 7 Pro → 10 Pro: Significant</strong><p>Gains thermal reliability, generative AI camera features, Video Boost maturity, and TSMC efficiency. Zoom hardware is the same (5x) but processing is dramatically better.</p></div><div class="rating-value success" style="font-size:1rem;min-width:70px;">Worth it ✓</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>From Pixel 8 Pro → 10 Pro: Incremental</strong><p>The 8 Pro already has generative AI and Video Boost. The 10 Pro adds TSMC efficiency, Pro Res Zoom, and better thermals. Meaningful but not urgent.</p></div><div class="rating-value warning" style="font-size:1rem;min-width:70px;">Optional</div></div>
+                <div class="ranking-row warning"><div class="rank-content"><strong>From Pixel 9 Pro → 10 Pro: Marginal</strong><p>The 9 Pro is already excellent. Main gains are TSMC efficiency and Pro Res Zoom. If thermals or battery aren't bothering you, staying on the 9 Pro is a reasonable choice.</p></div><div class="rating-value warning" style="font-size:1rem;min-width:70px;">Skip</div></div>
+            </div>
+
+            <div class="key-finding"><strong>The TSMC Switch Is The Biggest Pixel Upgrade In Five Years</strong><p>Every Tensor chip from G1 through G4 was manufactured on Samsung processes. The thermal throttling, battery drain under load, and camera shutdowns were all symptoms of that fabrication constraint. The Pixel 10 Pro's move to TSMC 3nm resolves all of them in one generation.</p></div>
+            <div class="key-finding"><strong>Camera Hardware Is Nearly Identical Since The 7 Pro</strong><p>The 50MP main and 48MP 5x telephoto hardware has remained essentially unchanged from the 7 Pro through the 10 Pro. What changed dramatically is the processing pipeline behind it. Google competes on software intelligence, not sensor size.</p></div>
+            <div class="key-finding"><strong>Generative AI Made Zoom Usable</strong><p>The 6 Pro's 4x physical zoom was the ceiling of what hardware could do. The 10 Pro's Pro Res Zoom reaches 100x using generative AI reconstruction — producing surprisingly usable distant shots that no physical lens on a smartphone could match.</p></div>
+
+            <div class="conclusion"><h4>Verdict: Buy The 10 Pro, Keep The 8 Pro, Skip The Rest</h4><p>The Pixel 10 Pro is the first generation where Google's hardware fully delivers on its software ambitions — TSMC fabrication eliminated the thermal ceiling that held back four generations of otherwise capable devices. For anyone upgrading from a 6 Pro or 7 Pro, the 10 Pro is a compelling generational leap. Those on an 8 Pro have a solid device worth keeping. The 6 Pro and 7 Pro remain historically important as the foundation of Google's custom silicon era, but show their age in thermal performance and camera processing compared to the current standard.</p></div>
+        </div>
+    </article>
+
+    <!-- KEY INSIGHTS -->
+    <article class="experiment" id="insights" aria-labelledby="insights-title">
+        <div class="experiment-header">
+            <h2 id="insights-title">Key Insights &amp; Recommendations</h2>
+        </div>
+        <div class="experiment-content">
+            <div class="insight-grid">
+                <div class="insight-card success"><h4>Prevention Over Repair</h4><p>A $20–50 screen protector and case prevents $300–600 repairs. The math is undeniable in hindsight. Protect the device first — every time.</p></div>
+                <div class="insight-card info"><h4>Apple Repair Is Premium But Justified</h4><p>$399–600 is expensive, but delivers speed (2–8 days), pristine quality, waterproofing, warranty protection, and authentic parts. No surprises, no restarts.</p></div>
+                <div class="insight-card error"><h4>Third-Party Repairs Are A Trap</h4><p>More expensive than Apple with no software authentication, no quality checks, lost waterproofing, voided warranty, and destroyed resale value. Objectively the worst option.</p></div>
+                <div class="insight-card warning"><h4>Cheap Repairs Are Temporary</h4><p>$220 saves money upfront but loses waterproofing and installs inferior components. Only acceptable if longevity and water resistance genuinely don't matter to you.</p></div>
+                <div class="insight-card info"><h4>Process Matters As Much As Outcome</h4><p>Apple and Samsung both returned pristine screens — but Samsung's admin failure turned a cost advantage into a month-long ordeal. Execution determines the real winner.</p></div>
+                <div class="insight-card warning"><h4>Brand Recognition ≠ Support Quality</h4><p>Apple and Samsung failed the customer service test. Huawei and Xiaomi topped it. Your assumptions about which companies are "good at support" may be wrong.</p></div>
+                <div class="insight-card success"><h4>Documentation Is Consumer Power</h4><p>Meticulous documentation turned a social media post into a $1,020 settlement from Samsung. Photos, receipts, and paper trails are leverage — especially when corporations go silent.</p></div>
+                <div class="insight-card error"><h4>Chip Efficiency Beats Battery Size</h4><p>Pixel 9 Pro (4700 mAh) outperforms Pixel 6 Pro (5003 mAh) significantly. mAh numbers are marketing — real-world endurance depends on what the chip does with that energy.</p></div>
+                <div class="insight-card success"><h4>Fabrication Process Matters More Than Specs</h4><p>Four generations of Pixel Pros were bottlenecked by Samsung fab thermal constraints — not processor design. The TSMC switch on the 10 Pro resolved years of throttling in one generation. Who makes the chip matters as much as what the chip can do.</p></div>
+                <div class="insight-card info"><h4>Google's Edge Is Software, Not Hardware</h4><p>The 50MP main + 48MP 5x telephoto camera hardware has barely changed since the 7 Pro. What improved dramatically is the AI processing behind it. Google competes on intelligence, not sensor size — and the 10 Pro's Pro Res Zoom proves that strategy works.</p></div>
+            </div>
+            <div class="recommendation-box">
+                <h3>Bottom Line — Repair Decisions</h3>
+                <ul>
+                    <li><span class="check">✓</span><span>First choice — speed, quality, and peace of mind: <strong style="color:#fff;">Official Apple</strong></span></li>
+                    <li><span class="check">✓</span><span>Apple unavailable or faster scheduling needed: <strong style="color:#fff;">Apple Authorized Service Provider (AASP)</strong> — identical quality, same warranty, slight cost premium</span></li>
+                    <li><span class="cross">✗</span><span>Third-party shops with genuine parts: <strong style="color:#fff;">Never</strong> — costs more than Apple, delivers less, no authentication</span></li>
+                    <li><span class="warning-icon">⚠️</span><span>Cheap unauthorized repair: <strong style="color:#fff;">Only</strong> if waterproofing and longevity genuinely don't matter</span></li>
+                    <li><span class="check">✓</span><span>Best long-term move: <strong style="color:#fff;">Protect your device from day one</strong> — a $20–50 case and screen protector beats a $400–600 repair every time</span></li>
+                </ul>
+            </div>
+        </div>
+    </article>
+
+    <!-- FODDER ARCHIVE -->
+    <article class="experiment" id="fodder" aria-labelledby="fodder-title">
+        <div class="experiment-header">
+            <h2 id="fodder-title">🗂️ Fodder Archive</h2>
+            <span class="experiment-tag">Side Experiments</span>
+            <span class="experiment-tag">Informal Observations</span>
+            <span class="experiment-tag">Non-Tech &amp; Fun</span>
+        </div>
+        <div class="experiment-content">
+            <p>A space for lighter experiments, informal observations, and content that doesn't fit the structured format of the main documentation. Less rigorous, more curious — everything from AI comparisons to random discoveries worth noting.</p>
+
+            <!-- FODDER ENTRY 1 — PLACEHOLDER -->
+            <div class="card" style="border-left: 3px solid var(--color-warning); margin-bottom: var(--spacing-lg);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-sm);">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1.1rem; margin-bottom: 0.3rem;">FA-01 — Which AI Builds Our Website Best?</strong>
+                        <span style="color: var(--color-text-muted); font-size: 0.8rem;">Coming soon · AI Comparison</span>
+                    </div>
+                    <span style="background: var(--color-warning); color: #000; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);">PENDING</span>
+                </div>
+                <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin: 0;">Multiple AI assistants given the same prompt to build a consumer tech documentation website from scratch — no guidance, no examples, no head start. Results will be rated on code quality, design, maintainability, and originality. Inspired by ChatGPT's attempt to rebuild this site and calling it "Version 6."</p>
+            </div>
+
+            <div style="text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); font-size: 0.9rem; border: 1px dashed var(--color-border); border-radius: var(--radius-md);">
+                More entries coming as experiments are completed. This archive grows alongside the main documentation.
+            </div>
+        </div>
+    </article>
+
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
+
+<footer>
+    <p>Consumer Tech Documentation — Real-world experiments and findings | Last updated June 2026</p>
+</footer>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ===== SCROLL TO TOP =====
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== COLLAPSIBLE NAV =====
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        const toggleIcon = document.getElementById('toggleIcon');
+        let isNavCollapsed = false;
+
+        function checkNavToggle() {
+            navToggle.style.display = 'flex';
+        }
+        checkNavToggle();
+
+        navToggle.addEventListener('click', () => {
+            isNavCollapsed = !isNavCollapsed;
+            navTabs.classList.toggle('collapsed', isNavCollapsed);
+            toggleIcon.textContent = isNavCollapsed ? '▼' : '▲';
+            toggleIcon.classList.toggle('open', !isNavCollapsed);
+            navToggle.setAttribute('aria-expanded', String(!isNavCollapsed));
+        });
+
+        document.querySelectorAll('.nav-tab').forEach(link => {
+            link.addEventListener('click', () => {
+                if (isNavCollapsed) {
+                    isNavCollapsed = false;
+                    navTabs.classList.remove('collapsed');
+                    toggleIcon.textContent = '▲';
+                    toggleIcon.classList.add('open');
+                    navToggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+    })();
+</script>
+
+
+
+</body></html>
