@@ -1,0 +1,15 @@
+{
+  "name": "consumer-tech-documentation",
+  "version": "1.0.0",
+  "description": "Consumer Tech Documentation - Real-world experiments and case studies",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Build complete'",
+    "lint": "node --check server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Consumer Tech Documentation",
+  "description": "Real-world experiments, case studies, and documented findings across repair, service, software, and hardware",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

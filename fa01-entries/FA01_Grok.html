@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FA-01 Submission: Grok (Score: 9.0/10)</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --success: #238636;
+        }
+        [data-theme="light"] {
+            --bg: #f6f8fa;
+            --surface: #ffffff;
+            --border: #d0d7de;
+            --text: #24292f;
+            --accent: #0969da;
+            --success: #1a7f37;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+            transition: background 0.2s, color 0.2s;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .btn { padding: 0.4rem 0.8rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; cursor: pointer; }
+        .badge { background: #238636; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+        .stat-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; text-align: center; }
+        .stat-val { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+        .nav-links { display: flex; gap: 1rem; margin-top: 1rem; }
+        .nav-link { color: var(--accent); text-decoration: none; cursor: pointer; font-weight: 500; }
+        .view { display: none; margin-top: 1rem; }
+        .view.active { display: block; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <h2>🥇 Grok Submission (FA-01) <span class="badge">9.0 / 10 · 1st Place</span></h2>
+            <p style="margin: 0; opacity: 0.8;">SPA architecture with client routing, theme toggle, and hero stats</p>
+        </div>
+        <div>
+            <button class="btn" id="themeToggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+            <a href="../fodder-archive.html" class="btn" style="text-decoration:none; margin-left: 0.5rem;">← Back</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Architecture & Metrics Dashboard</h3>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-val">7</div>
+                <div>Experiments</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">100%</div>
+                <div>Working SPA Routing</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">Clean</div>
+                <div>Persistent State</div>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link" onclick="showTab('overview')">Overview</a>
+            <a class="nav-link" onclick="showTab('exp1')">Exp 1: Apple vs Samsung</a>
+            <a class="nav-link" onclick="showTab('exp2')">Exp 2: Repair Tiers</a>
+        </div>
+    </div>
+
+    <div id="overview" class="view active card">
+        <h4>Submission Overview</h4>
+        <p>Grok's entry was the only submission to build a genuine single-page application structure with JavaScript-driven view management, persisted state across mode toggles, and responsive UI components mirroring the consumer tech documentation structure.</p>
+    </div>
+
+    <div id="exp1" class="view card">
+        <h4>Experiment 1: Apple vs Samsung Screen Repair</h4>
+        <p>Detailed breakdown comparing serialization locks, calibration requirements, parts pairing, and third-party repairability outcomes.</p>
+    </div>
+
+    <div id="exp2" class="view card">
+        <h4>Experiment 2: Repair Channel Tiers</h4>
+        <p>Testing authorization turnaround times and pricing tiers between First-Party OEM, AASPs, Independent Repair Providers, and independent repair shops.</p>
+    </div>
+</div>
+
+<script>
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+    }
+    function showTab(tabId) {
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+    }
+</script>
+</body>
+</html>
