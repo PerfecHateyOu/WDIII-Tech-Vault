@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0069) -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fodder Archive · Consumer Tech Documentation</title>
     <style>
@@ -23,6 +23,18 @@
             --color-warning: #fbbf24;
             --color-info: #60a5fa;
             --color-info-bg: #1a2a3f;
+            --color-ai: #c4b5fd;
+            --color-ai-bg: #2a1f3f;
+            --color-ecosystem: #fbbf24;
+            --color-ecosystem-bg: #3f2f0f;
+            --color-pending: #f0a04b;
+            --color-pending-bg: #3a2a14;
+            --color-progress: #60a5fa;
+            --color-progress-bg: #1a2a3f;
+            --font-h1: clamp(1.6rem, 4vw + 0.5rem, 2.5rem);
+            --font-h2: clamp(1.25rem, 2.5vw + 0.4rem, 1.8rem);
+            --font-h3: clamp(1.05rem, 1.2vw + 0.5rem, 1.2rem);
+            --font-body: clamp(0.92rem, 0.3vw + 0.82rem, 1rem);
             --spacing-xs: 0.4rem;
             --spacing-sm: 0.8rem;
             --spacing-md: 1.5rem;
@@ -42,6 +54,7 @@
             background: var(--color-bg-base);
             color: var(--color-text-primary);
             line-height: 1.6;
+            font-size: var(--font-body);
         }
 
         /* ===== HEADER ===== */
@@ -51,7 +64,7 @@
             padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
             text-align: center;
         }
-        header h1 { font-size: 2.5rem; color: #fff; font-weight: 700; margin-bottom: var(--spacing-xs); }
+        header h1 { font-size: var(--font-h1); color: #fff; font-weight: 700; margin-bottom: var(--spacing-xs); }
         header p { color: var(--color-text-secondary); font-size: 1.1rem; margin-bottom: var(--spacing-lg); }
 
         /* ===== NAVIGATION ===== */
@@ -123,7 +136,7 @@
         .nav-tab .tab-label { font-weight: 600; }
         .nav-tab .tab-sub { color: var(--color-text-muted); font-size: 0.75rem; }
 
-        /* ===== ACTIVE NAV STATE (scrollspy) ===== */
+        /* ===== ACTIVE NAV STATE ===== */
         .nav-tab.active {
             border-color: var(--color-info);
             background: var(--color-info-bg);
@@ -132,11 +145,8 @@
         .nav-tab.active .tab-sub { color: var(--color-info); opacity: 0.75; }
 
         /* ===== CATEGORY ACCENTS ===== */
-        .experiment[data-category="repair"] .experiment-header { border-bottom-color: var(--color-info); }
-        .experiment[data-category="support"] .experiment-header { border-bottom-color: var(--color-warning); }
-        .experiment[data-category="software"] .experiment-header { border-bottom-color: #a78bfa; }
-        .experiment[data-category="legal"] .experiment-header { border-bottom-color: var(--color-error); }
-        .experiment[data-category="hardware"] .experiment-header { border-bottom-color: var(--color-success); }
+        .experiment[data-category="ai"] .experiment-header { border-bottom-color: var(--color-ai); }
+        .experiment[data-category="ecosystem"] .experiment-header { border-bottom-color: var(--color-ecosystem); }
 
         .category-label {
             display: inline-block;
@@ -148,13 +158,10 @@
             border-radius: var(--radius-sm);
             margin-bottom: var(--spacing-xs);
         }
-        .experiment[data-category="repair"] .category-label { background: var(--color-info-bg); color: var(--color-info); }
-        .experiment[data-category="support"] .category-label { background: #3f2f0f; color: var(--color-warning); }
-        .experiment[data-category="software"] .category-label { background: #2a1f3f; color: #a78bfa; }
-        .experiment[data-category="legal"] .category-label { background: var(--color-error-bg); color: var(--color-error); }
-        .experiment[data-category="hardware"] .category-label { background: var(--color-success-bg); color: var(--color-success); }
+        .experiment[data-category="ai"] .category-label { background: var(--color-ai-bg); color: var(--color-ai); }
+        .experiment[data-category="ecosystem"] .category-label { background: var(--color-ecosystem-bg); color: var(--color-ecosystem); }
 
-        /* ===== SAMPLE-SIZE / SCOPE NOTE ===== */
+        /* ===== SCOPE NOTE ===== */
         .scope-note {
             display: inline-flex;
             align-items: center;
@@ -167,6 +174,68 @@
             border-radius: 20px;
             margin-top: var(--spacing-sm);
         }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: var(--spacing-xs) var(--spacing-lg);
+            background: var(--color-bg-surface);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .theme-toggle {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .theme-toggle:hover { border-color: var(--color-info); color: var(--color-info); }
+        .theme-toggle:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+
+        /* Light theme */
+        body.light-theme {
+            --color-bg-base: #f5f5f5;
+            --color-bg-surface: #e8e8e8;
+            --color-bg-surface-elevated: #d5d5d5;
+            --color-bg-card: #ffffff;
+            --color-text-primary: #222;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-border: #ccc;
+            --color-border-subtle: #bbb;
+            --color-info-bg: #e3f0ff;
+            --color-success-bg: #e8f5e9;
+            --color-error-bg: #ffebee;
+            --color-ai-bg: #ede9fe;
+            --color-ecosystem-bg: #fffbeb;
+        }
+        body.light-theme .nav-tab { background: #fff; color: #555; }
+        body.light-theme .nav-tab.active { background: var(--color-info-bg); color: var(--color-info); }
+        body.light-theme .experiment { background: #fff; border-color: #ddd; }
+        body.light-theme .experiment-header { background: #f0f0f0; }
+        body.light-theme .experiment-header h2 { color: #222; }
+        body.light-theme .card, body.light-theme .ranking-row, body.light-theme .repair-option,
+        body.light-theme .comparison-card, body.light-theme .insight-card, body.light-theme .rank-item { background: #fafafa; }
+        body.light-theme .key-finding { background: #f0f7ff; }
+        body.light-theme .ranking-row .rank-content strong { color: #222; }
+        body.light-theme .rank-label { color: #222; }
+        body.light-theme .recommendation-box { background: #f5f5f5; }
+        body.light-theme .recommendation-box h3 { color: #222; }
+        body.light-theme .recommendation-box li { color: #555; }
+        body.light-theme .data-table thead tr { background: #e0e0e0; }
+        body.light-theme .data-table th { color: #222; }
+        body.light-theme .data-table td { color: #444; }
+        body.light-theme .section-h3 { color: #222; }
+        body.light-theme .scroll-top { background: var(--color-info); color: #fff; }
+        body.light-theme .scope-note { background: #fafafa; }
 
         /* ===== LAYOUT ===== */
         .container { max-width: 1000px; margin: 0 auto; padding: var(--spacing-lg); }
@@ -184,7 +253,7 @@
         }
         .experiment:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
         .experiment-header { background: var(--color-bg-surface-elevated); padding: var(--spacing-md); border-bottom: 2px solid var(--color-border-subtle); }
-        .experiment-header h2 { font-size: 1.8rem; color: #fff; margin-bottom: var(--spacing-sm); }
+        .experiment-header h2 { font-size: var(--font-h2); color: #fff; margin-bottom: var(--spacing-sm); }
         .experiment-content { padding: var(--spacing-lg); }
         .experiment-content > p { color: var(--color-text-secondary); margin-bottom: var(--spacing-lg); }
         .experiment-tag { display: inline-block; background: var(--color-border-subtle); color: var(--color-text-secondary); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-size: 0.85rem; margin-top: var(--spacing-sm); margin-right: var(--spacing-xs); }
@@ -204,41 +273,6 @@
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
         .three-column { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
         .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
-
-        .comparison-card { padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); transition: transform 0.2s ease; }
-        .comparison-card:hover { transform: translateY(-2px); }
-        .comparison-card:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
-        .comparison-card.winner { border-left-color: var(--color-success); background: var(--color-success-bg); }
-        .comparison-card.loser { border-left-color: var(--color-error); background: var(--color-error-bg); }
-        .comparison-card h3 { margin-bottom: var(--spacing-md); font-size: 1.2rem; color: #fff; }
-
-        /* ===== METRICS ===== */
-        .metric { margin-bottom: var(--spacing-sm); display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-xs) 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .metric:last-child { border-bottom: none; }
-        .metric-label { color: var(--color-text-secondary); font-size: 0.9rem; }
-        .metric-value { font-weight: 600; color: #fff; }
-        .metric-value.success { color: var(--color-success); }
-        .metric-value.error { color: var(--color-error); }
-        .metric-value.warning { color: var(--color-warning); }
-
-        /* ===== REPAIR OPTIONS ===== */
-        .repair-option { padding: var(--spacing-md); border-radius: var(--radius-md); border-top: 3px solid var(--color-border-subtle); background: var(--color-bg-card); transition: transform 0.2s ease; }
-        .repair-option:hover { transform: translateY(-3px); }
-        .repair-option:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
-        .repair-option.apple { border-top-color: var(--color-info); }
-        .repair-option.thirdparty { border-top-color: var(--color-warning); }
-        .repair-option.cheap { border-top-color: var(--color-error); }
-        .repair-option h3 { margin-bottom: var(--spacing-md); font-size: 1.1rem; color: #fff; }
-
-        /* ===== PROS / CONS ===== */
-        .pros { margin-bottom: var(--spacing-md); }
-        .pros-label { color: var(--color-success); font-size: 0.85rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
-        .pros ul, .cons ul { list-style: none; padding-left: 0; }
-        .pros li, .cons li { color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-xs); padding-left: 1.2rem; position: relative; }
-        .pros li:before { content: "✓"; position: absolute; left: 0; color: var(--color-success); font-weight: bold; }
-        .cons { margin-bottom: 0; }
-        .cons-label { color: var(--color-error); font-size: 0.85rem; font-weight: 600; margin-bottom: var(--spacing-sm); }
-        .cons li:before { content: "✗"; position: absolute; left: 0; color: var(--color-error); font-weight: bold; }
 
         /* ===== RANKING ROWS ===== */
         .ranking-row { background: var(--color-bg-card); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-border-subtle); display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); transition: transform 0.2s ease, box-shadow 0.2s ease; }
@@ -343,7 +377,7 @@
         .rank-sub { color: var(--color-text-muted); font-size: 0.85rem; }
 
         /* ===== SECTION HEADER ===== */
-        .section-h3 { color: #fff; margin-bottom: var(--spacing-md); margin-top: var(--spacing-lg); font-size: 1.2rem; }
+        .section-h3 { color: #fff; margin-bottom: var(--spacing-md); margin-top: var(--spacing-lg); font-size: var(--font-h3); }
         .section-h3:first-child { margin-top: 0; }
 
         /* ===== SCROLL TO TOP ===== */
@@ -355,13 +389,259 @@
         /* ===== FOOTER ===== */
         footer { text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); border-top: 1px solid var(--color-border); margin-top: var(--spacing-xl); font-size: 0.9rem; }
 
+        /* ===== BACK LINK ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border-subtle);
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-md);
+        }
+        .back-link:hover { border-color: var(--color-info); color: var(--color-info); background: var(--color-info-bg); }
+
+        /* ===== BREADCRUMB ===== */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-md);
+        }
+        .breadcrumb a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+        .breadcrumb a:hover { color: var(--color-info); background: var(--color-info-bg); }
+        .breadcrumb a:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .breadcrumb .crumb-sep { color: var(--color-text-muted); opacity: 0.6; }
+        .breadcrumb .crumb-current { color: var(--color-text-primary); padding: 0.25rem 0.5rem; }
+
+        /* ===== SEARCH / FILTER ===== */
+        .nav-search-wrapper {
+            padding: 0 var(--spacing-lg) var(--spacing-sm);
+        }
+        .nav-search {
+            position: relative;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .nav-search input {
+            width: 100%;
+            padding: 0.55rem 2.2rem 0.55rem 2.2rem;
+            border-radius: 20px;
+            border: 1px solid var(--color-border-subtle);
+            background: var(--color-bg-card);
+            color: var(--color-text-primary);
+            font-size: 0.88rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .nav-search input::placeholder { color: var(--color-text-muted); }
+        .nav-search input:focus {
+            outline: none;
+            border-color: var(--color-info);
+            box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+        }
+        .nav-search .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            pointer-events: none;
+        }
+        .nav-search .search-clear {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 50%;
+            display: none;
+        }
+        .nav-search .search-clear.visible { display: block; }
+        .nav-search .search-clear:hover { color: var(--color-info); }
+        .nav-search .search-clear:focus-visible { outline: 2px solid var(--color-info); outline-offset: 1px; }
+        .nav-tab.search-hidden { display: none; }
+        .search-no-results {
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            padding: var(--spacing-sm);
+            display: none;
+        }
+        .search-no-results.visible { display: block; }
+        .experiment.search-hidden { display: none; }
+
+        /* ===== TABLE OF CONTENTS ===== */
+        .experiment-toc {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .experiment-toc summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            list-style: none;
+        }
+        .experiment-toc summary::-webkit-details-marker { display: none; }
+        .experiment-toc summary::before { content: '▸'; transition: transform 0.2s ease; color: var(--color-info); }
+        .experiment-toc[open] summary::before { transform: rotate(90deg); }
+        .experiment-toc summary:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 0.6rem;
+            margin-top: var(--spacing-sm);
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid var(--color-border-subtle);
+        }
+        .toc-list a {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: 0.3rem 0.7rem;
+            border-radius: 14px;
+            background: var(--color-bg-surface-elevated);
+            border: 1px solid var(--color-border-subtle);
+            transition: all 0.2s ease;
+        }
+        .toc-list a:hover { color: var(--color-info); border-color: var(--color-info); background: var(--color-info-bg); }
+        .toc-list a:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+
+        /* ===== METADATA CARD ===== */
+        .metadata-card {
+            background: var(--color-bg-surface-elevated);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-sm) var(--spacing-md);
+        }
+        .metadata-card .meta-item { display: flex; flex-direction: column; gap: 0.15rem; }
+        .metadata-card .meta-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+        }
+        .metadata-card .meta-value { color: var(--color-text-primary); font-size: 0.92rem; }
+        .metadata-card .meta-value.error { color: var(--color-error); }
+        .metadata-card .meta-value.success { color: var(--color-success); }
+
+        /* ===== STATUS BADGES ===== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-top: var(--spacing-sm);
+            margin-right: var(--spacing-xs);
+            border: 1px solid transparent;
+        }
+        .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .status-badge.status-done { background: var(--color-success-bg); color: var(--color-success); border-color: var(--color-success); }
+        .status-badge.status-pending, .status-badge.status-queued { background: var(--color-pending-bg); color: var(--color-pending); border-color: var(--color-pending); }
+        .status-badge.status-progress { background: var(--color-progress-bg); color: var(--color-progress); border-color: var(--color-progress); }
+
+        /* ===== CODE BLOCKS ===== */
+        pre.code-block {
+            background: #161616;
+            border: 1px solid var(--color-border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: 0.85rem;
+        }
+        pre.code-block code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        pre.code-block .tok-comment { color: #6a9955; font-style: italic; }
+        pre.code-block .tok-key { color: #60a5fa; }
+        pre.code-block .tok-string { color: #ce9178; }
+        pre.code-block .tok-tag { color: #c4b5fd; }
+        pre.code-block .tok-num { color: #4ade80; }
+        body.light-theme pre.code-block { background: #f5f5f5; border-color: #ddd; }
+        body.light-theme pre.code-block code { color: #222; }
+
+        /* ===== RELATED EXPERIMENTS ===== */
+        .related-experiments {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-border-subtle);
+        }
+        .related-experiments h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-sm);
+        }
+        .related-list { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+        .related-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border-subtle);
+            background: var(--color-bg-card);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .related-link:hover { border-color: var(--color-info); color: var(--color-info); background: var(--color-info-bg); transform: translateY(-1px); }
+        .related-link:focus-visible { outline: 2px solid var(--color-info); outline-offset: 2px; }
+
+        /* ===== REVEAL ANIMATION ===== */
+        .insight-card { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .insight-card.revealed { opacity: 1; transform: translateY(0); }
+        @media (prefers-reduced-motion: reduce) {
+            .insight-card { opacity: 1; transform: none; transition: none; }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .comparison-grid, .three-column, .two-column, .insight-grid, .summary-grid { grid-template-columns: 1fr; }
-            header h1 { font-size: 1.8rem; }
             .container { padding: var(--spacing-md); }
             .ranking-row { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
-            .experiment-header h2 { font-size: 1.4rem; }
             .experiment-content { padding: var(--spacing-md); }
             .rating-value { min-width: auto; align-self: flex-start; }
             .timeline-item { flex-direction: column; gap: var(--spacing-xs); }
@@ -371,7 +651,6 @@
             .nav-tab { justify-content: center; padding: 0.6rem 1rem; }
         }
         @media (max-width: 480px) {
-            header h1 { font-size: 1.4rem; }
             .experiment-tag { font-size: 0.75rem; }
             .nav-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
             .data-table { font-size: 0.82rem; }
@@ -383,6 +662,7 @@
         @media print {
             .nav-wrapper { display: none; }
             .scroll-top { display: none; }
+            .theme-toggle-wrapper { display: none; }
             .experiment { break-inside: avoid; border: 1px solid #444; content-visibility: visible; }
             .experiment:hover { box-shadow: none; }
             body { background: white; color: #222; }
@@ -399,9 +679,6 @@
             .data-table td { color: #444; border-bottom-color: #ddd; }
             .data-table tr.highlight { background: rgba(96,165,250,0.08); }
             .metric-value { color: #222; }
-            .metric-value.success { color: #2e7d32; }
-            .metric-value.error { color: #c62828; }
-            .metric-value.warning { color: #f57f17; }
             .summary-card-success { background: #e8f5e9; }
             .summary-card-failure { background: #ffebee; }
             .rank-item.gold { background: rgba(74,222,128,0.08); }
@@ -410,321 +687,989 @@
             .recommendation-box { background: #f5f5f5; border-color: #ccc; }
             .recommendation-box h3 { color: #222; }
             .recommendation-box li { border-bottom-color: #ddd; color: #444; }
+            .back-link { display: none; }
+            .scope-note { background: #f5f5f5; border-color: #ccc; }
+            .nav-search-wrapper { display: none; }
+            .breadcrumb { display: none; }
+            .experiment-toc { display: none; }
+            .related-experiments { display: none; }
+            .metadata-card { background: #f5f5f5; border-color: #ccc; }
+            .metadata-card .meta-value { color: #222; }
+            .insight-card { opacity: 1 !important; transform: none !important; }
+            pre.code-block { background: #f5f5f5; border-color: #ccc; }
+            pre.code-block code { color: #222; }
         }
     </style>
-<body>
+</head>
+<body class="">
+<noscript><style>.insight-card { opacity: 1 !important; transform: none !important; } .nav-search-wrapper { display: none; }</style></noscript>
 
 <header>
     <h1>🗂️ Fodder Archive</h1>
     <p>Side experiments, informal observations, and content that doesn't fit the structured documentation format — separated out so it doesn't crowd the consumer tech research.</p>
 </header>
 
+<!-- THEME TOGGLE -->
+<div class="theme-toggle-wrapper">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark</span>
+    </button>
+</div>
+
+<!-- NAVIGATION -->
 <div class="nav-wrapper">
-    <a href="/" class="nav-toggle" style="display:flex; text-decoration:none;">
-        <span>&larr; Back to Documentation</span>
-    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span>🗂️ Fodder Archive</span>
+        <span class="toggle-icon" id="toggleIcon">▼</span>
+    </button>
+    <nav class="nav-tabs collapsed" id="navTabs" aria-label="Fodder Archive sections">
+        <a href="#fa01" class="nav-tab active" aria-label="FA-01: Which AI Builds Our Website Best?" data-search="fa-01 which ai builds our website best ai experiment ai comparison deepseek gemini grok chatgpt claude">
+            <span class="tab-icon">🤖</span>
+            <span>
+                <span class="tab-label">FA-01</span><br>
+                <span class="tab-sub">AI Comparison</span>
+            </span>
+        </a>
+        <a href="#fa02" class="nav-tab" aria-label="FA-02: One Month Out of the Apple Ecosystem" data-search="fa-02 one month out of the apple ecosystem ecosystem study ecosystem exit friction log pixel samsung windows">
+            <span class="tab-icon">🚫</span>
+            <span>
+                <span class="tab-label">FA-02</span><br>
+                <span class="tab-sub">Ecosystem Exit</span>
+            </span>
+        </a>
+        <a href="#fa03" class="nav-tab" aria-label="FA-03: Laptop Evolution Comparison" data-search="fa-03 laptop evolution comparison macbook air acer aspire intel core ultra 7 m3 pro hardware performance battery ecosystem durability repair">
+            <span class="tab-icon">💻</span>
+            <span>
+                <span class="tab-label">FA-03</span><br>
+                <span class="tab-sub">Laptop Evolution</span>
+            </span>
+        </a>
+        <a href="Consumer_Tech_Documentation_V5_5_2.html" class="nav-tab" aria-label="Back to Main Documentation">
+            <span class="tab-icon">📄</span>
+            <span>
+                <span class="tab-label">← Main</span><br>
+                <span class="tab-sub">Documentation</span>
+            </span>
+        </a>
+    </nav>
+    <div class="nav-search-wrapper">
+        <div class="nav-search">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="experimentSearch" placeholder="Search experiments by title, category, or tag…" aria-label="Search experiments by title, category, or tag">
+            <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+        </div>
+        <p class="search-no-results" id="searchNoResults">No experiments match your search.</p>
+    </div>
 </div>
 
 <div class="container">
 
-    <article class="experiment" id="fodder" aria-labelledby="fodder-title">
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="Consumer_Tech_Documentation_V5_5_2.html">📄 Main Documentation</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">🗂️ Fodder Archive</span>
+    </nav>
+
+    <!-- ===== FA-01: AI COMPARISON ===== -->
+    <article class="experiment" data-category="ai" id="fa01" aria-labelledby="fa01-title" data-search="fa-01 which ai builds our website best ai experiment ai comparison cold prompt deepseek gemini grok chatgpt claude">
         <div class="experiment-header">
-            <h2 id="fodder-title">🗂️ Fodder Archive</h2>
-            <span class="experiment-tag">Side Experiments</span>
-            <span class="experiment-tag">Informal Observations</span>
-            <span class="experiment-tag">Non-Tech &amp; Fun</span>
+            <span class="category-label">AI Experiment</span>
+            <h2 id="fa01-title">FA-01 — Which AI Builds Our Website Best?</h2>
+            <span class="status-badge status-done">Done</span>
+            <span class="experiment-tag">5 Models Tested</span>
+            <span class="experiment-tag">Cold Prompt Only</span>
+            <br>
+            <span class="scope-note">📋 n=1 per model — anecdotal comparison, not a statistical sample</span>
         </div>
         <div class="experiment-content">
-            <p>A space for lighter experiments, informal observations, and content that doesn't fit the structured format of the main documentation. Less rigorous, more curious — everything from AI comparisons to random discoveries worth noting.</p>
+            <details class="experiment-toc">
+                <summary>On this page</summary>
+                <ul class="toc-list">
+                    <li><a href="#fa01-setup">Experiment Setup</a></li>
+                    <li><a href="#fa01-owner-rankings">Owner Rankings</a></li>
+                    <li><a href="#fa01-claude-assessment">Claude's Assessment</a></li>
+                    <li><a href="#fa01-divergence">Where They Diverge</a></li>
+                    <li><a href="#fa01-findings">Key Findings</a></li>
+                    <li><a href="#fa01-recommendation">Recommendation</a></li>
+                </ul>
+            </details>
+            <p>Five AI assistants — DeepSeek, Gemini, Grok, ChatGPT, and Claude — were each given the same blind prompt: <em style="color: var(--color-text-primary);">"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software."</em> No examples, no reference to this site, no guidance beyond the bare prompt. Rated on design execution, code quality, structure, and functionality. Inspired by ChatGPT's earlier attempt to rebuild this site and calling it "Version 6."</p>
 
-            <!-- FODDER ENTRY FA-01 — COMPLETE -->
-            <div class="card" style="border-left: 3px solid var(--color-success); margin-bottom: var(--spacing-lg);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-sm);">
-                    <div>
-                        <strong style="color: #fff; display: block; font-size: 1.1rem; margin-bottom: 0.3rem;">FA-01 — Which AI Builds Our Website Best?</strong>
-                        <span style="color: var(--color-text-muted); font-size: 0.8rem;">Complete · AI Comparison · 5 Models Tested</span>
-                    </div>
-                    <span style="background: var(--color-success); color: #000; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);">DONE</span>
-                </div>
+            <div class="scope-note" style="margin-bottom: var(--spacing-md);">⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Click "view submitted file" to judge the raw output yourself.</div>
 
-                <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md);">Five AI assistants — DeepSeek, Gemini, Grok, ChatGPT, and Claude — were each given the same blind prompt: <em style="color: var(--color-text-primary);">"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software."</em> No examples, no reference to this site, no guidance beyond the bare prompt. Rated on design execution, code quality, structure, and functionality. Inspired by ChatGPT's earlier attempt to rebuild this site and calling it "Version 6."</p>
-
-                <div class="scope-note" style="margin-bottom: var(--spacing-md);">⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Click "view submitted file" to judge the raw output yourself.</div>
-
-                <!-- SETUP -->
-                <h3 class="section-h3" style="margin-top: 0;">Experiment Setup</h3>
-                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
-                    <div class="metric"><span class="metric-label">Prompt</span><span class="metric-value" style="font-size:0.9rem; text-align:right; max-width:65%;">"Build a consumer tech documentation website in HTML for real-world smartphone, repair, and software experiments"</span></div>
-                    <div class="metric"><span class="metric-label">Models Tested</span><span class="metric-value">Claude · ChatGPT · Gemini · Grok · DeepSeek</span></div>
-                    <div class="metric"><span class="metric-label">Guidance Given</span><span class="metric-value error">None — cold prompt only</span></div>
-                    <div class="metric"><span class="metric-label">Content Requirement</span><span class="metric-value">Each AI invented its own placeholder content</span></div>
-                    <div class="metric"><span class="metric-label">Judged On</span><span class="metric-value">Design · Code quality · Structure · Functionality</span></div>
-                </div>
-
-                <!-- FULL RANKINGS -->
-                <h3 class="section-h3">Full Rankings — Owner Assessment</h3>
-                <div style="display:grid; gap:var(--spacing-sm); margin-bottom: var(--spacing-lg);">
-
-                    <div class="ranking-row success">
-                        <div class="rank-content">
-                            <strong>🥇 Grok — 9.0/10</strong>
-                            <a href="fa01-entries/FA01_Grok.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
-                            <p>Full SPA with working JS view-routing, a real light/dark toggle with persisted state, hero stats, timeline component, and per-experiment detail pages. The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized.</p>
-                        </div>
-                        <div class="rating-value success">9.0</div>
-                    </div>
-
-                    <div class="ranking-row warning">
-                        <div class="rank-content">
-                            <strong>🥈 ChatGPT — 7.0/10</strong>
-                            <a href="fa01-entries/FA01_ChatGPT.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
-                            <p>Sidebar doc layout with a working theme toggle and a live search bar that filters page sections by typed text — a genuinely useful feature none of the others attempted. Let down by sloppy markup (stray &lt;br&gt; tags instead of CSS spacing) and fairly generic visual styling.</p>
-                        </div>
-                        <div class="rating-value warning">7.0</div>
-                    </div>
-
-                    <div class="ranking-row warning">
-                        <div class="rank-content">
-                            <strong>🥈 DeepSeek — 7.0/10</strong>
-                            <a href="fa01-entries/FA01_DeepSeek.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
-                            <p>The most visually refined of the five — soft light theme, gradient-text logo, polished card and code-block styling, genuinely nice sidebar/grid layout. Purely static though: nav tabs and links don't go anywhere, no interactivity at all.</p>
-                        </div>
-                        <div class="rating-value warning">7.0</div>
-                    </div>
-
-                    <div class="ranking-row error">
-                        <div class="rank-content">
-                            <strong>4th — Gemini — 6.5/10</strong>
-                            <a href="fa01-entries/FA01_Gemini.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
-                            <p>Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections.</p>
-                        </div>
-                        <div class="rating-value error">6.5</div>
-                    </div>
-
-                    <div class="ranking-row error">
-                        <div class="rank-content">
-                            <strong>5th — Claude — 4.5/10</strong>
-                            <a href="fa01-entries/FA01_Claude.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
-                            <p>Plain dark card layout, static table, zero interactivity, and the thinnest content of the five. Functional and clean but clearly the least effort — kept here for transparency. The data is the data.</p>
-                        </div>
-                        <div class="rating-value error">4.5</div>
-                    </div>
-                </div>
-
-                <!-- CLAUDE'S INDEPENDENT ASSESSMENT -->
-                <h3 class="section-h3">Claude's Independent Assessment</h3>
-                <p style="color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-md); font-style: italic;">Note: this assessment was generated separately by Claude before seeing the owner's rankings above. Scores differ — make of that what you will.</p>
-                <div style="display:grid; gap:var(--spacing-sm); margin-bottom: var(--spacing-lg);">
-
-                    <div class="ranking-row success">
-                        <div class="rank-content">
-                            <strong>🥇 Claude — Editorial Foundation</strong>
-                            <p>Three intentional font families (Playfair Display, Inter, IBM Plex Mono), full design token system with semantic naming, sticky sidebar with active state navigation, status badges (COMPLETE / PENDING / ON HOLD), light/dark pill toggle, and responsive typography via <code>clamp()</code>. Most architecturally sophisticated of the five. Missing: no actual experiment data — a polished shell rather than a completed document.</p>
-                        </div>
-                        <div class="rating-value success" style="font-size:0.9rem;">1st</div>
-                    </div>
-
-                    <div class="ranking-row success">
-                        <div class="rank-content">
-                            <strong>🥈 Gemini — Functional Dashboard</strong>
-                            <p>Fixed sidebar, live search filtering nav items, <code>[data-theme]</code> attribute toggle with localStorage, copy-to-clipboard on code blocks, JS tab routing with fadeIn animations, status dots, and a <code>.callout</code> component system with modifiers. Structurally well-built. Fatal flaw: content went completely off-brief (OpenWrt router flashing, VLAN containment) — nothing to do with smartphones or repair.</p>
-                        </div>
-                        <div class="rating-value success" style="font-size:0.9rem;">2nd</div>
-                    </div>
-
-                    <div class="ranking-row warning">
-                        <div class="rank-content">
-                            <strong>3rd — DeepSeek — Most Visually Distinctive</strong>
-                            <p>Light theme by default, gradient text headline, branded icon in header, clean card system, sidebar meta-info section with active experiment count and maintainer handles, syntax-highlighted code blocks. Went off-brief (developer docs portal via npm, not consumer tech). No dark mode, no accessibility attributes, no print styles.</p>
-                        </div>
-                        <div class="rating-value warning" style="font-size:0.9rem;">3rd</div>
-                    </div>
-
-                    <div class="ranking-row warning">
-                        <div class="rank-content">
-                            <strong>4th — Grok — Most Ambitious, Most Dependent</strong>
-                            <p>Space Grotesk headings, yellow accent scheme, large hero section, animated pulse indicator, category filter buttons, JS-populated experiment cards. Relies entirely on Tailwind CSS and Font Awesome CDNs — if either goes down, the entire design collapses. Content is fabricated ("9 devices bricked temporarily", "47 hours logged"). Visually impressive but not self-contained.</p>
-                        </div>
-                        <div class="rating-value warning" style="font-size:0.9rem;">4th</div>
-                    </div>
-
-                    <div class="ranking-row error">
-                        <div class="rank-content">
-                            <strong>5th — ChatGPT — Recycled, Not Built</strong>
-                            <p>Three conflicting <code>:root</code> blocks that contradict each other, CSS variables defined but never actually used, Experiment 3 rating bars rendering as empty (no width values), content stopping at Experiment 3, title still reading "v3". Essentially recycled the original version of this site and called it a new submission. Least original, least complete, most structurally broken.</p>
-                        </div>
-                        <div class="rating-value error" style="font-size:0.9rem;">5th</div>
-                    </div>
-                </div>
-
-                <!-- WHERE ASSESSMENTS DIVERGE -->
-                <h3 class="section-h3">Where The Two Assessments Diverge</h3>
-                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
-                    <div class="metric"><span class="metric-label">Grok</span><span class="metric-value warning">Owner: 🥇 1st · Claude: 4th</span></div>
-                    <div class="metric"><span class="metric-label">ChatGPT</span><span class="metric-value warning">Owner: 🥈 2nd · Claude: 5th</span></div>
-                    <div class="metric"><span class="metric-label">DeepSeek</span><span class="metric-value">Owner: 🥈 2nd · Claude: 3rd</span></div>
-                    <div class="metric"><span class="metric-label">Gemini</span><span class="metric-value warning">Owner: 4th · Claude: 2nd</span></div>
-                    <div class="metric"><span class="metric-label">Claude</span><span class="metric-value warning">Owner: 5th · Claude: 1st</span></div>
-                </div>
-                <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-lg);">The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing, persisted state, and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does.</p>
-
-                <!-- KEY FINDINGS -->
-                <div class="key-finding">
-                    <strong>Architecture Beat Aesthetics (Owner's View)</strong>
-                    <p>The deciding factor wasn't color palette or typography — every entry looked reasonably professional. What separated Grok from the pack was building actual information architecture (routable views, reusable detail templates, real state) rather than a single static scroll of cards.</p>
-                </div>
-                <div class="key-finding">
-                    <strong>Content Interpretation Varied Wildly</strong>
-                    <p>Only Claude and Grok stayed close to the brief. Gemini built a network admin dashboard. DeepSeek built a developer docs portal. ChatGPT recycled existing work. "Consumer tech documentation website" meant five completely different things to five different models.</p>
-                </div>
-                <div class="key-finding">
-                    <strong>Interactivity Was Rare</strong>
-                    <p>Only Grok (view routing + persisted theme) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only.</p>
-                </div>
-                <div class="key-finding">
-                    <strong>Self-Containment Matters</strong>
-                    <p>Grok's entry depends on two external CDNs (Tailwind + Font Awesome). Every other submission was fully self-contained. For a documentation site meant to be archived and shared, CDN dependency is a real long-term risk.</p>
-                </div>
-
-                <div class="conclusion">
-                    <h4>Owner's Winner: Grok · Claude's Winner: Claude · Honest Winner: Probably Grok</h4>
-                    <p>The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation and persistent state. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running.</p>
-                </div>
+            <!-- SETUP -->
+            <h3 class="section-h3" id="fa01-setup" style="margin-top: 0;">Experiment Setup</h3>
+            <div class="metadata-card">
+                <div class="meta-item"><span class="meta-label">Prompt</span><span class="meta-value" style="font-size:0.85rem;">"Build a consumer tech documentation website in HTML for real-world smartphone, repair, and software experiments"</span></div>
+                <div class="meta-item"><span class="meta-label">Models Tested</span><span class="meta-value">Claude · ChatGPT · Gemini · Grok · DeepSeek</span></div>
+                <div class="meta-item"><span class="meta-label">Guidance Given</span><span class="meta-value error">None — cold prompt only</span></div>
+                <div class="meta-item"><span class="meta-label">Content Requirement</span><span class="meta-value">Each AI invented its own placeholder content</span></div>
+                <div class="meta-item"><span class="meta-label">Judged On</span><span class="meta-value">Design · Code quality · Structure · Functionality</span></div>
             </div>
 
-            <!-- FODDER ENTRY FA-02 — COMPLETE -->
-            <div class="card" style="border-left: 3px solid var(--color-error); margin-bottom: var(--spacing-lg);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-md);">
-                    <div>
-                        <strong style="color: #fff; display: block; font-size: 1.1rem; margin-bottom: 0.3rem;">FA-02 — One Month Out of the Apple Ecosystem</strong>
-                        <span style="color: var(--color-text-muted); font-size: 0.8rem;">Complete · Friction Log · Ecosystem Lock-In Study</span>
-                    </div>
-                    <span style="background: var(--color-error); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);">COMPLETED</span>
-                </div>
+            <!-- FULL RANKINGS — OWNER -->
+            <h3 class="section-h3" id="fa01-owner-rankings">Full Rankings — Owner Assessment</h3>
+            <div style="display:grid; gap:var(--spacing-sm); margin-bottom: var(--spacing-lg);">
 
-                <div class="insight-card warning mb-lg">
-                    <strong>Executive Summary</strong><br/>
-                    <span style="color: var(--color-text-secondary);">One month away from Apple revealed a painful truth: the ecosystem works so well when all parts align that you don't realize how much it's doing for you until it's gone. The friction wasn't insurmountable, but it was relentless. Every single task involved a workaround, a subscription, or a compromise that iOS/Mac handled transparently.</span>
-                </div>
-
-                <!-- SETUP -->
-                <h3 class="section-h3">Setup & Baseline</h3>
-                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
-                    <div class="metric"><span class="metric-label">Duration</span><span class="metric-value">30 days</span></div>
-                    <div class="metric"><span class="metric-label">Primary Device</span><span class="metric-value">Pixel 10 Pro</span></div>
-                    <div class="metric"><span class="metric-label">Desktop</span><span class="metric-value">Windows laptop (new purchase, specs comparable to MacBook Air)</span></div>
-                    <div class="metric"><span class="metric-label">Baseline (Before)</span><span class="metric-value">iPhone 16e + MacBook Air</span></div>
-                    <div class="metric"><span class="metric-label">Scope</span><span class="metric-value">Complete ecosystem exit: phone, desktop, cloud storage, accessories, auth systems</span></div>
-                </div>
-
-                <!-- KEY FINDINGS -->
-                <h3 class="section-h3">The Friction Log</h3>
-
-                <div class="insight-card error mb-lg">
-                    <strong>1. Account Migration Was Deceptive</strong><br/>
-                    <span style="color: var(--color-text-secondary);">Backing up photos, apps, and data seemed straightforward until the moment of truth. Each account linked to Apple ID required a 5–10 minute reconfiguration to switch to Google accounts. But worse: when transferring data, the system only preserved the most recent portion of each account. All historical data from when accounts were first created on Apple ID was lost. This wasn't obvious upfront.</span>
-                </div>
-
-                <div class="insight-card warning mb-lg">
-                    <strong>2. App Quality on Pixel vs iPhone</strong><br/>
-                    <span style="color: var(--color-text-secondary);"><strong>The finding:</strong> Apps on Pixel 10 Pro work, but with consistent quality issues compared to iPhone.<br/>
-                    • Apps don't fit the Pixel 10 Pro's screen ratio properly<br/>
-                    • Occasional lag and UI glitches<br/>
-                    • Forgetting account logins mid-session<br/>
-                    • Failure to send authentication codes<br/>
-                    • Even Google's own apps aren't optimized for their hardware<br/><br/>
-                    <strong>iPhone contrast:</strong> Same apps work flawlessly. 4K resolution, layout, configuration—all polished. The difference is stark. It's not a dealbreaker for a few weeks, but living with it full-time is wearing.</span>
-                </div>
-
-                <div class="insight-card error mb-lg">
-                    <strong>3. Desktop Transition: The Breaking Point</strong><br/>
-                    <span style="color: var(--color-text-secondary);">This is where the experiment fell apart. Switching to a Windows laptop (with specs comparable to MacBook Air) revealed:<br/>
-                    • <strong>Setup was atrocious:</strong> 30 minutes just to log in for the first time<br/>
-                    • <strong>Bloatware:</strong> System cluttered with unnecessary software<br/>
-                    • <strong>Subscriptions required:</strong> Had to pay to store files, access features that are free on Mac<br/>
-                    • <strong>Battery life:</strong> Requires constant charging to match MacBook Air performance. Unplugged, it's "like a laggy Android tablet from 20 years ago"<br/>
-                    • <strong>Pairing Pixel with Windows was broken:</strong> Required downloading an app just for the OS to recognize the phone. Manual linking failed repeatedly with generic error codes before finally working<br/>
-                    • <strong>Syncing:</strong> No harmony. Every integration felt like a workaround, not a feature.<br/><br/>
-                    <strong>Mac comparison:</strong> Simple setup, immediate login, automatic account transfer to iCloud, seamless synergy. The difference is night and day.</span>
-                </div>
-
-                <div class="insight-card warning mb-lg">
-                    <strong>4. Accessory Ecosystem Collapse</strong><br/>
-                    <span style="color: var(--color-text-secondary);">iPhone has ~100 brands worth of accessories. Pixel has 3 notable options. Windows laptop had almost nothing. Customization—a core desire—became impossible. This isn't just convenience; it's a meaningful reduction in how you can personalize your devices.</span>
-                </div>
-
-                <div class="insight-card warning mb-lg">
-                    <strong>5. Peripheral Hardware (Watch, Earphones)</strong><br/>
-                    <span style="color: var(--color-text-secondary);"><strong>Earphones:</strong> Easy swap to Sony WF (good pairing, good sound). Google Buds were "okay"—adequate but not exceptional. Sony met requirements.<br/>
-                    <strong>Watch:</strong> Google Watch paired well but health metrics were wildly inaccurate. Heartbeat, step count, calorie burn—all significantly off compared to Apple Watch. However, daily use was just for time + notifications, so this didn't matter much.<br/><br/>
-                    <strong>Verdict:</strong> Replaceable, not show-stoppers.</span>
-                </div>
-
-                <div class="insight-card info mb-lg">
-                    <strong>6. Pixel 10 Pro: The Phone Itself</strong><br/>
-                    <span style="color: var(--color-text-secondary);"><strong>The good:</strong> Stock Android offers features and customization that iOS simply doesn't have. Camera (rear) is exceptional.<br/>
-                    <strong>The bad:</strong> Front-facing camera is poor—not comparable to rear cameras or iPhone's selfie quality. This matters when documenting findings or recording yourself.<br/>
-                    <strong>Gaming:</strong> Heats up quickly despite new chipset. Unexpected, since efficiency was the selling point.<br/>
-                    <strong>Overall:</strong> Pixel 10 Pro is genuinely good, but it can't carry the entire ecosystem on its own.</span>
-                </div>
-
-                <div class="insight-card error mb-lg">
-                    <strong>7. Authentication Hell: The Final Straw</strong><br/>
-                    <span style="color: var(--color-text-secondary);">Most accounts require two-factor authentication via iPhone. To use Google Pixel as the only phone, you must:<br/>
-                    1. Log in to accounts on iPhone<br/>
-                    2. Re-authenticate to Google Pixel<br/>
-                    3. Re-authenticate everything else to work only on Pixel<br/><br/>
-                    Even after all this, "it barely works." This created a dependency loop where you can't fully leave the iPhone behind. The bridge is crumbling.</span>
-                </div>
-
-                <!-- BROADER IMPLICATIONS -->
-                <h3 class="section-h3">What This Reveals About Ecosystem Lock-In</h3>
-
-                <div class="ranking-row warning">
+                <div class="ranking-row success">
                     <div class="rank-content">
-                        <strong>The paradox:</strong> Apple's ecosystem is so seamless when you're inside it that you never notice how much integration is happening. Phone, watch, MacBook, iPad, Apple TV—they all work in harmony. You rely on that harmony without thinking about it.
+                        <strong>🥇 Grok — 9.0/10</strong>
+                        <a href="fa01-entries/FA01_Grok.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                        <p>Full SPA with working JS view-routing, a real light/dark toggle with persisted state, hero stats, timeline component, and per-experiment detail pages. The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized.</p>
                     </div>
+                    <div class="rating-value success">9.0</div>
                 </div>
 
                 <div class="ranking-row warning">
                     <div class="rank-content">
-                        <strong>Google's counter-offer:</strong> Individual features that outclass Apple. Stock Android customization, Pixel camera software, hardware options. But these don't integrate. Each one requires a workaround to the next.
+                        <strong>🥈 ChatGPT — 7.0/10</strong>
+                        <a href="fa01-entries/FA01_ChatGPT.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                        <p>Sidebar doc layout with a working theme toggle and a live search bar that filters page sections by typed text — a genuinely useful feature none of the others attempted. Let down by sloppy markup (stray &lt;br&gt; tags instead of CSS spacing) and fairly generic visual styling.</p>
                     </div>
+                    <div class="rating-value warning">7.0</div>
+                </div>
+
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>🥈 DeepSeek — 7.0/10</strong>
+                        <a href="fa01-entries/FA01_DeepSeek.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                        <p>The most visually refined of the five — soft light theme, gradient-text logo, polished card and code-block styling, genuinely nice sidebar/grid layout. Purely static though: nav tabs and links don't go anywhere, no interactivity at all.</p>
+                    </div>
+                    <div class="rating-value warning">7.0</div>
                 </div>
 
                 <div class="ranking-row error">
                     <div class="rank-content">
-                        <strong>Windows is brutal:</strong> It's not just "different." It's bloated, subscription-gated, and requires you to solve puzzles to do things that Mac handles automatically. This was the true deal-breaker.
+                        <strong>4th — Gemini — 6.5/10</strong>
+                        <a href="fa01-entries/FA01_Gemini.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                        <p>Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections.</p>
                     </div>
+                    <div class="rating-value error">6.5</div>
+                </div>
+
+                <div class="ranking-row error">
+                    <div class="rank-content">
+                        <strong>5th — Claude — 4.5/10</strong>
+                        <a href="fa01-entries/FA01_Claude.html" target="_blank" rel="noopener" style="font-size:0.75rem; font-weight:600; color: var(--color-info); text-decoration: underline; margin-left:0.4rem;">view submitted file →</a>
+                        <p>Plain dark card layout, static table, zero interactivity, and the thinnest content of the five. Functional and clean but clearly the least effort — kept here for transparency. The data is the data.</p>
+                    </div>
+                    <div class="rating-value error">4.5</div>
+                </div>
+            </div>
+
+            <!-- CLAUDE'S INDEPENDENT ASSESSMENT -->
+            <h3 class="section-h3" id="fa01-claude-assessment">Claude's Independent Assessment</h3>
+            <p style="color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-md); font-style: italic;">Note: this assessment was generated separately by Claude before seeing the owner's rankings above. Scores differ — make of that what you will.</p>
+            <div style="display:grid; gap:var(--spacing-sm); margin-bottom: var(--spacing-lg);">
+
+                <div class="ranking-row success">
+                    <div class="rank-content">
+                        <strong>🥇 Claude — Editorial Foundation</strong>
+                        <p>Three intentional font families (Playfair Display, Inter, IBM Plex Mono), full design token system with semantic naming, sticky sidebar with active state navigation, status badges (COMPLETE / PENDING / ON HOLD), light/dark pill toggle, and responsive typography via <code>clamp()</code>. Most architecturally sophisticated of the five. Missing: no actual experiment data — a polished shell rather than a completed document.</p>
+                    </div>
+                    <div class="rating-value success" style="font-size:0.9rem;">1st</div>
                 </div>
 
                 <div class="ranking-row success">
                     <div class="rank-content">
-                        <strong>Returning was easier than leaving:</strong> After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow.
+                        <strong>🥈 Gemini — Functional Dashboard</strong>
+                        <p>Fixed sidebar, live search filtering nav items, <code>[data-theme]</code> attribute toggle with localStorage, copy-to-clipboard on code blocks, JS tab routing with fadeIn animations, status dots, and a <code>.callout</code> component system with modifiers. Structurally well-built. Fatal flaw: content went completely off-brief (OpenWrt router flashing, VLAN containment) — nothing to do with smartphones or repair.</p>
                     </div>
+                    <div class="rating-value success" style="font-size:0.9rem;">2nd</div>
                 </div>
 
-                <!-- FINAL VERDICT -->
-                <h3 class="section-h3">Final Verdict</h3>
-
-                <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
-                    <strong style="color: #fff; display: block; margin-bottom: var(--spacing-sm);">Going Forward</strong>
-                    <p style="color: var(--color-text-secondary); margin-bottom: var(--spacing-sm);">Keeping Pixel 10 Pro as part of daily rotation—it's genuinely good as a phone and reliable on Android stock. Everything else (Windows, Google ecosystem beyond the phone, desktop integration, accessories) was "completely tolerable but just so annoying." The experiment confirmed: <strong>Apple's lock-in isn't just marketing. The ecosystem actually works better when all parts are in harmony.</strong></p>
-                    <p style="color: var(--color-text-secondary);">Never doing a full ecosystem exit again. The compromises weren't insurmountable, but they were relentless. Now it's clear why people stay.</p>
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>3rd — DeepSeek — Most Visually Distinctive</strong>
+                        <p>Light theme by default, gradient text headline, branded icon in header, clean card system, sidebar meta-info section with active experiment count and maintainer handles, syntax-highlighted code blocks. Went off-brief (developer docs portal via npm, not consumer tech). No dark mode, no accessibility attributes, no print styles.</p>
+                    </div>
+                    <div class="rating-value warning" style="font-size:0.9rem;">3rd</div>
                 </div>
 
-                <div class="insight-card info">
-                    <strong>Key Takeaway for Consumer Tech Lab</strong><br/>
-                    <span style="color: var(--color-text-secondary);">Ecosystem lock-in is real, but it's not sinister—it's a side effect of design coherence. Apple makes you stay because leaving is so much harder than staying. Google has the individual parts but not the glue. Windows is still playing catch-up. The best ecosystem is the one you don't notice you're in until you leave.</span>
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>4th — Grok — Most Ambitious, Most Dependent</strong>
+                        <p>Space Grotesk headings, yellow accent scheme, large hero section, animated pulse indicator, category filter buttons, JS-populated experiment cards. Relies entirely on Tailwind CSS and Font Awesome CDNs — if either goes down, the entire design collapses. Content is fabricated ("9 devices bricked temporarily", "47 hours logged"). Visually impressive but not self-contained.</p>
+                    </div>
+                    <div class="rating-value warning" style="font-size:0.9rem;">4th</div>
                 </div>
 
+                <div class="ranking-row error">
+                    <div class="rank-content">
+                        <strong>5th — ChatGPT — Recycled, Not Built</strong>
+                        <p>Three conflicting <code>:root</code> blocks that contradict each other, CSS variables defined but never actually used, Experiment 3 rating bars rendering as empty (no width values), content stopping at Experiment 3, title still reading "v3". Essentially recycled the original version of this site and called it a new submission. Least original, least complete, most structurally broken.</p>
+                    </div>
+                    <div class="rating-value error" style="font-size:0.9rem;">5th</div>
+                </div>
             </div>
 
-            <div style="text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); font-size: 0.9rem; border: 1px dashed var(--color-border); border-radius: var(--radius-md);">
-                More entries coming as experiments are completed. This archive grows alongside the main documentation.
+            <!-- DIVERGENCE TABLE -->
+            <h3 class="section-h3" id="fa01-divergence">Where The Two Assessments Diverge</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Comparison of owner vs Claude assessments — highlighting disagreements</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Model</th>
+                            <th scope="col" class="center">Owner Rank</th>
+                            <th scope="col" class="center">Claude Rank</th>
+                            <th scope="col" class="center">Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row" class="primary">Grok</th><td class="center badge-success">1st</td><td class="center badge-warning">4th</td><td class="center badge-error">▼ 3</td></tr>
+                        <tr><th scope="row" class="primary">ChatGPT</th><td class="center badge-success">2nd</td><td class="center badge-error">5th</td><td class="center badge-error">▼ 3</td></tr>
+                        <tr><th scope="row" class="primary">DeepSeek</th><td class="center badge-success">2nd</td><td class="center badge-warning">3rd</td><td class="center badge-warning">▼ 1</td></tr>
+                        <tr><th scope="row" class="primary">Gemini</th><td class="center badge-error">4th</td><td class="center badge-success">2nd</td><td class="center badge-success">▲ 2</td></tr>
+                        <tr><th scope="row" class="primary">Claude</th><td class="center badge-error">5th</td><td class="center badge-success">1st</td><td class="center badge-success">▲ 4</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-lg);">The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing, persisted state, and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does.</p>
+
+            <!-- KEY FINDINGS -->
+            <h3 class="section-h3" id="fa01-findings">Key Findings</h3>
+            <div class="insight-grid">
+                <div class="insight-card info revealed"><h4>Architecture Beat Aesthetics</h4><p>The deciding factor wasn't color palette or typography — every entry looked reasonably professional. What separated Grok from the pack was building actual information architecture (routable views, reusable detail templates, real state) rather than a single static scroll of cards.</p></div>
+                <div class="insight-card warning revealed"><h4>Content Interpretation Varied Wildly</h4><p>Only Claude and Grok stayed close to the brief. Gemini built a network admin dashboard. DeepSeek built a developer docs portal. ChatGPT recycled existing work. "Consumer tech documentation website" meant five completely different things to five different models.</p></div>
+                <div class="insight-card info revealed"><h4>Interactivity Was Rare</h4><p>Only Grok (view routing + persisted theme) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only.</p></div>
+                <div class="insight-card warning revealed"><h4>Self-Containment Matters</h4><p>Grok's entry depends on two external CDNs (Tailwind + Font Awesome). Every other submission was fully self-contained. For a documentation site meant to be archived and shared, CDN dependency is a real long-term risk.</p></div>
+            </div>
+
+            <div class="conclusion">
+                <h4>Owner's Winner: Grok · Claude's Winner: Claude · Honest Winner: Probably Grok</h4>
+                <p>The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation and persistent state. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running.</p>
+            </div>
+
+            <!-- RECOMMENDATION BOX -->
+            <div class="recommendation-box" id="fa01-recommendation">
+                <h3>Which AI Should You Use for Web Development?</h3>
+                <ul>
+                    <li><span class="check">✓</span><span><strong style="color:#fff;">Grok</strong> — Best for full-page builds with real interactivity and SPA structure</span></li>
+                    <li><span class="check">✓</span><span><strong style="color:#fff;">DeepSeek</strong> — Best for polished visual design and refined UI</span></li>
+                    <li><span class="check">✓</span><span><strong style="color:#fff;">ChatGPT</strong> — Best for adding specific features (search, theme toggle) to existing work</span></li>
+                    <li><span class="warning-icon">⚠️</span><span><strong style="color:#fff;">Gemini</strong> — Good structure, but verify content stays on-brief</span></li>
+                    <li><span class="cross">✗</span><span><strong style="color:#fff;">Claude</strong> — Solid foundation, but needs the most hand-holding to produce complete content</span></li>
+                </ul>
+            </div>
+
+            <!-- RELATED EXPERIMENTS -->
+            <div class="related-experiments">
+                <h4>Related Experiments</h4>
+                <div class="related-list">
+                    <a href="#fa02" class="related-link">🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem</a>
+                </div>
             </div>
         </div>
     </article>
+
+    <!-- ===== FA-02: ECOSYSTEM EXIT ===== -->
+    <article class="experiment" data-category="ecosystem" id="fa02" aria-labelledby="fa02-title" data-search="fa-02 one month out of the apple ecosystem ecosystem study ecosystem exit friction log pixel samsung windows lock-in">
+        <div class="experiment-header">
+            <span class="category-label">Ecosystem Study</span>
+            <h2 id="fa02-title">FA-02 — One Month Out of the Apple Ecosystem</h2>
+            <span class="status-badge status-done">Done</span>
+            <span class="experiment-tag">30 Days</span>
+            <span class="experiment-tag">Friction Log</span>
+            <span class="experiment-tag">Ecosystem Lock-In Study</span>
+            <br>
+            <span class="scope-note">📋 n=1 — personal experience, not a controlled study</span>
+        </div>
+        <div class="experiment-content">
+            <details class="experiment-toc">
+                <summary>On this page</summary>
+                <ul class="toc-list">
+                    <li><a href="#fa02-setup">Setup &amp; Baseline</a></li>
+                    <li><a href="#fa02-timeline">30-Day Journey</a></li>
+                    <li><a href="#fa02-friction">Friction Log</a></li>
+                    <li><a href="#fa02-implications">Ecosystem Lock-In</a></li>
+                    <li><a href="#fa02-verdict">Final Verdict</a></li>
+                </ul>
+            </details>
+            <p>A real-world consumer advocacy case documenting Samsung battery swelling across multiple device generations, corporate non-responsiveness, regulatory escalation, and eventual cash settlement. Not a planned experiment — it developed organically through consistent documentation habits.</p>
+
+            <!-- EXECUTIVE SUMMARY -->
+            <div class="insight-card warning mb-lg revealed">
+                <h4>Executive Summary</h4>
+                <p style="color: var(--color-text-secondary);">One month away from Apple revealed a painful truth: the ecosystem works so well when all parts align that you don't realize how much it's doing for you until it's gone. The friction wasn't insurmountable, but it was relentless. Every single task involved a workaround, a subscription, or a compromise that iOS/Mac handled transparently.</p>
+            </div>
+
+            <!-- SETUP -->
+            <h3 class="section-h3" id="fa02-setup">Setup &amp; Baseline</h3>
+            <div class="metadata-card">
+                <div class="meta-item"><span class="meta-label">Duration</span><span class="meta-value">30 days</span></div>
+                <div class="meta-item"><span class="meta-label">Primary Device</span><span class="meta-value">Pixel 10 Pro</span></div>
+                <div class="meta-item"><span class="meta-label">Desktop</span><span class="meta-value">HP Victus 15-fa2013dx</span></div>
+                <div class="meta-item"><span class="meta-label">Baseline (Before)</span><span class="meta-value">iPhone 16e + MacBook Air</span></div>
+                <div class="meta-item"><span class="meta-label">Scope</span><span class="meta-value">Complete ecosystem exit: phone, desktop, cloud, accessories, auth</span></div>
+            </div>
+
+            <pre class="code-block"><code><span class="tok-comment"># device-swap.log — week 1 baseline capture</span>
+<span class="tok-key">device</span>: <span class="tok-string">"Pixel 10 Pro"</span>
+<span class="tok-key">desktop</span>: <span class="tok-string">"HP Victus 15-fa2013dx"</span>
+<span class="tok-key">prior_setup</span>: <span class="tok-string">"iPhone 16e + MacBook Air"</span>
+<span class="tok-key">accounts_migrated</span>: <span class="tok-num">14</span>
+<span class="tok-key">windows_first_login_time</span>: <span class="tok-string">"30m"</span> <span class="tok-comment">// just to reach desktop</span></code></pre>
+
+            <!-- TIMELINE -->
+            <h3 class="section-h3" id="fa02-timeline">The 30-Day Journey</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker warning" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <strong>Week 1 — The Unpacking</strong>
+                        <p>Setup Pixel 10 Pro and HP Victus. Initial excitement about customization and stock Android freedom quickly replaced by setup friction — 30 minutes just to log into Windows, bloated with unnecessary software, subscription gateways for basic features.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker error" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <strong>Week 2 — The Cracks Appear</strong>
+                        <p>App quality on Pixel noticeably worse than iPhone — UI glitches, screen ratio issues, login problems. Windows-Pixel pairing failed repeatedly. Authentication migration revealed data loss: only recent history preserved; older account data disappeared.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker error" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <strong>Week 3 — The Breaking Point</strong>
+                        <p>Windows performance unplugged became unusable ("like a laggy Android tablet from 20 years ago"). Accessory ecosystem collapsed — Pixel has 3 notable accessory brands vs iPhone's ~100. Health metrics on Google Watch wildly inaccurate.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker success" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <strong>Week 4 — Return &amp; Reflection</strong>
+                        <p>Returning to iPhone and Mac was far easier than leaving. The ecosystem pulls you back in. Verdict: Apple's lock-in is real, but it's a side effect of design coherence, not malice. The best ecosystem is the one you don't notice until you leave.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FRICTION LOG -->
+            <h3 class="section-h3" id="fa02-friction">The Friction Log — Key Findings</h3>
+            <div class="insight-grid">
+                <div class="insight-card error revealed">
+                    <h4>Account Migration Was Deceptive</h4>
+                    <p>Backing up photos, apps, and data seemed straightforward until the moment of truth. Each account linked to Apple ID required 5–10 minutes of reconfiguration to switch to Google accounts. Worse: only the most recent portion of each account was preserved. All historical data from when accounts were first created on Apple ID was lost.</p>
+                </div>
+                <div class="insight-card warning revealed">
+                    <h4>App Quality on Pixel vs iPhone</h4>
+                    <p>Apps on Pixel 10 Pro work, but with consistent quality issues compared to iPhone: screen ratio problems, occasional lag and UI glitches, forgetting account logins mid-session, failure to send authentication codes. Even Google's own apps aren't optimized for their hardware.</p>
+                </div>
+                <div class="insight-card error revealed">
+                    <h4>Desktop Transition: The Breaking Point</h4>
+                    <p>Windows setup was atrocious (30 minutes just to log in), bloated with unnecessary software, required $130/year subscriptions for features free on Mac, and pairing Pixel with Windows required downloading an app just for the OS to recognize the phone. No harmony — every integration felt like a workaround.</p>
+                </div>
+                <div class="insight-card warning revealed">
+                    <h4>Accessory Ecosystem Collapse</h4>
+                    <p>iPhone has ~100 brands worth of accessories. Pixel has 3 notable options. Windows laptop had almost nothing. Customization — a core desire — became impossible. This isn't just convenience; it's a meaningful reduction in how you can personalize your devices.</p>
+                </div>
+                <div class="insight-card warning revealed">
+                    <h4>Peripheral Hardware (Watch, Earphones)</h4>
+                    <p>Earphones were an easy swap to Sony WF. Google Buds were "okay" but Sony met requirements. Google Watch paired well but health metrics were wildly inaccurate — heartbeat, step count, calorie burn all significantly off compared to Apple Watch.</p>
+                </div>
+                <div class="insight-card info revealed">
+                    <h4>Pixel 10 Pro: The Phone Itself</h4>
+                    <p><strong>The good:</strong> Stock Android offers features and customization iOS doesn't have. Rear camera is exceptional. <strong>The bad:</strong> Front-facing camera is poor — not comparable to iPhone's selfie quality. Gaming heats up quickly despite the new chipset.</p>
+                </div>
+                <div class="insight-card error revealed">
+                    <h4>Authentication Hell: The Final Straw</h4>
+                    <p>Most accounts require two-factor authentication via iPhone. To use Pixel as the only phone requires: logging into accounts on iPhone, re-authenticating to Pixel, then re-authenticating everything else to work only on Pixel. Even after all this, "it barely works." This created a dependency loop where you can't fully leave the iPhone behind.</p>
+                </div>
+                <div class="insight-card info revealed">
+                    <h4>Returning Was Easier Than Leaving</h4>
+                    <p>After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow.</p>
+                </div>
+            </div>
+
+            <!-- BROADER IMPLICATIONS -->
+            <h3 class="section-h3" id="fa02-implications">What This Reveals About Ecosystem Lock-In</h3>
+            <div style="display:grid; gap:var(--spacing-sm); margin-bottom:var(--spacing-lg);">
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>The Paradox</strong>
+                        <p>Apple's ecosystem is so seamless when you're inside it that you never notice how much integration is happening. Phone, watch, MacBook, iPad, Apple TV — they all work in harmony. You rely on that harmony without thinking about it.</p>
+                    </div>
+                </div>
+                <div class="ranking-row warning">
+                    <div class="rank-content">
+                        <strong>Google's Counter-Offer</strong>
+                        <p>Individual features that outclass Apple. Stock Android customization, Pixel camera software, hardware options. But these don't integrate. Each one requires a workaround to the next.</p>
+                    </div>
+                </div>
+                <div class="ranking-row error">
+                    <div class="rank-content">
+                        <strong>Windows Is Brutal</strong>
+                        <p>It's not just "different." It's bloated, subscription-gated, and requires you to solve puzzles to do things that Mac handles automatically. This was the true deal-breaker.</p>
+                    </div>
+                </div>
+                <div class="ranking-row success">
+                    <div class="rank-content">
+                        <strong>Returning Was Easier Than Leaving</strong>
+                        <p>After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINAL VERDICT -->
+            <h3 class="section-h3" id="fa02-verdict">Final Verdict</h3>
+            <div class="card mb-lg" style="background: var(--color-bg-surface-elevated);">
+                <strong style="color: #fff; display: block; margin-bottom: var(--spacing-sm);">Going Forward</strong>
+                <p style="color: var(--color-text-secondary); margin-bottom: var(--spacing-sm);">Keeping Pixel 10 Pro as part of daily rotation — it's genuinely good as a phone and reliable on Android stock. Everything else (Windows, Google ecosystem beyond the phone, desktop integration, accessories) was "completely tolerable but just so annoying." The experiment confirmed: <strong style="color: var(--color-info);">Apple's lock-in isn't just marketing. The ecosystem actually works better when all parts are in harmony.</strong></p>
+                <p style="color: var(--color-text-secondary);">Never doing a full ecosystem exit again. The compromises weren't insurmountable, but they were relentless. Now it's clear why people stay.</p>
+            </div>
+
+            <div class="conclusion">
+                <h4>Key Takeaway for Consumer Tech</h4>
+                <p>Ecosystem lock-in is real, but it's not sinister — it's a side effect of design coherence. Apple makes you stay because leaving is so much harder than staying. Google has the individual parts but not the glue. Windows is still playing catch-up. The best ecosystem is the one you don't notice you're in until you leave.</p>
+            </div>
+
+            <!-- RELATED EXPERIMENTS -->
+            <div class="related-experiments">
+                <h4>Related Experiments</h4>
+                <div class="related-list">
+                    <a href="#fa01" class="related-link">🤖 Also see: FA-01 — Which AI Builds Our Website Best?</a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ===== FA-03: LAPTOP COMPARISON ===== -->
+    <article class="experiment" data-category="hardware" id="fa03" aria-labelledby="fa03-title" data-search="fa-03 laptop evolution comparison macbook air acer aspire intel core ultra 7 m3 pro hardware performance battery ecosystem durability repair">
+        <div class="experiment-header">
+            <span class="category-label">Hardware Comparison</span>
+            <h2 id="fa03-title">FA-03 — Seven Years of Laptop Evolution: 2017 MacBook Air vs. 2024 M3 MacBook Air vs. Acer Aspire 14</h2>
+            <span class="status-badge status-done">Done</span>
+            <span class="experiment-tag">Complete — Firsthand Tested</span>
+            <span class="experiment-tag">7-Year Span</span>
+            <span class="experiment-tag">M3 Air vs Acer Aspire 14</span>
+            <br>
+            <span class="scope-note">✅ Firsthand hands-on assessment across all 3 units — real-world battery, thermal, build &amp; ecosystem testing</span>
+        </div>
+
+        <div class="experiment-content">
+            <details class="experiment-toc">
+                <summary>On this page</summary>
+                <ul class="toc-list">
+                    <li><a href="#fa03-overview">Comparison Overview</a></li>
+                    <li><a href="#fa03-performance">Performance Metrics</a></li>
+                    <li><a href="#fa03-build">Build Quality &amp; Durability</a></li>
+                    <li><a href="#fa03-repair">Repair &amp; Upgrade Potential</a></li>
+                    <li><a href="#fa03-ecosystem">Ecosystem &amp; Workflow Friction</a></li>
+                    <li><a href="#fa03-realworld">Real-World Usage</a></li>
+                    <li><a href="#fa03-cost">Cost &amp; Value Proposition</a></li>
+                    <li><a href="#fa03-conclusion">Conclusion &amp; Recommendations</a></li>
+                </ul>
+            </details>
+
+            <p>A comparative analysis of three laptops spanning 7 years of consumer hardware evolution: baseline 2017 MacBook Air, current-generation 2024 M3 MacBook Air, and 2024 Windows alternative (Acer Aspire 14). Tests performance, build quality, repairability, ecosystem friction, real-world usability, and value proposition.</p>
+
+            <div class="scope-note" style="margin-bottom: var(--spacing-lg); line-height: 1.6; display: block; border-radius: var(--radius-md); padding: var(--spacing-md);">
+                <strong style="color: var(--color-info);">Methodology Note:</strong> This comparison combines firsthand hands-on assessment (performance testing, build evaluation, ecosystem testing on all three devices) with documented specifications and market research. Each section is labeled with its data source. Real-world battery and thermal testing was conducted under consistent light-use workloads (web browsing, document editing, video playback) and sustained load scenarios (video encoding, compilation). The 2017 MacBook Air represents a mature, aged device; newer 2017 units may perform better. All findings reflect these specific units as tested.
+            </div>
+
+            <!-- COMPARISON OVERVIEW -->
+            <h3 class="section-h3" id="fa03-overview" style="margin-top: 0;">Comparison Overview</h3>
+            <div class="three-column">
+                <div class="card">
+                    <h4 style="color: var(--color-info); margin-bottom: var(--spacing-sm);">📅 2017 MacBook Air (Baseline)</h4>
+                    <p style="margin-bottom: 0.3rem;"><strong>CPU:</strong> Intel Core i5 (Kaby Lake)</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>RAM:</strong> 8GB DDR3</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Storage:</strong> 256GB SSD</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Display:</strong> 13.3" 1440×900 IPS</p>
+                    <p style="margin: 0;"><strong>Weight:</strong> 1.35kg</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: #fff; margin-bottom: var(--spacing-sm);">🍎 2024 MacBook Air 15" (M3)</h4>
+                    <p style="margin-bottom: 0.3rem;"><strong>CPU:</strong> Apple M3 Pro (10-core CPU / 10-core GPU)</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>RAM:</strong> 16GB Unified Memory</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Storage:</strong> 1TB SSD</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Display:</strong> 15" 2880×1800 Retina IPS</p>
+                    <p style="margin: 0;"><strong>Weight:</strong> 1.51kg</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--color-success); margin-bottom: var(--spacing-sm);">🪟 2024 Acer Aspire 14 (Core Ultra 7)</h4>
+                    <p style="margin-bottom: 0.3rem;"><strong>CPU:</strong> Intel Core Ultra 7 (10-core CPU / 10-core GPU)</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>RAM:</strong> 16GB LPDDR5X</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Storage:</strong> 1TB NVMe SSD</p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Display:</strong> 14" 2560×1600 OLED 120Hz</p>
+                    <p style="margin: 0;"><strong>Weight:</strong> 1.48kg</p>
+                </div>
+            </div>
+
+            <!-- PERFORMANCE METRICS -->
+            <h3 class="section-h3" id="fa03-performance">Performance Metrics</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Performance, battery endurance, and thermal behavior across test workloads</caption>
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">Metric</th>
+                            <th style="width: 26%;">2017 MacBook Air</th>
+                            <th style="width: 26%;">2024 M3 MacBook Air</th>
+                            <th style="width: 26%;">2024 Acer Aspire 14</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="primary">App Launches</th>
+                            <td>Slow/stuttery on modern web apps, visible delay on native apps</td>
+                            <td class="badge-success">Instantaneous across native Apple Silicon apps</td>
+                            <td>Very snappy on Windows 11 native and web apps</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Battery (Light Use)</th>
+                            <td>6–8 hours web browsing</td>
+                            <td class="badge-success" style="font-weight: 700;">15–18+ hours real-world light usage</td>
+                            <td>8–11 hours (varies with 120Hz display settings)</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Thermals</th>
+                            <td class="badge-error">Active fan; runs hot (85–95°C), fans audible under load</td>
+                            <td class="badge-success">Fanless design, completely silent; throttles slightly at peak (90–100°C internal)</td>
+                            <td>Active fan cooling; stays warm under heavy tasks; audible fan noise under sustained load</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Sustained Load (Encoding, Compilation)</th>
+                            <td class="badge-error">Fans spin continuously; thermal throttling evident after 10+ minutes</td>
+                            <td>No fan noise; slight throttle after 30+ minutes of max load</td>
+                            <td>Fan engagement immediate; maintains boost clock for 20+ minutes before throttle</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="key-finding">
+                <strong>Key Finding — Performance &amp; Efficiency</strong>
+                <p>The M3 MacBook Air delivers a generational leap in efficiency. App launch times are 4–5× faster than the 2017 model. Battery life improvement (6–8h → 15–18h) is the most dramatic shift, with the fanless design enabling silent, stress-free operation. The Acer Aspire 14 matches M3 for app snappiness on Windows workloads but cannot match battery endurance; the 120Hz OLED display consumes power aggressively, reducing battery life to 8–11 hours depending on refresh rate.</p>
+            </div>
+
+            <!-- BUILD QUALITY & DURABILITY -->
+            <h3 class="section-h3" id="fa03-build">Build Quality &amp; Durability</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Chassis rigidity, input mechanics, and panel longevity evaluation</caption>
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">Element</th>
+                            <th style="width: 26%;">2017 MacBook Air</th>
+                            <th style="width: 26%;">2024 M3 MacBook Air</th>
+                            <th style="width: 26%;">2024 Acer Aspire 14</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="primary">Chassis</th>
+                            <td>Aluminum unibody</td>
+                            <td>Ultra-thin aluminum unibody</td>
+                            <td>Plastic/aluminum hybrid chassis</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Hinge</th>
+                            <td>Smooth, one-finger lift (shows no play after 7 years)</td>
+                            <td class="badge-success">Solid, smooth tension, precise</td>
+                            <td>Sturdy, opens to 180°, solid feel</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Keyboard</th>
+                            <td>Classic scissor switch; deep travel (~1.5mm); highly reliable</td>
+                            <td>Magic Keyboard; shallow travel (~0.5mm); reliable, quiet</td>
+                            <td>Standard chicklet; slight flex in center; responsive</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Trackpad</th>
+                            <td>Physical click mechanism; durable despite heavy use over 7 years</td>
+                            <td class="badge-success">Force Touch haptic feedback; no moving parts; no wear</td>
+                            <td>Smooth precision touchpad; mechanical lower clicks remain responsive</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Display Durability</th>
+                            <td>No dead pixels or damage after 7 years of light use</td>
+                            <td>Bright, crisp Retina panel; no observed degradation over months of testing</td>
+                            <td>OLED brightness and color retention excellent; no burn-in over testing period</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="key-finding">
+                <strong>Key Finding — Build &amp; Materials</strong>
+                <p>The 2017 MacBook Air's aluminum unibody construction proves exceptionally durable—hinge tolerance and keyboard reliability remain excellent after 7 years of daily use. The 2024 M3 MacBook Air refines this approach with even more rigid construction and the Force Touch trackpad eliminates moving-part wear. The Acer Aspire 14's plastic/aluminum hybrid feels less premium but adequate; hinge and trackpad appear robust. Keyboard flex on the Acer suggests potential long-term durability concerns on the center keys under sustained typing, though this is common in this price tier.</p>
+            </div>
+
+            <!-- REPAIR & UPGRADE POTENTIAL -->
+            <h3 class="section-h3" id="fa03-repair">Repair &amp; Upgrade Potential</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Component serviceability, upgrade pathways, and replacement cost</caption>
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">Component</th>
+                            <th style="width: 26%;">2017 MacBook Air</th>
+                            <th style="width: 26%;">2024 M3 MacBook Air</th>
+                            <th style="width: 26%;">2024 Acer Aspire 14</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="primary">RAM</th>
+                            <td class="badge-error">Soldered (non-upgradeable)</td>
+                            <td class="badge-error">Unified memory, soldered (non-upgradeable)</td>
+                            <td class="badge-error">Soldered LPDDR5X (non-upgradeable)</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">SSD</th>
+                            <td class="badge-warning">Proprietary removable SSD (upgradeable via third-party adapter)</td>
+                            <td class="badge-error">Soldered to logic board (non-upgradeable; Apple service only)</td>
+                            <td class="badge-success" style="font-weight: 700;">Standard M.2 NVMe slot (user-upgradeable, 5-minute swap)</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Battery</th>
+                            <td class="badge-success">Screwed in (easy DIY replacement, ~$40 part)</td>
+                            <td class="badge-error">Glued with pull-tabs (serviceable by Apple/AASP, requires pro tools)</td>
+                            <td class="badge-success" style="font-weight: 700;">Screwed in (user-replaceable with standard screwdriver, ~$60 part)</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Keyboard/Trackpad</th>
+                            <td class="badge-success">Easily removable with bottom case open</td>
+                            <td class="badge-error">Integrated into top case; full top case replacement required</td>
+                            <td class="badge-error">Integrated into palmrest; requires full top case replacement</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="key-finding">
+                <strong>Key Finding — Serviceability &amp; Lifespan</strong>
+                <p>Repairability has contracted across all three units as design has become more integrated. The 2017 MacBook Air still allows user-level battery replacement and SSD upgrades (via adapter). The 2024 M3 MacBook Air is the least user-serviceable: storage and battery require professional service, raising long-term ownership costs. The Acer Aspire 14 wins here—its standard M.2 slot allows user SSD upgrades, and battery replacement is a straightforward screw swap. For consumers expecting device longevity, the Acer's repairability advantage becomes significant after 3–5 years of ownership.</p>
+            </div>
+
+            <!-- ECOSYSTEM & WORKFLOW FRICTION -->
+            <h3 class="section-h3" id="fa03-ecosystem">Ecosystem &amp; Workflow Friction</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Cross-device cohesion, update longevity, and developer ergonomics</caption>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Dimension</th>
+                            <th style="width: 26%;">2017 MacBook Air</th>
+                            <th style="width: 27%;">2024 M3 MacBook Air</th>
+                            <th style="width: 27%;">2024 Acer Aspire 14</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="primary">OS &amp; Updates</th>
+                            <td class="badge-error">Stuck on macOS Sonoma; Sequoia unsupported natively. Apple ended security updates.</td>
+                            <td class="badge-success">Current macOS (Sequoia). Full security patch support. Expected 7–8 year support window.</td>
+                            <td>Windows 11. Full support for current build. Update frequency depends on Microsoft cycle.</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Apple Ecosystem (AirDrop, Continuity)</th>
+                            <td>Supported but requires devices on older protocols; friction with newer Macs/iPhones</td>
+                            <td class="badge-success" style="font-weight: 700;">Zero friction. Seamless with iPhone, iPad, Apple Watch. Handoff works flawlessly.</td>
+                            <td class="badge-error">No native Apple ecosystem integration. Third-party solutions are clumsy.</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">x86/ARM Translation</th>
+                            <td>N/A (native Intel)</td>
+                            <td class="badge-success">Rosetta 2 translation for x86 Mac apps is transparent and fast (~5–10% overhead).</td>
+                            <td>N/A (native x86). Full Windows app ecosystem natively supported.</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Development Workflow</th>
+                            <td class="badge-error">Sluggish for modern WebGL, heavy video editing, or compiles (3–5× slower than M3).</td>
+                            <td class="badge-success">Exceptional. Native ARM development seamless. Xcode/VS Code compile in seconds.</td>
+                            <td>Very capable. Windows + x86 runs all dev tools natively. Fast on multi-threaded tasks.</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">Cross-Device Friction</th>
+                            <td class="badge-error">High friction with modern iOS devices (file sharing and iCloud sync often lag).</td>
+                            <td class="badge-success" style="font-weight: 700;">Zero friction. iCloud sync is instant and transparent. Deep cohesion.</td>
+                            <td>Moderate. Android integration is seamless (Snapdrop, Phone Link). Windows-to-iPhone friction exists.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="key-finding">
+                <strong>Key Finding — Ecosystem Coherence</strong>
+                <p>The 2024 M3 MacBook Air represents a fully mature ecosystem where friction within Apple's platform is nearly zero. The 2017 MacBook Air feels increasingly isolated as newer iPhones/iPads outpace its capabilities. The Acer Aspire 14 excels in pure Windows productivity and native x86 app support but cannot match Apple's ecosystem cohesion. For users heavily invested in Apple devices (iPhone, iPad, Watch), the M3 MacBook Air's ecosystem advantage justifies its premium. For Windows/Android users or those requiring maximum app flexibility, the Acer wins.</p>
+            </div>
+
+            <!-- REAL-WORLD USAGE -->
+            <h3 class="section-h3" id="fa03-realworld">Real-World Usage Assessment</h3>
+            <div class="three-column">
+                <div class="card">
+                    <h4 style="color: #fff; margin-bottom: var(--spacing-sm);">⚡ Daily Snappiness</h4>
+                    <p style="margin-bottom: var(--spacing-sm); font-size: 0.9rem;"><strong>2017 Air:</strong> Sluggish for modern multitasking. Opening 8+ browser tabs causes noticeable slowdown. Video conferencing (Zoom, Google Meet) is jerky with lower framerates.</p>
+                    <p style="margin-bottom: var(--spacing-sm); font-size: 0.9rem; color: var(--color-success);"><strong>M3 Air:</strong> Exceptionally snappy. 20+ tabs, Slack, Mail, and Xcode run simultaneously with zero hitching. Silent fanless operation keeps work stress-free.</p>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--color-info);"><strong>Acer Aspire 14:</strong> Snappy for office and creative work. The 120Hz OLED makes scrolling and UI interactions feel buttery smooth. Fan engages during heavy load.</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: #fff; margin-bottom: var(--spacing-sm);">🔋 Battery Longevity</h4>
+                    <p style="margin-bottom: var(--spacing-sm); font-size: 0.9rem;"><strong>2017 Air:</strong> Degraded 7-year capacity yields 5–6 hours real runtime (was 8 hours new). Battery replacement is cheap (~$40) but needed periodically.</p>
+                    <p style="margin-bottom: var(--spacing-sm); font-size: 0.9rem; color: var(--color-success);"><strong>M3 Air:</strong> Astonishing 15–18+ hours on light workloads. Even sustained dev tasks run 10–12 hours unplugged. Replacement requires Apple service ($129).</p>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--color-info);"><strong>Acer Aspire 14:</strong> Display settings heavily dictate runtime: 8–11 hours at 120Hz, 11–13 hours at 60Hz. Replacement is simple DIY ($60).</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: #fff; margin-bottom: var(--spacing-sm);">🔇 Thermals &amp; Acoustics</h4>
+                    <p style="margin-bottom: var(--spacing-sm); font-size: 0.9rem; color: var(--color-error);"><strong>2017 Air:</strong> Fans engage frequently. Noise reaches 50+ dB under heavy compilation or export—distracting in quiet rooms or libraries.</p>
+                    <p style="margin-bottom: var(--spacing-sm); font-size: 0.9rem; color: var(--color-success);"><strong>M3 Air:</strong> Completely silent under normal and heavy loads. Zero moving parts. Heat dissipates smoothly through the aluminum chassis.</p>
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--color-info);"><strong>Acer Aspire 14:</strong> Quiet in baseline use, but fans spin up immediately under load (~45 dB peak). Audible but less grating than the 2017 Air.</p>
+                </div>
+            </div>
+
+            <!-- COST & VALUE PROPOSITION -->
+            <h3 class="section-h3" id="fa03-cost">Cost &amp; Value Proposition</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption>Price-to-performance, expected lifecycle, and total cost of ownership</caption>
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">Laptop</th>
+                            <th style="width: 20%;">Current Market Price</th>
+                            <th style="width: 28%;">Best-Case Use</th>
+                            <th style="width: 30%;">Value Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="primary">📅 2017 MacBook Air</th>
+                            <td>$100–$200 (used market)</td>
+                            <td>Emergency backup machine, simple browser-only use, light document editing</td>
+                            <td>Adequate for low-risk, low-performance tasks. Not recommended for primary workload. Approaching end-of-life support.</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">🍎 2024 M3 MacBook Air</th>
+                            <td>$1,299–$1,699 MSRP</td>
+                            <td>Professionals needing silence, all-day battery, Apple ecosystem integration, creative work</td>
+                            <td class="badge-success">Premium price justified by class-leading battery, thermal design, ecosystem cohesion, and 6–8 year expected lifespan.</td>
+                        </tr>
+                        <tr>
+                            <th class="primary">🪟 2024 Acer Aspire 14</th>
+                            <td class="badge-success" style="font-weight: 700;">$750–$950 MSRP</td>
+                            <td>Students, professionals needing Windows, users wanting OLED at mid-range price, repair-conscious buyers</td>
+                            <td class="badge-success">Superior hardware-to-price ratio. 120Hz OLED screen at this price tier is compelling. User-upgradable SSD and battery.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="key-finding">
+                <strong>Key Finding — Cost-to-Utility Ratio</strong>
+                <p>Price-to-performance, the Acer Aspire 14 is superior. It offers nearly equivalent processing power, better display refresh rate, and user-serviceable components at 55% the cost of the M3 MacBook Air. However, the M3 MacBook Air's value proposition lies elsewhere: ecosystem lock-in (if you own iPhone/iPad), acoustic/thermal design (fanless = peace), and battery longevity (15+ hours vs. 8–11). For Apple ecosystem users or those requiring silent operation, the premium is justifiable. For Windows users or those prioritizing upgrade flexibility, the Acer is the rational choice.</p>
+            </div>
+
+            <!-- CONCLUSION & RECOMMENDATIONS -->
+            <h3 class="section-h3" id="fa03-conclusion">Conclusion &amp; Strategic Takeaways</h3>
+            <p>Seven years of laptop evolution have produced a stunning divergence across these three machines:</p>
+            <ul style="margin: var(--spacing-md) 0 var(--spacing-md) var(--spacing-lg); color: var(--color-text-secondary); line-height: 1.7;">
+                <li><strong style="color: #fff;">The 2017 MacBook Air</strong> is now a budget legacy device. While mechanically sound, its Intel Core i5 processor and 8GB RAM make it unsuitable for modern workflows. It serves only as an emergency backup machine.</li>
+                <li><strong style="color: #fff;">The 2024 M3 MacBook Air</strong> represents a quantum leap in efficiency and design. Silent operation, 15+ hour battery life, and zero ecosystem friction (within Apple) create a compelling ownership experience for users already in the Apple ecosystem. Its main weakness is repairability and vendor lock-in—expect $129+ service fees for battery replacement and SSD upgrades are impossible without Apple intervention.</li>
+                <li><strong style="color: #fff;">The 2024 Acer Aspire 14</strong> delivers remarkable value for Windows users. The 120Hz OLED display, Core Ultra 7 performance, and user-serviceable components (SSD, battery) make it the rational choice for budget-conscious buyers. Its weakness is ecosystem fragmentation (no Continuity equivalent) and slightly worse battery endurance than the M3.</li>
+            </ul>
+
+            <div class="recommendation-box">
+                <h3>Bottom Line — Purchasing Recommendations</h3>
+                <ul>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>If you own an iPhone/iPad: <strong style="color:#fff;">M3 MacBook Air</strong> (ecosystem cohesion justifies the premium)</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>If you use Windows/Android: <strong style="color:#fff;">Acer Aspire 14</strong> (superior hardware-to-price, user repairs, no vendor lock-in)</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>If you need absolute silence + all-day battery: <strong style="color:#fff;">M3 MacBook Air</strong> (fanless design = stress-free)</span>
+                    </li>
+                    <li>
+                        <span class="check">✓</span>
+                        <span>If you value repairability &amp; upgradeability: <strong style="color:#fff;">Acer Aspire 14</strong> (standard M.2 slot and screw-in battery)</span>
+                    </li>
+                    <li>
+                        <span class="warning-icon">⚠️</span>
+                        <span>The <strong style="color:#fff;">2017 MacBook Air</strong> should be retired unless you have no other option. At 7 years old with limited OS support, it is approaching end-of-life.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div style="font-size: 0.82rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border); padding-top: 1rem; margin-top: var(--spacing-xl);">
+                <strong>FA-03: Laptop Evolution Comparison</strong> | Status: Complete — Firsthand Tested<br>
+                Last Updated: September 4, 2026 | Data Sources: Direct hardware testing, thermal measurements, battery runtime logging, ecosystem integration hands-on testing, iFixit repair guides (specifications), market pricing
+            </div>
+
+            <!-- RELATED EXPERIMENTS -->
+            <div class="related-experiments">
+                <h4>Related Experiments</h4>
+                <div class="related-list">
+                    <a href="#fa02" class="related-link">🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem (ecosystem coherence context)</a>
+                    <a href="#fa01" class="related-link">🤖 Also see: FA-01 — Which AI Builds Our Website Best?</a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- PLACEHOLDER FOR FUTURE ENTRIES -->
+    <div style="text-align: center; padding: var(--spacing-lg); color: var(--color-text-muted); font-size: 0.9rem; border: 1px dashed var(--color-border); border-radius: var(--radius-md);">
+        🚧 More entries coming as experiments are completed. This archive grows alongside the main documentation.
+    </div>
+
 </div>
+
+<!-- SCROLL TO TOP -->
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top" tabindex="-1">↑</button>
+
+<footer>
+    <p>Fodder Archive — Side experiments and informal observations | Updated September 3, 2026</p>
+</footer>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ===== SCROLL TO TOP =====
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        scrollBtn.setAttribute('tabindex', '-1');
+        window.addEventListener('scroll', () => {
+            const visible = window.scrollY > 400;
+            scrollBtn.classList.toggle('visible', visible);
+            scrollBtn.setAttribute('tabindex', visible ? '0' : '-1');
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== COLLAPSIBLE NAV =====
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        const toggleIcon = document.getElementById('toggleIcon');
+        let isNavCollapsed = false;
+
+        navToggle.addEventListener('click', () => {
+            isNavCollapsed = !isNavCollapsed;
+            navTabs.classList.toggle('collapsed', isNavCollapsed);
+            toggleIcon.textContent = isNavCollapsed ? '▼' : '▲';
+            toggleIcon.classList.toggle('open', !isNavCollapsed);
+            navToggle.setAttribute('aria-expanded', String(!isNavCollapsed));
+        });
+
+        document.querySelectorAll('.nav-tab').forEach(link => {
+            link.addEventListener('click', () => {
+                if (isNavCollapsed) {
+                    isNavCollapsed = false;
+                    navTabs.classList.remove('collapsed');
+                    toggleIcon.textContent = '▲';
+                    toggleIcon.classList.add('open');
+                    navToggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // ===== SCROLLSPY =====
+        const sections = document.querySelectorAll('.experiment');
+        const tabLinks = document.querySelectorAll('.nav-tab[href*="#"]');
+        const tabsById = {};
+        tabLinks.forEach(tab => {
+            const href = tab.getAttribute('href');
+            if (href && href.includes('#')) {
+                const id = href.split('#')[1];
+                if (id) tabsById[id] = tab;
+            }
+        });
+
+        const spy = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const tab = tabsById[entry.target.id];
+                if (!tab) return;
+                if (entry.isIntersecting) {
+                    tabLinks.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+        sections.forEach(section => spy.observe(section));
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeLabel = document.getElementById('themeLabel');
+        let isDarkTheme = true;
+
+        const savedTheme = localStorage.getItem('fodder-theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            isDarkTheme = false;
+            themeIcon.textContent = '☀️';
+            themeLabel.textContent = 'Light';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                document.body.classList.remove('light-theme');
+                themeIcon.textContent = '🌙';
+                themeLabel.textContent = 'Dark';
+                localStorage.setItem('fodder-theme', 'dark');
+            } else {
+                document.body.classList.add('light-theme');
+                themeIcon.textContent = '☀️';
+                themeLabel.textContent = 'Light';
+                localStorage.setItem('fodder-theme', 'light');
+            }
+        });
+
+        // ===== SEARCH / FILTER =====
+        const searchInput = document.getElementById('experimentSearch');
+        const searchClear = document.getElementById('searchClear');
+        const noResults = document.getElementById('searchNoResults');
+        const searchableTabs = document.querySelectorAll('.nav-tab[data-search]');
+        const searchableExperiments = document.querySelectorAll('.experiment[data-search]');
+
+        function runSearch() {
+            const q = searchInput.value.trim().toLowerCase();
+            searchClear.classList.toggle('visible', q.length > 0);
+            let anyVisible = false;
+
+            searchableTabs.forEach(tab => {
+                const match = !q || tab.getAttribute('data-search').includes(q);
+                tab.classList.toggle('search-hidden', !match);
+            });
+
+            searchableExperiments.forEach(exp => {
+                const match = !q || exp.getAttribute('data-search').includes(q);
+                exp.classList.toggle('search-hidden', !match);
+                if (match) anyVisible = true;
+            });
+
+            noResults.classList.toggle('visible', q.length > 0 && !anyVisible);
+        }
+
+        searchInput.addEventListener('input', runSearch);
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            runSearch();
+            searchInput.focus();
+        });
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                runSearch();
+            }
+        });
+
+        // ===== INSIGHT CARD REVEAL =====
+        const reveal = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    reveal.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.insight-card').forEach(card => reveal.observe(card));
+
+    })();
+</script>
+
 </body>
 </html>
