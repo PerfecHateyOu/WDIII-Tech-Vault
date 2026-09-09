@@ -146,6 +146,143 @@
       border-color: var(--td-info) !important;
       transform: translateY(-2px);
     }
+
+    /* =========================================================
+       Responsive Styles & Breakpoints for .td-experiment cards
+       ========================================================= */
+    .td-page-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .td-experiment {
+      margin-bottom: 3rem;
+      border: 1px solid var(--td-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: var(--td-bg-surface);
+      scroll-margin-top: 7rem;
+    }
+
+    .td-experiment-header {
+      background: var(--td-bg-surface-elevated);
+      padding: 1.5rem;
+    }
+
+    .td-experiment-body {
+      padding: 2rem;
+    }
+
+    .td-card,
+    .td-comparison-card,
+    .td-key-finding,
+    .td-conclusion,
+    .td-ranking-row,
+    .td-insight-card,
+    .td-queued-card {
+      padding: 1.5rem;
+    }
+
+    /* Breakpoint 1: Medium devices / Tablets (max-width: 768px) */
+    @media (max-width: 768px) {
+      .td-page-container {
+        padding: 1.5rem 1rem;
+      }
+      .td-experiment {
+        margin-bottom: 2rem;
+        border-radius: 0.375rem;
+      }
+      .td-experiment-header {
+        padding: 1.25rem 1.25rem !important;
+      }
+      .td-experiment-body {
+        padding: 1.5rem 1.25rem !important;
+      }
+      .td-card,
+      .td-comparison-card,
+      .td-key-finding,
+      .td-conclusion,
+      .td-ranking-row,
+      .td-insight-card,
+      .td-queued-card {
+        padding: 1.25rem 1rem !important;
+      }
+    }
+
+    /* Breakpoint 2: Small devices / Standard Mobile (max-width: 640px) */
+    @media (max-width: 640px) {
+      .td-page-container {
+        padding: 1rem 0.625rem;
+      }
+      .td-experiment {
+        margin-bottom: 1.5rem;
+        border-radius: 0.375rem;
+      }
+      .td-experiment-header {
+        padding: 1rem 0.875rem !important;
+      }
+      .td-experiment-body {
+        padding: 1.125rem 0.75rem !important;
+      }
+      .td-card,
+      .td-comparison-card,
+      .td-key-finding,
+      .td-conclusion,
+      .td-ranking-row,
+      .td-insight-card,
+      .td-queued-card {
+        padding: 0.875rem 0.75rem !important;
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+      }
+      /* Comparison and stat grid spacing */
+      .td-experiment-body [style*="grid-template-columns"] {
+        gap: 1rem !important;
+      }
+      /* Data table cell density for mobile readability */
+      .td-scrollbar table th,
+      .td-scrollbar table td {
+        padding: 0.4rem 0.55rem !important;
+        font-size: 0.86rem !important;
+      }
+      .btn-save-drive,
+      .btn-share-gmail {
+        padding: 0.35rem 0.65rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /* Breakpoint 3: Narrow mobile screens (max-width: 480px) */
+    @media (max-width: 480px) {
+      .td-page-container {
+        padding: 0.75rem 0.375rem;
+      }
+      .td-experiment {
+        margin-bottom: 1.25rem;
+        border-radius: 0.25rem;
+      }
+      .td-experiment-header {
+        padding: 0.875rem 0.625rem !important;
+      }
+      .td-experiment-body {
+        padding: 0.875rem 0.5rem !important;
+      }
+      .td-card,
+      .td-comparison-card,
+      .td-key-finding,
+      .td-conclusion,
+      .td-ranking-row,
+      .td-insight-card,
+      .td-queued-card {
+        padding: 0.75rem 0.5rem !important;
+      }
+      .td-scrollbar table th,
+      .td-scrollbar table td {
+        padding: 0.35rem 0.4rem !important;
+        font-size: 0.8rem !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -377,7 +514,7 @@
     </div>
   </div>
 
-  <div style="max-width:1000px; margin:0 auto; padding:2rem;">
+  <div class="td-page-container">
     <nav style="display:flex; align-items:center; flex-wrap:wrap; gap:0.375rem; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1.5rem;">
       <span style="color:var(--td-text-secondary); padding:0.25rem 0.5rem; border-radius:0.25rem;">🏠 Home</span>
       <span style="opacity:0.6;">/</span>
@@ -428,7 +565,7 @@
     </div>
   </div>
 
-  <div style="max-width:1000px; margin:0 auto; padding:2rem;">
+  <div class="td-page-container">
     <nav style="display:flex; align-items:center; flex-wrap:wrap; gap:0.375rem; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1.5rem;">
       <a href="#/" style="color:var(--td-text-secondary); padding:0.25rem 0.5rem; border-radius:0.25rem;">📄 Main Documentation</a>
       <span style="opacity:0.6;">/</span>
@@ -492,7 +629,7 @@
     <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Spotted an error in a finding, have a device you'd like to see tested, or want to contribute data to a queued experiment? Reach out — every message is read, and verifiable corrections are credited in the relevant experiment.</p>
     <div style="border-radius:0.375rem; padding:1rem; margin-bottom:2rem; background:var(--td-bg-card); border:1px solid var(--td-border);">
       <p style="color:var(--td-text-muted); font-size:0.85rem; margin:0 0 0.25rem;">Email</p>
-      <a href="mailto:hello@techstackarchive.dev" style="color:var(--td-info); font-size:1rem; font-weight:600;">hello@techstackarchive.dev</a>
+      <a href="mailto:shadowclanbuisnessv@gmail.com" style="color:var(--td-info); font-size:1rem; font-weight:600;">shadowclanbuisnessv@gmail.com</a>
     </div>
     <form id="contactForm" style="display:flex; flex-direction:column; gap:1rem;">
       <div>
@@ -572,7 +709,7 @@
     <button class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
   </div>
 
-  <div style="max-width:1000px; margin:0 auto; padding:2rem;">
+  <div class="td-page-container">
     <nav style="display:flex; align-items:center; flex-wrap:wrap; gap:0.375rem; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1.5rem;">
       <a href="#/" style="color:var(--td-text-secondary); padding:0.25rem 0.5rem; border-radius:0.25rem;">🏠 Home</a>
       <span style="opacity:0.6;">/</span>
@@ -694,13 +831,13 @@ function metric(label, value, valueColor) {
   return `<div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:var(--td-text-secondary); font-size:0.9rem;">${label}</span><span style="font-weight:600; color:${valueColor||'var(--td-text-primary)'};">${value}</span></div>`;
 }
 function keyFinding(title, body) {
-  return `<div style="padding:1.5rem; margin:1.5rem 0; border-radius:0.125rem; background:var(--td-bg-surface-elevated); border-left:4px solid var(--td-info);"><strong style="display:block; color:var(--td-info); margin-bottom:0.25rem;">${title}</strong><p style="color:var(--td-text-secondary); margin:0;">${body}</p></div>`;
+  return `<div class="td-key-finding" style="margin:1.5rem 0; border-radius:0.125rem; background:var(--td-bg-surface-elevated); border-left:4px solid var(--td-info);"><strong style="display:block; color:var(--td-info); margin-bottom:0.25rem;">${title}</strong><p style="color:var(--td-text-secondary); margin:0;">${body}</p></div>`;
 }
 function conclusion(title, body) {
-  return `<div style="background:var(--td-success-bg); border:1px solid var(--td-success); padding:1.5rem; border-radius:0.375rem; margin-top:2rem;"><h4 style="color:var(--td-success); margin:0 0 0.5rem; font-weight:600;">${title}</h4><p style="color:var(--td-text-secondary); line-height:1.6; margin:0;">${body}</p></div>`;
+  return `<div class="td-conclusion" style="background:var(--td-success-bg); border:1px solid var(--td-success); border-radius:0.375rem; margin-top:2rem;"><h4 style="color:var(--td-success); margin:0 0 0.5rem; font-weight:600;">${title}</h4><p style="color:var(--td-text-secondary); line-height:1.6; margin:0;">${body}</p></div>`;
 }
 function sectionH3(id, text) { return `<h3 id="${id}" style="color:var(--td-text-primary); margin:2rem 0 1rem; font-size:1.125rem; font-weight:600; scroll-margin-top:7rem;">${text}</h3>`; }
-function card(cls, inner) { return `<div style="background:var(--td-bg-card); padding:1.5rem; border-radius:0.375rem; ${cls||''}">${inner}</div>`; }
+function card(cls, inner) { return `<div class="td-card" style="background:var(--td-bg-card); border-radius:0.375rem; ${cls||''}">${inner}</div>`; }
 
 function dataTable(caption, headers, rows, highlightRows) {
   highlightRows = highlightRows || [];
@@ -731,7 +868,7 @@ function dataTable(caption, headers, rows, highlightRows) {
 function rankingRow(tone, title, value, valueColor, body) {
   const border = tone==='success'?'var(--td-success)':tone==='warning'?'var(--td-warning)':tone==='error'?'var(--td-error)':'var(--td-border-subtle)';
   const vc = valueColor==='success'?'var(--td-success)':valueColor==='error'?'var(--td-error)':valueColor==='warning'?'var(--td-warning)':'#f87171';
-  return `<div style="background:var(--td-bg-card); padding:1.5rem; border-radius:0.375rem; border-left:3px solid ${border}; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;"><div><strong style="display:block; margin-bottom:0.125rem; color:var(--td-text-primary);">${title}</strong><p style="color:var(--td-text-secondary); font-size:0.9rem; margin:0;">${body}</p></div>${value?`<div style="font-size:1.5rem; font-weight:700; min-width:60px; text-align:center; color:${vc};">${value}</div>`:''}</div>`;
+  return `<div class="td-ranking-row" style="background:var(--td-bg-card); border-radius:0.375rem; border-left:3px solid ${border}; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;"><div><strong style="display:block; margin-bottom:0.125rem; color:var(--td-text-primary);">${title}</strong><p style="color:var(--td-text-secondary); font-size:0.9rem; margin:0;">${body}</p></div>${value?`<div style="font-size:1.5rem; font-weight:700; min-width:60px; text-align:center; color:${vc};">${value}</div>`:''}</div>`;
 }
 
 function rankItem(rank, rankTone, label, sub, highlight) {
@@ -746,12 +883,12 @@ function perfRow(score, scoreTone, name, note) {
 
 function insightCard(tone, title, body) {
   const border = tone==='success'?'var(--td-success)':tone==='info'?'var(--td-info)':tone==='warning'?'var(--td-warning)':tone==='error'?'var(--td-error)':'var(--td-border-subtle)';
-  return `<div style="background:var(--td-bg-card); padding:1.5rem; border-radius:0.375rem; border-left:3px solid ${border};"><h4 style="color:var(--td-text-primary); margin:0 0 0.5rem; font-weight:600;">${title}</h4><p style="color:var(--td-text-secondary); font-size:0.9rem; margin:0;">${body}</p></div>`;
+  return `<div class="td-insight-card" style="background:var(--td-bg-card); border-radius:0.375rem; border-left:3px solid ${border};"><h4 style="color:var(--td-text-primary); margin:0 0 0.5rem; font-weight:600;">${title}</h4><p style="color:var(--td-text-secondary); font-size:0.9rem; margin:0;">${body}</p></div>`;
 }
 
 function comparisonCard(tone, title, inner) {
   const cls = tone==='winner'?'border-left:3px solid var(--td-success); background:var(--td-success-bg);':tone==='loser'?'border-left:3px solid var(--td-error); background:var(--td-error-bg);':'border-left:3px solid var(--td-border-subtle);';
-  return `<div style="padding:1.5rem; border-radius:0.375rem; ${cls}"><h3 style="margin:0 0 1.5rem; font-size:1.25rem; color:#fff;">${title}</h3>${inner}</div>`;
+  return `<div class="td-comparison-card" style="border-radius:0.375rem; ${cls}"><h3 style="margin:0 0 1.5rem; font-size:1.25rem; color:#fff;">${title}</h3>${inner}</div>`;
 }
 
 function timeline(items) {
@@ -777,8 +914,8 @@ function relatedExperiments(items) {
 
 function experimentShell(opts) {
   const catBorder = CATEGORY_BORDER[opts.category] || CATEGORY_BORDER.repair;
-  let h = `<article id="${opts.id}" data-category="${opts.category}" data-search="${opts.search||''}" class="td-experiment" style="margin-bottom:3rem; border:1px solid var(--td-border); border-radius:0.5rem; overflow:hidden; background:var(--td-bg-surface); scroll-margin-top:7rem;">`;
-  h += `<div style="background:var(--td-bg-surface-elevated); padding:1.5rem; border-bottom:2px solid ${catBorder};">`;
+  let h = `<article id="${opts.id}" data-category="${opts.category}" data-search="${opts.search||''}" class="td-experiment">`;
+  h += `<div class="td-experiment-header" style="border-bottom:2px solid ${catBorder};">`;
   h += `<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">`;
   h += `<div>`;
   if (opts.category) h += categoryLabel(opts.category, opts.categoryText);
@@ -793,7 +930,7 @@ function experimentShell(opts) {
   if (opts.status) h += statusBadge(opts.status, opts.statusLabel);
   if (opts.tags) opts.tags.forEach(t => h += tag(t));
   if (opts.scope) h += scopeNote(opts.scope);
-  h += `</div></div><div style="padding:2rem;">`;
+  h += `</div></div><div class="td-experiment-body">`;
   if (opts.toc && opts.toc.length) {
     h += `<details style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:0.5rem 1rem; margin-bottom:2rem;"><summary style="cursor:pointer; font-weight:600; color:var(--td-text-primary); font-size:0.9rem; display:flex; align-items:center; gap:0.375rem;"><span style="color:var(--td-info);">▸</span> On this page</summary><ul style="list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:0.375rem; margin:0.5rem 0 0; padding-top:0.5rem; border-top:1px solid var(--td-border-subtle);">`;
     opts.toc.forEach(t => { h += `<li><a href="#${t.id}" data-scroll="${t.id}" style="display:inline-block; font-size:0.8rem; color:var(--td-text-secondary); padding:0.25rem 0.625rem; border-radius:9999px; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle);">${t.label}</a></li>`; });
@@ -1139,7 +1276,7 @@ function buildExp11() {
 function buildQueued() {
   function queuedLabel() { return `<span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-pending-bg); color:var(--td-pending); border:1px solid var(--td-pending);">Queued</span>`; }
   function queuedCard(borderColor, title, tag, inner) {
-    return `<div style="background:var(--td-bg-card); padding:1.5rem; border-radius:0.375rem; margin-bottom:1.5rem; border-left:3px solid ${borderColor};"><p style="color:#fff; font-weight:600; margin:0 0 0.5rem;">${title}${tag?`<span style="margin-left:0.5rem; display:inline-block; background:var(--td-border-subtle); color:var(--td-text-secondary); padding:0.125rem 0.5rem; border-radius:0.25rem; font-size:0.85rem; font-weight:400;">${tag}</span>`:''}</p>${inner}</div>`;
+    return `<div class="td-queued-card" style="background:var(--td-bg-card); border-radius:0.375rem; margin-bottom:1.5rem; border-left:3px solid ${borderColor};"><p style="color:#fff; font-weight:600; margin:0 0 0.5rem;">${title}${tag?`<span style="margin-left:0.5rem; display:inline-block; background:var(--td-border-subtle); color:var(--td-text-secondary); padding:0.125rem 0.5rem; border-radius:0.25rem; font-size:0.85rem; font-weight:400;">${tag}</span>`:''}</p>${inner}</div>`;
   }
   function hypothesisList(items) {
     let h = `<ul style="margin-left:1.5rem; color:var(--td-text-secondary); font-size:0.92rem; list-style:none; padding:0;">`;
@@ -1156,13 +1293,13 @@ function buildQueued() {
   return `
     <section id="queued" style="margin:3rem 0;">
       <div style="text-align:center; margin-bottom:3rem;"><h2 style="font-size:clamp(1.6rem,4vw+0.5rem,2.5rem); color:#fff; margin:0 0 1rem; font-weight:700;">Queued Experiments</h2><p style="color:var(--td-text-secondary); font-size:1.05rem; margin:0;">Upcoming research projects currently in planning or pre-production phase.</p></div>
-      <article id="queue1" data-search="queued iphone apple device security ecosystem privacy authentication" class="td-experiment" style="margin-bottom:3rem; border:1px solid var(--td-border); border-radius:0.5rem; overflow:hidden; background:var(--td-bg-surface); border-left:4px solid var(--td-pending); opacity:0.95; scroll-margin-top:7rem;">
-        <div style="background:var(--td-bg-surface-elevated); padding:1.5rem; border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
+      <article id="queue1" data-search="queued iphone apple device security ecosystem privacy authentication" class="td-experiment" style="border-left:4px solid var(--td-pending); opacity:0.95;">
+        <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
           ${queuedLabel()}
           <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Queued Experiment 9: How Secure Is Your iPhone &amp; Apple Device in the Ecosystem?</h3>
           ${statusBadge("pending","Research Complete — Testing Not Started")}
         </div>
-        <div style="padding:2rem;">
+        <div class="td-experiment-body">
           <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Objective</h4>
           <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Comprehensive security audit of the Apple ecosystem — testing authentication vulnerabilities, data isolation, cross-device security assumptions, and real-world attack surface. Will document practical threat scenarios, ecosystem dependency risks, and actual vs. marketed security.</p>
           <div style="display:inline-flex; align-items:center; gap:0.375rem; font-size:0.75rem; color:var(--td-text-muted); background:var(--td-bg-card); border:1px dashed var(--td-border-subtle); padding:0.25rem 0.625rem; border-radius:9999px; margin-bottom:1.5rem;">📋 The section below is background research, not results. It reflects secondhand sourcing (Apple's own documentation, academic research, security researcher disclosures) used to build the hypotheses below. Hands-on testing on my own devices has not started yet — status will move to "Active" once it does.</div>
@@ -1197,13 +1334,13 @@ function buildQueued() {
           ${statusBox("var(--td-pending)","Background research complete. Hands-on testing on my own devices has not yet started — will move to \"Active\" once field testing begins.")}
         </div>
       </article>
-      <article id="queue2" data-search="queued ios 26 27 year long survey data comparison performance" class="td-experiment" style="margin-bottom:3rem; border:1px solid var(--td-border); border-radius:0.5rem; overflow:hidden; background:var(--td-bg-surface); border-left:4px solid var(--td-pending); opacity:0.95; scroll-margin-top:7rem;">
-        <div style="background:var(--td-bg-surface-elevated); padding:1.5rem; border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
+      <article id="queue2" data-search="queued ios 26 27 year long survey data comparison performance" class="td-experiment" style="border-left:4px solid var(--td-pending); opacity:0.95;">
+        <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
           ${queuedLabel()}
           <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey</h3>
           ${statusBadge("paused","Paused")}
         </div>
-        <div style="padding:2rem;">
+        <div class="td-experiment-body">
           <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Objective</h4>
           <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Longitudinal performance and stability comparison across iOS 26 and iOS 27 over a 12-month period. Will document real-world usage patterns, performance degradation curves, battery efficiency, app compatibility, and OS-level stability throughout the lifecycle of both versions.</p>
           <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Scope &amp; Methodology</h4>
@@ -1249,9 +1386,9 @@ function buildInsights() {
   }
   const recBox = `<div style="margin-top:2rem; padding:2rem; background:var(--td-bg-surface-elevated); border-radius:0.375rem; border:1px solid var(--td-border);"><h3 style="color:#fff; margin:0 0 1.5rem; font-size:1.125rem; font-weight:600;">Bottom Line — Repair Decisions</h3><ul style="list-style:none; padding:0; margin:0;">${recItem("check","First choice — speed, quality, and peace of mind: <strong style='color:#fff'>Official Apple</strong>")}${recItem("check","Apple unavailable or faster scheduling needed: <strong style='color:#fff'>Apple Authorized Service Provider (AASP)</strong> — identical quality, same warranty, slight cost premium")}${recItem("cross","Third-party shops with genuine parts: <strong style='color:#fff'>Never</strong> — costs more than Apple, delivers less, no authentication")}${recItem("warning","Cheap unauthorized repair: <strong style='color:#fff'>Only</strong> if waterproofing and longevity genuinely don't matter")}${recItem("check","Best long-term move: <strong style='color:#fff'>Protect your device from day one</strong> — a $20–50 case and screen protector beats a $400–600 repair every time")}</ul></div>`;
   return `
-    <article id="insights" data-search="insights recommendations repair decisions" class="td-experiment" style="margin-bottom:3rem; border:1px solid var(--td-border); border-radius:0.5rem; overflow:hidden; background:var(--td-bg-surface); scroll-margin-top:7rem;">
-      <div style="background:var(--td-bg-surface-elevated); padding:1.5rem; border-bottom:2px solid var(--td-border-subtle);"><h2 style="font-size:clamp(1.25rem,2.5vw+0.4rem,1.8rem); color:#fff; margin:0 0 0.5rem; font-weight:700;">Key Insights &amp; Recommendations</h2></div>
-      <div style="padding:2rem;">
+    <article id="insights" data-search="insights recommendations repair decisions" class="td-experiment">
+      <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle);"><h2 style="font-size:clamp(1.25rem,2.5vw+0.4rem,1.8rem); color:#fff; margin:0 0 0.5rem; font-weight:700;">Key Insights &amp; Recommendations</h2></div>
+      <div class="td-experiment-body">
         ${cards}
         ${recBox}
         ${relatedExperiments([{to:"#/fodder",label:"🗂️ Also see: Fodder Archive — Side Experiments"}])}
@@ -3261,7 +3398,7 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
   const message = document.getElementById("contactMessage").value;
   const subject = encodeURIComponent("TechStack Archive contact from "+(name||"a reader"));
   const body = encodeURIComponent(message+"\n\n— "+name+(email?" ("+email+")":""));
-  window.location.href = "mailto:hello@techstackarchive.dev?subject="+subject+"&body="+body;
+  window.location.href = "mailto:shadowclanbuisnessv@gmail.com?subject="+subject+"&body="+body;
 });
 
 // ===== Init =====

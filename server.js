@@ -515,6 +515,17 @@ app.post('/api/gmail/messages/:messageId/trash', async (req, res) => {
   }
 });
 
+// Explicit download route for bun.lock to force browser file download
+app.get(['/bun.lock', '/download/bun.lock', '/api/download/bun.lock'], (req, res) => {
+  const filePath = path.join(__dirname, 'bun.lock');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="bun.lock"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('bun.lock not found');
+});
+
 // Serve static assets from the current directory
 app.use(express.static(__dirname, {
   extensions: ['html', 'htm']
