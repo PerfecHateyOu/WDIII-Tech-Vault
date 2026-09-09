@@ -493,6 +493,76 @@
   </div>
 </div>
 
+<!-- Direct File Downloads Modal (bun.lock & Firebase Config) -->
+<div id="downloadsModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; z-index:3000; align-items:center; justify-content:center; padding:1.5rem; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);">
+  <div class="td-slide-up" style="max-width:760px; width:100%; border-radius:0.75rem; padding:2rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); box-shadow:0 16px 48px rgba(0,0,0,0.6); max-height:90vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+      <h3 style="color:#fff; font-size:1.35rem; margin:0; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
+        <span>📥</span> <span>Direct File Downloads</span>
+      </h3>
+      <button id="downloadsModalCloseBtn" type="button" style="background:none; border:none; color:var(--td-text-muted); font-size:1.4rem; cursor:pointer; padding:0.25rem;">✕</button>
+    </div>
+
+    <!-- Explanation Banner -->
+    <div style="background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); border-radius:0.5rem; padding:1rem 1.25rem; margin-bottom:1.5rem; color:var(--td-text-primary); font-size:0.875rem; line-height:1.6;">
+      <div style="font-weight:600; color:#60a5fa; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.375rem;">
+        <span>ℹ️</span> <span>About AI Studio File Explorer Alert Icon (!)</span>
+      </div>
+      <p style="margin:0;">The AI Studio Monaco code editor does not have a default viewer for <code>.lock</code> files and protects platform-generated Firebase credentials, which is why they show an alert icon in the web workspace. Use the direct one-click download buttons below to download the exact files to your device, or access the clean <code>.json</code> versions.</p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+      <!-- bun.lock Card -->
+      <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span style="font-size:1.25rem;">📦</span>
+              <h4 style="color:#fff; font-size:1.05rem; margin:0; font-weight:600;">bun.lock</h4>
+              <span style="font-size:0.75rem; padding:0.15rem 0.5rem; border-radius:9999px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-weight:600;">14.1 KB</span>
+            </div>
+            <p style="color:var(--td-text-secondary); font-size:0.85rem; margin:0.25rem 0 0;">Bun package dependencies lockfile (JSON format v2).</p>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a href="/download/bun.lock" download="bun.lock" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:#10b981; color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none;">⬇️ Download bun.lock</a>
+            <a href="/download/bun.lock.json" download="bun.lock.json" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.85rem; font-weight:500; text-decoration:none;">.json version</a>
+            <button id="btnCopyBunLock" type="button" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">📋 Copy Content</button>
+          </div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--td-text-muted); font-family:monospace; background:var(--td-bg-surface); padding:0.5rem 0.75rem; border-radius:0.25rem; border:1px solid var(--td-border); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          Direct URL: <a href="/download/bun.lock" target="_blank" style="color:var(--td-info);">/download/bun.lock</a> (or in project tree: <code>bun.lock.json</code>)
+        </div>
+      </div>
+
+      <!-- firebase-applet-config.json Card -->
+      <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span style="font-size:1.25rem;">🔥</span>
+              <h4 style="color:#fff; font-size:1.05rem; margin:0; font-weight:600;">firebase-applet-config.json</h4>
+              <span style="font-size:0.75rem; padding:0.15rem 0.5rem; border-radius:9999px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); font-weight:600;">479 B</span>
+            </div>
+            <p style="color:var(--td-text-secondary); font-size:0.85rem; margin:0.25rem 0 0;">Firebase client credentials, Firestore database ID, and project configuration.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a href="/download/firebase-applet-config.json" download="firebase-applet-config.json" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:#f59e0b; color:#000; font-size:0.85rem; font-weight:600; text-decoration:none;">⬇️ Download firebase config</a>
+            <a href="/firebase-config.json" download="firebase-config.json" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.85rem; font-weight:500; text-decoration:none;">firebase-config.json</a>
+            <button id="btnCopyFirebaseConfig" type="button" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">📋 Copy Content</button>
+          </div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--td-text-muted); font-family:monospace; background:var(--td-bg-surface); padding:0.5rem 0.75rem; border-radius:0.25rem; border:1px solid var(--td-border); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          Direct URL: <a href="/download/firebase-applet-config.json" target="_blank" style="color:var(--td-info);">/download/firebase-applet-config.json</a> (or in project tree: <code>firebase-config.json</code>)
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem; text-align:right;">
+      <button id="downloadsModalDoneBtn" type="button" style="padding:0.625rem 1.25rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.9rem; font-weight:600; cursor:pointer;">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast Notifications Container -->
 <div id="toastContainer" style="position:fixed; bottom:2rem; left:2rem; z-index:4000; display:flex; flex-direction:column; gap:0.5rem; max-width:420px; pointer-events:none;"></div>
 
@@ -509,6 +579,7 @@
   <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border);">
     <div class="drive-header-status" style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem;"></div>
     <div style="display:flex; align-items:center; gap:0.5rem;">
+      <button class="btnOpenDownloadsModal" style="display:inline-flex; align-items:center; gap:0.375rem; background:var(--td-bg-card); border:1px solid rgba(16,185,129,0.4); border-radius:9999px; padding:0.375rem 0.875rem; color:#10b981; font-size:0.85rem; font-weight:600; cursor:pointer;" title="Download bun.lock and Firebase configuration files">📥 Download Files</button>
       <a href="#/drive" style="display:inline-flex; align-items:center; gap:0.375rem; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-info); font-size:0.85rem; font-weight:500;">📁 Drive</a>
       <button id="themeToggleHome" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
     </div>
@@ -543,6 +614,7 @@
       <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
       <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+      <a href="#/downloads" class="btnOpenDownloadsModal" style="color:#10b981; font-weight:600;">📥 Download Files (bun.lock &amp; Firebase)</a>
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | Last updated September 8, 2026 (V5.5.4) | © WDIII</p>
     <p style="margin:0.5rem 0 0; font-size:0.8rem; opacity:0.85;">*Latest: Experiment 9 (iPhone &amp; Apple Device Security Audit) is queued and undergoing research review.</p>
@@ -1893,6 +1965,10 @@ function showPage(hash) {
   else if (route === "/methodology") pageId = "page-methodology";
   else if (route === "/drive") pageId = "page-drive";
   else if (route === "/gmail") pageId = "page-gmail";
+  else if (route === "/downloads") {
+    openDownloadsModal();
+    return;
+  }
   document.getElementById(pageId).classList.add("active");
   window.scrollTo(0,0);
   setupScrollSpy(pageId);
@@ -3400,6 +3476,53 @@ document.getElementById("disclaimerDismiss").addEventListener("click", () => {
   disclaimer.style.display = "none";
 });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { disclaimer.style.display = "none"; sessionStorage.setItem("ctd-disclaimer-ack","1"); } });
+
+// ===== Downloads Modal Logic =====
+function openDownloadsModal() {
+  const modal = document.getElementById("downloadsModal");
+  if (modal) modal.style.display = "flex";
+}
+function closeDownloadsModal() {
+  const modal = document.getElementById("downloadsModal");
+  if (modal) modal.style.display = "none";
+  if (window.location.hash === "#/downloads") {
+    history.pushState("", document.title, window.location.pathname + window.location.search);
+  }
+}
+
+document.querySelectorAll(".btnOpenDownloadsModal").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    openDownloadsModal();
+  });
+});
+
+document.getElementById("downloadsModalCloseBtn")?.addEventListener("click", closeDownloadsModal);
+document.getElementById("downloadsModalDoneBtn")?.addEventListener("click", closeDownloadsModal);
+
+document.getElementById("btnCopyBunLock")?.addEventListener("click", async () => {
+  try {
+    const res = await fetch("/download/bun.lock");
+    if (!res.ok) throw new Error("Could not fetch bun.lock");
+    const text = await res.text();
+    await navigator.clipboard.writeText(text);
+    showToast("Copied bun.lock to clipboard!", "success");
+  } catch (err) {
+    showToast("Failed to copy bun.lock: " + err.message, "error");
+  }
+});
+
+document.getElementById("btnCopyFirebaseConfig")?.addEventListener("click", async () => {
+  try {
+    const res = await fetch("/download/firebase-applet-config.json");
+    if (!res.ok) throw new Error("Could not fetch Firebase config");
+    const text = await res.text();
+    await navigator.clipboard.writeText(text);
+    showToast("Copied Firebase config to clipboard!", "success");
+  } catch (err) {
+    showToast("Failed to copy Firebase config: " + err.message, "error");
+  }
+});
 
 // ===== Scroll to top button =====
 const scrollTopBtn = document.getElementById("scrollTopBtn");

@@ -515,15 +515,45 @@ app.post('/api/gmail/messages/:messageId/trash', async (req, res) => {
   }
 });
 
-// Explicit download route for bun.lock to force browser file download
-app.get(['/bun.lock', '/download/bun.lock', '/api/download/bun.lock'], (req, res) => {
+// Explicit download routes for bun.lock and firebase configuration files
+app.get(['/bun.lock', '/download/bun.lock', '/download/bun', '/api/download/bun.lock'], (req, res) => {
   const filePath = path.join(__dirname, 'bun.lock');
   if (fs.existsSync(filePath)) {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="bun.lock"');
     return res.sendFile(filePath);
   }
   res.status(404).send('bun.lock not found');
+});
+
+app.get(['/bun.lock.json', '/download/bun.lock.json'], (req, res) => {
+  const filePath = path.join(__dirname, 'bun.lock.json');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="bun.lock.json"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('bun.lock.json not found');
+});
+
+app.get(['/firebase-applet-config.json', '/download/firebase-applet-config.json', '/download/firebase', '/download/firebase-config', '/download/firebase-config.json'], (req, res) => {
+  const configPath = path.join(__dirname, 'firebase-applet-config.json');
+  if (fs.existsSync(configPath)) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="firebase-applet-config.json"');
+    return res.sendFile(configPath);
+  }
+  res.status(404).json({ error: 'firebase-applet-config.json not found' });
+});
+
+app.get(['/firebase-config.json'], (req, res) => {
+  const configPath = path.join(__dirname, 'firebase-config.json');
+  if (fs.existsSync(configPath)) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="firebase-config.json"');
+    return res.sendFile(configPath);
+  }
+  res.status(404).json({ error: 'firebase-config.json not found' });
 });
 
 // Serve static assets from the current directory
