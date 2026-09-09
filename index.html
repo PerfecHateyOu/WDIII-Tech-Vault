@@ -8,12 +8,25 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": "TechArticle",
     "name": "Consumer Tech Documentation",
+    "headline": "Consumer Tech Documentation — Real-world experiments and findings",
     "description": "Real-world experiments, case studies, and documented findings across repair, service, software, and hardware.",
-    "applicationCategory": "WebApplication",
-    "operatingSystem": "Any",
-    "publisher": { "@type": "Organization", "name": "TechStack Archive" }
+    "version": "V5.5.4",
+    "dateModified": "2026-09-08",
+    "author": { "@type": "Person", "name": "WDIII" },
+    "publisher": { "@type": "Organization", "name": "TechStack Archive" },
+    "hasPart": [
+      { "@type": "TechArticle", "name": "Experiment 1: Apple vs Samsung Mail-In Repair" },
+      { "@type": "TechArticle", "name": "Experiment 2: Repair Channel Tiers (Apple Store vs AASP vs Independent)" },
+      { "@type": "TechArticle", "name": "Experiment 3: Customer Service Support Phone Test" },
+      { "@type": "TechArticle", "name": "Experiment 4: iOS Performance Over Time" },
+      { "@type": "TechArticle", "name": "Case Study: Samsung Battery Swelling Settlement" },
+      { "@type": "TechArticle", "name": "Experiment 5: Pixel vs iPhone Battery Endurance" },
+      { "@type": "TechArticle", "name": "Experiment 6: AASP Repair Field Reality" },
+      { "@type": "TechArticle", "name": "Experiment 7: Pixel Pro Generations Findings" },
+      { "@type": "TechArticle", "name": "Queued: Experiment 9 (iPhone & Apple Device Security Audit)", "disambiguatingDescription": "Experiment 8 has been removed for the expedition review of Experiment 9." }
+    ]
   }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -454,7 +467,7 @@
           <option value="fa01">FA-01: AI Builder Comparison</option>
           <option value="fa02">FA-02: Ecosystem Exit Friction Log</option>
           <option value="fa03">FA-03: Laptop Evolution Comparison</option>
-          <option value="full-archive">Complete Archive Dossier V5.5.3</option>
+          <option value="full-archive">Complete Archive Dossier V5.5.4</option>
         </select>
       </div>
       <div>
@@ -531,8 +544,9 @@
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
       <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
     </nav>
-    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | Last updated July 28, 2026 (V5.5.3) | © WDIII</p>
-    <p style="margin:0.5rem 0 0; font-size:0.8rem; opacity:0.85;">*Latest: Experiment 9 (iPhone & Apple Device Security Audit) is queued and undergoing research review.</p>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | Last updated September 8, 2026 (V5.5.4) | © WDIII</p>
+    <p style="margin:0.5rem 0 0; font-size:0.8rem; opacity:0.85;">*Latest: Experiment 9 (iPhone &amp; Apple Device Security Audit) is queued and undergoing research review.</p>
+    <p style="margin:0.25rem 0 0; font-size:0.8rem; opacity:0.85;">*Experiment 8 has been removed for the expedition review of Experiment 9.</p>
     <p style="margin:1rem 0 0; font-size:0.8rem; opacity:0.75; padding:0.75rem; border-top:1px solid var(--td-border-subtle); color:var(--td-info);">ℹ️ Information has been redacted for the sake of transparency and better feedback. I apologize for the inconvenience.</p>
   </footer>
 </div>
@@ -1292,7 +1306,11 @@ function buildQueued() {
   }
   return `
     <section id="queued" style="margin:3rem 0;">
-      <div style="text-align:center; margin-bottom:3rem;"><h2 style="font-size:clamp(1.6rem,4vw+0.5rem,2.5rem); color:#fff; margin:0 0 1rem; font-weight:700;">Queued Experiments</h2><p style="color:var(--td-text-secondary); font-size:1.05rem; margin:0;">Upcoming research projects currently in planning or pre-production phase.</p></div>
+      <div style="text-align:center; margin-bottom:3rem;">
+        <h2 style="font-size:clamp(1.6rem,4vw+0.5rem,2.5rem); color:#fff; margin:0 0 1rem; font-weight:700;">Queued Experiments</h2>
+        <p style="color:var(--td-text-secondary); font-size:1.05rem; margin:0 0 0.75rem;">Upcoming research projects currently in planning or pre-production phase.</p>
+        <div style="display:inline-block; padding:0.375rem 0.875rem; border-radius:9999px; background:rgba(251,191,36,0.1); border:1px solid var(--td-warning); color:var(--td-warning); font-size:0.85rem; font-weight:500;">*Experiment 8 has been removed for the expedition review of Experiment 9.</div>
+      </div>
       <article id="queue1" data-search="queued iphone apple device security ecosystem privacy authentication" class="td-experiment" style="border-left:4px solid var(--td-pending); opacity:0.95;">
         <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
           ${queuedLabel()}
@@ -2465,7 +2483,7 @@ async function previewDriveFile(file) {
 }
 
 function generateExperimentMarkdown(expId) {
-  const dateStr = "July 28, 2026";
+  const dateStr = "September 8, 2026";
   switch (expId) {
     case "exp1":
       return `# Experiment 1: Apple vs Samsung Mail-In Repair
@@ -2653,10 +2671,11 @@ A comparative analysis of three laptops spanning 7 years of consumer hardware ev
     case "full-archive":
     default:
       return `# Consumer Tech Documentation — Full Research Archive Dossier
-**Version:** V5.5.3
+**Version:** V5.5.4
 **Author:** WDIII
-**Last Updated:** July 28, 2026
+**Last Updated:** September 8, 2026
 **Website:** TechStack Archive
+*Note: Experiment 8 has been removed for the expedition review of Experiment 9.*
 
 ---
 
@@ -2886,13 +2905,13 @@ function renderDrivePage() {
   });
   document.getElementById("btnBackupAll").addEventListener("click", async () => {
     const md = generateExperimentMarkdown("full-archive");
-    await uploadToDrive("Consumer-Tech-Documentation-Complete-Dossier-V5.5.3.md", md);
+    await uploadToDrive("Consumer-Tech-Documentation-Complete-Dossier-V5.5.4.md", md);
   });
   const emptyBackupBtn = document.getElementById("btnEmptyBackup");
   if (emptyBackupBtn) {
     emptyBackupBtn.addEventListener("click", async () => {
       const md = generateExperimentMarkdown("full-archive");
-      await uploadToDrive("Consumer-Tech-Documentation-Complete-Dossier-V5.5.3.md", md);
+      await uploadToDrive("Consumer-Tech-Documentation-Complete-Dossier-V5.5.4.md", md);
     });
   }
   document.getElementById("btnNewDocModal").addEventListener("click", () => {
@@ -3132,7 +3151,7 @@ function renderGmailPage() {
           { id: "fa01", name: "FA-01: AI Builder Comparison" },
           { id: "fa02", name: "FA-02: Ecosystem Exit Log" },
           { id: "fa03", name: "FA-03: Laptop Comparison" },
-          { id: "full-archive", name: "Complete Dossier: Archive V5.5.3" }
+          { id: "full-archive", name: "Complete Dossier: Archive V5.5.4" }
         ].map(item => `
           <div style="display:flex; justify-content:space-between; align-items:center; padding:0.625rem 0.875rem; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem;">
             <span style="color:var(--td-text-primary); font-size:0.85rem; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-right:0.5rem;">${item.name}</span>

@@ -537,7 +537,7 @@ app.get('/', (req, res) => {
 });
 
 // Route aliases
-app.get(['/Document V5.2.3.htm', '/Document%20V5.2.3.htm', '/consumer-tech-documentation', '/consumer-tech-documentation.html', '/Consumer_Tech_Documentation_V5_5_2.html', '/Consumer_Tech_Documentation_V5_5_2', '/Consumer_Tech_Documentation_V5_5_3.html', '/Consumer_Tech_Documentation_V5_5_3'], (req, res) => {
+app.get(['/Document V5.2.3.htm', '/Document%20V5.2.3.htm', '/consumer-tech-documentation', '/consumer-tech-documentation.html', '/Consumer_Tech_Documentation_V5_5_2.html', '/Consumer_Tech_Documentation_V5_5_2', '/Consumer_Tech_Documentation_V5_5_3.html', '/Consumer_Tech_Documentation_V5_5_3', '/Consumer_Tech_Documentation_V5_5_4.html', '/Consumer_Tech_Documentation_V5_5_4'], (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
