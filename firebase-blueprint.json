@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access metadata and reputation metrics",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Authentication User ID" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "photoURL": { "type": "string", "description": "Avatar photo URL" },
+        "role": { "type": "string", "enum": ["contributor", "moderator", "admin", "owner"], "description": "System role" },
+        "reputationScore": { "type": "number", "description": "Community reputation points" },
+        "submissionCount": { "type": "number", "description": "Number of submitted research items" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account registration timestamp" },
+        "lastLoginAt": { "type": "string", "format": "date-time", "description": "Last sign-in timestamp" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Device": {
+      "title": "Device",
+      "description": "Hardware device registry with verified empirical specifications and status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique slug identifier for the device" },
+        "brand": { "type": "string", "description": "Manufacturer brand name" },
+        "model": { "type": "string", "description": "Device model designation" },
+        "category": { "type": "string", "enum": ["smartphone", "laptop", "wearable", "tablet", "accessory"], "description": "Device hardware category" },
+        "releaseYear": { "type": "number", "description": "Documented release calendar year or null if unverified" },
+        "operatingSystem": { "type": "string", "description": "Primary operating system platform" },
+        "specifications": { "type": "object", "description": "Structured hardware specifications or null where undocumented" },
+        "origin": { "type": "string", "enum": ["official_wdiii", "community"], "description": "Data origin partition" },
+        "sources": { "type": "array", "description": "Documented research sources and citations" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Registry creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" },
+        "status": { "type": "string", "enum": ["active", "archived", "deprecated", "draft", "private"], "description": "Catalog publication status" },
+        "experimentsInvolved": { "type": "array", "description": "List of experiment IDs referencing this device" }
+      },
+      "required": ["id", "brand", "model", "category", "origin", "status"]
+    },
+    "Experiment": {
+      "title": "Experiment",
+      "description": "Empirical testing dossier, methodology, measurements, and conclusions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique slug or experiment code" },
+        "experimentNumber": { "type": "string", "description": "Sequential experiment number or code" },
+        "title": { "type": "string", "description": "Full research title" },
+        "category": { "type": "string", "enum": ["repair", "support", "software", "legal", "hardware", "ecosystem", "ai"], "description": "Research category" },
+        "status": { "type": "string", "enum": ["done", "progress", "pending", "paused", "queued", "draft", "private"], "description": "Execution status" },
+        "statusLabel": { "type": "string", "description": "Human-readable status label" },
+        "origin": { "type": "string", "enum": ["official_wdiii", "community"], "description": "Authoritative origin classification" },
+        "researchQuestion": { "type": "string", "description": "Core empirical question under investigation" },
+        "objective": { "type": "string", "description": "Target outcome and scope" },
+        "methodology": { "type": "string", "description": "Step-by-step scientific method and testing approach" },
+        "conditions": { "type": "string", "description": "Environmental and physical testing controls" },
+        "protocol": { "type": "string", "description": "Testing protocol instructions" },
+        "measurements": { "type": "object", "description": "Quantitative telemetry, benchmarks, and cost metrics" },
+        "results": { "type": "string", "description": "Key outcome summary" },
+        "observations": { "type": "array", "description": "Detailed empirical findings and observations" },
+        "limitations": { "type": "string", "description": "Documented testing boundaries and sample constraints" },
+        "devices": { "type": "array", "description": "Referenced device IDs in the device catalog" },
+        "sources": { "type": "array", "description": "Documented empirical data sources" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Record creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last revision timestamp" }
+      },
+      "required": ["id", "title", "category", "status", "origin"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "Community benchmark test submission undergoing peer review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique submission identifier" },
+        "userId": { "type": "string", "description": "UID of submitter" },
+        "authorId": { "type": "string", "description": "UID of submitter (alias)" },
+        "submitterName": { "type": "string", "description": "Display name of submitter" },
+        "submitterEmail": { "type": "string", "description": "Email of submitter" },
+        "deviceId": { "type": "string", "description": "Referenced device registry ID" },
+        "experimentId": { "type": "string", "description": "Referenced official experiment ID" },
+        "submittedAt": { "type": "string", "format": "date-time", "description": "Submission ISO timestamp" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" },
+        "testDate": { "type": "string", "description": "Date when empirical testing was performed" },
+        "softwareVersion": { "type": "string", "description": "Operating system and software build tested" },
+        "conditions": { "type": "object", "description": "Structured testing conditions and controls" },
+        "measurements": { "type": "object", "description": "Empirical measurements with explicit units" },
+        "evidenceReferences": { "type": "array", "description": "Uploaded telemetry evidence file references" },
+        "notes": { "type": "string", "description": "Contributor empirical observations and notes" },
+        "status": { "type": "string", "enum": ["pending_review", "pending", "needs_revision", "approved", "rejected", "withdrawn"], "description": "Review status" },
+        "reviewerId": { "type": "string", "description": "UID of reviewer if reviewed" },
+        "reviewedAt": { "type": "string", "format": "date-time", "description": "Review completion timestamp" },
+        "reviewNotes": { "type": "string", "description": "Reviewer notes and revision instructions" },
+        "reviewHistory": { "type": "array", "description": "Audit trail of review decisions and notes" }
+      },
+      "required": ["deviceId", "experimentId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles with role-based access controls"
+    },
+    "/devices/{deviceId}": {
+      "schema": "Device",
+      "description": "Hardware device registry catalog"
+    },
+    "/experiments/{experimentId}": {
+      "schema": "Experiment",
+      "description": "Authoritative research experiments and dossiers"
+    },
+    "/submissions/{submissionId}": {
+      "schema": "Submission",
+      "description": "Community benchmark test submissions"
+    }
+  }
+}

@@ -1,0 +1,189 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Lookup user role from user profile or auth custom claims
+    function getUserRole() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : (isSignedIn() && 'role' in request.auth.token ? request.auth.token.role : 'guest');
+    }
+
+    function isContributor() {
+      return isSignedIn();
+    }
+
+    function isModerator() {
+      return isSignedIn() && (
+        getUserRole() == 'moderator' ||
+        getUserRole() == 'admin' ||
+        getUserRole() == 'owner' ||
+        ('role' in request.auth.token && (request.auth.token.role in ['moderator', 'admin', 'owner']))
+      );
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        getUserRole() == 'admin' ||
+        getUserRole() == 'owner' ||
+        request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
+        ('role' in request.auth.token && (request.auth.token.role in ['admin', 'owner']))
+      );
+    }
+
+    function isSystemOwner() {
+      return isSignedIn() && (
+        getUserRole() == 'owner' ||
+        request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
+        ('role' in request.auth.token && request.auth.token.role == 'owner')
+      );
+    }
+
+    // 1. User Profiles Collection
+    match /users/{userId} {
+      // Authenticated users or self can read user profiles
+      allow read: if isSignedIn();
+
+      // New users can create their own profile with contributor role ONLY
+      allow create: if isOwner(userId)
+                    && request.resource.data.uid == userId
+                    && request.resource.data.role == 'contributor'
+                    && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == 0);
+
+      // Existing users can update their profile (displayName, photoURL, lastLoginAt, etc.)
+      // but strictly CANNOT escalate their role or tamper with reputation score or uid
+      allow update: if (isOwner(userId)
+                        && request.resource.data.role == resource.data.role
+                        && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == resource.data.reputationScore)
+                        && request.resource.data.uid == userId)
+                    || isAdmin();
+
+      // Only administrators can delete user accounts
+      allow delete: if isAdmin();
+    }
+
+    // 2. Hardware Devices Catalog
+    match /devices/{deviceId} {
+      // Public users and unauthenticated visitors can read public devices
+      allow read: if !('status' in resource.data) || resource.data.status != 'private' || isAdmin();
+
+      // Only authorized administrators can create or update official device records
+      // Enforce strict schema validation on server
+      allow create, update: if isAdmin()
+                            && request.resource.data.keys().hasAll(['id', 'brand', 'model', 'category', 'origin', 'status'])
+                            && request.resource.data.id == deviceId
+                            && request.resource.data.brand is string
+                            && request.resource.data.model is string
+                            && request.resource.data.category in ['smartphone', 'laptop', 'wearable', 'tablet', 'accessory']
+                            && request.resource.data.origin in ['official_wdiii', 'community']
+                            && request.resource.data.status in ['active', 'archived', 'deprecated', 'draft', 'private'];
+
+      allow delete: if isAdmin();
+    }
+
+    // 3. Official Experiment Protocols & Dossiers
+    match /experiments/{experimentId} {
+      // Public users and unauthenticated visitors can read published experiments
+      allow read: if !('status' in resource.data) || resource.data.status != 'private' || isAdmin();
+
+      // Only authorized administrators can create or update official experiments
+      // Normal contributors are strictly forbidden from modifying official archives
+      allow create, update: if isAdmin()
+                            && request.resource.data.keys().hasAll(['id', 'title', 'category', 'status', 'origin'])
+                            && request.resource.data.id == experimentId
+                            && request.resource.data.title is string
+                            && request.resource.data.category in ['repair', 'support', 'software', 'legal', 'hardware', 'ecosystem', 'ai']
+                            && request.resource.data.origin in ['official_wdiii', 'community']
+                            && request.resource.data.status in ['done', 'progress', 'pending', 'paused', 'queued', 'draft', 'private'];
+
+      allow delete: if isAdmin();
+    }
+
+    // 4. Community Submissions & Benchmark Tests
+    match /submissions/{submissionId} {
+      // Approved submissions are publicly visible
+      // Pending, needs_revision, rejected, or withdrawn submissions are visible ONLY to the submitter and moderators
+      allow read: if resource.data.status == 'approved'
+                  || (isSignedIn() && (
+                    ('userId' in resource.data && resource.data.userId == request.auth.uid) ||
+                    ('authorId' in resource.data && resource.data.authorId == request.auth.uid) ||
+                    isModerator()
+                  ));
+
+      // Authenticated contributors can submit tests, but status MUST be 'pending_review' (or 'pending')
+      // Normal users CANNOT approve their own submissions or assign reviewers
+      allow create: if isContributor()
+                    && (
+                      ('userId' in request.resource.data && request.resource.data.userId == request.auth.uid) ||
+                      ('authorId' in request.resource.data && request.resource.data.authorId == request.auth.uid)
+                    )
+                    && request.resource.data.status in ['pending_review', 'pending']
+                    && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == null)
+                    && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == null)
+                    && request.resource.data.keys().hasAll(['deviceId', 'experimentId', 'status']);
+
+      // Authors can update ONLY their own pending/needs_revision submissions:
+      // - Allowed new statuses: 'pending_review', 'pending', or 'withdrawn'
+      // - Cannot change reviewerId, reviewedAt, or authorId/userId
+      // Moderators can update status ('approved', 'rejected', 'needs_revision') and attach reviewNotes/reviewerId
+      allow update: if (
+                      (
+                        ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                        ('authorId' in resource.data && isOwner(resource.data.authorId))
+                      )
+                      && resource.data.status in ['pending_review', 'pending', 'needs_revision']
+                      && request.resource.data.status in ['pending_review', 'pending', 'withdrawn']
+                      && (!('userId' in request.resource.data) || request.resource.data.userId == resource.data.userId)
+                      && (!('authorId' in request.resource.data) || request.resource.data.authorId == resource.data.authorId)
+                      && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == resource.data.reviewerId)
+                      && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == resource.data.reviewedAt)
+                    )
+                    || isModerator();
+
+      // Authors can delete or withdraw their submission ONLY while it remains pending, needs_revision, or withdrawn
+      // Verified/approved test results cannot be arbitrarily deleted by normal users
+      allow delete: if (
+                      (
+                        ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                        ('authorId' in resource.data && isOwner(resource.data.authorId))
+                      )
+                      && resource.data.status in ['pending_review', 'pending', 'needs_revision', 'withdrawn']
+                    )
+                    || isAdmin();
+    }
+
+    // 5. Aggregate Device Statistics
+    match /device_stats/{deviceId} {
+      allow read: if true;
+      allow write: if isModerator();
+    }
+
+    // 6. System Configuration & Administrative Data
+    match /system_config/{configId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /admin_audit_logs/{logId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /admin_roles/{roleDocId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

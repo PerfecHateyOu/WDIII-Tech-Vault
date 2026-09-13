@@ -1,0 +1,69 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isModerator() {
+      return isSignedIn() && (
+        ('role' in request.auth.token && (request.auth.token.role in ['moderator', 'admin', 'owner'])) ||
+        request.auth.token.email == 'perfectshadowkai33@gmail.com'
+      );
+    }
+
+    function isValidImage() {
+      return request.resource.contentType.matches('image/(jpeg|png|webp|gif)')
+          && request.resource.size <= 8 * 1024 * 1024;
+    }
+
+    function isValidTelemetryFile() {
+      return (
+        request.resource.contentType.matches('image/(jpeg|png|webp|gif)') ||
+        request.resource.contentType.matches('text/(plain|csv)') ||
+        request.resource.contentType == 'application/pdf' ||
+        request.resource.contentType == 'application/json'
+      ) && request.resource.size <= 10 * 1024 * 1024;
+    }
+
+    // 1. Evidence, telemetry logs, and test verification media
+    // Path structure: evidence/{userId}/{fileName}
+    match /evidence/{userId}/{fileName} {
+      // Read access restricted to the submitter and authorized moderators
+      allow read: if isOwner(userId) || isModerator();
+
+      // Contributors can create uploads strictly under their own UID directory
+      allow create: if isOwner(userId) && isValidTelemetryFile();
+
+      // Overwrites are disallowed to prevent tampering with uploaded test evidence
+      allow update: if false;
+
+      // Submitters or moderators can delete evidence
+      allow delete: if isOwner(userId) || isModerator();
+    }
+
+    // 2. User profile avatars
+    // Path structure: avatars/{userId}/{fileName}
+    match /avatars/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if isOwner(userId) && isValidImage() && request.resource.size <= 2 * 1024 * 1024;
+      allow delete: if isOwner(userId) || isModerator();
+    }
+
+    // 3. Official curated platform assets
+    match /official/{allPaths=**} {
+      allow read: if true;
+      allow write: if isModerator();
+    }
+
+    // Default Deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -367,77 +367,6 @@
   </div>
 </div>
 
-
-<!-- Direct File Downloads Modal (bun.lock & Firebase Config) -->
-<div id="downloadsModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; z-index:3000; align-items:center; justify-content:center; padding:1.5rem; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);">
-  <div class="td-slide-up" style="max-width:760px; width:100%; border-radius:0.75rem; padding:2rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); box-shadow:0 16px 48px rgba(0,0,0,0.6); max-height:90vh; overflow-y:auto;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-      <h3 style="color:#fff; font-size:1.35rem; margin:0; font-weight:700; display:flex; align-items:center; gap:0.5rem;">
-        <span>📥</span> <span>Direct File Downloads</span>
-      </h3>
-      <button id="downloadsModalCloseBtn" type="button" style="background:none; border:none; color:var(--td-text-muted); font-size:1.4rem; cursor:pointer; padding:0.25rem;">✕</button>
-    </div>
-
-    <!-- Explanation Banner -->
-    <div style="background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); border-radius:0.5rem; padding:1rem 1.25rem; margin-bottom:1.5rem; color:var(--td-text-primary); font-size:0.875rem; line-height:1.6;">
-      <div style="font-weight:600; color:#60a5fa; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.375rem;">
-        <span>ℹ️</span> <span>About AI Studio File Explorer Alert Icon (!)</span>
-      </div>
-      <p style="margin:0;">The AI Studio Monaco code editor does not have a default viewer for <code>.lock</code> files and protects platform-generated Firebase credentials, which is why they show an alert icon in the web workspace. Use the direct one-click download buttons below to download the exact files to your device, or access the clean <code>.json</code> versions.</p>
-    </div>
-
-    <div style="display:flex; flex-direction:column; gap:1.25rem;">
-      <!-- bun.lock Card -->
-      <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-          <div>
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-              <span style="font-size:1.25rem;">📦</span>
-              <h4 style="color:#fff; font-size:1.05rem; margin:0; font-weight:600;">bun.lock</h4>
-              <span style="font-size:0.75rem; padding:0.15rem 0.5rem; border-radius:9999px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-weight:600;">14.1 KB</span>
-            </div>
-            <p style="color:var(--td-text-secondary); font-size:0.85rem; margin:0.25rem 0 0;">Bun package dependencies lockfile (JSON format v2).</p>
-          </div>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <a href="/download/bun.lock" download="bun.lock" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:#10b981; color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none;">⬇️ Download bun.lock</a>
-            <a href="/download/bun.lock.json" download="bun.lock.json" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.85rem; font-weight:500; text-decoration:none;">.json version</a>
-            <button id="btnCopyBunLock" type="button" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">📋 Copy Content</button>
-          </div>
-        </div>
-        <div style="font-size:0.75rem; color:var(--td-text-muted); font-family:monospace; background:var(--td-bg-surface); padding:0.5rem 0.75rem; border-radius:0.25rem; border:1px solid var(--td-border); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-          Direct URL: <a href="/download/bun.lock" target="_blank" style="color:var(--td-info);">/download/bun.lock</a> (or in project tree: <code>bun.lock.json</code>)
-        </div>
-      </div>
-
-      <!-- firebase-applet-config.json Card -->
-      <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-          <div>
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-              <span style="font-size:1.25rem;">🔥</span>
-              <h4 style="color:#fff; font-size:1.05rem; margin:0; font-weight:600;">firebase-applet-config.json</h4>
-              <span style="font-size:0.75rem; padding:0.15rem 0.5rem; border-radius:9999px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); font-weight:600;">479 B</span>
-            </div>
-            <p style="color:var(--td-text-secondary); font-size:0.85rem; margin:0.25rem 0 0;">Firebase client credentials, Firestore database ID, and project configuration.</p>
-          </div>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <a href="/download/firebase-applet-config.json" download="firebase-applet-config.json" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:#f59e0b; color:#000; font-size:0.85rem; font-weight:600; text-decoration:none;">⬇️ Download firebase config</a>
-            <a href="/firebase-config.json" download="firebase-config.json" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.85rem; font-weight:500; text-decoration:none;">firebase-config.json</a>
-            <button id="btnCopyFirebaseConfig" type="button" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 0.875rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">📋 Copy Content</button>
-          </div>
-        </div>
-        <div style="font-size:0.75rem; color:var(--td-text-muted); font-family:monospace; background:var(--td-bg-surface); padding:0.5rem 0.75rem; border-radius:0.25rem; border:1px solid var(--td-border); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-          Direct URL: <a href="/download/firebase-applet-config.json" target="_blank" style="color:var(--td-info);">/download/firebase-applet-config.json</a> (or in project tree: <code>firebase-config.json</code>)
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:1.5rem; text-align:right;">
-      <button id="downloadsModalDoneBtn" type="button" style="padding:0.625rem 1.25rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.9rem; font-weight:600; cursor:pointer;">Close</button>
-    </div>
-  </div>
-</div>
-
 <!-- Brand & Logo Viewer Modal -->
 <div id="logoModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; z-index:3000; align-items:center; justify-content:center; padding:1.5rem; background:rgba(0,0,0,0.82); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);">
   <div class="td-slide-up" style="max-width:680px; width:100%; border-radius:0.75rem; padding:2rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); box-shadow:0 16px 48px rgba(0,0,0,0.6); max-height:90vh; overflow-y:auto;">
@@ -512,7 +441,8 @@
     <div style="display:flex; align-items:center; gap:0.75rem;">
       <span style="font-size:0.8rem; color:var(--td-text-muted);">Independent Hardware &amp; Software Research Dossier</span>
     </div>
-    <div style="display:flex; align-items:center; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerHome"></div>
       <button id="themeToggleHome" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
     </div>
   </div>
@@ -546,7 +476,6 @@
       <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
       <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
-      <a href="#/downloads" class="btnOpenDownloadsModal" style="color:#10b981; font-weight:600;">📥 Download Files (bun.lock &amp; Firebase)</a>
       <a href="#/logo" class="btnOpenLogoModal" style="color:var(--td-info); font-weight:500;">🏷️ Brand Logo</a>
     </nav>
     <p style="margin:0; display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
@@ -574,7 +503,8 @@
       </a>
       <span style="font-size:0.8rem; color:var(--td-text-muted);">Side Experiments &amp; Observations</span>
     </div>
-    <div style="display:flex; align-items:center; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerFodder"></div>
       <button id="themeToggleFodder" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
     </div>
   </div>
@@ -607,7 +537,6 @@
       <a href="#/about" style="color:var(--td-text-muted);">About</a>
       <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
-      <a href="#/downloads" class="btnOpenDownloadsModal" style="color:var(--td-text-muted);">Downloads</a>
     </nav>
     <p style="margin:0;">Fodder Archive — Side experiments and informal observations | Updated September 3, 2026 | © WDIII</p>
   </footer>
@@ -634,7 +563,6 @@
     <div style="margin-top:2rem; display:flex; flex-wrap:wrap; gap:0.75rem;">
       <a href="#/methodology" style="display:inline-block; padding:0.5rem 1rem; border-radius:0.375rem; font-size:0.9rem; font-weight:600; background:var(--td-info); color:#fff;">Read the Methodology</a>
       <a href="#/" style="display:inline-block; padding:0.5rem 1rem; border-radius:0.375rem; font-size:0.9rem; font-weight:600; border:1px solid var(--td-border-subtle); color:var(--td-text-secondary);">Browse Experiments</a>
-      <button class="btnOpenDownloadsModal" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 1rem; border-radius:0.375rem; font-size:0.9rem; font-weight:600; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-secondary); cursor:pointer;">📥 Project Files &amp; Config</button>
     </div>
   </div>
   <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
@@ -644,7 +572,6 @@
       <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
       <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
-      <a href="#/downloads" class="btnOpenDownloadsModal" style="color:var(--td-text-muted);">Downloads</a>
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
@@ -691,7 +618,6 @@
       <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
       <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
-      <a href="#/downloads" class="btnOpenDownloadsModal" style="color:var(--td-text-muted);">Downloads</a>
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
@@ -728,15 +654,347 @@
       <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
       <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
       <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
-      <a href="#/downloads" class="btnOpenDownloadsModal" style="color:var(--td-text-muted);">Downloads</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
+<!-- ===================== USER PROFILE PAGE ===================== -->
+<div class="page" id="page-profile">
+  <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
+    <div style="font-size:1.875rem; margin-bottom:0.5rem;">👤</div>
+    <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Contributor Profile</h1>
+    <p style="color:var(--td-text-secondary); font-size:1.125rem; margin:0;">WDIII Community Identity &amp; Role Credential</p>
+  </header>
+  <div style="max-width:720px; margin:0 auto; padding:2.5rem 2rem;">
+    <nav style="display:flex; align-items:center; flex-wrap:wrap; gap:0.375rem; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1.5rem;">
+      <a href="#/" style="color:var(--td-text-secondary); padding:0.25rem 0.5rem; border-radius:0.25rem;">🏠 Home</a>
+      <span style="opacity:0.6;">/</span>
+      <span style="color:var(--td-text-primary); padding:0.25rem 0.5rem;">👤 Profile</span>
+    </nav>
+    <div id="profilePageContent">
+      <div style="text-align:center; padding:3rem; color:var(--td-text-muted);">Loading profile information...</div>
+    </div>
+  </div>
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
+<!-- ===================== DEVICE CATALOG PAGE ===================== -->
+<div class="page" id="page-devices">
+  <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
+    <div style="font-size:1.875rem; margin-bottom:0.5rem;">📱</div>
+    <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Hardware Registry</h1>
+    <p style="color:var(--td-text-secondary); font-size:1.125rem; margin:0;">Authoritative specifications, testing footprints, and empirical data for all devices in the WDIII archive</p>
+  </header>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation — By WDIII" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Empirical Hardware Database</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerDevices"></div>
+      <button id="themeToggleDevices" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div class="td-page-container">
+    <nav style="display:flex; align-items:center; flex-wrap:wrap; gap:0.375rem; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1.5rem;">
+      <a href="#/" style="color:var(--td-text-secondary); padding:0.25rem 0.5rem; border-radius:0.25rem; text-decoration:none;">🏠 Home</a>
+      <span style="opacity:0.6;">/</span>
+      <span style="color:var(--td-text-primary); padding:0.25rem 0.5rem;">📱 Hardware Registry</span>
+    </nav>
+    <div id="devicesPageContent"></div>
+  </div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-info); font-weight:600;">Hardware Registry</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
+<!-- ===================== DEVICE DETAIL PAGE ===================== -->
+<div class="page" id="page-device-detail">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/devices" class="wdiii-mini-badge" title="Hardware Registry" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Hardware Technical Dossier</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerDeviceDetail"></div>
+      <button id="themeToggleDeviceDetail" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div id="deviceDetailContent"></div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-info); font-weight:600;">Hardware Registry</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
+<!-- ===================== EXPERIMENT DETAIL PAGE ===================== -->
+<div class="page" id="page-experiment-detail">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Official Research Protocol Dossier</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerExpDetail"></div>
+      <button id="themeToggleExpDetail" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div id="experimentDetailContent"></div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
+<!-- ===================== SUBMIT TEST PAGE ===================== -->
+<div class="page" id="page-submit">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Community Testing Protocol Lab</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerSubmit"></div>
+      <button id="themeToggleSubmit" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div id="submitPageContent"></div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/submit" style="color:var(--td-info); font-weight:600;">Submit Test</a>
+      <a href="#/my-tests" style="color:var(--td-text-muted);">My Tests</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
+<!-- ===================== MY TESTS PAGE ===================== -->
+<div class="page" id="page-my-tests">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Community Submissions Portfolio</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerMyTests"></div>
+      <button id="themeToggleMyTests" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div id="myTestsPageContent"></div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/submit" style="color:var(--td-text-muted);">Submit Test</a>
+      <a href="#/my-tests" style="color:var(--td-info); font-weight:600;">My Tests</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
 </div>
 
 <script type="module">
+import { initFirebase, onAuthChange, logOut } from "/src/services/firebase.js";
+import { initAuthHeader } from "/src/components/auth-header.js";
+import { escapeHtml } from "/src/utils/sanitize.js";
+import { renderDevicesCatalog, renderDeviceDetail } from "/src/ui/devices-view.js";
+import { renderExperimentDetail } from "/src/ui/experiment-detail-view.js";
+import { renderSubmitView } from "/src/ui/submit-view.js";
+import { renderMyTestsView } from "/src/ui/my-tests-view.js";
+
+// Initialize Firebase SDK immediately
+initFirebase().catch(err => {
+  console.warn("Firebase initialization deferred:", err.message);
+});
+
+// Initialize Auth header in visible headers
+initAuthHeader("#authHeaderContainerHome");
+initAuthHeader("#authHeaderContainerFodder");
+initAuthHeader("#authHeaderContainerDevices");
+initAuthHeader("#authHeaderContainerDeviceDetail");
+initAuthHeader("#authHeaderContainerExpDetail");
+initAuthHeader("#authHeaderContainerSubmit");
+initAuthHeader("#authHeaderContainerMyTests");
+
+// Track current profile for profile page view
+let currentAuthData = { user: null, profile: null, loading: true };
+onAuthChange(data => {
+  currentAuthData = data;
+  if (document.getElementById("page-profile")?.classList.contains("active")) {
+    renderProfilePage();
+  }
+  if (document.getElementById("page-submit")?.classList.contains("active")) {
+    renderSubmitView(document.getElementById("submitPageContent"));
+  }
+  if (document.getElementById("page-my-tests")?.classList.contains("active")) {
+    renderMyTestsView(document.getElementById("myTestsPageContent"));
+  }
+});
+
+function renderProfilePage() {
+  const content = document.getElementById("profilePageContent");
+  if (!content) return;
+  const { user, profile, loading } = currentAuthData;
+
+  if (loading) {
+    content.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--td-text-muted);">Verifying authentication...</div>`;
+    return;
+  }
+
+  if (!user) {
+    content.innerHTML = `
+      <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; padding:2.5rem; text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:1rem;">🔒</div>
+        <h2 style="color:var(--td-text-primary); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">Authentication Required</h2>
+        <p style="color:var(--td-text-secondary); max-width:480px; margin:0 auto 1.75rem; font-size:0.95rem; line-height:1.5;">
+          Sign in with your Google account to view your WDIII contributor identity, credentials, reputation points, and community research records.
+        </p>
+        <div style="display:inline-block;">
+          <div id="profilePageAuthBtn"></div>
+        </div>
+      </div>
+    `;
+    initAuthHeader("#profilePageAuthBtn");
+    return;
+  }
+
+  const displayName = escapeHtml(profile?.displayName || user.displayName || "Contributor");
+  const email = escapeHtml(user.email || "");
+  const photo = escapeHtml(user.photoURL || profile?.photoURL || "/public/icon.png");
+  const role = escapeHtml(profile?.role || "contributor");
+  const reputation = profile?.reputationScore ?? 0;
+  const submissions = profile?.submissionCount ?? 0;
+  const createdDate = profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : "Recently";
+  const lastLogin = profile?.lastLoginAt ? new Date(profile.lastLoginAt).toLocaleString() : "Active Now";
+
+  let roleColor = "var(--td-info)";
+  let roleBg = "rgba(96, 165, 250, 0.15)";
+  let roleBorder = "rgba(96, 165, 250, 0.35)";
+  if (role === "admin" || role === "owner") {
+    roleColor = "var(--td-error, #f87171)";
+    roleBg = "rgba(239, 68, 68, 0.15)";
+    roleBorder = "rgba(239, 68, 68, 0.35)";
+  } else if (role === "moderator") {
+    roleColor = "var(--td-pending, #fbbf24)";
+    roleBg = "rgba(245, 158, 11, 0.15)";
+    roleBorder = "rgba(245, 158, 11, 0.35)";
+  }
+
+  content.innerHTML = `
+    <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; overflow:hidden;">
+      <div style="padding:2rem; display:flex; align-items:center; gap:1.5rem; border-bottom:1px solid var(--td-border-subtle); flex-wrap:wrap;">
+        <img src="${photo}" alt="${displayName}" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--td-border); background:var(--td-bg-card);" />
+        <div style="flex:1; min-width:200px;">
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.25rem;">
+            <h2 style="font-size:1.35rem; font-weight:700; color:var(--td-text-primary); margin:0;">${displayName}</h2>
+            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:0.15rem 0.5rem; border-radius:0.25rem; background:${roleBg}; color:${roleColor}; border:1px solid ${roleBorder};">${role}</span>
+          </div>
+          <div style="font-size:0.875rem; color:var(--td-text-muted);">${email}</div>
+          <div style="font-size:0.75rem; color:var(--td-text-muted); margin-top:0.25rem; font-family:monospace;">UID: ${escapeHtml(user.uid)}</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1px; background:var(--td-border-subtle);">
+        <div style="background:var(--td-bg-card); padding:1.25rem; text-align:center;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Reputation</div>
+          <div style="font-size:1.5rem; font-weight:700; color:var(--td-info);">${reputation}</div>
+        </div>
+        <div style="background:var(--td-bg-card); padding:1.25rem; text-align:center;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Submissions</div>
+          <div style="font-size:1.5rem; font-weight:700; color:var(--td-text-primary);">${submissions}</div>
+        </div>
+        <div style="background:var(--td-bg-card); padding:1.25rem; text-align:center;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Member Since</div>
+          <div style="font-size:0.95rem; font-weight:600; color:var(--td-text-secondary);">${createdDate}</div>
+        </div>
+      </div>
+
+      <div style="padding:1.5rem; background:var(--td-bg-surface);">
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1rem;">
+          <span>Last Active Session:</span>
+          <span style="font-weight:500; color:var(--td-text-secondary);">${lastLogin}</span>
+        </div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button type="button" id="btnProfileSignOut" style="display:inline-flex; align-items:center; gap:0.5rem; background:transparent; border:1px solid var(--td-border-subtle); color:var(--td-error, #f87171); padding:0.5rem 1rem; border-radius:0.375rem; font-size:0.85rem; font-weight:600; cursor:pointer;">
+            <span>🚪</span> <span>Sign Out of Vault</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("btnProfileSignOut")?.addEventListener("click", async () => {
+    await logOut();
+    window.location.hash = "#/";
+  });
+}
+
 // ===== Data =====
 const HOME_TABS = [
+  { to: "#/devices", icon: "📱", label: "Devices", sub: "Hardware Registry ↗", search: "devices hardware registry smartphones laptops pixel iphone galaxy" },
+  { to: "#/submit", icon: "🧪", label: "Submit", sub: "Community Testing ↗", search: "submit test empirical protocol community data" },
+  { to: "#/my-tests", icon: "📋", label: "My Tests", sub: "Submissions Log ↗", search: "my tests submissions portfolio audit log" },
   { id: "exp1", icon: "🔧", label: "Exp 1", sub: "Apple vs Samsung Repair", search: "exp-1 apple samsung repair mail-in screen damage" },
   { id: "exp2", icon: "⚙️", label: "Exp 2", sub: "Repair Channel Tiers", search: "exp-2 repair channel tiers iphone 15 aasp" },
   { id: "exp3", icon: "📞", label: "Exp 3", sub: "Customer Service Test", search: "exp-3 customer service support test call phone" },
@@ -746,11 +1004,13 @@ const HOME_TABS = [
   { id: "exp6", icon: "🏪", label: "Exp 6", sub: "AASP Repair Test", search: "exp-6 aasp repair test ifix authorized" },
   { id: "exp7", icon: "📷", label: "Exp 7", sub: "Pixel Pro Generations", search: "exp-7 pixel pro generation comparison tensor chip camera" },
   { id: "exp9", icon: "🔐", label: "Exp 9", sub: "Apple Security Audit", search: "exp-9 apple ecosystem security audit authentication find my airdrop awdl" },
-  { id: "insights", icon: "💡", label: "Insights", sub: "Key Takeaways", search: "insights recommendations repair decisions" },
   { id: "queued", icon: "⏳", label: "Queued", sub: "Upcoming Research", search: "queued pending upcoming experiments security ios survey exp 8 experiment 8 rework" },
   { to: "#/fodder", icon: "🗂️", label: "Fodder", sub: "Side Experiments ↗", search: "fodder archive side experiments ai comparison ecosystem exit" },
 ];
 const FODDER_TABS = [
+  { to: "#/devices", icon: "📱", label: "Devices", sub: "Hardware Registry ↗", search: "devices hardware registry" },
+  { to: "#/submit", icon: "🧪", label: "Submit", sub: "Community Testing ↗", search: "submit test empirical protocol community data" },
+  { to: "#/my-tests", icon: "📋", label: "My Tests", sub: "Submissions Log ↗", search: "my tests submissions portfolio audit log" },
   { id: "fa01", icon: "🤖", label: "FA-01", sub: "AI Comparison", search: "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude" },
   { id: "fa02", icon: "🚫", label: "FA-02", sub: "Ecosystem Exit", search: "fa-02 one month out of the apple ecosystem ecosystem exit friction log pixel samsung windows" },
   { id: "fa03", icon: "💻", label: "FA-03", sub: "Laptop Comparison", search: "fa-03 laptop comparison macbook air acer aspire intel core ultra 7 m3 pro hardware performance battery ecosystem" },
@@ -880,6 +1140,7 @@ function experimentShell(opts) {
   h += `</div>`;
   h += `<div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">`;
   if (opts.actions) h += opts.actions;
+  h += `<a href="#/experiments/${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-info); font-size:0.78rem; text-decoration:none; font-weight:600;" title="Open isolated research protocol dossier"><span>🔬 Dossier</span> ↗</a>`;
   h += `<a href="#${opts.id}" data-scroll="${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-text-muted); font-size:0.78rem; text-decoration:none;" title="Direct anchor link"><span>🔗</span> #${opts.id}</a>`;
   h += `</div>`;
   h += `</div>`;
@@ -1966,40 +2227,6 @@ function buildQueued() {
   `;
 }
 
-function buildInsights() {
-  const INSIGHTS = [
-    {tone:"success",title:"Prevention Over Repair",body:"A $20–50 screen protector and case prevents $300–600 repairs. The math is undeniable in hindsight. Protect the device first — every time."},
-    {tone:"info",title:"Apple Repair Is Premium But Justified",body:"$399–600 is expensive, but delivers speed (2–8 days), pristine quality, waterproofing, warranty protection, and authentic parts. No surprises, no restarts."},
-    {tone:"error",title:"Third-Party Repairs Are A Trap",body:"More expensive than Apple with no software authentication, no quality checks, lost waterproofing, voided warranty, and destroyed resale value. Objectively the worst option."},
-    {tone:"warning",title:"Cheap Repairs Are Temporary",body:"$220 saves money upfront but loses waterproofing and installs inferior components. Only acceptable if longevity and water resistance genuinely don't matter to you."},
-    {tone:"info",title:"Process Matters As Much As Outcome",body:"Apple and Samsung both returned pristine screens — but Samsung's admin failure turned a cost advantage into a month-long ordeal. Execution determines the real winner."},
-    {tone:"warning",title:"Brand Recognition ≠ Support Quality",body:"Apple and Samsung failed the customer service test. Huawei and Xiaomi topped it. Your assumptions about which companies are \"good at support\" may be wrong."},
-    {tone:"success",title:"Documentation Is Consumer Power",body:"Meticulous documentation turned a social media post into a $1,020 settlement from Samsung. Photos, receipts, and paper trails are leverage — especially when corporations go silent."},
-    {tone:"error",title:"Chip Efficiency Beats Battery Size",body:"Pixel 9 Pro (4700 mAh) outperforms Pixel 6 Pro (5003 mAh) significantly. mAh numbers are marketing — real-world endurance depends on what the chip does with that energy."},
-    {tone:"success",title:"Fabrication Process Matters More Than Specs",body:"Four generations of Pixel Pros were bottlenecked by Samsung fab thermal constraints — not processor design. The TSMC switch on the 10 Pro resolved years of throttling in one generation. Who makes the chip matters as much as what the chip can do."},
-    {tone:"info",title:"Google's Edge Is Software, Not Hardware",body:"The 50MP main + 48MP 5x telephoto camera hardware has barely changed since the 7 Pro. What improved dramatically is the AI processing behind it. Google competes on intelligence, not sensor size — and the 10 Pro's Pro Res Zoom proves that strategy works."}
-  ];
-  let cards = `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin:2rem 0;">`;
-  INSIGHTS.forEach(c => { cards += insightCard(c.tone, c.title, c.body); });
-  cards += `</div>`;
-  function recItem(type, text) {
-    const icon = type==='check'?'var(--td-success)':type==='cross'?'var(--td-error)':'var(--td-warning)';
-    const sym = type==='check'?'✓':type==='cross'?'✗':'⚠️';
-    return `<li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:${icon};">${sym}</span><span>${text}</span></li>`;
-  }
-  const recBox = `<div style="margin-top:2rem; padding:2rem; background:var(--td-bg-surface-elevated); border-radius:0.375rem; border:1px solid var(--td-border);"><h3 style="color:#fff; margin:0 0 1.5rem; font-size:1.125rem; font-weight:600;">Bottom Line — Repair Decisions</h3><ul style="list-style:none; padding:0; margin:0;">${recItem("check","First choice — speed, quality, and peace of mind: <strong style='color:#fff'>Official Apple</strong>")}${recItem("check","Apple unavailable or faster scheduling needed: <strong style='color:#fff'>Apple Authorized Service Provider (AASP)</strong> — identical quality, same warranty, slight cost premium")}${recItem("cross","Third-party shops with genuine parts: <strong style='color:#fff'>Never</strong> — costs more than Apple, delivers less, no authentication")}${recItem("warning","Cheap unauthorized repair: <strong style='color:#fff'>Only</strong> if waterproofing and longevity genuinely don't matter")}${recItem("check","Best long-term move: <strong style='color:#fff'>Protect your device from day one</strong> — a $20–50 case and screen protector beats a $400–600 repair every time")}</ul></div>`;
-  return `
-    <article id="insights" data-search="insights recommendations repair decisions" class="td-experiment">
-      <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle);"><h2 style="font-size:clamp(1.25rem,2.5vw+0.4rem,1.8rem); color:#fff; margin:0 0 0.5rem; font-weight:700;">Key Insights &amp; Recommendations</h2></div>
-      <div class="td-experiment-body">
-        ${cards}
-        ${recBox}
-        ${relatedExperiments([{to:"#/fodder",label:"🗂️ Also see: Fodder Archive — Side Experiments"}])}
-      </div>
-    </article>
-  `;
-}
-
 function buildFa01() {
   function metaCard(items) {
     let h = `<div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; margin-bottom:2rem; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">`;
@@ -2464,19 +2691,13 @@ function buildFa03() {
 }
 
 // ===== Render content =====
-document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildInsights()+buildQueued();
+document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildQueued();
 document.getElementById("fodderContent").innerHTML = buildFa01()+buildFa02()+buildFa03();
 
 // ===== Routing =====
 function showPage(hash) {
   let route = (hash||"#/").replace(/^#/,"");
-  if (route === "/downloads") {
-    if (!document.querySelector(".page.active")) {
-      document.getElementById("page-home")?.classList.add("active");
-    }
-    openDownloadsModal();
-    return;
-  } else if (route === "/logo" || route === "/brand") {
+  if (route === "/logo" || route === "/brand") {
     if (!document.querySelector(".page.active")) {
       document.getElementById("page-home")?.classList.add("active");
     }
@@ -2489,6 +2710,47 @@ function showPage(hash) {
   else if (route === "/about") pageId = "page-about";
   else if (route === "/contact") pageId = "page-contact";
   else if (route === "/methodology") pageId = "page-methodology";
+  else if (route === "/profile") {
+    pageId = "page-profile";
+    renderProfilePage();
+  }
+  else if (route === "/devices") {
+    pageId = "page-devices";
+    renderDevicesCatalog(document.getElementById("devicesPageContent"));
+  }
+  else if (route.startsWith("/devices/")) {
+    pageId = "page-device-detail";
+    const deviceId = decodeURIComponent(route.replace(/^\/devices\//, "").replace(/\/$/, ""));
+    renderDeviceDetail(document.getElementById("deviceDetailContent"), deviceId);
+  }
+  else if (route.startsWith("/experiments/")) {
+    pageId = "page-experiment-detail";
+    const expId = decodeURIComponent(route.replace(/^\/experiments\//, "").replace(/\/$/, ""));
+    renderExperimentDetail(document.getElementById("experimentDetailContent"), expId);
+  }
+  else if (route === "/submit" || route.startsWith("/submit?") || route.startsWith("/submit/")) {
+    pageId = "page-submit";
+    renderSubmitView(document.getElementById("submitPageContent"));
+  }
+  else if (route === "/my-tests" || route.startsWith("/my-tests?") || route.startsWith("/my-tests/")) {
+    pageId = "page-my-tests";
+    renderMyTestsView(document.getElementById("myTestsPageContent"));
+  }
+  else {
+    // Check if route references an element on home or fodder page directly (e.g. /exp1 or exp1)
+    const anchorId = route.replace(/^\//, "");
+    if (anchorId) {
+      const elOnHome = document.getElementById("page-home")?.querySelector(`#${anchorId}`);
+      const elOnFodder = document.getElementById("page-fodder")?.querySelector(`#${anchorId}`);
+      if (elOnFodder) {
+        pageId = "page-fodder";
+        setTimeout(() => elOnFodder.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+      } else if (elOnHome) {
+        pageId = "page-home";
+        setTimeout(() => elOnHome.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+      }
+    }
+  }
   const targetPage = document.getElementById(pageId);
   if (targetPage) targetPage.classList.add("active");
   window.scrollTo(0,0);
@@ -2646,7 +2908,6 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     disclaimer.style.display = "none";
     sessionStorage.setItem("ctd-disclaimer-ack","1");
-    closeDownloadsModal();
     closeLogoModal();
   }
 });
@@ -2674,56 +2935,6 @@ document.getElementById("logoModalCloseBtn")?.addEventListener("click", closeLog
 document.getElementById("logoModalDoneBtn")?.addEventListener("click", closeLogoModal);
 document.getElementById("logoModal")?.addEventListener("click", (e) => {
   if (e.target.id === "logoModal") closeLogoModal();
-});
-
-// ===== Downloads Modal Logic =====
-function openDownloadsModal() {
-  const modal = document.getElementById("downloadsModal");
-  if (modal) modal.style.display = "flex";
-}
-function closeDownloadsModal() {
-  const modal = document.getElementById("downloadsModal");
-  if (modal) modal.style.display = "none";
-  if (window.location.hash === "#/downloads") {
-    history.pushState("", document.title, window.location.pathname + window.location.search);
-  }
-}
-
-document.querySelectorAll(".btnOpenDownloadsModal").forEach(btn => {
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    openDownloadsModal();
-  });
-});
-
-document.getElementById("downloadsModalCloseBtn")?.addEventListener("click", closeDownloadsModal);
-document.getElementById("downloadsModalDoneBtn")?.addEventListener("click", closeDownloadsModal);
-document.getElementById("downloadsModal")?.addEventListener("click", (e) => {
-  if (e.target.id === "downloadsModal") closeDownloadsModal();
-});
-
-document.getElementById("btnCopyBunLock")?.addEventListener("click", async () => {
-  try {
-    const res = await fetch("/download/bun.lock");
-    if (!res.ok) throw new Error("Could not fetch bun.lock");
-    const text = await res.text();
-    await navigator.clipboard.writeText(text);
-    showToast("Copied bun.lock to clipboard!", "success");
-  } catch (err) {
-    showToast("Failed to copy bun.lock: " + err.message, "error");
-  }
-});
-
-document.getElementById("btnCopyFirebaseConfig")?.addEventListener("click", async () => {
-  try {
-    const res = await fetch("/download/firebase-applet-config.json");
-    if (!res.ok) throw new Error("Could not fetch Firebase config");
-    const text = await res.text();
-    await navigator.clipboard.writeText(text);
-    showToast("Copied Firebase config to clipboard!", "success");
-  } catch (err) {
-    showToast("Failed to copy Firebase config: " + err.message, "error");
-  }
 });
 
 // ===== Scroll to top button =====
