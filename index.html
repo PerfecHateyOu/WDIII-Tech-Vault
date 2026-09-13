@@ -666,7 +666,7 @@
     <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Spotted an error in a finding, have a device you'd like to see tested, or want to contribute data to a queued experiment? Reach out — every message is read, and verifiable corrections are credited in the relevant experiment.</p>
     <div style="border-radius:0.375rem; padding:1rem; margin-bottom:2rem; background:var(--td-bg-card); border:1px solid var(--td-border);">
       <p style="color:var(--td-text-muted); font-size:0.85rem; margin:0 0 0.25rem;">Email</p>
-      <a href="mailto:shadowclanbuisnessv@gmail.com" style="color:var(--td-info); font-size:1rem; font-weight:600;">shadowclanbuisnessv@gmail.com</a>
+      <a href="mailto:williamdebe06@icloud.com" style="color:var(--td-info); font-size:1rem; font-weight:600;">williamdebe06@icloud.com</a>
     </div>
     <form id="contactForm" style="display:flex; flex-direction:column; gap:1rem;">
       <div>
@@ -879,6 +879,7 @@ function experimentShell(opts) {
   h += `<h2 style="font-size:clamp(1.25rem,2.5vw+0.4rem,1.8rem); color:#fff; margin:0 0 0.5rem; font-weight:700;">${opts.title}</h2>`;
   h += `</div>`;
   h += `<div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">`;
+  if (opts.actions) h += opts.actions;
   h += `<a href="#${opts.id}" data-scroll="${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-text-muted); font-size:0.78rem; text-decoration:none;" title="Direct anchor link"><span>🔗</span> #${opts.id}</a>`;
   h += `</div>`;
   h += `</div>`;
@@ -1227,7 +1228,7 @@ function buildExp9() {
       { id: "exp9-conclusion", label: "Conclusion & Strategic Takeaways" }
     ],
     body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:1.5rem; line-height:1.7;">A comprehensive, firsthand empirical security audit of the Apple consumer ecosystem spanning 24 calendar days (September 1–24, 2026) and ~50 active testing hours. Across 13 executed threat scenarios covering account authentication resilience, device tracking/location exposure, and local proximity wireless protocols (AirDrop/AWDL/BLE), all 13 tests concluded successfully with 100% scenario execution, verifiable packet logs, and telemetry.</p>
+      <p style="color:var(--td-text-secondary); margin-bottom:1.5rem; line-height:1.7;">A comprehensive, firsthand empirical security audit of the Apple consumer ecosystem spanning 34 calendar days (August 7 – September 9, 2026) and ~50 active testing hours. Across 13 executed threat scenarios covering account authentication resilience, device tracking/location exposure, and local proximity wireless protocols (AirDrop/AWDL/BLE), all 13 tests concluded successfully with 100% scenario execution, verifiable packet logs, and telemetry.</p>
 
       <div style="background:var(--td-bg-surface-elevated); border-left:3px solid var(--td-info); padding:1rem 1.25rem; border-radius:0.375rem; margin-bottom:2rem; font-size:0.92rem; color:var(--td-text-secondary); line-height:1.6;">
         <strong style="color:var(--td-info);">Methodology &amp; Rigor Note:</strong> All tests were conducted against dedicated physical Apple hardware running iOS 18.x and macOS Sequoia with a dedicated RF Faraday isolation chamber (&gt;80 dB attenuation), custom monitor-mode Wi-Fi capture stations (AWDL frames over 5 GHz Channel 44/149), and Nordic nRF52840 BLE packet sniffers. Findings strictly separate cryptographically defended core systems (which successfully resisted attacks) from unencrypted local wireless side-channels where identity and behavioral leaks persist as convenience trade-offs.
@@ -1269,7 +1270,7 @@ function buildExp9() {
           <strong>PASSED WITH NOTED PRIVACY RECONFIGURATIONS:</strong> Apple's core architecture is exceptionally resilient against remote and account-takeover attacks when contemporary controls (Passkeys, Stolen Device Protection, Advanced Data Protection) are engaged. However, <em>local proximity actors</em> within RF range (BLE/Wi-Fi) possess distinct side-channel vectors to infer user identity, behavioral state, and device telemetry due to unencrypted protocol trade-offs prioritizing seamless user convenience over zero-trust isolation.
         </p>
         <div style="display:flex; flex-wrap:wrap; gap:0.5rem; font-size:0.82rem;">
-          <span style="background:rgba(16,185,129,0.15); color:var(--td-success); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-success);">Duration: 24 Calendar Days (Sept 1–24, 2026)</span>
+          <span style="background:rgba(16,185,129,0.15); color:var(--td-success); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-success);">Duration: 34 Calendar Days (August 7 – September 9, 2026)</span>
           <span style="background:rgba(59,130,246,0.15); color:var(--td-info); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-info);">Active Hands-On Time: ~50 Hours</span>
           <span style="background:rgba(251,191,36,0.15); color:var(--td-warning); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-warning);">Overall Matrix Pass Rate: 13/13 (100%)</span>
           <span style="background:rgba(168,85,247,0.15); color:#c084fc; padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid #c084fc;">Quality: Publication-Ready</span>
@@ -1853,7 +1854,7 @@ function buildExp9() {
       <div style="margin-top:2rem; padding:1rem 1.25rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; font-size:0.85rem; color:var(--td-text-secondary);">
         <div>
           <strong style="color:#fff;">Lead Researcher:</strong> Bill (WDIII Tech Vault) &nbsp;|&nbsp;
-          <strong style="color:#fff;">Research Period:</strong> September 1–24, 2026 &nbsp;|&nbsp;
+          <strong style="color:#fff;">Research Period:</strong> August 7th to September 9th, 2026 &nbsp;|&nbsp;
           <strong style="color:#fff;">Status:</strong> <span style="color:var(--td-success); font-weight:700;">Complete — Firsthand Tested</span>
         </div>
         <div>
@@ -2741,7 +2742,7 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
   const message = document.getElementById("contactMessage").value;
   const subject = encodeURIComponent("TechStack Archive contact from "+(name||"a reader"));
   const body = encodeURIComponent(message+"\n\n— "+name+(email?" ("+email+")":""));
-  window.location.href = "mailto:shadowclanbuisnessv@gmail.com?subject="+subject+"&body="+body;
+  window.location.href = "mailto:williamdebe06@icloud.com?subject="+subject+"&body="+body;
 });
 
 // ===== Init =====
