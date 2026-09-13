@@ -12,7 +12,7 @@
  */
 
 import { getUserSubmissions, getSubmissionById, withdrawSubmission, reviewSubmission } from "../services/database.js";
-import { getCurrentUser, getUserProfile, signInWithGoogle } from "../services/firebase.js";
+import { getCurrentUser, getCurrentProfile, signInWithGoogle } from "../services/firebase.js";
 import { escapeHtml, sanitizeText } from "../utils/sanitize.js";
 
 export async function renderMyTestsView(container) {

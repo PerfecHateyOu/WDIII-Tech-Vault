@@ -11,8 +11,8 @@
  * 6. Visual and structural separation from official WDIII archive.
  */
 
-import { getAllDevices, getAllExperiments, getDeviceById, getExperimentById, createSubmission, updateSubmission, getSubmissionById, saveDraftSubmission, loadDraftSubmission, clearDraftSubmission } from "../services/database.js";
-import { getCurrentUser, getUserProfile, onAuthChange, signInWithGoogle, uploadEvidenceFile, deleteEvidenceFile } from "../services/firebase.js";
+import { getDevices, getExperiments, getDeviceById, getExperimentById, createSubmission, updateSubmission, getSubmissionById, saveDraftSubmission, loadDraftSubmission, clearDraftSubmission } from "../services/database.js";
+import { getCurrentUser, getCurrentProfile, onAuthChange, signInWithGoogle, uploadEvidenceFile, deleteEvidenceFile } from "../services/firebase.js";
 import { escapeHtml, sanitizeText } from "../utils/sanitize.js";
 
 export async function renderSubmitView(container) {
