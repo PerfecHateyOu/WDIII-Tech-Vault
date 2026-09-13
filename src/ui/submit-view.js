@@ -42,8 +42,8 @@ export async function renderSubmitView(container) {
 
   try {
     const [allDevices, allExperiments] = await Promise.all([
-      getAllDevices(),
-      getAllExperiments()
+      getDevices(),
+      getExperiments()
     ]);
 
     let existingSubmission = null;
