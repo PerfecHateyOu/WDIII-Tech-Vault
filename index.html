@@ -22,8 +22,8 @@
     "name": "Consumer Tech Documentation",
     "headline": "Consumer Tech Documentation — Real-world experiments and findings",
     "description": "Real-world experiments, case studies, and documented findings across repair, service, software, and hardware.",
-    "version": "V5.5.5",
-    "dateModified": "2026-09-11",
+    "version": "V5.6.2",
+    "dateModified": "2026-09-14",
     "author": { "@type": "Person", "name": "WDIII" },
     "publisher": { "@type": "Organization", "name": "TechStack Archive" },
     "hasPart": [
@@ -348,6 +348,142 @@
         font-size: 0.8rem !important;
       }
     }
+
+    /* Section Navigation Tabs Container */
+    .td-sections-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      max-height: min(65vh, 460px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--td-border) transparent;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, padding 0.3s ease;
+    }
+    .td-sections-nav::-webkit-scrollbar {
+      width: 5px;
+    }
+    .td-sections-nav::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .td-sections-nav::-webkit-scrollbar-thumb {
+      background: var(--td-border);
+      border-radius: 9999px;
+    }
+    .td-sections-nav.is-collapsed {
+      max-height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+    }
+
+    /* Section Tab Item */
+    .td-section-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      border: 1px solid var(--td-border-subtle);
+      background: var(--td-bg-card);
+      color: var(--td-text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .td-section-tab:hover {
+      border-color: var(--td-border);
+      color: var(--td-text-primary);
+      background: var(--td-bg-surface-elevated);
+    }
+    .td-section-tab.active {
+      border-color: var(--td-info);
+      background: var(--td-info-bg);
+      color: var(--td-info);
+    }
+    .td-tab-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .td-tab-content {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      min-width: 0;
+    }
+    .td-tab-label {
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .td-tab-sub {
+      font-size: 0.72rem;
+      color: var(--td-text-muted);
+      line-height: 1.2;
+      opacity: 0.85;
+    }
+    .td-section-tab.active .td-tab-sub {
+      color: var(--td-info);
+      opacity: 0.85;
+    }
+
+    /* Optimized responsive layout for mobile viewports */
+    @media (max-width: 640px) {
+      .td-sections-nav {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.4rem !important;
+        padding: 0.5rem 0.75rem 0.75rem !important;
+        max-height: min(60vh, 390px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+      }
+      .td-section-tab {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.45rem !important;
+        padding: 0.45rem 0.6rem !important;
+        border-radius: 0.5rem !important;
+        min-height: 44px !important;
+        width: 100% !important;
+      }
+      .td-tab-icon {
+        font-size: 1.1rem !important;
+      }
+      .td-tab-label {
+        font-size: 0.82rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      .td-tab-sub {
+        font-size: 0.68rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .td-sections-nav {
+        grid-template-columns: 1fr !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -449,7 +585,7 @@
 
   <div id="navHome" style="position:sticky; top:0; z-index:100; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); backdrop-filter:blur(8px);">
     <button id="sectionsToggleHome" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:0.5rem 1.5rem; background:transparent; border:none; color:var(--td-text-secondary); cursor:pointer; font-size:0.9rem;">📑 Sections <span id="sectionsArrowHome" style="font-size:1.25rem;">▲</span></button>
-    <nav id="sectionsNavHome" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; padding:1rem 1.5rem; overflow:hidden; max-height:500px; transition:all 0.3s;"></nav>
+    <nav id="sectionsNavHome" class="td-sections-nav" aria-label="Section Navigation"></nav>
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
@@ -479,7 +615,7 @@
       <a href="#/logo" class="btnOpenLogoModal" style="color:var(--td-info); font-weight:500;">🏷️ Brand Logo</a>
     </nav>
     <p style="margin:0; display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
-      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 11, 2026 (V5.5.5) |</span>
+      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 14, 2026 (V5.6.2) |</span>
       <a href="#/logo" class="wdiii-mini-badge btnOpenLogoModal" title="WDIII Official Brand" style="text-decoration:none;">
         <img src="/logo.svg" alt="WDIII" style="height:12px; width:auto; display:block;" />
       </a>
@@ -511,7 +647,7 @@
 
   <div id="navFodder" style="position:sticky; top:0; z-index:100; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); backdrop-filter:blur(8px);">
     <button id="sectionsToggleFodder" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:0.5rem 1.5rem; background:transparent; border:none; color:var(--td-text-secondary); cursor:pointer; font-size:0.9rem;">📑 Sections <span id="sectionsArrowFodder" style="font-size:1.25rem;">▲</span></button>
-    <nav id="sectionsNavFodder" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; padding:1rem 1.5rem; overflow:hidden; max-height:500px; transition:all 0.3s;"></nav>
+    <nav id="sectionsNavFodder" class="td-sections-nav" aria-label="Fodder Section Navigation"></nav>
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
@@ -2808,13 +2944,48 @@ function showPage(hash) {
 // ===== Nav tabs rendering =====
 function renderTabs(navId, tabs, activeId) {
   const nav = document.getElementById(navId);
+  if (!nav) return;
+
+  // If nav buttons are already rendered, simply update the active states to preserve scroll position
+  const existingButtons = nav.querySelectorAll(".td-section-tab");
+  if (existingButtons.length === tabs.length) {
+    existingButtons.forEach((btn, idx) => {
+      const tab = tabs[idx];
+      if (tab) {
+        const isActive = Boolean(tab.id && tab.id === activeId);
+        btn.classList.toggle("active", isActive);
+        const sub = btn.querySelector(".td-tab-sub");
+        if (sub) {
+          sub.style.color = isActive ? "var(--td-info)" : "var(--td-text-muted)";
+        }
+      }
+    });
+    return;
+  }
+
   nav.innerHTML = "";
   tabs.forEach(tab => {
     const btn = document.createElement(tab.to ? "a" : "button");
-    if (tab.to) { btn.href = tab.to; }
-    btn.style.cssText = `display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; border-radius:9999px; border:1px solid ${tab.id===activeId?'var(--td-info)':'var(--td-border-subtle)'}; background:${tab.id===activeId?'var(--td-info-bg)':'var(--td-bg-card)'}; color:${tab.id===activeId?'var(--td-info)':'var(--td-text-secondary)'}; font-size:0.85rem; font-weight:500; white-space:nowrap; cursor:pointer; text-decoration:none;`;
-    btn.innerHTML = `<span style="font-size:1rem;">${tab.icon}</span><span><span style="font-weight:600;">${tab.label}</span><br><span style="font-size:0.75rem; color:${tab.id===activeId?'var(--td-info)':'var(--td-text-muted)'}; opacity:${tab.id===activeId?0.75:1};">${tab.sub}</span></span>`;
-    if (!tab.to) { btn.addEventListener("click", () => { document.getElementById(tab.id).scrollIntoView({behavior:"smooth", block:"start"}); collapseNavs(); }); }
+    if (tab.to) {
+      btn.href = tab.to;
+    } else {
+      btn.type = "button";
+    }
+    const isActive = Boolean(tab.id && tab.id === activeId);
+    btn.className = `td-section-tab${isActive ? " active" : ""}`;
+    if (tab.id) {
+      btn.setAttribute("data-tab-id", tab.id);
+    }
+    btn.innerHTML = `<span class="td-tab-icon">${tab.icon}</span><span class="td-tab-content"><span class="td-tab-label">${tab.label}</span><span class="td-tab-sub" style="color:${isActive ? 'var(--td-info)' : 'var(--td-text-muted)'};">${tab.sub}</span></span>`;
+    if (!tab.to) {
+      btn.addEventListener("click", () => {
+        const el = document.getElementById(tab.id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        collapseNavs();
+      });
+    }
     nav.appendChild(btn);
   });
 }
@@ -2863,24 +3034,34 @@ setupSearch("searchHome","searchClearHome","searchNoMatchHome","page-home");
 setupSearch("searchFodder","searchClearFodder",null,"page-fodder");
 
 // ===== Sections collapse =====
+const navOpenState = { Home: true, Fodder: true };
 function collapseNavs() {
   ["Home","Fodder"].forEach(suffix => {
     const nav = document.getElementById("sectionsNav"+suffix);
     const arrow = document.getElementById("sectionsArrow"+suffix);
-    if (nav) { nav.style.maxHeight = "0"; nav.style.padding = "0 1.5rem"; nav.style.opacity = "0"; nav.style.pointerEvents = "none"; }
-    if (arrow) arrow.style.transform = "";
+    if (nav) {
+      nav.classList.add("is-collapsed");
+      navOpenState[suffix] = false;
+    }
+    if (arrow) arrow.style.transform = "rotate(180deg)";
   });
 }
 ["Home","Fodder"].forEach(suffix => {
   const btn = document.getElementById("sectionsToggle"+suffix);
   const nav = document.getElementById("sectionsNav"+suffix);
   const arrow = document.getElementById("sectionsArrow"+suffix);
-  let open = true;
-  btn.addEventListener("click", () => {
-    open = !open;
-    if (open) { nav.style.maxHeight = "500px"; nav.style.padding = "1rem 1.5rem"; nav.style.opacity = "1"; nav.style.pointerEvents = "auto"; arrow.style.transform = ""; }
-    else { nav.style.maxHeight = "0"; nav.style.padding = "0 1.5rem"; nav.style.opacity = "0"; nav.style.pointerEvents = "none"; arrow.style.transform = "rotate(180deg)"; }
-  });
+  if (btn && nav) {
+    btn.addEventListener("click", () => {
+      navOpenState[suffix] = !navOpenState[suffix];
+      if (navOpenState[suffix]) {
+        nav.classList.remove("is-collapsed");
+        if (arrow) arrow.style.transform = "";
+      } else {
+        nav.classList.add("is-collapsed");
+        if (arrow) arrow.style.transform = "rotate(180deg)";
+      }
+    });
+  }
 });
 
 // ===== Smooth scroll for internal anchors =====

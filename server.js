@@ -50,7 +50,11 @@ app.use((req, res, next) => {
       '/consumer-tech-documentation',
       '/consumer-tech-documentation.html',
       '/Consumer_Tech_Documentation_V5_5_5.html',
-      '/Consumer_Tech_Documentation_V5_5_5'
+      '/Consumer_Tech_Documentation_V5_5_5',
+      '/Consumer_Tech_Documentation_V5_6_1.html',
+      '/Consumer_Tech_Documentation_V5_6_1',
+      '/Consumer_Tech_Documentation_V5_6_2.html',
+      '/Consumer_Tech_Documentation_V5_6_2'
     ]);
     if (!allowedHtmlPaths.has(decodedPath)) {
       return res.status(404).send('Not found');
@@ -149,7 +153,11 @@ app.get([
   '/consumer-tech-documentation',
   '/consumer-tech-documentation.html',
   '/Consumer_Tech_Documentation_V5_5_5.html',
-  '/Consumer_Tech_Documentation_V5_5_5'
+  '/Consumer_Tech_Documentation_V5_5_5',
+  '/Consumer_Tech_Documentation_V5_6_1.html',
+  '/Consumer_Tech_Documentation_V5_6_1',
+  '/Consumer_Tech_Documentation_V5_6_2.html',
+  '/Consumer_Tech_Documentation_V5_6_2'
 ], (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
