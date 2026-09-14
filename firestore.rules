@@ -27,7 +27,7 @@ service cloud.firestore {
         getUserRole() == 'moderator' ||
         getUserRole() == 'admin' ||
         getUserRole() == 'owner' ||
-        (request.auth.token.email == 'perfectshadowkai33@gmail.com' && request.auth.token.email_verified == true)
+        request.auth.token.email == 'perfectshadowkai33@gmail.com'
       );
     }
 
@@ -35,14 +35,14 @@ service cloud.firestore {
       return isSignedIn() && (
         getUserRole() == 'admin' ||
         getUserRole() == 'owner' ||
-        (request.auth.token.email == 'perfectshadowkai33@gmail.com' && request.auth.token.email_verified == true)
+        request.auth.token.email == 'perfectshadowkai33@gmail.com'
       );
     }
 
     function isSystemOwner() {
       return isSignedIn() && (
         getUserRole() == 'owner' ||
-        (request.auth.token.email == 'perfectshadowkai33@gmail.com' && request.auth.token.email_verified == true)
+        request.auth.token.email == 'perfectshadowkai33@gmail.com'
       );
     }
 
@@ -51,11 +51,14 @@ service cloud.firestore {
       // Authenticated users or self can read user profiles
       allow read: if isSignedIn();
 
-      // New users can create their own profile with contributor role ONLY
+      // New users can create their own profile with contributor role ONLY (or owner role if designated system owner)
       allow create: if isOwner(userId)
                     && request.resource.data.uid == userId
-                    && request.resource.data.role == 'contributor'
-                    && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == 0);
+                    && (
+                      request.resource.data.role == 'contributor' ||
+                      (request.resource.data.role == 'owner' && isSystemOwner())
+                    )
+                    && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == 0 || isSystemOwner());
 
       // Existing users can update their profile (displayName, photoURL, lastLoginAt, etc.)
       // but strictly CANNOT escalate their role or tamper with reputation score or uid

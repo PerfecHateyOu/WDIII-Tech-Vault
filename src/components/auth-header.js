@@ -185,17 +185,24 @@ export function initAuthHeader(target) {
       const name = user.displayName || profile?.displayName || "Contributor";
       const photo = user.photoURL || profile?.photoURL || "/public/icon.png";
       const email = user.email || "";
-      const role = profile?.role || "contributor";
+      const isOwner = profile?.role === "owner" || email.toLowerCase() === "perfectshadowkai33@gmail.com";
+      const role = isOwner ? "owner" : (profile?.role || "contributor");
+      const displayRole = isOwner ? "👑 Owner" : role === "admin" ? "🛡️ Admin" : role === "moderator" ? "⚖️ Moderator" : "Contributor";
 
       avatarImg.src = photo;
       avatarImg.alt = escapeHtml(name);
       userNameSpan.textContent = name;
-      roleBadgeSpan.textContent = role;
+      roleBadgeSpan.textContent = displayRole;
       dropName.textContent = name;
       dropEmail.textContent = email;
 
       // Colorize badge based on role
-      if (role === "admin" || role === "owner") {
+      if (isOwner) {
+        roleBadgeSpan.style.background = "rgba(239, 68, 68, 0.2)";
+        roleBadgeSpan.style.borderColor = "rgba(239, 68, 68, 0.5)";
+        roleBadgeSpan.style.color = "#f87171";
+        roleBadgeSpan.style.fontWeight = "700";
+      } else if (role === "admin") {
         roleBadgeSpan.style.background = "rgba(239, 68, 68, 0.15)";
         roleBadgeSpan.style.borderColor = "rgba(239, 68, 68, 0.35)";
         roleBadgeSpan.style.color = "var(--td-error, #f87171)";

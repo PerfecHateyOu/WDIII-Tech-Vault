@@ -959,8 +959,9 @@ function renderProfilePage() {
   const displayName = escapeHtml(profile?.displayName || user.displayName || "Contributor");
   const email = escapeHtml(user.email || "");
   const photo = escapeHtml(user.photoURL || profile?.photoURL || "/public/icon.png");
-  const role = escapeHtml(profile?.role || "contributor");
-  const reputation = profile?.reputationScore ?? 0;
+  const isOwner = (profile?.role === "owner") || (user.email && user.email.toLowerCase() === "perfectshadowkai33@gmail.com");
+  const role = isOwner ? "owner" : escapeHtml(profile?.role || "contributor");
+  const reputation = profile?.reputationScore ?? (isOwner ? 1000 : 0);
   const submissions = profile?.submissionCount ?? 0;
   const createdDate = profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : "Recently";
   const lastLogin = profile?.lastLoginAt ? new Date(profile.lastLoginAt).toLocaleString() : "Active Now";
@@ -968,7 +969,11 @@ function renderProfilePage() {
   let roleColor = "var(--td-info)";
   let roleBg = "rgba(96, 165, 250, 0.15)";
   let roleBorder = "rgba(96, 165, 250, 0.35)";
-  if (role === "admin" || role === "owner") {
+  if (role === "owner") {
+    roleColor = "#f87171";
+    roleBg = "rgba(239, 68, 68, 0.2)";
+    roleBorder = "rgba(239, 68, 68, 0.5)";
+  } else if (role === "admin") {
     roleColor = "var(--td-error, #f87171)";
     roleBg = "rgba(239, 68, 68, 0.15)";
     roleBorder = "rgba(239, 68, 68, 0.35)";
@@ -985,7 +990,7 @@ function renderProfilePage() {
         <div style="flex:1; min-width:200px;">
           <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.25rem;">
             <h2 style="font-size:1.35rem; font-weight:700; color:var(--td-text-primary); margin:0;">${displayName}</h2>
-            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:0.15rem 0.5rem; border-radius:0.25rem; background:${roleBg}; color:${roleColor}; border:1px solid ${roleBorder};">${role}</span>
+            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:0.15rem 0.5rem; border-radius:0.25rem; background:${roleBg}; color:${roleColor}; border:1px solid ${roleBorder};">${isOwner ? "👑 System Owner" : role}</span>
           </div>
           <div style="font-size:0.875rem; color:var(--td-text-muted);">${email}</div>
           <div style="font-size:0.75rem; color:var(--td-text-muted); margin-top:0.25rem; font-family:monospace;">UID: ${escapeHtml(user.uid)}</div>

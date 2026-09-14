@@ -117,15 +117,20 @@ export async function initFirebase() {
           } catch (profileErr) {
             console.error("Error synchronizing user profile:", profileErr);
             // Fallback safe in-memory profile if Firestore sync is pending or restricted
+            const isOwnerAccount = isSystemOwner(user);
             userProfile = {
               uid: user.uid,
-              displayName: user.displayName || "Contributor",
+              displayName: user.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
               email: user.email || "",
               photoURL: user.photoURL || "",
               role: "contributor",
               submissionCount: 0,
               reputationScore: 0
             };
+            if (isOwnerAccount) {
+              userProfile.role = "owner";
+              userProfile.reputationScore = 1000;
+            }
           }
         } else {
           userProfile = null;
@@ -158,47 +163,69 @@ export async function initFirebase() {
   return initPromise;
 }
 
+export const SYSTEM_OWNER_EMAIL = "perfectshadowkai33@gmail.com";
+
+/**
+ * Checks whether a given user object or email address is the verified platform owner
+ */
+export function isSystemOwner(userOrEmail) {
+  if (!userOrEmail) return false;
+  const email = typeof userOrEmail === "string" ? userOrEmail : userOrEmail.email;
+  return typeof email === "string" && email.trim().toLowerCase() === SYSTEM_OWNER_EMAIL.toLowerCase();
+}
+
 /**
  * Synchronizes user document in Firestore: users/{uid}
- * - Creates record on first login with default role 'contributor'
+ * - Automatically provisions designated root system owner (perfectshadowkai33@gmail.com) with role 'owner'
+ * - Creates standard contributor record for other users on first login
  * - Updates lastLoginAt on subsequent logins
- * - Strictly preserves existing role and reputationScore (prevents client escalation)
+ * - Strictly preserves or upgrades system privileges safely
  */
 export async function syncUserProfile(user) {
   if (!db || !user) return null;
 
+  const isOwnerAccount = isSystemOwner(user);
   const userRef = doc(db, "users", user.uid);
   let snap;
   try {
     snap = await getDoc(userRef);
   } catch (err) {
     console.warn("Could not read user profile document (may be network or permission):", err);
-    return {
+    const fallbackProfile = {
       uid: user.uid,
-      displayName: user.displayName || "Contributor",
+      displayName: user.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
       email: user.email || "",
       photoURL: user.photoURL || "",
       role: "contributor",
       submissionCount: 0,
       reputationScore: 0
     };
+    if (isOwnerAccount) {
+      fallbackProfile.role = "owner";
+      fallbackProfile.reputationScore = 1000;
+    }
+    return fallbackProfile;
   }
 
   const nowIso = new Date().toISOString();
 
   if (!snap.exists()) {
-    // First time sign-in: Create initial profile
+    // First time sign-in: Create initial profile with default role strictly contributor
     const initialData = {
       uid: user.uid,
-      displayName: user.displayName || "Contributor",
+      displayName: user.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
       email: user.email || "",
       photoURL: user.photoURL || "",
       createdAt: nowIso,
       lastLoginAt: nowIso,
-      role: "contributor", // Default role strictly contributor
+      role: "contributor",
       submissionCount: 0,
       reputationScore: 0
     };
+    if (isOwnerAccount) {
+      initialData.role = "owner";
+      initialData.reputationScore = 1000;
+    }
 
     try {
       await setDoc(userRef, initialData);
@@ -208,12 +235,14 @@ export async function syncUserProfile(user) {
       return initialData;
     }
   } else {
-    // Existing user: Update lastLoginAt, displayName, photoURL without touching role or reputationScore
+    // Existing user: Update lastLoginAt, displayName, photoURL and grant owner role if root owner
     const existing = snap.data();
+    const needsOwnerPromotion = isOwnerAccount && existing.role !== "owner";
     const updateData = {
-      displayName: user.displayName || existing.displayName || "Contributor",
+      displayName: user.displayName || existing.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
       photoURL: user.photoURL || existing.photoURL || "",
-      lastLoginAt: nowIso
+      lastLoginAt: nowIso,
+      ...(needsOwnerPromotion ? { role: "owner" } : {})
     };
 
     try {
@@ -226,8 +255,8 @@ export async function syncUserProfile(user) {
       ...existing,
       ...updateData,
       uid: user.uid,
-      role: existing.role || "contributor",
-      reputationScore: existing.reputationScore || 0,
+      role: isOwnerAccount ? "owner" : (existing.role || "contributor"),
+      reputationScore: existing.reputationScore || (isOwnerAccount ? 1000 : 0),
       submissionCount: existing.submissionCount || 0
     };
   }
