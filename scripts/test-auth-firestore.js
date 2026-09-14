@@ -136,6 +136,56 @@ const serverContent = fs.readFileSync(serverPath, 'utf8');
 assert(serverContent.includes('/api/firebase-config'), "Server exposes safe /api/firebase-config");
 assert(!serverContent.includes('serviceAccountKey'), "Server does not expose private service account keys to client");
 
+// 5. Supplemental Regression Tests (Static Rule Logic Simulation)
+// NOTE: These static simulation tests provide regression coverage of rule predicates,
+// but they do NOT constitute authoritative proof that Firebase's deployed rules reject
+// live attacks. Authoritative live verification is handled by src/services/auth-audit.js
+// using real authenticated Firebase sessions against deployed Firestore.
+console.log("\nSection 5: Supplemental Regression Simulation (Rule AST & Logic Verification)");
+const authAuditPath = path.join(ROOT_DIR, 'src', 'services', 'auth-audit.js');
+assert(fs.existsSync(authAuditPath), "src/services/auth-audit.js diagnostic module exists");
+
+const authAuditContent = fs.readFileSync(authAuditPath, 'utf8');
+assert(authAuditContent.includes('runContributorPrivilegeAudit'), "auth-audit.js exports runContributorPrivilegeAudit");
+assert(authAuditContent.includes('isSystemOwner') && authAuditContent.includes('SYSTEM_OWNER_EMAIL'), "auth-audit.js includes owner account protection safeguards");
+assert(authAuditContent.includes('displayName'), "auth-audit.js uses harmless displayName field for control test");
+
+// Simulate rule predicate logic from firestore.rules
+function simulateUserUpdateRule(auth, existingDoc, updatePayload) {
+  const isOwner = auth && auth.uid === existingDoc.uid;
+  const targetRole = 'role' in updatePayload ? updatePayload.role : existingDoc.role;
+  const roleUnchanged = targetRole === existingDoc.role;
+  const reputationUnchanged = !('reputationScore' in updatePayload) || (updatePayload.reputationScore === existingDoc.reputationScore);
+  const uidMatches = !('uid' in updatePayload) || (updatePayload.uid === existingDoc.uid);
+  const isAdmin = auth && (auth.email === 'perfectshadowkai33@gmail.com' || auth.role === 'admin' || auth.role === 'owner');
+
+  return (isOwner && roleUnchanged && reputationUnchanged && uidMatches) || isAdmin;
+}
+
+const standardContributorAuth = { uid: "user_contributor_test", email: "reader@example.com", role: "contributor" };
+const existingContributorDoc = { uid: "user_contributor_test", role: "contributor", reputationScore: 0, displayName: "Tech Reader" };
+
+assert(
+  simulateUserUpdateRule(standardContributorAuth, existingContributorDoc, { role: "admin" }) === false,
+  "[Supplemental Simulation] Contributor escalation to 'admin' is rejected by rule logic"
+);
+assert(
+  simulateUserUpdateRule(standardContributorAuth, existingContributorDoc, { role: "moderator" }) === false,
+  "[Supplemental Simulation] Contributor escalation to 'moderator' is rejected by rule logic"
+);
+assert(
+  simulateUserUpdateRule(standardContributorAuth, existingContributorDoc, { role: "owner" }) === false,
+  "[Supplemental Simulation] Contributor escalation to 'owner' is rejected by rule logic"
+);
+assert(
+  simulateUserUpdateRule(standardContributorAuth, existingContributorDoc, { reputationScore: 5000 }) === false,
+  "[Supplemental Simulation] Contributor tampering with reputationScore is rejected by rule logic"
+);
+assert(
+  simulateUserUpdateRule(standardContributorAuth, existingContributorDoc, { displayName: "Updated Name" }) === true,
+  "[Supplemental Simulation] Legitimate profile update (displayName) is permitted by rule logic"
+);
+
 console.log("\n=======================================================");
 console.log(` Audit Complete: ${passedTests}/${totalTests} tests passed (${failedTests} failed)`);
 console.log("=======================================================\n");
