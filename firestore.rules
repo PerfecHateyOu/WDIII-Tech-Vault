@@ -11,11 +11,11 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // Lookup user role from user profile or auth custom claims
+    // Lookup user role strictly from trusted Firestore document (never trust client claims)
     function getUserRole() {
       return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
         ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
-        : (isSignedIn() && 'role' in request.auth.token ? request.auth.token.role : 'guest');
+        : 'guest';
     }
 
     function isContributor() {
@@ -27,7 +27,7 @@ service cloud.firestore {
         getUserRole() == 'moderator' ||
         getUserRole() == 'admin' ||
         getUserRole() == 'owner' ||
-        ('role' in request.auth.token && (request.auth.token.role in ['moderator', 'admin', 'owner']))
+        (request.auth.token.email == 'perfectshadowkai33@gmail.com' && request.auth.token.email_verified == true)
       );
     }
 
@@ -35,16 +35,14 @@ service cloud.firestore {
       return isSignedIn() && (
         getUserRole() == 'admin' ||
         getUserRole() == 'owner' ||
-        request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
-        ('role' in request.auth.token && (request.auth.token.role in ['admin', 'owner']))
+        (request.auth.token.email == 'perfectshadowkai33@gmail.com' && request.auth.token.email_verified == true)
       );
     }
 
     function isSystemOwner() {
       return isSignedIn() && (
         getUserRole() == 'owner' ||
-        request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
-        ('role' in request.auth.token && request.auth.token.role == 'owner')
+        (request.auth.token.email == 'perfectshadowkai33@gmail.com' && request.auth.token.email_verified == true)
       );
     }
 
@@ -126,7 +124,7 @@ service cloud.firestore {
                       ('userId' in request.resource.data && request.resource.data.userId == request.auth.uid) ||
                       ('authorId' in request.resource.data && request.resource.data.authorId == request.auth.uid)
                     )
-                    && request.resource.data.status in ['pending_review', 'pending']
+                    && (request.resource.data.status == 'pending' || request.resource.data.status == 'pending_review')
                     && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == null)
                     && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == null)
                     && request.resource.data.keys().hasAll(['deviceId', 'experimentId', 'status']);

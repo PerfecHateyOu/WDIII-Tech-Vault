@@ -26,7 +26,7 @@ export async function renderMyTestsView(container) {
   `;
 
   const currentUser = getCurrentUser();
-  const profile = getUserProfile();
+  const profile = getCurrentProfile();
 
   if (!currentUser) {
     renderAuthPrompt(container);

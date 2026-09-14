@@ -854,6 +854,38 @@
   </footer>
 </div>
 
+<!-- ===================== DEVICE COMPARISON PAGE ===================== -->
+<div class="page" id="page-compare">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Hardware Specification &amp; Benchmark Shootout</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerCompare"></div>
+      <button id="themeToggleCompare" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div id="comparePageContent"></div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/compare" style="color:var(--td-info); font-weight:600;">Compare Devices</a>
+      <a href="#/submit" style="color:var(--td-text-muted);">Submit Test</a>
+      <a href="#/my-tests" style="color:var(--td-text-muted);">My Tests</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
 <script type="module">
 import { initFirebase, onAuthChange, logOut } from "/src/services/firebase.js";
 import { initAuthHeader } from "/src/components/auth-header.js";
@@ -862,6 +894,7 @@ import { renderDevicesCatalog, renderDeviceDetail } from "/src/ui/devices-view.j
 import { renderExperimentDetail } from "/src/ui/experiment-detail-view.js";
 import { renderSubmitView } from "/src/ui/submit-view.js";
 import { renderMyTestsView } from "/src/ui/my-tests-view.js";
+import { renderCompareView } from "/src/ui/compare-view.js";
 
 // Initialize Firebase SDK immediately
 initFirebase().catch(err => {
@@ -876,6 +909,7 @@ initAuthHeader("#authHeaderContainerDeviceDetail");
 initAuthHeader("#authHeaderContainerExpDetail");
 initAuthHeader("#authHeaderContainerSubmit");
 initAuthHeader("#authHeaderContainerMyTests");
+initAuthHeader("#authHeaderContainerCompare");
 
 // Track current profile for profile page view
 let currentAuthData = { user: null, profile: null, loading: true };
@@ -889,6 +923,9 @@ onAuthChange(data => {
   }
   if (document.getElementById("page-my-tests")?.classList.contains("active")) {
     renderMyTestsView(document.getElementById("myTestsPageContent"));
+  }
+  if (document.getElementById("page-compare")?.classList.contains("active")) {
+    renderCompareView(document.getElementById("comparePageContent"));
   }
 });
 
@@ -993,6 +1030,7 @@ function renderProfilePage() {
 // ===== Data =====
 const HOME_TABS = [
   { to: "#/devices", icon: "📱", label: "Devices", sub: "Hardware Registry ↗", search: "devices hardware registry smartphones laptops pixel iphone galaxy" },
+  { to: "#/compare", icon: "⚖️", label: "Compare", sub: "Device Shootout ↗", search: "compare device comparison specs shootout benchmark" },
   { to: "#/submit", icon: "🧪", label: "Submit", sub: "Community Testing ↗", search: "submit test empirical protocol community data" },
   { to: "#/my-tests", icon: "📋", label: "My Tests", sub: "Submissions Log ↗", search: "my tests submissions portfolio audit log" },
   { id: "exp1", icon: "🔧", label: "Exp 1", sub: "Apple vs Samsung Repair", search: "exp-1 apple samsung repair mail-in screen damage" },
@@ -1009,6 +1047,7 @@ const HOME_TABS = [
 ];
 const FODDER_TABS = [
   { to: "#/devices", icon: "📱", label: "Devices", sub: "Hardware Registry ↗", search: "devices hardware registry" },
+  { to: "#/compare", icon: "⚖️", label: "Compare", sub: "Device Shootout ↗", search: "compare device comparison specs shootout benchmark" },
   { to: "#/submit", icon: "🧪", label: "Submit", sub: "Community Testing ↗", search: "submit test empirical protocol community data" },
   { to: "#/my-tests", icon: "📋", label: "My Tests", sub: "Submissions Log ↗", search: "my tests submissions portfolio audit log" },
   { id: "fa01", icon: "🤖", label: "FA-01", sub: "AI Comparison", search: "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude" },
@@ -2735,6 +2774,10 @@ function showPage(hash) {
   else if (route === "/my-tests" || route.startsWith("/my-tests?") || route.startsWith("/my-tests/")) {
     pageId = "page-my-tests";
     renderMyTestsView(document.getElementById("myTestsPageContent"));
+  }
+  else if (route === "/compare" || route.startsWith("/compare?") || route.startsWith("/compare/")) {
+    pageId = "page-compare";
+    renderCompareView(document.getElementById("comparePageContent"));
   }
   else {
     // Check if route references an element on home or fodder page directly (e.g. /exp1 or exp1)

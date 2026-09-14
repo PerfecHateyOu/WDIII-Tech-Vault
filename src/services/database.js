@@ -872,4 +872,14 @@ export async function getApprovedSubmissionsForDevice(deviceId) {
   }
 }
 
+/**
+ * Step 6: Get aggregated community telemetry statistics (device_stats) for a device.
+ * Exclusively aggregates approved submissions.
+ */
+export async function getDeviceCommunityStats(deviceId) {
+  const { getDeviceCommunityStats: fetchStats } = await import("./device-stats.js");
+  return fetchStats(deviceId);
+}
+
+
 
