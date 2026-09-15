@@ -833,8 +833,8 @@ function renderSubmissionForm(container, ctx) {
 
   async function handleFilesUpload(files) {
     uploadProgressBarContainer.style.display = "block";
-    uploadProgressBar.style.width = "0%";
-    uploadPercentText.textContent = "0%";
+    uploadProgressBar.style.width = "10%";
+    uploadPercentText.textContent = "10%";
 
     const total = files.length;
     for (let i = 0; i < total; i++) {
@@ -844,8 +844,8 @@ function renderSubmissionForm(container, ctx) {
       try {
         const evidenceRecord = await uploadEvidenceFile(file, currentUser.uid, (percent) => {
           const overall = Math.round(((i + (percent / 100)) / total) * 100);
-          uploadProgressBar.style.width = `${overall}%`;
-          uploadPercentText.textContent = `${overall}%`;
+          uploadProgressBar.style.width = `${Math.max(overall, 10)}%`;
+          uploadPercentText.textContent = `${Math.max(overall, 10)}%`;
         });
 
         state.evidenceReferences.push(evidenceRecord);
@@ -858,10 +858,10 @@ function renderSubmissionForm(container, ctx) {
 
     uploadProgressBar.style.width = "100%";
     uploadPercentText.textContent = "100%";
-    uploadStatusText.textContent = "Upload complete!";
+    uploadStatusText.textContent = "✓ Upload complete!";
     setTimeout(() => {
       uploadProgressBarContainer.style.display = "none";
-    }, 1200);
+    }, 450);
   }
 
   // Event Listeners
@@ -998,7 +998,7 @@ function renderSubmissionForm(container, ctx) {
     const btnSubmit = document.getElementById("btnSubmitTest");
     btnSubmit.disabled = true;
     btnSubmit.style.opacity = "0.7";
-    btnSubmit.innerHTML = `<span>⏳</span> <span>Transmitting Test to Vault...</span>`;
+    btnSubmit.innerHTML = `<span>⏳</span> <span>Validating &amp; Transmitting...</span>`;
 
     submitMessageBanner.style.display = "none";
 
@@ -1006,24 +1006,22 @@ function renderSubmissionForm(container, ctx) {
     const progressModal = renderSubmissionProgressModal({
       title: existingSubmission ? "Updating Empirical Test Review" : "Submitting Empirical Test Review",
       subtitle: `Transmitting protocol telemetry for ${selectedDevice?.brand || "Device"} ${selectedDevice?.model || ""} (${selectedProtocol?.name || "Protocol"})`,
-      estimatedSeconds: 1.5
+      estimatedSeconds: 0.8
     });
 
     try {
-      progressModal.updateStage(1, 20, "Validating protocol compliance & telemetry measurements...");
-      await new Promise(r => setTimeout(r, 120));
+      progressModal.updateStage(1, 30, "Validating protocol compliance & telemetry measurements...");
+      // Micro-task yield to allow UI paint
+      await new Promise(r => setTimeout(r, 20));
 
-      progressModal.updateStage(2, 45, "Encoding cryptographic provenance & JSON payload packaging...");
-      await new Promise(r => setTimeout(r, 100));
-
-      progressModal.updateStage(3, 75, "Transmitting empirical data to WDIII Vault & cloud storage...");
+      progressModal.updateStage(2, 65, "Encoding provenance & transmitting to WDIII Vault...");
 
       if (existingSubmission) {
         // Updating an existing submission (e.g. from needs_revision)
         await updateSubmission(existingSubmission.id, payload, currentUser.uid);
         
         progressModal.updateStage(4, 95, "Re-registering test in peer review moderation queue...");
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 20));
 
         progressModal.complete({ id: existingSubmission.id });
 
@@ -1036,7 +1034,7 @@ function renderSubmissionForm(container, ctx) {
         `;
         setTimeout(() => {
           window.location.hash = "#/my-tests";
-        }, 1800);
+        }, 1200);
       } else {
         // Creating fresh submission
         const result = await createSubmission({
@@ -1047,7 +1045,7 @@ function renderSubmissionForm(container, ctx) {
         });
 
         progressModal.updateStage(4, 95, "Registering test in peer review moderation queue...");
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 20));
 
         progressModal.complete({ id: result.id });
 
@@ -1060,7 +1058,7 @@ function renderSubmissionForm(container, ctx) {
           <div style="font-size:0.85rem;">Submission ID: <code>${escapeHtml(result.id)}</code>. Status: <strong>PENDING REVIEW</strong>.</div>
           <div style="margin-top:0.75rem;">
             <a href="#/my-tests" style="display:inline-block; padding:0.375rem 0.875rem; background:var(--td-success); color:#fff; border-radius:0.25rem; font-weight:600; text-decoration:none; font-size:0.85rem;">
-              View in My Tests
+              View in My Tests ↗
             </a>
           </div>
         `;
@@ -1068,7 +1066,7 @@ function renderSubmissionForm(container, ctx) {
         submissionForm.reset();
         setTimeout(() => {
           window.location.hash = "#/my-tests";
-        }, 2200);
+        }, 1300);
       }
     } catch (err) {
       console.error("Submission failed:", err);

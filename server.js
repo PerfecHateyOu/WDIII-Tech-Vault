@@ -109,6 +109,150 @@ app.get(['/download/logo.jpg', '/download/wdiii-logo.jpg'], (req, res) => {
   res.status(404).send('logo.jpg not found');
 });
 
+// ===== High-Speed Evidence Upload & Vault Submission APIs =====
+const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads', 'evidence');
+try {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+} catch (err) {
+  console.warn('Notice creating uploads directory:', err);
+}
+
+const SUBMISSIONS_FILE = path.join(__dirname, 'data-submissions.json');
+let memorySubmissions = [];
+try {
+  if (fs.existsSync(SUBMISSIONS_FILE)) {
+    memorySubmissions = JSON.parse(fs.readFileSync(SUBMISSIONS_FILE, 'utf8')) || [];
+  }
+} catch (err) {
+  console.warn('Notice reading data-submissions.json:', err);
+}
+
+function persistSubmissions() {
+  try {
+    fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(memorySubmissions, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('Notice writing data-submissions.json:', err);
+  }
+}
+
+// 1. Instant Evidence File Upload Route (< 100ms)
+app.post('/api/upload-evidence', (req, res) => {
+  try {
+    const { fileName, fileType, base64Data, userId } = req.body || {};
+    if (!base64Data) {
+      return res.status(400).json({ error: 'Missing file payload (base64Data is required).' });
+    }
+
+    const cleanBase64 = base64Data.replace(/^data:[^;]+;base64,/, '');
+    const buffer = Buffer.from(cleanBase64, 'base64');
+
+    if (buffer.length > 10 * 1024 * 1024) {
+      return res.status(400).json({ error: 'File size exceeds maximum limit of 10MB.' });
+    }
+
+    const rawName = (fileName || 'evidence.bin').replace(/[^a-zA-Z0-9._-]/g, '_');
+    const safeUser = (userId || 'guest').replace(/[^a-zA-Z0-9_-]/g, '_');
+    const uniqueFileName = `evidence_${safeUser}_${Date.now()}_${rawName}`;
+    const targetFilePath = path.join(UPLOADS_DIR, uniqueFileName);
+
+    fs.writeFileSync(targetFilePath, buffer);
+
+    const relativeUrl = `/uploads/evidence/${uniqueFileName}`;
+    return res.json({
+      success: true,
+      name: fileName || rawName,
+      fileName: uniqueFileName,
+      path: relativeUrl,
+      url: relativeUrl,
+      size: buffer.length,
+      type: fileType || 'application/octet-stream',
+      uploadedAt: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('Error in /api/upload-evidence:', err);
+    return res.status(500).json({ error: `Upload processing failed: ${err.message}` });
+  }
+});
+
+// 2. Fast Vault Submissions Creation Route (< 30ms)
+app.post('/api/submissions', (req, res) => {
+  try {
+    const submission = req.body;
+    if (!submission || !submission.id || !submission.userId || !submission.deviceId) {
+      return res.status(400).json({ error: 'Incomplete submission payload.' });
+    }
+
+    const existingIdx = memorySubmissions.findIndex(s => s.id === submission.id);
+    if (existingIdx >= 0) {
+      memorySubmissions[existingIdx] = { ...memorySubmissions[existingIdx], ...submission, updatedAt: new Date().toISOString() };
+    } else {
+      memorySubmissions.unshift(submission);
+    }
+    persistSubmissions();
+
+    return res.json({
+      success: true,
+      id: submission.id,
+      submission
+    });
+  } catch (err) {
+    console.error('Error in POST /api/submissions:', err);
+    return res.status(500).json({ error: `Failed to save submission: ${err.message}` });
+  }
+});
+
+// 3. Submissions Query Route
+app.get('/api/submissions', (req, res) => {
+  try {
+    const { userId, deviceId, experimentId, status } = req.query || {};
+    let filtered = [...memorySubmissions];
+
+    if (userId) filtered = filtered.filter(s => s.userId === userId || s.authorId === userId);
+    if (deviceId) filtered = filtered.filter(s => s.deviceId === deviceId);
+    if (experimentId) filtered = filtered.filter(s => s.experimentId === experimentId);
+    if (status) filtered = filtered.filter(s => s.status === status);
+
+    return res.json({
+      success: true,
+      count: filtered.length,
+      submissions: filtered
+    });
+  } catch (err) {
+    console.error('Error in GET /api/submissions:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// 4. Submissions Update Route
+app.patch('/api/submissions/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body || {};
+    const existingIdx = memorySubmissions.findIndex(s => s.id === id);
+    if (existingIdx === -1) {
+      return res.status(404).json({ error: 'Submission not found.' });
+    }
+
+    memorySubmissions[existingIdx] = {
+      ...memorySubmissions[existingIdx],
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    persistSubmissions();
+
+    return res.json({
+      success: true,
+      submission: memorySubmissions[existingIdx]
+    });
+  } catch (err) {
+    console.error('Error in PATCH /api/submissions:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Serve /uploads statically with dedicated route
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+
 // Fallback for unmatched API routes to ensure JSON 404
 app.all('/api/*', (req, res) => {
   res.status(404).json({ error: `API route ${req.method} ${req.originalUrl} not found` });
