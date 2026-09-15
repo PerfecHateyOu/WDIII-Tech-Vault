@@ -1071,6 +1071,7 @@ import { renderSubmitView } from "/src/ui/submit-view.js";
 import { renderMyTestsView } from "/src/ui/my-tests-view.js";
 import { renderCompareView } from "/src/ui/compare-view.js";
 import { renderModerationView } from "/src/ui/moderation-view.js";
+import { startTopProgress, completeTopProgress } from "/src/utils/loading-bar.js";
 
 // Initialize Firebase SDK immediately
 initFirebase().catch(err => {
@@ -2928,16 +2929,19 @@ document.getElementById("fodderContent").innerHTML = buildFa01()+buildFa02()+bui
 
 // ===== Routing =====
 function showPage(hash) {
+  startTopProgress(350);
   let route = (hash||"#/").replace(/^#/,"");
   if (route === "/logo" || route === "/brand") {
     if (!document.querySelector(".page.active")) {
       document.getElementById("page-home")?.classList.add("active");
     }
     openLogoModal();
+    completeTopProgress();
     return;
   }
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   let pageId = "page-home";
+  let asyncRenderPromise = null;
   if (route === "/fodder") pageId = "page-fodder";
   else if (route === "/about") pageId = "page-about";
   else if (route === "/contact") pageId = "page-contact";
@@ -2948,33 +2952,33 @@ function showPage(hash) {
   }
   else if (route === "/devices") {
     pageId = "page-devices";
-    renderDevicesCatalog(document.getElementById("devicesPageContent"));
+    asyncRenderPromise = renderDevicesCatalog(document.getElementById("devicesPageContent"));
   }
   else if (route.startsWith("/devices/")) {
     pageId = "page-device-detail";
     const deviceId = decodeURIComponent(route.replace(/^\/devices\//, "").replace(/\/$/, ""));
-    renderDeviceDetail(document.getElementById("deviceDetailContent"), deviceId);
+    asyncRenderPromise = renderDeviceDetail(document.getElementById("deviceDetailContent"), deviceId);
   }
   else if (route.startsWith("/experiments/")) {
     pageId = "page-experiment-detail";
     const expId = decodeURIComponent(route.replace(/^\/experiments\//, "").replace(/\/$/, ""));
-    renderExperimentDetail(document.getElementById("experimentDetailContent"), expId);
+    asyncRenderPromise = renderExperimentDetail(document.getElementById("experimentDetailContent"), expId);
   }
   else if (route === "/submit" || route.startsWith("/submit?") || route.startsWith("/submit/")) {
     pageId = "page-submit";
-    renderSubmitView(document.getElementById("submitPageContent"));
+    asyncRenderPromise = renderSubmitView(document.getElementById("submitPageContent"));
   }
   else if (route === "/my-tests" || route.startsWith("/my-tests?") || route.startsWith("/my-tests/")) {
     pageId = "page-my-tests";
-    renderMyTestsView(document.getElementById("myTestsPageContent"));
+    asyncRenderPromise = renderMyTestsView(document.getElementById("myTestsPageContent"));
   }
   else if (route === "/compare" || route.startsWith("/compare?") || route.startsWith("/compare/")) {
     pageId = "page-compare";
-    renderCompareView(document.getElementById("comparePageContent"));
+    asyncRenderPromise = renderCompareView(document.getElementById("comparePageContent"));
   }
   else if (route === "/moderation" || route.startsWith("/moderation?") || route.startsWith("/moderation/")) {
     pageId = "page-moderation";
-    renderModerationView(document.getElementById("moderationPageContent"));
+    asyncRenderPromise = renderModerationView(document.getElementById("moderationPageContent"));
   }
   else {
     // Check if route references an element on home or fodder page directly (e.g. /exp1 or exp1)
@@ -2995,6 +2999,14 @@ function showPage(hash) {
   if (targetPage) targetPage.classList.add("active");
   window.scrollTo(0,0);
   setupScrollSpy(pageId);
+
+  if (asyncRenderPromise && typeof asyncRenderPromise.then === "function") {
+    asyncRenderPromise.finally(() => {
+      completeTopProgress();
+    });
+  } else {
+    completeTopProgress();
+  }
 }
 
 // ===== Nav tabs rendering =====

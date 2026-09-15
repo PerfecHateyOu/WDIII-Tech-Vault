@@ -29,11 +29,38 @@ async function getSdk() {
   return { fb: firebaseModule, fs: firestoreModule };
 }
 
-// In-memory cache structures
-let devicesCache = null;
-let experimentsCache = null;
+// In-memory cache structures with immediate pre-seeding for instantaneous loading
+let devicesCache = Array.isArray(OFFICIAL_DEVICES) ? [...OFFICIAL_DEVICES] : null;
+let experimentsCache = Array.isArray(OFFICIAL_EXPERIMENTS) ? [...OFFICIAL_EXPERIMENTS] : null;
 let deviceDetailCache = new Map();
 let experimentDetailCache = new Map();
+let backgroundSyncStarted = false;
+
+// Trigger non-blocking background synchronization if Firestore is ready
+if (typeof window !== "undefined") {
+  setTimeout(async () => {
+    try {
+      const { fb, fs } = await getSdk();
+      if (fb && fs && fb.isFirebaseReady()) {
+        const db = fb.getDb();
+        if (db) {
+          const [devSnap, expSnap] = await Promise.all([
+            fs.getDocs(fs.collection(db, "devices")).catch(() => null),
+            fs.getDocs(fs.collection(db, "experiments")).catch(() => null)
+          ]);
+          if (devSnap && !devSnap.empty) {
+            devicesCache = devSnap.docs.map(d => d.data());
+          }
+          if (expSnap && !expSnap.empty) {
+            experimentsCache = expSnap.docs.map(d => d.data());
+          }
+        }
+      }
+    } catch (e) {
+      // Non-critical background cache sync notice
+    }
+  }, 100);
+}
 
 /**
  * Initialize and load devices with caching

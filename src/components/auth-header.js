@@ -5,8 +5,9 @@
  * for header bars across the application.
  */
 
-import { signInWithGoogle, logOut, onAuthChange } from "/src/services/firebase.js";
+import { signInWithGoogle, signInAsVisitor, logOut, onAuthChange } from "/src/services/firebase.js";
 import { escapeHtml } from "/src/utils/sanitize.js";
+import { renderAuthProgressModal } from "/src/utils/loading-bar.js";
 
 /**
  * Mount the Auth Widget inside a container element
@@ -19,21 +20,25 @@ export function initAuthHeader(target) {
   container.innerHTML = `
     <div class="wdiii-auth-container" style="display:flex; align-items:center; position:relative;">
       <!-- Loading indicator -->
-      <div class="auth-loading" style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:var(--td-text-muted);">
-        <span class="auth-spinner" style="display:inline-block; width:14px; height:14px; border:2px solid var(--td-border-subtle); border-top-color:var(--td-info); border-radius:50%; animation:authSpin 0.8s linear infinite;"></span>
-        <span>Checking auth...</span>
+      <div class="auth-loading" style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:var(--td-text-muted); background:var(--td-bg-surface-elevated); padding:0.25rem 0.625rem; border-radius:9999px; border:1px solid var(--td-border-subtle);">
+        <span class="auth-spinner" style="display:inline-block; width:12px; height:12px; border:2px solid var(--td-border-subtle); border-top-color:var(--td-info); border-radius:50%; animation:authSpin 0.8s linear infinite;"></span>
+        <span>Verifying vault session...</span>
       </div>
 
-      <!-- Unauthenticated State: Google Sign-In Button -->
-      <div class="auth-unauthenticated" style="display:none;">
-        <button type="button" class="btn-google-signin" id="btnGoogleSignIn" style="display:inline-flex; align-items:center; gap:0.625rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:0.375rem 0.875rem; font-size:0.85rem; font-weight:500; color:var(--td-text-primary); cursor:pointer; transition:background-color 0.15s, border-color 0.15s; white-space:nowrap;">
-          <svg style="width:16px; height:16px; flex-shrink:0;" viewBox="0 0 24 24">
+      <!-- Unauthenticated State: Google Sign-In & Visitor Access Buttons -->
+      <div class="auth-unauthenticated" style="display:none; align-items:center; gap:0.5rem;">
+        <button type="button" class="btn-google-signin" id="btnGoogleSignIn" style="display:inline-flex; align-items:center; gap:0.5rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:0.35rem 0.75rem; font-size:0.82rem; font-weight:500; color:var(--td-text-primary); cursor:pointer; transition:all 0.15s; white-space:nowrap;">
+          <svg style="width:14px; height:14px; flex-shrink:0;" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
           <span>Sign in with Google</span>
+        </button>
+        <button type="button" class="btn-visitor-signin" id="btnVisitorSignIn" title="Instant Sandbox Session" style="display:inline-flex; align-items:center; gap:0.35rem; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:0.375rem; padding:0.35rem 0.65rem; font-size:0.82rem; font-weight:500; color:var(--td-pending); cursor:pointer; transition:all 0.15s; white-space:nowrap;">
+          <span>👤</span>
+          <span>Visitor Mode</span>
         </button>
       </div>
 
@@ -53,6 +58,9 @@ export function initAuthHeader(target) {
             <div class="dropdown-email" style="font-size:0.75rem; color:var(--td-text-muted); word-break:break-all;"></div>
           </div>
           <div style="padding:0.25rem 0;">
+            <a href="javascript:void(0)" class="dropdown-item" id="menuItemUpgradeGoogle" style="display:none; align-items:center; gap:0.625rem; padding:0.5rem 1rem; color:var(--td-info); font-size:0.85rem; text-decoration:none; transition:background-color 0.12s; border-bottom:1px solid var(--td-border-subtle);">
+              <span>⭐</span> <span>Connect Google Account</span>
+            </a>
             <a href="#/profile" class="dropdown-item" id="menuItemProfile" style="display:flex; align-items:center; gap:0.625rem; padding:0.5rem 1rem; color:var(--td-text-primary); font-size:0.85rem; text-decoration:none; transition:background-color 0.12s;">
               <span>👤</span> <span>My Profile</span>
             </a>
@@ -65,7 +73,7 @@ export function initAuthHeader(target) {
           </div>
           <div style="border-top:1px solid var(--td-border-subtle); padding:0.25rem 0 0;">
             <button type="button" class="dropdown-item" id="menuItemSignOut" style="display:flex; align-items:center; gap:0.625rem; width:100%; text-align:left; background:none; border:none; padding:0.5rem 1rem; color:var(--td-error, #f87171); font-size:0.85rem; font-weight:500; cursor:pointer; transition:background-color 0.12s;">
-              <span>🚪</span> <span>Sign Out</span>
+              <span>🚪</span> <span id="signOutLabel">Sign Out</span>
             </button>
           </div>
         </div>
@@ -78,6 +86,7 @@ export function initAuthHeader(target) {
   const unauthEl = container.querySelector(".auth-unauthenticated");
   const authEl = container.querySelector(".auth-authenticated");
   const btnGoogle = container.querySelector("#btnGoogleSignIn");
+  const btnVisitor = container.querySelector("#btnVisitorSignIn");
   const btnUserMenu = container.querySelector("#btnUserMenu");
   const menuDropdown = container.querySelector("#accountMenuDropdown");
   const avatarImg = container.querySelector(".user-avatar");
@@ -86,6 +95,8 @@ export function initAuthHeader(target) {
   const dropName = container.querySelector(".dropdown-displayname");
   const dropEmail = container.querySelector(".dropdown-email");
   const btnSignOut = container.querySelector("#menuItemSignOut");
+  const signOutLabel = container.querySelector("#signOutLabel");
+  const itemUpgradeGoogle = container.querySelector("#menuItemUpgradeGoogle");
 
   // Style CSS helper
   if (!document.getElementById("authWidgetStyles")) {
@@ -124,20 +135,25 @@ export function initAuthHeader(target) {
     }
   });
 
-  // Sign In Click
+  // Sign In Click with Google
   btnGoogle.addEventListener("click", async () => {
     btnGoogle.disabled = true;
     btnGoogle.style.opacity = "0.7";
-    const originalText = btnGoogle.querySelector("span").textContent;
-    btnGoogle.querySelector("span").textContent = "Signing in...";
+    const authModal = renderAuthProgressModal({ type: "google" });
+    authModal.updateStage(1, 25, "Opening secure Google Identity prompt...");
 
     try {
-      await signInWithGoogle();
+      authModal.updateStage(2, 55, "Verifying OAuth credentials & contributor identity...");
+      const signInPromise = signInWithGoogle();
+      authModal.updateStage(3, 85, "Synchronizing contributor profile & research history...");
+      await signInPromise;
+      authModal.complete();
       if (typeof window.showToast === "function") {
         window.showToast("Signed in successfully with Google", "success");
       }
     } catch (err) {
       console.error("Sign-in error:", err);
+      authModal.error(err);
       let errorMsg = err.message || "Failed to sign in.";
       if (err.code === "POPUP_CLOSED") {
         errorMsg = "Sign-in cancelled.";
@@ -150,8 +166,30 @@ export function initAuthHeader(target) {
     } finally {
       btnGoogle.disabled = false;
       btnGoogle.style.opacity = "1";
-      btnGoogle.querySelector("span").textContent = originalText;
     }
+  });
+
+  // Visitor Mode Click
+  btnVisitor?.addEventListener("click", async () => {
+    btnVisitor.disabled = true;
+    const authModal = renderAuthProgressModal({ type: "visitor" });
+    authModal.updateStage(1, 30, "Configuring guest contributor sandbox session...");
+    await new Promise(r => setTimeout(r, 120));
+    authModal.updateStage(2, 70, "Allocating empirical draft storage & test portfolio...");
+    await signInAsVisitor();
+    authModal.updateStage(3, 95, "Activating protocol privileges...");
+    await new Promise(r => setTimeout(r, 80));
+    authModal.complete();
+    btnVisitor.disabled = false;
+    if (typeof window.showToast === "function") {
+      window.showToast("Visitor guest session activated", "success");
+    }
+  });
+
+  // Upgrade to Google Account from Visitor Mode
+  itemUpgradeGoogle?.addEventListener("click", () => {
+    toggleDropdown(true);
+    btnGoogle.click();
   });
 
   // Sign Out Click
@@ -160,7 +198,7 @@ export function initAuthHeader(target) {
     try {
       await logOut();
       if (typeof window.showToast === "function") {
-        window.showToast("Signed out successfully", "info");
+        window.showToast("Session ended", "info");
       }
     } catch (err) {
       console.error("Sign-out error:", err);
@@ -182,12 +220,13 @@ export function initAuthHeader(target) {
       unauthEl.style.display = "none";
       authEl.style.display = "block";
 
-      const name = user.displayName || profile?.displayName || "Contributor";
+      const isVisitor = user.isVisitor === true || profile?.isVisitor === true;
+      const name = user.displayName || profile?.displayName || (isVisitor ? "Guest Contributor" : "Contributor");
       const photo = user.photoURL || profile?.photoURL || "/public/icon.png";
-      const email = user.email || "";
-      const isOwner = profile?.role === "owner" || email.toLowerCase() === "perfectshadowkai33@gmail.com";
-      const role = isOwner ? "owner" : (profile?.role || "contributor");
-      const displayRole = isOwner ? "👑 Owner" : role === "admin" ? "🛡️ Admin" : role === "moderator" ? "⚖️ Moderator" : "Contributor";
+      const email = user.email || (isVisitor ? "guest@wdiii.vault" : "");
+      const isOwner = !isVisitor && (profile?.role === "owner" || email.toLowerCase() === "perfectshadowkai33@gmail.com");
+      const role = isVisitor ? "visitor" : isOwner ? "owner" : (profile?.role || "contributor");
+      const displayRole = isVisitor ? "👤 Visitor" : isOwner ? "👑 Owner" : role === "admin" ? "🛡️ Admin" : role === "moderator" ? "⚖️ Moderator" : "Contributor";
 
       avatarImg.src = photo;
       avatarImg.alt = escapeHtml(name);
@@ -196,8 +235,20 @@ export function initAuthHeader(target) {
       dropName.textContent = name;
       dropEmail.textContent = email;
 
+      if (signOutLabel) {
+        signOutLabel.textContent = isVisitor ? "Exit Visitor Mode" : "Sign Out";
+      }
+      if (itemUpgradeGoogle) {
+        itemUpgradeGoogle.style.display = isVisitor ? "flex" : "none";
+      }
+
       // Colorize badge based on role
-      if (isOwner) {
+      if (isVisitor) {
+        roleBadgeSpan.style.background = "rgba(245, 158, 11, 0.15)";
+        roleBadgeSpan.style.borderColor = "rgba(245, 158, 11, 0.4)";
+        roleBadgeSpan.style.color = "var(--td-pending, #fbbf24)";
+        roleBadgeSpan.style.fontWeight = "600";
+      } else if (isOwner) {
         roleBadgeSpan.style.background = "rgba(239, 68, 68, 0.2)";
         roleBadgeSpan.style.borderColor = "rgba(239, 68, 68, 0.5)";
         roleBadgeSpan.style.color = "#f87171";
@@ -217,7 +268,7 @@ export function initAuthHeader(target) {
       }
     } else {
       authEl.style.display = "none";
-      unauthEl.style.display = "block";
+      unauthEl.style.display = "flex";
       toggleDropdown(true);
     }
   });

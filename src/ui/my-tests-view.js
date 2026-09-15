@@ -12,8 +12,9 @@
  */
 
 import { getUserSubmissions, getSubmissionById, withdrawSubmission, reviewSubmission } from "../services/database.js";
-import { getCurrentUser, getCurrentProfile, signInWithGoogle } from "../services/firebase.js";
+import { getCurrentUser, getCurrentProfile, signInWithGoogle, signInAsVisitor } from "../services/firebase.js";
 import { escapeHtml, sanitizeText } from "../utils/sanitize.js";
+import { renderAuthProgressModal } from "../utils/loading-bar.js";
 
 export async function renderMyTestsView(container) {
   if (!container) return;
@@ -57,21 +58,45 @@ function renderAuthPrompt(container) {
         Authentication Required
       </h2>
       <p style="color:var(--td-text-secondary); font-size:0.95rem; line-height:1.5; max-width:480px; margin:0 auto 1.75rem;">
-        Sign in with your Google account to track your submitted community tests, review peer audit notes, and manage protocol submissions.
+        Sign in to track your submitted community tests, review peer audit notes, and manage empirical protocol submissions.
       </p>
-      <button id="btnMyTestsSignIn" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.625rem 1.5rem; background:var(--td-info); color:#fff; font-weight:600; font-size:0.95rem; border-radius:0.375rem; border:none; cursor:pointer;">
-        <span>Sign In with Google</span>
-      </button>
+      <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+        <button id="btnMyTestsSignIn" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.625rem 1.5rem; background:var(--td-info); color:#fff; font-weight:600; font-size:0.95rem; border-radius:0.375rem; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
+          <span>Sign In with Google</span>
+        </button>
+        <button id="btnMyTestsVisitor" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.625rem 1.25rem; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.35); color:var(--td-pending); font-weight:600; font-size:0.95rem; border-radius:0.375rem; cursor:pointer;">
+          <span>👤</span>
+          <span>Explore as Visitor (Guest Contributor Sandbox)</span>
+        </button>
+      </div>
     </div>
   `;
 
   document.getElementById("btnMyTestsSignIn")?.addEventListener("click", async () => {
+    const authModal = renderAuthProgressModal({ type: "google" });
+    authModal.updateStage(1, 30, "Initiating Google Identity authentication...");
     try {
+      authModal.updateStage(2, 60, "Verifying contributor credentials & privileges...");
       await signInWithGoogle();
-      renderMyTestsView(container);
+      authModal.updateStage(3, 90, "Loading submissions portfolio...");
+      authModal.complete();
+      setTimeout(() => renderMyTestsView(container), 250);
     } catch (err) {
       console.warn("Sign in error:", err);
+      authModal.error(err);
     }
+  });
+
+  document.getElementById("btnMyTestsVisitor")?.addEventListener("click", async () => {
+    const authModal = renderAuthProgressModal({ type: "visitor" });
+    authModal.updateStage(1, 35, "Configuring visitor sandbox workspace...");
+    await new Promise(r => setTimeout(r, 120));
+    authModal.updateStage(2, 75, "Allocating empirical storage...");
+    await signInAsVisitor();
+    authModal.updateStage(3, 95, "Activating submissions portfolio...");
+    await new Promise(r => setTimeout(r, 80));
+    authModal.complete();
+    setTimeout(() => renderMyTestsView(container), 200);
   });
 }
 
