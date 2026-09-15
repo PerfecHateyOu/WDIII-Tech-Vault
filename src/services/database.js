@@ -714,9 +714,23 @@ export async function reviewSubmission(submissionId, reviewData) {
       const db = fb.getDb();
       if (db) {
         await fs.updateDoc(fs.doc(db, "submissions", submissionId), updateFields);
+
+        // Server-of-truth reputation increment on approval
+        if (status === "approved" && current.userId) {
+          try {
+            if (typeof fs.increment === "function") {
+              await fs.updateDoc(fs.doc(db, "users", current.userId), {
+                reputationScore: fs.increment(25)
+              });
+            }
+          } catch (repErr) {
+            console.warn("Notice: could not update author reputationScore in Firestore (requires admin role):", repErr.message);
+          }
+        }
       }
     } catch (err) {
       console.warn("Firestore reviewSubmission notice:", err);
+      throw err;
     }
   }
 
@@ -879,6 +893,76 @@ export async function getApprovedSubmissionsForDevice(deviceId) {
 export async function getDeviceCommunityStats(deviceId) {
   const { getDeviceCommunityStats: fetchStats } = await import("./device-stats.js");
   return fetchStats(deviceId);
+}
+
+/**
+ * Step 7: Retrieve all submissions pending review for the moderation dashboard.
+ * Returns submissions with status 'pending_review' or 'pending', ordered newest first.
+ */
+export async function getPendingSubmissions() {
+  const { fb, fs } = await getSdk();
+  const resultMap = new Map();
+
+  if (fb && fs && fb.isFirebaseReady()) {
+    try {
+      const db = fb.getDb();
+      if (db) {
+        try {
+          const q = fs.query(
+            fs.collection(db, "submissions"),
+            fs.where("status", "in", ["pending_review", "pending"]),
+            fs.orderBy("submittedAt", "desc")
+          );
+          const snap = await fs.getDocs(q);
+          snap.docs.forEach(doc => {
+            resultMap.set(doc.id, { id: doc.id, ...doc.data() });
+          });
+        } catch (queryErr) {
+          // Fallback if composite index on (status, submittedAt) is absent
+          const qSimple = fs.query(
+            fs.collection(db, "submissions"),
+            fs.where("status", "in", ["pending_review", "pending"])
+          );
+          const snap = await fs.getDocs(qSimple);
+          snap.docs.forEach(doc => {
+            resultMap.set(doc.id, { id: doc.id, ...doc.data() });
+          });
+        }
+      }
+    } catch (err) {
+      console.warn("Firestore getPendingSubmissions query notice:", err);
+    }
+  }
+
+  // Also query local storage so offline and demo tests are visible
+  try {
+    if (typeof localStorage !== "undefined") {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("wdiii_submissions_")) {
+          const list = JSON.parse(localStorage.getItem(k) || "[]");
+          list.forEach(s => {
+            if (s && (s.status === "pending_review" || s.status === "pending")) {
+              if (!resultMap.has(s.id)) {
+                resultMap.set(s.id, s);
+              }
+            }
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Local storage getPendingSubmissions notice:", err);
+  }
+
+  const results = Array.from(resultMap.values());
+  results.sort((a, b) => {
+    const timeA = new Date(a.submittedAt || a.createdAt || 0).getTime();
+    const timeB = new Date(b.submittedAt || b.createdAt || 0).getTime();
+    return timeB - timeA;
+  });
+
+  return results;
 }
 
 
