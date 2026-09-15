@@ -1002,10 +1002,13 @@ function renderSubmissionForm(container, ctx) {
 
     submitMessageBanner.style.display = "none";
 
+    const selectedDevice = getSelectedDevice();
+    const selectedProtocol = getSelectedExperiment();
+
     // Launch multi-step empirical submission progress modal with real-time ETA and elapsed timer
     const progressModal = renderSubmissionProgressModal({
       title: existingSubmission ? "Updating Empirical Test Review" : "Submitting Empirical Test Review",
-      subtitle: `Transmitting protocol telemetry for ${selectedDevice?.brand || "Device"} ${selectedDevice?.model || ""} (${selectedProtocol?.name || "Protocol"})`,
+      subtitle: `Transmitting protocol telemetry for ${selectedDevice?.brand || "Device"} ${selectedDevice?.model || ""} (${selectedProtocol?.title || selectedProtocol?.name || "Protocol"})`,
       estimatedSeconds: 0.8
     });
 
