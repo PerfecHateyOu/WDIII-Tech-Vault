@@ -22,8 +22,8 @@
     "name": "Consumer Tech Documentation",
     "headline": "Consumer Tech Documentation — Real-world experiments and findings",
     "description": "Real-world experiments, case studies, and documented findings across repair, service, software, and hardware.",
-    "version": "V5.6.2",
-    "dateModified": "2026-09-14",
+    "version": "V5.6.3",
+    "dateModified": "2026-09-15",
     "author": { "@type": "Person", "name": "WDIII" },
     "publisher": { "@type": "Organization", "name": "TechStack Archive" },
     "hasPart": [
@@ -618,7 +618,7 @@
       <a href="#/logo" class="btnOpenLogoModal" style="color:var(--td-info); font-weight:500;">🏷️ Brand Logo</a>
     </nav>
     <p style="margin:0; display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
-      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 14, 2026 (V5.6.2) |</span>
+      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 14, 2026 (V5.6.3) |</span>
       <a href="#/logo" class="wdiii-mini-badge btnOpenLogoModal" title="WDIII Official Brand" style="text-decoration:none;">
         <img src="/logo.svg" alt="WDIII" style="height:12px; width:auto; display:block;" />
       </a>
@@ -1061,6 +1061,38 @@
   </footer>
 </div>
 
+<!-- ===================== REPLICATION PAGE ===================== -->
+<div class="page" id="page-replicate">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
+        <img src="/logo.svg" alt="WDIII" style="height:14px; width:auto; display:block;" />
+      </a>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">Community Experiment Replication Protocol</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="authHeaderContainerReplicate"></div>
+      <button id="themeToggleReplicate" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
+    </div>
+  </div>
+
+  <div id="replicationPageContent"></div>
+
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/compare" style="color:var(--td-text-muted);">Compare Devices</a>
+      <a href="#/submit" style="color:var(--td-text-muted);">Submit Test</a>
+      <a href="#/my-tests" style="color:var(--td-text-muted);">My Tests</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
+    </nav>
+    <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
+  </footer>
+</div>
+
 <script type="module">
 import { initFirebase, onAuthChange, logOut } from "/src/services/firebase.js";
 import { initAuthHeader } from "/src/components/auth-header.js";
@@ -1071,6 +1103,7 @@ import { renderSubmitView } from "/src/ui/submit-view.js";
 import { renderMyTestsView } from "/src/ui/my-tests-view.js";
 import { renderCompareView } from "/src/ui/compare-view.js";
 import { renderModerationView } from "/src/ui/moderation-view.js";
+import { renderReplicationView } from "/src/ui/replication-view.js";
 import { startTopProgress, completeTopProgress } from "/src/utils/loading-bar.js";
 
 // Initialize Firebase SDK immediately
@@ -1088,6 +1121,7 @@ initAuthHeader("#authHeaderContainerSubmit");
 initAuthHeader("#authHeaderContainerMyTests");
 initAuthHeader("#authHeaderContainerCompare");
 initAuthHeader("#authHeaderContainerModeration");
+initAuthHeader("#authHeaderContainerReplicate");
 
 // Track current profile for profile page view
 let currentAuthData = { user: null, profile: null, loading: true };
@@ -1107,6 +1141,13 @@ onAuthChange(data => {
   }
   if (document.getElementById("page-moderation")?.classList.contains("active")) {
     renderModerationView(document.getElementById("moderationPageContent"));
+  }
+  if (document.getElementById("page-replicate")?.classList.contains("active")) {
+    const hash = window.location.hash || "";
+    let r = hash.replace(/^#/, "");
+    const routeWithoutQuery = r.split("?")[0];
+    const expId = routeWithoutQuery.startsWith("/replicate/") ? decodeURIComponent(routeWithoutQuery.replace(/^\/replicate\//, "").replace(/\/$/, "")) : "";
+    renderReplicationView(document.getElementById("replicationPageContent"), expId);
   }
 
   // Toggle visibility of conditional moderation nav links
@@ -2979,6 +3020,12 @@ function showPage(hash) {
   else if (route === "/moderation" || route.startsWith("/moderation?") || route.startsWith("/moderation/")) {
     pageId = "page-moderation";
     asyncRenderPromise = renderModerationView(document.getElementById("moderationPageContent"));
+  }
+  else if (route === "/replicate" || route.startsWith("/replicate/") || route.startsWith("/replicate?")) {
+    pageId = "page-replicate";
+    const routeWithoutQuery = route.split("?")[0];
+    const expId = routeWithoutQuery.startsWith("/replicate/") ? decodeURIComponent(routeWithoutQuery.replace(/^\/replicate\//, "").replace(/\/$/, "")) : "";
+    asyncRenderPromise = renderReplicationView(document.getElementById("replicationPageContent"), expId);
   }
   else {
     // Check if route references an element on home or fodder page directly (e.g. /exp1 or exp1)

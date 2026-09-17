@@ -366,6 +366,7 @@ export async function syncVaultToFirestore() {
 
 const SUBMISSION_LOCAL_KEY_PREFIX = "wdiii_submissions_local_";
 const DRAFT_LOCAL_KEY_PREFIX = "wdiii_draft_submission_";
+const inMemorySubmissions = new Map();
 
 /**
  * Helper to get local submissions storage
@@ -476,6 +477,7 @@ export async function createSubmission(payload) {
     userId: payload.userId,
     authorId: payload.userId, // Dual-key compatibility for security rules
     submitterName: sanitizedSubmitterName,
+    authorDisplayName: sanitizedSubmitterName,
     submitterEmail: sanitizedSubmitterEmail,
     deviceId: payload.deviceId,
     deviceBrand: device.brand,
@@ -484,6 +486,7 @@ export async function createSubmission(payload) {
     experimentTitle: experiment.title,
     experimentNumber: experiment.experimentNumber || "",
     experimentCategory: experiment.category,
+    type: "replication",
     submittedAt: nowIso,
     createdAt: nowIso,
     updatedAt: nowIso,
@@ -491,6 +494,7 @@ export async function createSubmission(payload) {
     softwareVersion: sanitizedSoftware,
     conditions: sanitizedConditions,
     measurements: sanitizedMeasurements,
+    evidence: cleanEvidence,
     evidenceReferences: cleanEvidence,
     notes: sanitizedNotes,
     // Status MUST strictly be pending_review on initial creation
@@ -498,10 +502,17 @@ export async function createSubmission(payload) {
     reviewerId: null,
     reviewedAt: null,
     reviewNotes: null,
+    review: null,
+    provenance: {
+      source: "community",
+      protocolVersion: experiment.protocolVersion || "1.0.0",
+      experimentVersion: experiment.version || "1.0.0"
+    },
     reviewHistory: []
   };
 
   // 1. Immediate optimistic local cache write (0ms latency, zero risk of data loss)
+  inMemorySubmissions.set(subId, submissionRecord);
   const localList = getLocalSubmissions(payload.userId);
   localList.unshift(submissionRecord);
   saveLocalSubmissions(payload.userId, localList);
@@ -604,7 +615,12 @@ export async function getUserSubmissions(userId) {
 export async function getSubmissionById(submissionId, userId = null) {
   if (!submissionId) return null;
 
-  // Check local cache first
+  // Check in-memory submissions cache first
+  if (inMemorySubmissions.has(submissionId)) {
+    return inMemorySubmissions.get(submissionId);
+  }
+
+  // Check local cache
   if (userId) {
     const local = getLocalSubmissions(userId);
     const foundLocal = local.find(s => s.id === submissionId);
@@ -790,12 +806,20 @@ export async function reviewSubmission(submissionId, reviewData) {
   const current = await getSubmissionById(submissionId);
   if (!current) throw new Error("Submission not found.");
 
+  // CRITICAL IMMUTABLE RULE: Approved submissions are permanently locked against direct updates
+  if (current.status === "approved") {
+    throw new Error("Immutable Record: Approved submissions are permanently locked against direct modifications. Any corrections must trigger a separate revision workflow.");
+  }
+
+  const cleanFeedback = sanitizeText(reviewNotes || reviewData.feedback || "", 2000);
+  const activeReviewerId = reviewerId || "moderator";
+
   const historyEntry = {
     previousStatus: current.status,
     newStatus: status,
-    reviewerId: reviewerId || "moderator",
+    reviewerId: activeReviewerId,
     reviewerName: reviewerName || "Reviewer",
-    reviewNotes: sanitizeText(reviewNotes || "", 2000),
+    reviewNotes: cleanFeedback,
     timestamp: nowIso
   };
 
@@ -803,38 +827,92 @@ export async function reviewSubmission(submissionId, reviewData) {
 
   const updateFields = {
     status,
-    reviewerId: reviewerId || "moderator",
+    reviewerId: activeReviewerId,
     reviewedAt: nowIso,
-    reviewNotes: sanitizeText(reviewNotes || "", 2000),
+    reviewNotes: cleanFeedback,
+    review: {
+      reviewerId: activeReviewerId,
+      reviewedAt: nowIso,
+      feedback: cleanFeedback
+    },
     reviewHistory: updatedHistory,
     updatedAt: nowIso
   };
 
+  // Build immutable audit log entry
+  const auditLogId = `audit_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const auditLogRecord = {
+    id: auditLogId,
+    action: `${status}_submission`,
+    actorId: activeReviewerId,
+    targetSubmissionId: submissionId,
+    previousStatus: current.status,
+    newStatus: status,
+    reason: cleanFeedback || `Submission review status updated to ${status}`,
+    timestamp: nowIso
+  };
+
   const { fb, fs } = await getSdk();
-  if (fb && fs && fb.isFirebaseReady()) {
+  const authUser = fb?.getCurrentUser ? fb.getCurrentUser() : null;
+  const isVisitor = authUser?.isVisitor === true;
+  const effectiveReviewerUid = (authUser && authUser.uid && !isVisitor) ? authUser.uid : activeReviewerId;
+
+  auditLogRecord.actorId = effectiveReviewerUid;
+
+  if (fb && fs && fb.isFirebaseReady() && authUser && !isVisitor) {
     try {
       const db = fb.getDb();
       if (db) {
-        await fs.updateDoc(fs.doc(db, "submissions", submissionId), updateFields);
+        const subDocRef = fs.doc(db, "submissions", submissionId);
+        let docExists = false;
+        try {
+          const snap = await fs.getDoc(subDocRef);
+          docExists = snap && snap.exists();
+        } catch (existErr) {
+          console.warn("Notice checking Firestore submission existence:", existErr.message);
+        }
 
-        // Server-of-truth reputation increment on approval
-        if (status === "approved" && current.userId) {
+        if (docExists) {
+          await fs.updateDoc(subDocRef, updateFields);
+
+          // Record immutable audit log
           try {
-            if (typeof fs.increment === "function") {
-              await fs.updateDoc(fs.doc(db, "users", current.userId), {
-                reputationScore: fs.increment(25)
-              });
+            await fs.setDoc(fs.doc(db, "admin_audit_logs", auditLogId), auditLogRecord);
+          } catch (auditErr) {
+            console.warn("Notice: could not persist admin audit log to Firestore:", auditErr.message);
+          }
+
+          // Server-of-truth reputation increment on approval
+          if (status === "approved" && current.userId) {
+            try {
+              if (typeof fs.increment === "function") {
+                await fs.updateDoc(fs.doc(db, "users", current.userId), {
+                  reputationScore: fs.increment(25)
+                });
+              }
+            } catch (repErr) {
+              console.warn("Notice: could not update author reputationScore in Firestore (requires admin role):", repErr.message);
             }
-          } catch (repErr) {
-            console.warn("Notice: could not update author reputationScore in Firestore (requires admin role):", repErr.message);
           }
         }
       }
     } catch (err) {
       console.warn("Firestore reviewSubmission notice:", err);
+      // Still update in-memory and local caches before rethrowing
+      inMemorySubmissions.set(submissionId, { ...current, ...updateFields });
+      if (current.userId) {
+        const localList = getLocalSubmissions(current.userId);
+        const idx = localList.findIndex(s => s.id === submissionId);
+        if (idx !== -1) {
+          localList[idx] = { ...localList[idx], ...updateFields };
+          saveLocalSubmissions(current.userId, localList);
+        }
+      }
       throw err;
     }
   }
+
+  inMemorySubmissions.set(submissionId, { ...current, ...updateFields });
 
   if (current.userId) {
     const localList = getLocalSubmissions(current.userId);

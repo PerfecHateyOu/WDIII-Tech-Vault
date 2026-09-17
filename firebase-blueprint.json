@@ -55,6 +55,16 @@
         "methodology": { "type": "string", "description": "Step-by-step scientific method and testing approach" },
         "conditions": { "type": "string", "description": "Environmental and physical testing controls" },
         "protocol": { "type": "string", "description": "Testing protocol instructions" },
+        "protocolVersion": { "type": "string", "description": "Testing protocol version string (e.g. 1.0.0)" },
+        "version": { "type": "string", "description": "Experiment revision version (e.g. 1.0.0)" },
+        "measurementSchema": {
+          "type": "array",
+          "description": "Dynamic array of allowed and required empirical measurements for this protocol"
+        },
+        "allowedMeasurementKeys": {
+          "type": "array",
+          "description": "Array of permitted measurement keys for strict server-side schema validation"
+        },
         "measurements": { "type": "object", "description": "Quantitative telemetry, benchmarks, and cost metrics" },
         "results": { "type": "string", "description": "Key outcome summary" },
         "observations": { "type": "array", "description": "Detailed empirical findings and observations" },
@@ -68,32 +78,52 @@
     },
     "Submission": {
       "title": "Submission",
-      "description": "Community benchmark test submission undergoing peer review",
+      "description": "Community empirical replication test submission undergoing peer review",
       "type": "object",
       "properties": {
         "id": { "type": "string", "description": "Unique submission identifier" },
-        "userId": { "type": "string", "description": "UID of submitter" },
-        "authorId": { "type": "string", "description": "UID of submitter (alias)" },
-        "submitterName": { "type": "string", "description": "Display name of submitter" },
-        "submitterEmail": { "type": "string", "description": "Email of submitter" },
+        "authorId": { "type": "string", "description": "UID of author" },
+        "authorDisplayName": { "type": "string", "description": "Display name of author" },
         "deviceId": { "type": "string", "description": "Referenced device registry ID" },
         "experimentId": { "type": "string", "description": "Referenced official experiment ID" },
-        "submittedAt": { "type": "string", "format": "date-time", "description": "Submission ISO timestamp" },
+        "type": { "type": "string", "enum": ["replication"], "description": "Submission type classification" },
+        "status": { "type": "string", "enum": ["draft", "pending_review", "needs_revision", "approved", "rejected", "withdrawn"], "description": "Review status" },
+        "measurements": { "type": "object", "description": "Empirical measurements conforming to parent experiment measurementSchema" },
+        "conditions": { "type": "object", "description": "Structured testing conditions and controls" },
+        "notes": { "type": "string", "description": "Contributor empirical observations and notes" },
+        "evidence": { "type": "array", "description": "Array of file metadata maps (name, url, size, type, uploadedAt)" },
         "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
         "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" },
-        "testDate": { "type": "string", "description": "Date when empirical testing was performed" },
-        "softwareVersion": { "type": "string", "description": "Operating system and software build tested" },
-        "conditions": { "type": "object", "description": "Structured testing conditions and controls" },
-        "measurements": { "type": "object", "description": "Empirical measurements with explicit units" },
-        "evidenceReferences": { "type": "array", "description": "Uploaded telemetry evidence file references" },
-        "notes": { "type": "string", "description": "Contributor empirical observations and notes" },
-        "status": { "type": "string", "enum": ["pending_review", "pending", "needs_revision", "approved", "rejected", "withdrawn"], "description": "Review status" },
-        "reviewerId": { "type": "string", "description": "UID of reviewer if reviewed" },
-        "reviewedAt": { "type": "string", "format": "date-time", "description": "Review completion timestamp" },
-        "reviewNotes": { "type": "string", "description": "Reviewer notes and revision instructions" },
-        "reviewHistory": { "type": "array", "description": "Audit trail of review decisions and notes" }
+        "submittedAt": { "type": "string", "format": "date-time", "description": "Submission timestamp" },
+        "review": {
+          "type": "object",
+          "description": "Moderator review metadata (reviewerId, reviewedAt, feedback)"
+        },
+        "provenance": {
+          "type": "object",
+          "description": "Provenance metadata (source: community, protocolVersion, experimentVersion)"
+        },
+        "userId": { "type": "string", "description": "Legacy alias for authorId" },
+        "submitterName": { "type": "string", "description": "Legacy alias for authorDisplayName" },
+        "evidenceReferences": { "type": "array", "description": "Legacy alias for evidence array" }
       },
-      "required": ["deviceId", "experimentId", "status"]
+      "required": ["authorId", "authorDisplayName", "deviceId", "experimentId", "type", "status", "measurements", "conditions", "evidence", "provenance"]
+    },
+    "AdminAuditLog": {
+      "title": "AdminAuditLog",
+      "description": "Immutable audit trail for all moderation and administrative decisions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique audit log entry ID" },
+        "action": { "type": "string", "description": "Action performed (approve, reject, request_revision, etc.)" },
+        "actorId": { "type": "string", "description": "UID of moderator/admin who took action" },
+        "targetSubmissionId": { "type": "string", "description": "Target submission ID modified" },
+        "previousStatus": { "type": "string", "description": "Status before action" },
+        "newStatus": { "type": "string", "description": "Status after action" },
+        "reason": { "type": "string", "description": "Moderator explanation or rejection reason" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "Exact action timestamp" }
+      },
+      "required": ["action", "actorId", "targetSubmissionId", "previousStatus", "newStatus", "reason", "timestamp"]
     }
   },
   "firestore": {
@@ -112,6 +142,10 @@
     "/submissions/{submissionId}": {
       "schema": "Submission",
       "description": "Community benchmark test submissions"
+    },
+    "/admin_audit_logs/{logId}": {
+      "schema": "AdminAuditLog",
+      "description": "Immutable moderation audit log entries"
     }
   }
 }
