@@ -110,8 +110,11 @@ export async function initFirebase() {
 
       // Listen to Firebase Auth state transitions
       onAuthStateChanged(auth, async (user) => {
-        currentUser = user;
         if (user) {
+          currentUser = user;
+          try {
+            sessionStorage.removeItem("wdiii_active_visitor");
+          } catch (e) {}
           try {
             userProfile = await syncUserProfile(user);
           } catch (profileErr) {
@@ -133,7 +136,42 @@ export async function initFirebase() {
             }
           }
         } else {
-          userProfile = null;
+          // Check if visitor session was active in this browser tab
+          let isVisitorActive = false;
+          try {
+            isVisitorActive = typeof sessionStorage !== "undefined" && sessionStorage.getItem("wdiii_active_visitor") === "true";
+          } catch (e) {}
+
+          if (isVisitorActive) {
+            let visitorId = "guest";
+            try {
+              visitorId = localStorage.getItem("wdiii_visitor_id") || "guest";
+            } catch (e) {}
+            const visitorUid = `visitor_${visitorId}`;
+            currentUser = {
+              uid: visitorUid,
+              isAnonymous: true,
+              isVisitor: true,
+              displayName: "Visitor",
+              email: "guest@wdiii.vault",
+              photoURL: "/public/icon.png"
+            };
+            userProfile = {
+              uid: visitorUid,
+              displayName: "Visitor",
+              email: "guest@wdiii.vault",
+              photoURL: "/public/icon.png",
+              role: "visitor",
+              isVisitor: true,
+              reputationScore: 0,
+              submissionCount: 0,
+              createdAt: new Date().toISOString(),
+              lastLoginAt: new Date().toISOString()
+            };
+          } else {
+            currentUser = null;
+            userProfile = null;
+          }
         }
         isInitialized = true;
         notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
@@ -304,10 +342,72 @@ export async function signInWithGoogle() {
 }
 
 /**
+ * Sign in as an anonymous / guest Visitor
+ * Activates an instant read-only session with the Visitor role.
+ */
+export async function signInAsVisitor() {
+  await initFirebase();
+  
+  // Clear any existing Google auth session if needed
+  if (auth && currentUser && !currentUser.isVisitor) {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.warn("Sign out during visitor switch notice:", e);
+    }
+  }
+
+  let visitorId = "guest";
+  try {
+    visitorId = localStorage.getItem("wdiii_visitor_id");
+    if (!visitorId) {
+      visitorId = "vis_" + Math.random().toString(36).substring(2, 10);
+      localStorage.setItem("wdiii_visitor_id", visitorId);
+    }
+  } catch (e) {
+    visitorId = "vis_" + Math.random().toString(36).substring(2, 10);
+  }
+
+  const visitorUid = `visitor_${visitorId}`;
+
+  currentUser = {
+    uid: visitorUid,
+    isAnonymous: true,
+    isVisitor: true,
+    displayName: "Visitor",
+    email: "guest@wdiii.vault",
+    photoURL: "/public/icon.png"
+  };
+
+  userProfile = {
+    uid: visitorUid,
+    displayName: "Visitor",
+    email: "guest@wdiii.vault",
+    photoURL: "/public/icon.png",
+    role: "visitor",
+    isVisitor: true,
+    reputationScore: 0,
+    submissionCount: 0,
+    createdAt: new Date().toISOString(),
+    lastLoginAt: new Date().toISOString()
+  };
+
+  try {
+    sessionStorage.setItem("wdiii_active_visitor", "true");
+  } catch (e) {}
+
+  notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
+  return { user: currentUser, profile: userProfile };
+}
+
+/**
  * Sign out current authenticated user
  */
 export async function logOut() {
-  if (auth && currentUser) {
+  try {
+    sessionStorage.removeItem("wdiii_active_visitor");
+  } catch (e) {}
+  if (auth && currentUser && !currentUser.isVisitor) {
     try {
       await signOut(auth);
     } catch (e) {
