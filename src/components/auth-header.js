@@ -64,12 +64,6 @@ export function initAuthHeader(target) {
             <a href="#/profile" class="dropdown-item" id="menuItemProfile" style="display:flex; align-items:center; gap:0.625rem; padding:0.5rem 1rem; color:var(--td-text-primary); font-size:0.85rem; text-decoration:none; transition:background-color 0.12s;">
               <span>👤</span> <span>My Profile</span>
             </a>
-            <a href="#/submit" class="dropdown-item" id="menuItemSubmit" style="display:flex; align-items:center; gap:0.625rem; padding:0.5rem 1rem; color:var(--td-text-primary); font-size:0.85rem; text-decoration:none; transition:background-color 0.12s;">
-              <span>📝</span> <span>Submit Test</span>
-            </a>
-            <a href="#/my-tests" class="dropdown-item" id="menuItemMyTests" style="display:flex; align-items:center; gap:0.625rem; padding:0.5rem 1rem; color:var(--td-text-primary); font-size:0.85rem; text-decoration:none; transition:background-color 0.12s;">
-              <span>🧪</span> <span>My Tests</span>
-            </a>
           </div>
           <div style="border-top:1px solid var(--td-border-subtle); padding:0.25rem 0 0;">
             <button type="button" class="dropdown-item" id="menuItemSignOut" style="display:flex; align-items:center; gap:0.625rem; width:100%; text-align:left; background:none; border:none; padding:0.5rem 1rem; color:var(--td-error, #f87171); font-size:0.85rem; font-weight:500; cursor:pointer; transition:background-color 0.12s;">

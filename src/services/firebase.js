@@ -133,30 +133,7 @@ export async function initFirebase() {
             }
           }
         } else {
-          // If no Firebase user, check if visitor session was active
-          if (typeof localStorage !== "undefined" && localStorage.getItem("wdiii_visitor_active") === "true") {
-            const visitorId = localStorage.getItem("wdiii_visitor_uid") || `visitor_${Math.random().toString(36).substring(2, 9)}`;
-            currentUser = {
-              uid: visitorId,
-              displayName: "Guest Contributor",
-              email: "visitor@wdiii.vault",
-              photoURL: "/logo.svg",
-              isAnonymous: true,
-              isVisitor: true
-            };
-            userProfile = {
-              uid: visitorId,
-              displayName: "Guest Contributor (Visitor)",
-              email: "visitor@wdiii.vault",
-              photoURL: "/logo.svg",
-              role: "contributor",
-              submissionCount: 0,
-              reputationScore: 25,
-              isVisitor: true
-            };
-          } else {
-            userProfile = null;
-          }
+          userProfile = null;
         }
         isInitialized = true;
         notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
@@ -327,53 +304,10 @@ export async function signInWithGoogle() {
 }
 
 /**
- * Sign in as a Visitor / Guest Contributor Sandbox
- * Provides zero-friction, instant access to the empirical testing pipeline
- */
-export async function signInAsVisitor() {
-  let visitorId = "visitor_guest";
-  if (typeof localStorage !== "undefined") {
-    visitorId = localStorage.getItem("wdiii_visitor_uid") || `visitor_${Math.random().toString(36).substring(2, 9)}`;
-    localStorage.setItem("wdiii_visitor_uid", visitorId);
-    localStorage.setItem("wdiii_visitor_active", "true");
-  }
-
-  currentUser = {
-    uid: visitorId,
-    displayName: "Guest Contributor",
-    email: "visitor@wdiii.vault",
-    photoURL: "/logo.svg",
-    isAnonymous: true,
-    isVisitor: true
-  };
-
-  userProfile = {
-    uid: visitorId,
-    displayName: "Guest Contributor (Visitor)",
-    email: "visitor@wdiii.vault",
-    photoURL: "/logo.svg",
-    role: "contributor",
-    submissionCount: 0,
-    reputationScore: 25,
-    isVisitor: true
-  };
-
-  notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
-  return { user: currentUser, profile: userProfile };
-}
-
-export function isVisitorSession() {
-  return currentUser?.isVisitor === true;
-}
-
-/**
  * Sign out current authenticated user
  */
 export async function logOut() {
-  if (typeof localStorage !== "undefined") {
-    localStorage.removeItem("wdiii_visitor_active");
-  }
-  if (auth && currentUser && !currentUser.isVisitor) {
+  if (auth && currentUser) {
     try {
       await signOut(auth);
     } catch (e) {

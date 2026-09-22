@@ -176,7 +176,7 @@ export function extractMetricValue(submission, metricKey) {
  *
  * @param {Array<object>} rawSubmissions
  * @param {string} [deviceId=""]
- * @returns {object} Device Community Statistics dossier
+ * @returns {object} Device Community Statistics record
  */
 export function computeDeviceCommunityStats(rawSubmissions = [], deviceId = "") {
   // Enforce strict security filter: APPROVED submissions ONLY

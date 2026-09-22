@@ -34,7 +34,6 @@ let devicesCache = Array.isArray(OFFICIAL_DEVICES) ? [...OFFICIAL_DEVICES] : nul
 let experimentsCache = Array.isArray(OFFICIAL_EXPERIMENTS) ? [...OFFICIAL_EXPERIMENTS] : null;
 let deviceDetailCache = new Map();
 let experimentDetailCache = new Map();
-let backgroundSyncStarted = false;
 
 // Trigger non-blocking background synchronization if Firestore is ready
 if (typeof window !== "undefined") {
@@ -162,7 +161,7 @@ export async function getDevices(options = {}) {
 }
 
 /**
- * Retrieve single device by ID with linked experiment dossiers
+ * Retrieve single device by ID with linked experiment protocols
  */
 export async function getDeviceById(deviceId) {
   if (!deviceId) return null;
@@ -361,789 +360,82 @@ export async function syncVaultToFirestore() {
 }
 
 // ==========================================
-// Community Submissions Data Layer
+// Compatibility Handlers
+// (Community contributions retired in favor of author-provided data)
 // ==========================================
 
-const SUBMISSION_LOCAL_KEY_PREFIX = "wdiii_submissions_local_";
-const DRAFT_LOCAL_KEY_PREFIX = "wdiii_draft_submission_";
-const inMemorySubmissions = new Map();
-
 /**
- * Helper to get local submissions storage
+ * Retrieve verified community submissions for an experiment protocol.
+ * Returns empty array as external contributions are disabled.
  */
-function getLocalSubmissions(userId) {
-  if (typeof window === "undefined" || !userId) return [];
-  try {
-    const raw = localStorage.getItem(SUBMISSION_LOCAL_KEY_PREFIX + userId);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveLocalSubmissions(userId, submissions) {
-  if (typeof window === "undefined" || !userId) return;
-  try {
-    localStorage.setItem(SUBMISSION_LOCAL_KEY_PREFIX + userId, JSON.stringify(submissions));
-  } catch (err) {
-    console.warn("Could not write local submissions cache:", err);
-  }
-}
-
-/**
- * Rapid server submissions sync helper (< 25ms)
- */
-async function syncSubmissionToServer(record) {
-  if (typeof window === "undefined" || !record) return;
-  try {
-    fetch("/api/submissions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(record)
-    }).catch(e => console.warn("Notice syncing with server repository:", e));
-  } catch (err) {
-    console.warn("Server submissions sync notice:", err);
-  }
-}
-
-/**
- * Fetch server submissions
- */
-async function fetchServerSubmissions(params = {}) {
-  if (typeof window === "undefined") return [];
-  try {
-    const qs = new URLSearchParams(params).toString();
-    const res = await fetch(`/api/submissions${qs ? "?" + qs : ""}`);
-    if (res.ok) {
-      const data = await res.json();
-      return Array.isArray(data.submissions) ? data.submissions : [];
-    }
-  } catch (err) {
-    console.warn("Notice fetching server submissions:", err);
-  }
+export async function getApprovedSubmissionsForExperiment(experimentId) {
   return [];
 }
 
 /**
- * Create a new community test submission against an official WDIII protocol
- * Strictly enforces pending_review status and provenance
+ * Retrieve verified community submissions for a device.
+ * Returns empty array as external contributions are disabled.
  */
-export async function createSubmission(payload) {
-  if (!payload) throw new Error("Submission payload is required.");
-  if (!payload.userId) throw new Error("Authenticated User ID is required.");
-  if (!payload.deviceId) throw new Error("Target Device ID is required.");
-  if (!payload.experimentId) throw new Error("Official Experiment Protocol ID is required.");
+export async function getApprovedSubmissionsForDevice(deviceId) {
+  return [];
+}
 
-  // Fast device verification (synchronous official array first, < 0.05ms)
-  const device = OFFICIAL_DEVICES.find(d => d.id === payload.deviceId) || (await getDeviceById(payload.deviceId));
-  if (!device) {
-    throw new Error(`Device '${payload.deviceId}' was not found in the official hardware registry.`);
-  }
-
-  // Fast experiment verification (synchronous official array first, < 0.05ms)
-  const experiment = OFFICIAL_EXPERIMENTS.find(e => e.id === payload.experimentId) || (await getExperimentById(payload.experimentId));
-  if (!experiment) {
-    throw new Error(`Official experiment protocol '${payload.experimentId}' was not found.`);
-  }
-
-  const nowIso = new Date().toISOString();
-  const subId = payload.id || `sub_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-
-  // Sanitize all user-controlled text, conditions, and measurements
-  const sanitizedConditions = sanitizeObject(payload.conditions || {});
-  const sanitizedMeasurements = sanitizeObject(payload.measurements || {});
-  const sanitizedNotes = sanitizeText(payload.notes || "", 5000);
-  const sanitizedSoftware = sanitizeText(payload.softwareVersion || "", 120);
-  const sanitizedTestDate = sanitizeText(payload.testDate || nowIso.split("T")[0], 30);
-  const sanitizedSubmitterName = sanitizeText(payload.submitterName || "Contributor", 100);
-  const sanitizedSubmitterEmail = sanitizeText(payload.submitterEmail || "", 150);
-
-  // Filter evidence references to valid structures
-  const cleanEvidence = Array.isArray(payload.evidenceReferences)
-    ? payload.evidenceReferences.map(ref => ({
-        name: sanitizeText(ref.name || "Evidence", 120),
-        fileName: sanitizeText(ref.fileName || ref.name || "", 120),
-        path: sanitizeText(ref.path || "", 300),
-        url: ref.url || "#",
-        size: Number(ref.size) || 0,
-        type: sanitizeText(ref.type || "application/octet-stream", 60),
-        uploadedAt: ref.uploadedAt || nowIso
-      }))
-    : [];
-
-  // Build hardened submission record
-  const submissionRecord = {
-    id: subId,
-    userId: payload.userId,
-    authorId: payload.userId, // Dual-key compatibility for security rules
-    submitterName: sanitizedSubmitterName,
-    authorDisplayName: sanitizedSubmitterName,
-    submitterEmail: sanitizedSubmitterEmail,
-    deviceId: payload.deviceId,
-    deviceBrand: device.brand,
-    deviceModel: device.model,
-    experimentId: payload.experimentId,
-    experimentTitle: experiment.title,
-    experimentNumber: experiment.experimentNumber || "",
-    experimentCategory: experiment.category,
-    type: "replication",
-    submittedAt: nowIso,
-    createdAt: nowIso,
-    updatedAt: nowIso,
-    testDate: sanitizedTestDate,
-    softwareVersion: sanitizedSoftware,
-    conditions: sanitizedConditions,
-    measurements: sanitizedMeasurements,
-    evidence: cleanEvidence,
-    evidenceReferences: cleanEvidence,
-    notes: sanitizedNotes,
-    // Status MUST strictly be pending_review on initial creation
-    status: "pending_review",
-    reviewerId: null,
-    reviewedAt: null,
-    reviewNotes: null,
-    review: null,
-    provenance: {
-      source: "community",
-      protocolVersion: experiment.protocolVersion || "1.0.0",
-      experimentVersion: experiment.version || "1.0.0"
-    },
-    reviewHistory: []
-  };
-
-  // 1. Immediate optimistic local cache write (0ms latency, zero risk of data loss)
-  inMemorySubmissions.set(subId, submissionRecord);
-  const localList = getLocalSubmissions(payload.userId);
-  localList.unshift(submissionRecord);
-  saveLocalSubmissions(payload.userId, localList);
-
-  // 2. Clear saved draft if present
-  clearDraftSubmission(payload.userId);
-
-  // 3. Fast server repository persistence (< 25ms)
-  syncSubmissionToServer(submissionRecord);
-
-  // 4. Firestore write with strict 650ms timeout race (never blocks UI)
-  let firestoreSaved = false;
-  try {
-    const { fb, fs } = await getSdk();
-    if (fb && fs && fb.isFirebaseReady()) {
-      const authUser = fb.getCurrentUser ? fb.getCurrentUser() : null;
-      if (authUser && !authUser.isVisitor) {
-        const db = fb.getDb();
-        if (db) {
-          const fsWritePromise = fs.setDoc(fs.doc(db, "submissions", subId), submissionRecord);
-          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore sync timeout")), 650));
-          await Promise.race([fsWritePromise, timeoutPromise]);
-          firestoreSaved = true;
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("Firestore submission write notice (offline / background sync):", err);
-  }
-
+/**
+ * Aggregated telemetry statistics for a device
+ */
+export async function getDeviceCommunityStats(deviceId) {
   return {
-    success: true,
-    id: subId,
-    submission: submissionRecord,
-    firestoreSaved
+    deviceId,
+    sampleSize: 0,
+    metrics: {},
+    distributions: { operatingSystems: {}, testingEnvironments: {} }
   };
 }
 
 /**
- * Retrieve user's own submissions with resilient cache fallback
+ * Retrieve pending submissions. Returns empty array as contributions are disabled.
  */
-export async function getUserSubmissions(userId) {
-  if (!userId) return [];
-
-  const localList = getLocalSubmissions(userId);
-  const mergedMap = new Map();
-  for (const item of localList) {
-    mergedMap.set(item.id, item);
-  }
-
-  // Fast server submissions fetch (< 25ms)
-  try {
-    const serverItems = await fetchServerSubmissions({ userId });
-    for (const item of serverItems) {
-      if (!mergedMap.has(item.id) || new Date(item.updatedAt || 0) > new Date(mergedMap.get(item.id).updatedAt || 0)) {
-        mergedMap.set(item.id, item);
-      }
-    }
-  } catch (err) {
-    console.warn("Notice checking server submissions for user:", err);
-  }
-
-  // Firestore query with 650ms timeout race (for authenticated non-visitors)
-  try {
-    const { fb, fs } = await getSdk();
-    if (fb && fs && fb.isFirebaseReady()) {
-      const authUser = fb.getCurrentUser ? fb.getCurrentUser() : null;
-      if (authUser && !authUser.isVisitor) {
-        const db = fb.getDb();
-        if (db) {
-          const q = fs.query(
-            fs.collection(db, "submissions"),
-            fs.where("userId", "==", userId)
-          );
-          const snapPromise = fs.getDocs(q);
-          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 650));
-          const snap = await Promise.race([snapPromise, timeoutPromise]);
-          if (snap && !snap.empty) {
-            snap.docs.forEach(doc => {
-              const data = doc.data();
-              mergedMap.set(data.id, data);
-            });
-          }
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("Firestore query for user submissions:", err);
-  }
-
-  const result = Array.from(mergedMap.values());
-  // Sort descending by submittedAt / createdAt
-  result.sort((a, b) => new Date(b.submittedAt || b.createdAt || 0) - new Date(a.submittedAt || a.createdAt || 0));
-  return result;
+export async function getPendingSubmissions() {
+  return [];
 }
 
 /**
- * Retrieve a single submission by ID
+ * Moderation review handler stub preserved for interface compatibility.
  */
-export async function getSubmissionById(submissionId, userId = null) {
-  if (!submissionId) return null;
-
-  // Check in-memory submissions cache first
-  if (inMemorySubmissions.has(submissionId)) {
-    return inMemorySubmissions.get(submissionId);
-  }
-
-  // Check local cache
-  if (userId) {
-    const local = getLocalSubmissions(userId);
-    const foundLocal = local.find(s => s.id === submissionId);
-    if (foundLocal) return foundLocal;
-  }
-
-  // Check server repository (< 20ms)
-  try {
-    const serverItems = await fetchServerSubmissions();
-    const foundServer = serverItems.find(s => s.id === submissionId);
-    if (foundServer) return foundServer;
-  } catch (err) {
-    console.warn("Notice checking server submission by ID:", err);
-  }
-
-  try {
-    const { fb, fs } = await getSdk();
-    if (fb && fs && fb.isFirebaseReady()) {
-      const db = fb.getDb();
-      if (db) {
-        const snapPromise = fs.getDoc(fs.doc(db, "submissions", submissionId));
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 650));
-        const snap = await Promise.race([snapPromise, timeoutPromise]);
-        if (snap && snap.exists()) {
-          return snap.data();
-        }
-      }
-    }
-  } catch (err) {
-    console.warn(`Firestore getSubmissionById(${submissionId}) notice:`, err);
-  }
-
-  return null;
-}
-
-/**
- * Update an existing submission while it remains in pending_review or needs_revision
- * Contributors cannot alter status to approved or change reviewerId
- */
-export async function updateSubmission(submissionId, updatePayload, userId) {
-  if (!submissionId) throw new Error("Submission ID is required.");
-  if (!userId) throw new Error("User ID is required.");
-
-  const current = await getSubmissionById(submissionId, userId);
-  if (!current) throw new Error("Submission not found.");
-
-  if (current.userId !== userId && current.authorId !== userId) {
-    throw new Error("Unauthorized: You may only modify your own submissions.");
-  }
-
-  if (!["pending_review", "pending", "needs_revision"].includes(current.status)) {
-    throw new Error(`Submission cannot be modified while in status '${current.status}'.`);
-  }
-
-  const nowIso = new Date().toISOString();
-  const sanitizedConditions = updatePayload.conditions ? sanitizeObject(updatePayload.conditions) : current.conditions;
-  const sanitizedMeasurements = updatePayload.measurements ? sanitizeObject(updatePayload.measurements) : current.measurements;
-  const sanitizedNotes = updatePayload.notes !== undefined ? sanitizeText(updatePayload.notes, 5000) : current.notes;
-  const sanitizedSoftware = updatePayload.softwareVersion !== undefined ? sanitizeText(updatePayload.softwareVersion, 120) : current.softwareVersion;
-  const sanitizedTestDate = updatePayload.testDate !== undefined ? sanitizeText(updatePayload.testDate, 30) : current.testDate;
-
-  // When updating from needs_revision, transition back to pending_review for re-review
-  const newStatus = current.status === "needs_revision" ? "pending_review" : current.status;
-
-  const updatedRecord = {
-    ...current,
-    conditions: sanitizedConditions,
-    measurements: sanitizedMeasurements,
-    notes: sanitizedNotes,
-    softwareVersion: sanitizedSoftware,
-    testDate: sanitizedTestDate,
-    status: newStatus,
-    updatedAt: nowIso,
-    // Preserve reviewer & audit provenance
-    reviewerId: current.reviewerId,
-    reviewedAt: current.reviewedAt,
-    reviewNotes: current.reviewNotes,
-    reviewHistory: current.reviewHistory || []
-  };
-
-  if (Array.isArray(updatePayload.evidenceReferences)) {
-    updatedRecord.evidenceReferences = updatePayload.evidenceReferences.map(ref => ({
-      name: sanitizeText(ref.name || "Evidence", 120),
-      fileName: sanitizeText(ref.fileName || ref.name || "", 120),
-      path: sanitizeText(ref.path || "", 300),
-      url: ref.url || "#",
-      size: Number(ref.size) || 0,
-      type: sanitizeText(ref.type || "application/octet-stream", 60),
-      uploadedAt: ref.uploadedAt || nowIso
-    }));
-  }
-
-  // 1. Update local storage cache immediately (0ms)
-  const localList = getLocalSubmissions(userId);
-  const idx = localList.findIndex(s => s.id === submissionId);
-  if (idx !== -1) {
-    localList[idx] = updatedRecord;
-  } else {
-    localList.unshift(updatedRecord);
-  }
-  saveLocalSubmissions(userId, localList);
-
-  // 2. High-speed server sync (< 25ms)
-  syncSubmissionToServer(updatedRecord);
-
-  // 3. Firestore write with 650ms timeout race (never blocks UI)
-  try {
-    const { fb, fs } = await getSdk();
-    if (fb && fs && fb.isFirebaseReady()) {
-      const authUser = fb.getCurrentUser ? fb.getCurrentUser() : null;
-      if (authUser && !authUser.isVisitor) {
-        const db = fb.getDb();
-        if (db) {
-          const updatePromise = fs.updateDoc(fs.doc(db, "submissions", submissionId), updatedRecord);
-          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 650));
-          await Promise.race([updatePromise, timeoutPromise]);
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("Firestore update notice (offline / background sync):", err);
-  }
-
-  return updatedRecord;
-}
-
-/**
- * Withdraw a pending or needs_revision submission
- */
-export async function withdrawSubmission(submissionId, userId) {
-  if (!submissionId || !userId) throw new Error("Submission ID and User ID required.");
-
-  const current = await getSubmissionById(submissionId, userId);
-  if (!current) throw new Error("Submission not found.");
-
-  if (current.userId !== userId && current.authorId !== userId) {
-    throw new Error("Unauthorized: You may only withdraw your own submissions.");
-  }
-
-  if (!["pending_review", "pending", "needs_revision"].includes(current.status)) {
-    throw new Error(`Cannot withdraw submission with status '${current.status}'.`);
-  }
-
-  const nowIso = new Date().toISOString();
-  const updateData = {
-    status: "withdrawn",
-    updatedAt: nowIso
-  };
-
-  const { fb, fs } = await getSdk();
-  if (fb && fs && fb.isFirebaseReady()) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        await fs.updateDoc(fs.doc(db, "submissions", submissionId), updateData);
-      }
-    } catch (err) {
-      console.warn("Firestore withdrawDoc notice:", err);
-    }
-  }
-
-  const localList = getLocalSubmissions(userId);
-  const idx = localList.findIndex(s => s.id === submissionId);
-  if (idx !== -1) {
-    localList[idx] = { ...localList[idx], ...updateData };
-    saveLocalSubmissions(userId, localList);
-  }
-
-  return { success: true, id: submissionId, status: "withdrawn" };
-}
-
-/**
- * Review a community submission (Moderator / Admin authorization required)
- * Allows setting status to: 'approved', 'rejected', or 'needs_revision'
- */
-export async function reviewSubmission(submissionId, reviewData) {
-  const { status, reviewNotes, reviewerId, reviewerName } = reviewData;
+export async function reviewSubmission(submissionId, reviewData = {}) {
+  const status = reviewData.status;
   if (!["approved", "rejected", "needs_revision"].includes(status)) {
-    throw new Error(`Invalid review status '${status}'. Must be approved, rejected, or needs_revision.`);
+    throw new Error(`Invalid status: ${status}`);
   }
-
-  const nowIso = new Date().toISOString();
-  const current = await getSubmissionById(submissionId);
-  if (!current) throw new Error("Submission not found.");
-
-  // CRITICAL IMMUTABLE RULE: Approved submissions are permanently locked against direct updates
-  if (current.status === "approved") {
-    throw new Error("Immutable Record: Approved submissions are permanently locked against direct modifications. Any corrections must trigger a separate revision workflow.");
-  }
-
-  const cleanFeedback = sanitizeText(reviewNotes || reviewData.feedback || "", 2000);
-  const activeReviewerId = reviewerId || "moderator";
-
-  const historyEntry = {
-    previousStatus: current.status,
-    newStatus: status,
-    reviewerId: activeReviewerId,
-    reviewerName: reviewerName || "Reviewer",
-    reviewNotes: cleanFeedback,
-    timestamp: nowIso
-  };
-
-  const updatedHistory = [...(current.reviewHistory || []), historyEntry];
-
-  const updateFields = {
-    status,
-    reviewerId: activeReviewerId,
-    reviewedAt: nowIso,
-    reviewNotes: cleanFeedback,
-    review: {
-      reviewerId: activeReviewerId,
-      reviewedAt: nowIso,
-      feedback: cleanFeedback
-    },
-    reviewHistory: updatedHistory,
-    updatedAt: nowIso
-  };
-
-  // Build immutable audit log entry
-  const auditLogId = `audit_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-  const auditLogRecord = {
-    id: auditLogId,
-    action: `${status}_submission`,
-    actorId: activeReviewerId,
-    targetSubmissionId: submissionId,
-    previousStatus: current.status,
-    newStatus: status,
-    reason: cleanFeedback || `Submission review status updated to ${status}`,
-    timestamp: nowIso
-  };
-
-  const { fb, fs } = await getSdk();
-  const authUser = fb?.getCurrentUser ? fb.getCurrentUser() : null;
-  const isVisitor = authUser?.isVisitor === true;
-  const effectiveReviewerUid = (authUser && authUser.uid && !isVisitor) ? authUser.uid : activeReviewerId;
-
-  auditLogRecord.actorId = effectiveReviewerUid;
-
-  if (fb && fs && fb.isFirebaseReady() && authUser && !isVisitor) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        const subDocRef = fs.doc(db, "submissions", submissionId);
-        let docExists = false;
-        try {
-          const snap = await fs.getDoc(subDocRef);
-          docExists = snap && snap.exists();
-        } catch (existErr) {
-          console.warn("Notice checking Firestore submission existence:", existErr.message);
-        }
-
-        if (docExists) {
-          await fs.updateDoc(subDocRef, updateFields);
-
-          // Record immutable audit log
-          try {
-            await fs.setDoc(fs.doc(db, "admin_audit_logs", auditLogId), auditLogRecord);
-          } catch (auditErr) {
-            console.warn("Notice: could not persist admin audit log to Firestore:", auditErr.message);
-          }
-
-          // Server-of-truth reputation increment on approval
-          if (status === "approved" && current.userId) {
-            try {
-              if (typeof fs.increment === "function") {
-                await fs.updateDoc(fs.doc(db, "users", current.userId), {
-                  reputationScore: fs.increment(25)
-                });
-              }
-            } catch (repErr) {
-              console.warn("Notice: could not update author reputationScore in Firestore (requires admin role):", repErr.message);
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Firestore reviewSubmission notice:", err);
-      // Still update in-memory and local caches before rethrowing
-      inMemorySubmissions.set(submissionId, { ...current, ...updateFields });
-      if (current.userId) {
-        const localList = getLocalSubmissions(current.userId);
-        const idx = localList.findIndex(s => s.id === submissionId);
-        if (idx !== -1) {
-          localList[idx] = { ...localList[idx], ...updateFields };
-          saveLocalSubmissions(current.userId, localList);
-        }
-      }
-      throw err;
-    }
-  }
-
-  inMemorySubmissions.set(submissionId, { ...current, ...updateFields });
-
-  if (current.userId) {
-    const localList = getLocalSubmissions(current.userId);
-    const idx = localList.findIndex(s => s.id === submissionId);
-    if (idx !== -1) {
-      localList[idx] = { ...localList[idx], ...updateFields };
-      saveLocalSubmissions(current.userId, localList);
-    }
-  }
-
   return { success: true, id: submissionId, status };
 }
 
 /**
- * Save in-progress submission draft to private client storage
+ * User submission query stub
  */
-export function saveDraftSubmission(userId, draftData) {
-  if (typeof window === "undefined" || !userId) return;
-  try {
-    const key = DRAFT_LOCAL_KEY_PREFIX + userId;
-    const cleanDraft = {
-      ...draftData,
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(key, JSON.stringify(cleanDraft));
-    return true;
-  } catch (err) {
-    console.warn("Could not save submission draft:", err);
-    return false;
-  }
+export async function getUserSubmissions(userId) {
+  return [];
 }
 
 /**
- * Load saved submission draft from private client storage
+ * Single submission query stub
  */
-export function loadDraftSubmission(userId) {
-  if (typeof window === "undefined" || !userId) return null;
-  try {
-    const key = DRAFT_LOCAL_KEY_PREFIX + userId;
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
+export async function getSubmissionById(submissionId, userId = null) {
+  return null;
 }
 
-/**
- * Clear saved submission draft
- */
-export function clearDraftSubmission(userId) {
-  if (typeof window === "undefined" || !userId) return;
-  try {
-    const key = DRAFT_LOCAL_KEY_PREFIX + userId;
-    localStorage.removeItem(key);
-  } catch {
-    // Ignore error
-  }
+export function saveDraftSubmission(userId, draftData) {}
+export function loadDraftSubmission(userId) { return null; }
+export function clearDraftSubmission(userId) {}
+
+export async function createSubmission(payload) {
+  throw new Error("Community submissions have been retired. The author exclusively publishes verified testing data.");
 }
 
-/**
- * Get approved community submissions for an experiment protocol
- */
-export async function getApprovedSubmissionsForExperiment(experimentId) {
-  if (!experimentId) return [];
-
-  const { fb, fs } = await getSdk();
-  if (fb && fs && fb.isFirebaseReady()) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        const q = fs.query(
-          fs.collection(db, "submissions"),
-          fs.where("experimentId", "==", experimentId),
-          fs.where("status", "==", "approved"),
-          fs.orderBy("submittedAt", "desc")
-        );
-        const snap = await fs.getDocs(q);
-        if (!snap.empty) {
-          return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
-      }
-    } catch (err) {
-      console.warn("Firestore approved submissions by experiment query error:", err);
-    }
-  }
-
-  // Fallback: check local storage across user keys
-  try {
-    const results = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith("wdiii_submissions_")) {
-        const list = JSON.parse(localStorage.getItem(k) || "[]");
-        list.forEach(s => {
-          if (s.experimentId === experimentId && s.status === "approved") {
-            results.push(s);
-          }
-        });
-      }
-    }
-    return results;
-  } catch {
-    return [];
-  }
+export async function updateSubmission(submissionId, updatePayload, userId) {
+  throw new Error("Community submissions have been retired.");
 }
 
-/**
- * Get approved community submissions for a device
- */
-export async function getApprovedSubmissionsForDevice(deviceId) {
-  if (!deviceId) return [];
-
-  const { fb, fs } = await getSdk();
-  if (fb && fs && fb.isFirebaseReady()) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        const q = fs.query(
-          fs.collection(db, "submissions"),
-          fs.where("deviceId", "==", deviceId),
-          fs.where("status", "==", "approved"),
-          fs.orderBy("submittedAt", "desc")
-        );
-        const snap = await fs.getDocs(q);
-        if (!snap.empty) {
-          return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
-      }
-    } catch (err) {
-      console.warn("Firestore approved submissions by device query error:", err);
-    }
-  }
-
-  // Fallback: check local storage across user keys
-  try {
-    const results = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith("wdiii_submissions_")) {
-        const list = JSON.parse(localStorage.getItem(k) || "[]");
-        list.forEach(s => {
-          if (s.deviceId === deviceId && s.status === "approved") {
-            results.push(s);
-          }
-        });
-      }
-    }
-    return results;
-  } catch {
-    return [];
-  }
+export async function withdrawSubmission(submissionId, userId) {
+  throw new Error("Community submissions have been retired.");
 }
-
-/**
- * Step 6: Get aggregated community telemetry statistics (device_stats) for a device.
- * Exclusively aggregates approved submissions.
- */
-export async function getDeviceCommunityStats(deviceId) {
-  const { getDeviceCommunityStats: fetchStats } = await import("./device-stats.js");
-  return fetchStats(deviceId);
-}
-
-/**
- * Step 7: Retrieve all submissions pending review for the moderation dashboard.
- * Returns submissions with status 'pending_review' or 'pending', ordered newest first.
- */
-export async function getPendingSubmissions() {
-  const { fb, fs } = await getSdk();
-  const resultMap = new Map();
-
-  if (fb && fs && fb.isFirebaseReady()) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        try {
-          const q = fs.query(
-            fs.collection(db, "submissions"),
-            fs.where("status", "in", ["pending_review", "pending"]),
-            fs.orderBy("submittedAt", "desc")
-          );
-          const snap = await fs.getDocs(q);
-          snap.docs.forEach(doc => {
-            resultMap.set(doc.id, { id: doc.id, ...doc.data() });
-          });
-        } catch (queryErr) {
-          // Fallback if composite index on (status, submittedAt) is absent
-          const qSimple = fs.query(
-            fs.collection(db, "submissions"),
-            fs.where("status", "in", ["pending_review", "pending"])
-          );
-          const snap = await fs.getDocs(qSimple);
-          snap.docs.forEach(doc => {
-            resultMap.set(doc.id, { id: doc.id, ...doc.data() });
-          });
-        }
-      }
-    } catch (err) {
-      console.warn("Firestore getPendingSubmissions query notice:", err);
-    }
-  }
-
-  // Also query local storage so offline and demo tests are visible
-  try {
-    if (typeof localStorage !== "undefined") {
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && k.startsWith("wdiii_submissions_")) {
-          const list = JSON.parse(localStorage.getItem(k) || "[]");
-          list.forEach(s => {
-            if (s && (s.status === "pending_review" || s.status === "pending")) {
-              if (!resultMap.has(s.id)) {
-                resultMap.set(s.id, s);
-              }
-            }
-          });
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("Local storage getPendingSubmissions notice:", err);
-  }
-
-  const results = Array.from(resultMap.values());
-  results.sort((a, b) => {
-    const timeA = new Date(a.submittedAt || a.createdAt || 0).getTime();
-    const timeB = new Date(b.submittedAt || b.createdAt || 0).getTime();
-    return timeB - timeA;
-  });
-
-  return results;
-}
-
-
-

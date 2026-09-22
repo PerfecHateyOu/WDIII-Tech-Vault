@@ -5,11 +5,10 @@
  * - High-contrast dark theme with CSS custom properties
  * - Research vault & engineering catalog aesthetic (no ecommerce clichés)
  * - Transparent handling of null specifications (no fabricated data)
- * - Cross-linked to official WDIII experiment dossiers
+ * - Cross-linked to official WDIII experiments
  */
 
 import { getDevices, getDeviceById } from "../services/database.js";
-import { getDeviceCommunityStats, formatMetricValue } from "../services/device-stats.js";
 
 function esc(s) {
   if (s === null || s === undefined) return "";
@@ -292,7 +291,7 @@ function renderDeviceCard(device) {
 
       <!-- Action Button -->
       <a href="#/devices/${device.id}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.375rem; width:100%; padding:0.55rem; border-radius:0.375rem; background:var(--td-bg-surface); border:1px solid var(--td-border-subtle); color:var(--td-text-primary); font-size:0.85rem; font-weight:600; text-decoration:none; transition:background 0.15s, border-color 0.15s;">
-        <span>View Hardware Dossier</span>
+        <span>View Hardware Specifications</span>
         <span>→</span>
       </a>
     </div>
@@ -325,7 +324,6 @@ export async function renderDeviceDetail(container, deviceId) {
     return;
   }
 
-  const stats = await getDeviceCommunityStats(device.id);
   const specs = device.specifications || {};
   const linked = device.linkedExperiments || [];
 
@@ -349,13 +347,10 @@ export async function renderDeviceDetail(container, deviceId) {
           <a href="#/compare?devices=${encodeURIComponent(device.id)}" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.35rem 0.75rem; border-radius:0.375rem; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-text-secondary); font-size:0.82rem; font-weight:600; text-decoration:none;">
             <span>⚖️</span> <span>Compare in Shootout</span>
           </a>
-          <a href="#/submit?device=${encodeURIComponent(device.id)}" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.35rem 0.75rem; border-radius:0.375rem; background:var(--td-info); color:#fff; font-size:0.82rem; font-weight:600; text-decoration:none;">
-            <span>🧪</span> <span>Submit Protocol Test</span>
-          </a>
         </div>
       </div>
 
-      <!-- Device Header Dossier Card -->
+      <!-- Device Header Specifications Card -->
       <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; padding:2rem; margin-bottom:2rem;">
         <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:1.5rem;">
           <div>
@@ -382,18 +377,12 @@ export async function renderDeviceDetail(container, deviceId) {
             </div>
           </div>
 
-          <!-- Quick Stats Badge Box (Canonical vs Community) -->
+          <!-- Quick Stats Badge Box -->
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
             <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem 1.25rem; text-align:center; min-width:140px;">
               <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Lab Experiments</div>
               <div style="font-size:1.6rem; font-weight:700; color:${linked.length > 0 ? 'var(--td-info)' : 'var(--td-text-muted)'};">${linked.length}</div>
               <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">${linked.length > 0 ? 'Canonical Tests' : 'Baseline Catalog'}</div>
-            </div>
-
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem 1.25rem; text-align:center; min-width:140px;">
-              <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Community Data</div>
-              <div style="font-size:1.6rem; font-weight:700; color:${stats.sampleSize > 0 ? 'var(--td-success)' : 'var(--td-text-muted)'};">${stats.sampleSize}</div>
-              <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">${stats.sampleSize > 0 ? 'Verified Samples (n)' : 'Pending Data'}</div>
             </div>
           </div>
         </div>
@@ -520,9 +509,6 @@ export async function renderDeviceDetail(container, deviceId) {
         `}
       </div>
 
-      <!-- Step 6: Crowdsourced Community Telemetry & Empirical Statistics Section -->
-      ${renderCommunityStatsSection(stats, device)}
-
       <!-- Authoritative Sources & Verification Footnotes -->
       <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; padding:1.5rem;">
         <h4 style="color:#fff; font-size:0.95rem; font-weight:700; margin:0 0 0.75rem; display:flex; align-items:center; gap:0.375rem;">
@@ -537,242 +523,6 @@ export async function renderDeviceDetail(container, deviceId) {
           Device Registry Slug: <code>${esc(device.id)}</code> | Verified Origin: <code>${esc(device.origin)}</code>
         </div>
       </div>
-    </div>
-  `;
-}
-
-/**
- * Renders the dedicated Crowdsourced Community Telemetry & Statistics section
- */
-function renderCommunityStatsSection(stats, device) {
-  const metricKeys = Object.keys(stats.metrics || {});
-  const hasMetrics = metricKeys.length > 0;
-  const protocols = Object.entries(stats.distributions?.protocols || {});
-  const osList = Object.entries(stats.distributions?.operatingSystems || {});
-
-  return `
-    <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; padding:1.75rem; margin-bottom:2rem;">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1rem; border-bottom:1px solid var(--td-border-subtle); padding-bottom:1rem;">
-        <div>
-          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
-            <span style="font-size:1.3rem;">🧪</span>
-            <h3 style="color:#fff; font-size:1.2rem; font-weight:700; margin:0;">
-              Crowdsourced Community Telemetry &amp; Statistics
-            </h3>
-          </div>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; margin:0; line-height:1.5;">
-            Descriptive statistical metrics compiled strictly from approved peer-reviewed reproduction protocols.
-          </p>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-          <span style="font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:9999px; background:${stats.sampleSize > 0 ? 'rgba(52, 211, 153, 0.12)' : 'var(--td-bg-card)'}; border:1px solid ${stats.sampleSize > 0 ? 'rgba(52, 211, 153, 0.3)' : 'var(--td-border-subtle)'}; color:${stats.sampleSize > 0 ? 'var(--td-success)' : 'var(--td-text-muted)'};">
-            ${stats.sampleSize} Verified Sample${stats.sampleSize === 1 ? '' : 's'} (n)
-          </span>
-          <a href="#/submit?device=${encodeURIComponent(device.id)}" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.35rem 0.75rem; border-radius:0.375rem; background:var(--td-info); color:#fff; font-size:0.8rem; font-weight:600; text-decoration:none;">
-            <span>+</span> <span>Submit Protocol Test</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Segregation Disclaimer Banner -->
-      <div style="display:flex; align-items:flex-start; gap:0.75rem; background:rgba(96, 165, 250, 0.08); border:1px solid rgba(96, 165, 250, 0.2); border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:1.5rem; font-size:0.82rem; color:var(--td-text-secondary); line-height:1.5;">
-        <span style="font-size:1.1rem; line-height:1;">⚖️</span>
-        <div>
-          <strong style="color:var(--td-info);">Segregation of Data Authority:</strong>
-          Community telemetry represents independent test runs under diverse environmental conditions. These data points are mathematically aggregated and isolated from canonical WDIII laboratory research. Pending, rejected, or unverified submissions are strictly excluded from all public metrics.
-        </div>
-      </div>
-
-      ${stats.sampleSize === 0 ? `
-        <div style="text-align:center; padding:2.5rem 1.5rem; background:var(--td-bg-card); border:1px dashed var(--td-border-subtle); border-radius:0.5rem;">
-          <div style="font-size:2rem; margin-bottom:0.5rem;">📊</div>
-          <p style="color:var(--td-text-primary); font-weight:600; font-size:0.95rem; margin:0 0 0.35rem;">
-            No Verified Community Benchmarks Logged Yet
-          </p>
-          <p style="color:var(--td-text-muted); font-size:0.85rem; max-width:480px; margin:0 auto 1.25rem; line-height:1.5;">
-            Be the first verified contributor to submit an empirical reproduction protocol for ${esc(device.brand)} ${esc(device.model)}.
-          </p>
-          <a href="#/submit?device=${encodeURIComponent(device.id)}" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1.1rem; border-radius:0.375rem; background:var(--td-info); color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none;">
-            🧪 Submit First Protocol Reproduction
-          </a>
-        </div>
-      ` : `
-        <!-- High-Level KPI Stat Cards -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1.75rem;">
-          <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem;">
-            <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Sample Size (n)</div>
-            <div style="font-size:1.6rem; font-weight:700; color:var(--td-success);">${stats.sampleSize}</div>
-            <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">${stats.contributorCount || 1} Unique Contributor${(stats.contributorCount || 1) === 1 ? '' : 's'}</div>
-          </div>
-
-          ${stats.metrics.screenOnTimeMinutes ? `
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem;">
-              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Mean Screen-On Time</div>
-              <div style="font-size:1.6rem; font-weight:700; color:var(--td-info);">
-                ${formatMetricValue(stats.metrics.screenOnTimeMinutes, "mean")}
-              </div>
-              <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">
-                Median: ${formatMetricValue(stats.metrics.screenOnTimeMinutes, "median")}
-              </div>
-            </div>
-          ` : ""}
-
-          ${stats.metrics.repairCost ? `
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem;">
-              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Mean Repair Cost</div>
-              <div style="font-size:1.6rem; font-weight:700; color:#f59e0b;">
-                ${formatMetricValue(stats.metrics.repairCost, "mean")}
-              </div>
-              <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">
-                Range: ${formatMetricValue(stats.metrics.repairCost, "range")}
-              </div>
-            </div>
-          ` : ""}
-
-          ${stats.metrics.qualityRating ? `
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem;">
-              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Post-Repair Quality</div>
-              <div style="font-size:1.6rem; font-weight:700; color:var(--td-text-primary);">
-                ${formatMetricValue(stats.metrics.qualityRating, "mean")}
-              </div>
-              <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">
-                Median: ${formatMetricValue(stats.metrics.qualityRating, "median")}
-              </div>
-            </div>
-          ` : ""}
-
-          ${stats.metrics.chargeTimeMinutes ? `
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1rem;">
-              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); margin-bottom:0.25rem;">Full Charge Time</div>
-              <div style="font-size:1.6rem; font-weight:700; color:var(--td-text-primary);">
-                ${formatMetricValue(stats.metrics.chargeTimeMinutes, "mean")}
-              </div>
-              <div style="font-size:0.72rem; color:var(--td-text-secondary); margin-top:0.25rem;">
-                Median: ${formatMetricValue(stats.metrics.chargeTimeMinutes, "median")}
-              </div>
-            </div>
-          ` : ""}
-        </div>
-
-        ${hasMetrics ? `
-          <!-- Detailed Statistical Aggregation Matrix -->
-          <div style="margin-bottom:1.75rem;">
-            <h4 style="color:#fff; font-size:1rem; font-weight:700; margin:0 0 0.75rem; display:flex; align-items:center; gap:0.35rem;">
-              <span>📐</span> <span>Descriptive Statistical Metrics</span>
-            </h4>
-            <div style="overflow-x:auto; border:1px solid var(--td-border-subtle); border-radius:0.5rem;" class="td-scrollbar">
-              <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
-                <thead>
-                  <tr style="background:var(--td-bg-card); border-bottom:1px solid var(--td-border-subtle); color:var(--td-text-muted); text-align:left;">
-                    <th style="padding:0.75rem 1rem;">Metric / Parameter</th>
-                    <th style="padding:0.75rem 1rem; text-align:center;">Sample (n)</th>
-                    <th style="padding:0.75rem 1rem;">Arithmetic Mean (μ)</th>
-                    <th style="padding:0.75rem 1rem;">Median (M)</th>
-                    <th style="padding:0.75rem 1rem;">Std Deviation (σ)</th>
-                    <th style="padding:0.75rem 1rem;">Observed Range [Min – Max]</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${metricKeys.map(k => {
-                    const m = stats.metrics[k];
-                    const p = m.precision ?? 1;
-                    const pref = m.prefix || "";
-                    const suff = m.suffix || "";
-                    const stdStr = m.count >= 2 && m.stdDev !== null ? `±${m.stdDev.toFixed(p)}` : `<span style="color:var(--td-text-muted); font-style:italic;">— (n &lt; 2)</span>`;
-                    const rangeStr = m.min !== null && m.max !== null ? `${pref}${m.min.toFixed(p)}${suff} – ${pref}${m.max.toFixed(p)}${suff}` : "—";
-                    return `
-                      <tr style="border-bottom:1px solid var(--td-border-subtle); background:var(--td-bg-surface);">
-                        <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">
-                          ${esc(m.label)}
-                          ${m.isCustom ? `<span style="font-size:0.7rem; margin-left:0.35rem; padding:0.1rem 0.35rem; border-radius:0.25rem; background:var(--td-bg-card); color:var(--td-text-muted);">Custom</span>` : ""}
-                        </td>
-                        <td style="padding:0.75rem 1rem; text-align:center; font-family:monospace; color:var(--td-text-secondary);">${m.count}</td>
-                        <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-info);">${pref}${m.mean.toFixed(p)}${suff}</td>
-                        <td style="padding:0.75rem 1rem; color:var(--td-text-primary);">${pref}${m.median.toFixed(p)}${suff}</td>
-                        <td style="padding:0.75rem 1rem; color:var(--td-text-secondary); font-family:monospace;">${stdStr}</td>
-                        <td style="padding:0.75rem 1rem; color:var(--td-text-muted); font-size:0.82rem;">${rangeStr}</td>
-                      </tr>
-                    `;
-                  }).join("")}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ` : ""}
-
-        <!-- Tested Operating Systems and Protocols Breakdown -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.75rem;">
-          ${osList.length > 0 ? `
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
-              <h5 style="color:#fff; font-size:0.9rem; font-weight:700; margin:0 0 0.75rem; display:flex; align-items:center; gap:0.35rem;">
-                <span>💻</span> <span>Tested Operating Systems &amp; Builds</span>
-              </h5>
-              <div style="display:flex; flex-direction:column; gap:0.5rem;">
-                ${osList.map(([osName, count]) => `
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; background:var(--td-bg-surface); padding:0.4rem 0.6rem; border-radius:0.25rem;">
-                    <span style="color:var(--td-text-primary);">${esc(osName)}</span>
-                    <span style="font-family:monospace; font-weight:700; color:var(--td-info);">${count} test${count === 1 ? '' : 's'}</span>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-          ` : ""}
-
-          ${protocols.length > 0 ? `
-            <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
-              <h5 style="color:#fff; font-size:0.9rem; font-weight:700; margin:0 0 0.75rem; display:flex; align-items:center; gap:0.35rem;">
-                <span>🔬</span> <span>Associated Protocols Evaluated</span>
-              </h5>
-              <div style="display:flex; flex-direction:column; gap:0.5rem;">
-                ${protocols.map(([protoId, count]) => `
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; background:var(--td-bg-surface); padding:0.4rem 0.6rem; border-radius:0.25rem;">
-                    <a href="#/experiments/${encodeURIComponent(protoId)}" style="color:var(--td-info); text-decoration:none; font-weight:600;">
-                      Protocol ${esc(protoId.toUpperCase())}
-                    </a>
-                    <span style="font-family:monospace; font-weight:700; color:var(--td-text-secondary);">${count} reproduction${count === 1 ? '' : 's'}</span>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-          ` : ""}
-        </div>
-
-        <!-- Recent Verified Submissions -->
-        ${stats.recentSubmissions?.length > 0 ? `
-          <div>
-            <h5 style="color:#fff; font-size:0.9rem; font-weight:700; margin:0 0 0.75rem; display:flex; align-items:center; gap:0.35rem;">
-              <span>📋</span> <span>Latest Verified Field Test Logs</span>
-            </h5>
-            <div style="display:flex; flex-direction:column; gap:0.5rem;">
-              ${stats.recentSubmissions.map(sub => {
-                const dateStr = sub.testDate ? new Date(sub.testDate).toLocaleDateString() : "Verified";
-                const measList = Object.entries(sub.measurements || {});
-                return `
-                  <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:0.75rem 1rem; font-size:0.82rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.35rem;">
-                      <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <span style="font-weight:600; color:var(--td-text-primary);">${esc(sub.authorDisplayName)}</span>
-                        <span style="font-size:0.72rem; padding:0.1rem 0.4rem; border-radius:0.25rem; background:rgba(52, 211, 153, 0.1); color:var(--td-success);">Verified</span>
-                      </div>
-                      <span style="color:var(--td-text-muted); font-size:0.75rem;">${esc(dateStr)} | Build: ${esc(sub.softwareVersion)}</span>
-                    </div>
-                    ${measList.length > 0 ? `
-                      <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem;">
-                        ${measList.map(([k, v]) => `
-                          <span style="font-size:0.75rem; background:var(--td-bg-surface); padding:0.2rem 0.45rem; border-radius:0.25rem; border:1px solid var(--td-border-subtle); color:var(--td-text-secondary);">
-                            <strong style="color:var(--td-text-primary);">${esc(k)}:</strong> ${typeof v === 'object' && v !== null ? esc(v.value) + ' ' + esc(v.unit || '') : esc(v)}
-                          </span>
-                        `).join("")}
-                      </div>
-                    ` : ""}
-                  </div>
-                `;
-              }).join("")}
-            </div>
-          </div>
-        ` : ""}
-      `}
     </div>
   `;
 }

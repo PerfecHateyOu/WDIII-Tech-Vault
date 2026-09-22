@@ -569,7 +569,7 @@ export async function renderCompareView(container) {
     mount.innerHTML = `
       <div style="text-align:center; padding:3.5rem; color:var(--td-text-muted);">
         <div style="font-size:1.5rem; margin-bottom:0.5rem;">⏳</div>
-        <div>Loading verified metrics and official research dossiers...</div>
+        <div>Loading verified metrics and official research data...</div>
       </div>
     `;
 
@@ -637,10 +637,7 @@ export async function renderCompareView(container) {
                     </div>
                     <div style="display:flex; gap:0.4rem;">
                       <a href="#/devices/${device.id}" style="font-size:0.78rem; font-weight:600; color:var(--td-info); text-decoration:none; padding:0.3rem 0.6rem; border-radius:0.25rem; background:var(--td-info-bg); border:1px solid rgba(96,165,250,0.25);">
-                        Dossier →
-                      </a>
-                      <a href="#/submit?device=${encodeURIComponent(device.id)}" style="font-size:0.78rem; font-weight:600; color:var(--td-text-secondary); text-decoration:none; padding:0.3rem 0.6rem; border-radius:0.25rem; background:var(--td-bg-card); border:1px solid var(--td-border-subtle);">
-                        + Submit Test
+                        View Specs →
                       </a>
                     </div>
                   </th>

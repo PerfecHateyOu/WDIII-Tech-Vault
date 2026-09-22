@@ -8,7 +8,7 @@
  * - Displays research questions, objectives, methodology, and verdicts
  */
 
-import { getExperimentById, getApprovedSubmissionsForExperiment } from "../services/database.js";
+import { getExperimentById } from "../services/database.js";
 
 function esc(s) {
   if (s === null || s === undefined) return "";
@@ -21,10 +21,9 @@ function esc(s) {
 export async function renderExperimentDetail(container, experimentId) {
   if (!container) return;
 
-  container.innerHTML = `<div style="text-align:center; padding:4rem 2rem; color:var(--td-text-muted);">Retrieving research dossier…</div>`;
+  container.innerHTML = `<div style="text-align:center; padding:4rem 2rem; color:var(--td-text-muted);">Retrieving research report…</div>`;
 
   const exp = await getExperimentById(experimentId);
-  const communitySubmissions = await getApprovedSubmissionsForExperiment(experimentId);
 
   if (!exp) {
     container.innerHTML = `
@@ -111,21 +110,6 @@ export async function renderExperimentDetail(container, experimentId) {
           </h1>
           ${exp.subtitle ? `<p style="color:var(--td-text-secondary); font-size:1.05rem; margin:0 0 1rem; line-height:1.5;">${esc(exp.subtitle)}</p>` : ""}
 
-          <!-- Community Protocol Action Banner -->
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:1.25rem; padding:0.875rem 1.25rem; background:var(--td-bg-card); border:1px solid var(--td-info); border-radius:0.5rem;">
-            <div>
-              <div style="font-size:0.85rem; font-weight:700; color:var(--td-text-primary); margin-bottom:0.15rem;">
-                🧪 Contribute Empirical Test Data
-              </div>
-              <div style="font-size:0.8rem; color:var(--td-text-secondary);">
-                Run this official protocol on your personal hardware and submit your measurements for peer review.
-              </div>
-            </div>
-            <a href="#/submit?experiment=${encodeURIComponent(exp.id)}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.45rem 1rem; border-radius:0.375rem; background:var(--td-info); color:#fff; font-weight:600; font-size:0.85rem; text-decoration:none; white-space:nowrap;">
-              <span>+ Submit Test for This Protocol</span>
-            </a>
-          </div>
-
           <!-- Linked Devices Bar -->
           <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--td-border-subtle);">
             <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--td-text-muted); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.35rem;">
@@ -206,110 +190,6 @@ export async function renderExperimentDetail(container, experimentId) {
           </div>
         </div>
       </article>
-
-      <!-- ========================================================
-           COMMUNITY TEST RESULTS SECTION (STRUCTURALLY SEPARATED)
-           ======================================================== -->
-      <section style="margin-top:2.5rem; margin-bottom:2.5rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; padding:2rem;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem; border-bottom:1px solid var(--td-border-subtle); padding-bottom:1rem;">
-          <div>
-            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
-              <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:0.2rem 0.5rem; border-radius:0.25rem; background:rgba(96,165,250,0.15); color:var(--td-info); border:1px solid var(--td-info);">
-                Community Replications
-              </span>
-              <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:0.2rem 0.5rem; border-radius:0.25rem; background:rgba(16,185,129,0.15); color:var(--td-success); border:1px solid var(--td-success);">
-                Peer Audited
-              </span>
-            </div>
-            <h2 style="color:var(--td-text-primary); font-size:1.4rem; font-weight:700; margin:0 0 0.25rem;">
-              Verified Community Test Results (${communitySubmissions.length})
-            </h2>
-            <p style="color:var(--td-text-secondary); font-size:0.88rem; margin:0; line-height:1.5;">
-              Independent replication submissions submitted against this official protocol and verified by WDIII peer reviewers.
-            </p>
-          </div>
-
-          <a href="#/submit?experiment=${encodeURIComponent(exp.id)}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.5rem 1rem; border-radius:0.375rem; background:var(--td-info); color:#fff; font-weight:600; font-size:0.85rem; text-decoration:none; white-space:nowrap;">
-            <span>+ Submit Replication Test</span>
-          </a>
-        </div>
-
-        ${!communitySubmissions.length ? `
-          <div style="background:var(--td-bg-card); border:1px dashed var(--td-border-subtle); border-radius:0.5rem; padding:2rem; text-align:center;">
-            <div style="font-size:2rem; margin-bottom:0.5rem;">🧪</div>
-            <div style="font-weight:600; color:var(--td-text-primary); margin-bottom:0.25rem;">No Community Replications Yet</div>
-            <p style="color:var(--td-text-secondary); font-size:0.88rem; max-width:480px; margin:0 auto 1.25rem; line-height:1.5;">
-              Be the first community researcher to run this protocol on your personal hardware and submit your measurements.
-            </p>
-            <a href="#/submit?experiment=${encodeURIComponent(exp.id)}" style="display:inline-block; padding:0.45rem 1.1rem; background:var(--td-info); color:#fff; font-weight:600; font-size:0.85rem; border-radius:0.375rem; text-decoration:none;">
-              Submit Empirical Data
-            </a>
-          </div>
-        ` : `
-          <div style="display:flex; flex-direction:column; gap:1.25rem;">
-            ${communitySubmissions.map(sub => {
-              const cond = sub.conditions || {};
-              const condKeys = Object.keys(cond);
-              const meas = sub.measurements || {};
-              const measEntries = Object.entries(meas);
-              const ev = sub.evidenceReferences || [];
-
-              return `
-                <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.5rem; padding:1.25rem;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem; border-bottom:1px solid var(--td-border-subtle); padding-bottom:0.5rem;">
-                    <div>
-                      <span style="font-size:0.75rem; font-weight:700; color:var(--td-success); background:rgba(16,185,129,0.12); padding:0.15rem 0.45rem; border-radius:0.25rem; border:1px solid var(--td-success);">
-                        ✓ Peer Verified
-                      </span>
-                      <strong style="color:var(--td-text-primary); font-size:0.95rem; margin-left:0.5rem;">
-                        ${esc(sub.deviceBrand || "")} ${esc(sub.deviceModel || sub.deviceId)}
-                      </strong>
-                    </div>
-                    <div style="font-size:0.8rem; color:var(--td-text-muted);">
-                      Tested: <strong style="color:var(--td-text-secondary);">${esc(sub.testDate || "N/A")}</strong>
-                    </div>
-                  </div>
-
-                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:0.75rem; font-size:0.85rem;">
-                    <div>
-                      <span style="color:var(--td-text-muted);">Submitter:</span>
-                      <strong style="color:var(--td-text-primary); margin-left:0.25rem;">${esc(sub.submitterName || "Community Member")}</strong>
-                    </div>
-                    <div>
-                      <span style="color:var(--td-text-muted);">OS / Build:</span>
-                      <strong style="color:var(--td-text-primary); margin-left:0.25rem;">${esc(sub.softwareVersion || "Standard")}</strong>
-                    </div>
-                  </div>
-
-                  <!-- Measurements Summary -->
-                  ${measEntries.length ? `
-                    <div style="background:var(--td-bg-surface); border-radius:0.375rem; padding:0.75rem; margin-bottom:0.75rem;">
-                      <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--td-text-muted); margin-bottom:0.35rem;">
-                        Measured Results:
-                      </div>
-                      <div style="display:flex; flex-wrap:wrap; gap:1rem; font-size:0.85rem;">
-                        ${measEntries.map(([k, m]) => {
-                          const val = typeof m === "object" && m !== null ? m.value : m;
-                          const unit = typeof m === "object" && m !== null ? m.unit : "";
-                          return `<div><span style="color:var(--td-text-secondary);">${esc(k)}:</span> <strong style="color:var(--td-text-primary); font-family:monospace;">${esc(String(val))} ${esc(unit)}</strong></div>`;
-                        }).join("")}
-                      </div>
-                    </div>
-                  ` : ""}
-
-                  <!-- Evidence links -->
-                  ${ev.length ? `
-                    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; font-size:0.8rem;">
-                      <span style="color:var(--td-text-muted);">Evidence:</span>
-                      ${ev.map(e => `<a href="${esc(e.url)}" target="_blank" rel="noopener" style="color:var(--td-info); text-decoration:none;">📎 ${esc(e.name || e.fileName)} ↗</a>`).join(" • ")}
-                    </div>
-                  ` : ""}
-                </div>
-              `;
-            }).join("")}
-          </div>
-        `}
-      </section>
 
       <!-- Bottom Quick Navigation -->
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding:1rem 0;">
