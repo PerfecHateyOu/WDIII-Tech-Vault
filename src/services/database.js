@@ -360,82 +360,550 @@ export async function syncVaultToFirestore() {
 }
 
 // ==========================================
-// Compatibility Handlers
-// (Community contributions retired in favor of author-provided data)
+// Community Research Hub Submission Services
 // ==========================================
 
+function createSubmissionId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return \`sub_\${Date.now()}_\${Math.random().toString(36).slice(2, 10)}\`;
+}
+
+function getAuthenticatedProfile(fb) {
+  const user = fb?.getCurrentUser?.();
+  const profile = fb?.getCurrentProfile?.();
+
+  if (!user || user.isVisitor || profile?.role === "visitor") {
+    throw new Error("You must be signed in with a contributor account to submit a replication.");
+  }
+
+  return { user, profile: profile || {} };
+}
+
+function normalizeEvidenceItem(item = {}) {
+  return {
+    name: sanitizeText(String(item.name || item.fileName || "Evidence")).slice(0, 200),
+    fileName: sanitizeText(String(item.fileName || item.name || "")).slice(0, 200),
+    path: sanitizeText(String(item.path || "")).slice(0, 500),
+    url: String(item.url || "").slice(0, 2000),
+    size: Number(item.size) || 0,
+    type: sanitizeText(String(item.type || "application/octet-stream")).slice(0, 120),
+    uploadedAt: item.uploadedAt || new Date().toISOString()
+  };
+}
+
+function validateMeasurementsAgainstExperiment(experiment, measurements) {
+  const errors = [];
+
+  if (!measurements || typeof measurements !== "object" || Array.isArray(measurements)) {
+    return { valid: false, errors: ["Measurements payload must be an object."] };
+  }
+
+  const schema = Array.isArray(experiment?.measurementSchema)
+    ? experiment.measurementSchema
+    : [];
+  const allowedKeys = Array.isArray(experiment?.allowedMeasurementKeys)
+    ? experiment.allowedMeasurementKeys
+    : [];
+
+  if (schema.length === 0 || allowedKeys.length === 0) {
+    return {
+      valid: false,
+      errors: ["This experiment does not expose a complete measurement schema."]
+    };
+  }
+
+  const schemaMap = new Map(schema.map(field => [field.key, field]));
+
+  for (const key of Object.keys(measurements)) {
+    if (!allowedKeys.includes(key) || !schemaMap.has(key)) {
+      errors.push(\`Measurement field '\${key}' is not allowed by this experiment.\`);
+    }
+  }
+
+  for (const field of schema) {
+    const rawItem = measurements[field.key];
+
+    if (rawItem === undefined || rawItem === null || rawItem === "") {
+      if (field.required) {
+        errors.push(\`Missing required measurement: \${field.key}.\`);
+      }
+      continue;
+    }
+
+    const value = (
+      typeof rawItem === "object" &&
+      rawItem !== null &&
+      Object.prototype.hasOwnProperty.call(rawItem, "value")
+    ) ? rawItem.value : rawItem;
+
+    if (field.type === "number") {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        errors.push(\`Measurement '\${field.key}' must be a finite number.\`);
+        continue;
+      }
+      if (field.min !== undefined && numeric < Number(field.min)) {
+        errors.push(\`Measurement '\${field.key}' is below the allowed minimum.\`);
+      }
+      if (field.max !== undefined && numeric > Number(field.max)) {
+        errors.push(\`Measurement '\${field.key}' exceeds the allowed maximum.\`);
+      }
+    } else if (field.type === "boolean") {
+      if (typeof value !== "boolean") {
+        errors.push(\`Measurement '\${field.key}' must be boolean.\`);
+      }
+    } else if (field.type === "string") {
+      if (typeof value !== "string") {
+        errors.push(\`Measurement '\${field.key}' must be a string.\`);
+      }
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
 /**
- * Retrieve verified community submissions for an experiment protocol.
- * Returns empty array as external contributions are disabled.
+ * Retrieve approved community submissions for an experiment protocol.
  */
 export async function getApprovedSubmissionsForExperiment(experimentId) {
-  return [];
+  if (!experimentId) return [];
+
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) return [];
+
+  try {
+    const db = fb.getDb();
+    if (!db) return [];
+
+    const snapshot = await fs.getDocs(fs.collection(db, "submissions"));
+    return snapshot.docs
+      .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+      .filter(submission =>
+        submission.status === "approved" &&
+        submission.experimentId === experimentId
+      );
+  } catch (err) {
+    console.warn("Could not retrieve approved community submissions:", err);
+    return [];
+  }
 }
 
 /**
- * Retrieve verified community submissions for a device.
- * Returns empty array as external contributions are disabled.
+ * Retrieve approved community submissions for a device.
  */
 export async function getApprovedSubmissionsForDevice(deviceId) {
-  return [];
+  if (!deviceId) return [];
+
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) return [];
+
+  try {
+    const db = fb.getDb();
+    if (!db) return [];
+
+    const snapshot = await fs.getDocs(fs.collection(db, "submissions"));
+    return snapshot.docs
+      .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+      .filter(submission =>
+        submission.status === "approved" &&
+        submission.deviceId === deviceId
+      );
+  } catch (err) {
+    console.warn("Could not retrieve approved community submissions:", err);
+    return [];
+  }
 }
 
 /**
- * Aggregated telemetry statistics for a device
+ * Aggregate simple numeric statistics from approved submissions for a device.
  */
 export async function getDeviceCommunityStats(deviceId) {
+  const submissions = await getApprovedSubmissionsForDevice(deviceId);
+  const metrics = {};
+
+  for (const submission of submissions) {
+    for (const [key, rawItem] of Object.entries(submission.measurements || {})) {
+      const value = (
+        typeof rawItem === "object" &&
+        rawItem !== null &&
+        Object.prototype.hasOwnProperty.call(rawItem, "value")
+      ) ? rawItem.value : rawItem;
+
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) continue;
+
+      if (!metrics[key]) metrics[key] = [];
+      metrics[key].push(numeric);
+    }
+  }
+
+  const metricStats = {};
+  for (const [key, values] of Object.entries(metrics)) {
+    if (!values.length) continue;
+
+    const sorted = [...values].sort((a, b) => a - b);
+    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+    const median = sorted.length % 2
+      ? sorted[Math.floor(sorted.length / 2)]
+      : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+    const variance = values.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / values.length;
+
+    metricStats[key] = {
+      sampleSize: values.length,
+      mean,
+      median,
+      min: sorted[0],
+      max: sorted[sorted.length - 1],
+      variance,
+      standardDeviation: Math.sqrt(variance)
+    };
+  }
+
   return {
     deviceId,
-    sampleSize: 0,
-    metrics: {},
-    distributions: { operatingSystems: {}, testingEnvironments: {} }
+    sampleSize: submissions.length,
+    metrics: metricStats,
+    distributions: {
+      operatingSystems: {},
+      testingEnvironments: {}
+    }
   };
 }
 
 /**
- * Retrieve pending submissions. Returns empty array as contributions are disabled.
+ * Retrieve submissions awaiting moderation.
+ * Firestore rules restrict visibility to moderators/owners and the submitter.
  */
 export async function getPendingSubmissions() {
-  return [];
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) return [];
+
+  try {
+    const db = fb.getDb();
+    if (!db) return [];
+
+    const snapshot = await fs.getDocs(fs.collection(db, "submissions"));
+    return snapshot.docs
+      .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+      .filter(submission =>
+        ["pending_review", "pending", "needs_revision"].includes(submission.status)
+      )
+      .sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
+  } catch (err) {
+    console.warn("Could not retrieve pending submissions:", err);
+    return [];
+  }
 }
 
 /**
- * Moderation review handler stub preserved for interface compatibility.
+ * Retrieve a user's own submissions.
+ */
+export async function getUserSubmissions(userId = null) {
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) return [];
+
+  const currentUser = fb.getCurrentUser();
+  const targetUserId = userId || currentUser?.uid;
+
+  if (!targetUserId || currentUser?.isVisitor) return [];
+  if (userId && currentUser?.uid !== userId && fb.getCurrentProfile?.()?.role === "contributor") {
+    throw new Error("You are not authorized to retrieve another user's submissions.");
+  }
+
+  try {
+    const db = fb.getDb();
+    if (!db) return [];
+
+    const snapshot = await fs.getDocs(fs.collection(db, "submissions"));
+    return snapshot.docs
+      .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+      .filter(submission =>
+        submission.authorId === targetUserId || submission.userId === targetUserId
+      )
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+  } catch (err) {
+    console.warn("Could not retrieve user submissions:", err);
+    return [];
+  }
+}
+
+/**
+ * Retrieve a single submission.
+ */
+export async function getSubmissionById(submissionId) {
+  if (!submissionId) return null;
+
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) return null;
+
+  try {
+    const db = fb.getDb();
+    if (!db) return null;
+
+    const docSnap = await fs.getDoc(fs.doc(db, "submissions", submissionId));
+    return docSnap.exists()
+      ? { id: docSnap.id, ...docSnap.data() }
+      : null;
+  } catch (err) {
+    console.warn("Could not retrieve submission:", err);
+    return null;
+  }
+}
+
+/**
+ * Create a community replication submission.
+ * Client-side validation improves UX; Firestore rules remain the security boundary.
+ */
+export async function createSubmission(payload = {}) {
+  const { fb, fs } = await getSdk();
+
+  if (!fb || !fs || !fb.isFirebaseReady()) {
+    throw new Error("Firebase is unavailable. Your replication was not submitted.");
+  }
+
+  const { user, profile } = getAuthenticatedProfile(fb);
+  const db = fb.getDb();
+  if (!db) throw new Error("Firestore is unavailable.");
+
+  if (!payload.experimentId || !payload.deviceId) {
+    throw new Error("A valid experiment and device are required.");
+  }
+
+  const [experiment, device] = await Promise.all([
+    getExperimentById(payload.experimentId),
+    getDeviceById(payload.deviceId)
+  ]);
+
+  if (!experiment) throw new Error("The selected experiment could not be found.");
+  if (!device) throw new Error("The selected device could not be found.");
+
+  if (!Array.isArray(experiment.devices) || !experiment.devices.includes(device.id)) {
+    throw new Error("The selected device is not registered for this experiment.");
+  }
+
+  const measurementCheck = validateMeasurementsAgainstExperiment(
+    experiment,
+    payload.measurements || {}
+  );
+
+  if (!measurementCheck.valid) {
+    throw new Error(\`Measurement validation failed: \${measurementCheck.errors.join(" ")}\`);
+  }
+
+  const now = new Date().toISOString();
+  const submissionId = createSubmissionId();
+
+  const evidence = Array.isArray(payload.evidenceReferences)
+    ? payload.evidenceReferences.map(normalizeEvidenceItem)
+    : Array.isArray(payload.evidence)
+      ? payload.evidence.map(normalizeEvidenceItem)
+      : [];
+
+  const conditions = sanitizeObject({
+    officialBaseline: String(payload.conditions?.officialBaseline || "").slice(0, 5000),
+    additionalConditions: String(payload.conditions?.additionalConditions || "").slice(0, 5000),
+    environment: String(payload.conditions?.environment || "").slice(0, 2000),
+    testDate: String(payload.testDate || "").slice(0, 40),
+    softwareVersion: String(payload.softwareVersion || "").slice(0, 300)
+  });
+
+  const submission = {
+    id: submissionId,
+    authorId: user.uid,
+    authorDisplayName: sanitizeText(profile.displayName || user.displayName || "Contributor").slice(0, 200),
+    userId: user.uid,
+    submitterName: sanitizeText(profile.displayName || user.displayName || "Contributor").slice(0, 200),
+    submitterEmail: sanitizeText(user.email || "").slice(0, 320),
+    deviceId: device.id,
+    experimentId: experiment.id,
+    type: "replication",
+    status: "pending_review",
+    measurements: payload.measurements,
+    conditions,
+    notes: sanitizeText(String(payload.notes || "")).slice(0, 5000),
+    evidence,
+    evidenceReferences: evidence,
+    createdAt: now,
+    updatedAt: now,
+    submittedAt: now,
+    review: null,
+    reviewerId: null,
+    reviewedAt: null,
+    reviewNotes: null,
+    provenance: {
+      source: "community",
+      protocolVersion: String(experiment.protocolVersion || experiment.version || "unknown"),
+      experimentVersion: String(experiment.version || "unknown")
+    }
+  };
+
+  await fs.setDoc(fs.doc(db, "submissions", submissionId), submission);
+
+  return submission;
+}
+
+/**
+ * Update an author's editable submission fields.
+ * Approval/rejection/review transitions are handled by reviewSubmission().
+ */
+export async function updateSubmission(submissionId, updatePayload = {}, userId = null) {
+  if (!submissionId) throw new Error("Submission ID is required.");
+
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) {
+    throw new Error("Firebase is unavailable.");
+  }
+
+  const { user } = getAuthenticatedProfile(fb);
+  if (userId && user.uid !== userId) {
+    throw new Error("You are not authorized to update this submission.");
+  }
+
+  const db = fb.getDb();
+  const existingSnap = await fs.getDoc(fs.doc(db, "submissions", submissionId));
+  if (!existingSnap.exists()) throw new Error("Submission not found.");
+
+  const existing = existingSnap.data();
+  if (existing.authorId !== user.uid && existing.userId !== user.uid) {
+    throw new Error("You are not authorized to update this submission.");
+  }
+
+  if (existing.status === "approved") {
+    throw new Error("Approved submissions are immutable.");
+  }
+
+  const experiment = await getExperimentById(existing.experimentId);
+  if (!experiment) throw new Error("The source experiment could not be found.");
+
+  const measurements = updatePayload.measurements || existing.measurements || {};
+  const measurementCheck = validateMeasurementsAgainstExperiment(experiment, measurements);
+
+  if (!measurementCheck.valid) {
+    throw new Error(\`Measurement validation failed: \${measurementCheck.errors.join(" ")}\`);
+  }
+
+  const allowedStatus = ["draft", "pending_review", "pending", "withdrawn", "needs_revision"];
+  const nextStatus = updatePayload.status || existing.status;
+  if (!allowedStatus.includes(nextStatus)) {
+    throw new Error("Invalid contributor submission status.");
+  }
+
+  const updates = {
+    updatedAt: new Date().toISOString(),
+    status: nextStatus,
+    measurements,
+    conditions: updatePayload.conditions || existing.conditions || {},
+    notes: sanitizeText(String(updatePayload.notes ?? existing.notes ?? "")).slice(0, 5000)
+  };
+
+  if (Array.isArray(updatePayload.evidenceReferences)) {
+    updates.evidence = updatePayload.evidenceReferences.map(normalizeEvidenceItem);
+    updates.evidenceReferences = updates.evidence;
+  }
+
+  await fs.updateDoc(fs.doc(db, "submissions", submissionId), updates);
+  return { id: submissionId, ...existing, ...updates };
+}
+
+/**
+ * Moderator review transition.
+ * Firestore rules perform the authoritative authorization check.
  */
 export async function reviewSubmission(submissionId, reviewData = {}) {
-  const status = reviewData.status;
-  if (!["approved", "rejected", "needs_revision"].includes(status)) {
-    throw new Error(`Invalid status: ${status}`);
+  if (!submissionId) throw new Error("Submission ID is required.");
+
+  const { fb, fs } = await getSdk();
+  if (!fb || !fs || !fb.isFirebaseReady()) {
+    throw new Error("Firebase is unavailable.");
   }
-  return { success: true, id: submissionId, status };
+
+  const profile = fb.getCurrentProfile?.();
+  const user = fb.getCurrentUser?.();
+
+  if (!user || user.isVisitor) {
+    throw new Error("Authentication is required for moderation.");
+  }
+
+  if (!["moderator", "admin", "owner"].includes(profile?.role) && !fb.isSystemOwner?.(user)) {
+    throw new Error("Moderator authorization is required.");
+  }
+
+  const status = reviewData.status;
+  if (!["approved", "rejected", "needs_revision", "pending_review", "pending"].includes(status)) {
+    throw new Error(\`Invalid moderation status: \${status}\`);
+  }
+
+  const db = fb.getDb();
+  const ref = fs.doc(db, "submissions", submissionId);
+  const existingSnap = await fs.getDoc(ref);
+  if (!existingSnap.exists()) throw new Error("Submission not found.");
+
+  const existing = existingSnap.data();
+  if (existing.status === "approved") {
+    throw new Error("Approved submissions are immutable.");
+  }
+
+  const now = new Date().toISOString();
+  const feedback = sanitizeText(String(reviewData.feedback || reviewData.reviewNotes || "")).slice(0, 5000);
+
+  const updates = {
+    status,
+    updatedAt: now,
+    reviewerId: user.uid,
+    reviewedAt: now,
+    reviewNotes: feedback,
+    review: {
+      reviewerId: user.uid,
+      reviewedAt: now,
+      feedback
+    }
+  };
+
+  await fs.updateDoc(ref, updates);
+
+  return { id: submissionId, ...existing, ...updates };
 }
 
 /**
- * User submission query stub
+ * Withdraw an author's submission.
  */
-export async function getUserSubmissions(userId) {
-  return [];
+export async function withdrawSubmission(submissionId, userId = null) {
+  return updateSubmission(
+    submissionId,
+    { status: "withdrawn" },
+    userId
+  );
 }
 
-/**
- * Single submission query stub
- */
-export async function getSubmissionById(submissionId, userId = null) {
-  return null;
+// Draft helpers intentionally remain local-only until the durable draft workflow is implemented.
+export function saveDraftSubmission(userId, draftData) {
+  if (!userId) return;
+  try {
+    localStorage.setItem(\`wdiii_submission_draft_\${userId}\`, JSON.stringify(draftData || {}));
+  } catch (err) {
+    console.warn("Could not save local submission draft:", err);
+  }
 }
 
-export function saveDraftSubmission(userId, draftData) {}
-export function loadDraftSubmission(userId) { return null; }
-export function clearDraftSubmission(userId) {}
-
-export async function createSubmission(payload) {
-  throw new Error("Community submissions have been retired. The author exclusively publishes verified testing data.");
+export function loadDraftSubmission(userId) {
+  if (!userId) return null;
+  try {
+    const raw = localStorage.getItem(\`wdiii_submission_draft_\${userId}\`);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    console.warn("Could not load local submission draft:", err);
+    return null;
+  }
 }
 
-export async function updateSubmission(submissionId, updatePayload, userId) {
-  throw new Error("Community submissions have been retired.");
+export function clearDraftSubmission(userId) {
+  if (!userId) return;
+  try {
+    localStorage.removeItem(\`wdiii_submission_draft_\${userId}\`);
+  } catch (err) {
+    console.warn("Could not clear local submission draft:", err);
+  }
 }
 
-export async function withdrawSubmission(submissionId, userId) {
-  throw new Error("Community submissions have been retired.");
-}
