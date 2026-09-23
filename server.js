@@ -118,11 +118,25 @@ app.all('/api/*', (req, res) => {
 });
 
 // ===== Static Serving: Dedicated Public Assets Directory ONLY =====
-app.use(express.static(path.join(__dirname, 'public'), {
+const staticOptions = {
   index: false,
   dotfiles: 'ignore',
-  fallthrough: true
-}));
+  fallthrough: true,
+  maxAge: 31536000000,
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+};
+
+app.use(express.static(path.join(__dirname, 'public'), staticOptions));
+
+// ===== Static Serving: Modular CSS & JS Directories =====
+app.use('/css', express.static(path.join(__dirname, 'css'), staticOptions));
+app.use('/js', express.static(path.join(__dirname, 'js'), staticOptions));
 
 // ===== Static Serving: Approved Frontend Modules & Images in /src =====
 const APPROVED_SRC_EXTS = new Set([

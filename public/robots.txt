@@ -1,0 +1,7 @@
+# Robots.txt for CTC — WDIII Tech Vault
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /download/
+
+Sitemap: https://ais-dev-s6igsku5zq33xja3k5cejd-858792364131.us-east1.run.app/sitemap.xml
