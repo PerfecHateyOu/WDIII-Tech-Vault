@@ -8,7 +8,7 @@
     "start": "node server.js",
     "build": "echo 'Build complete'",
     "lint": "node --check server.js",
-    "test": "node scripts/security-audit-test.js && node scripts/test-auth-firestore.js && node scripts/test-database-integration.js && node scripts/test-device-stats.js && node scripts/test-compare-view.js && node scripts/test-comparison-system.js"
+    "test": "node scripts/security-audit-test.js && node scripts/test-auth-firestore.js && node scripts/test-database-integration.js && node scripts/test-device-stats.js && node scripts/test-compare-view.js && node scripts/test-comparison-system.js && node scripts/test-comments-integration.js"
   },
   "dependencies": {
     "express": "^4.21.2"

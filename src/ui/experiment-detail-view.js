@@ -9,17 +9,25 @@
  */
 
 import { getExperimentById } from "../services/database.js";
+import { initCommentsSection } from "../components/comments-section.js";
 
 function esc(s) {
   if (s === null || s === undefined) return "";
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+let activeCommentsCleanup = null;
+
 /**
  * Render single Experiment Detail Page (#/experiments/{experimentId})
  */
 export async function renderExperimentDetail(container, experimentId) {
   if (!container) return;
+
+  if (typeof activeCommentsCleanup === "function") {
+    try { activeCommentsCleanup(); } catch (e) {}
+    activeCommentsCleanup = null;
+  }
 
   container.innerHTML = `<div style="text-align:center; padding:4rem 2rem; color:var(--td-text-muted);">Retrieving research report…</div>`;
 
@@ -100,8 +108,13 @@ export async function renderExperimentDetail(container, experimentId) {
                 </span>
               ` : ""}
             </div>
-            <div style="font-size:0.8rem; color:var(--td-text-muted); font-family:monospace;">
-              PROTOCOL: ${esc(exp.id.toUpperCase())}
+            <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+              <a href="#experimentCommentsContainer" class="btn-jump-discussion" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:600; color:var(--td-info); text-decoration:none; padding:0.25rem 0.65rem; background:var(--td-info-bg); border:1px solid var(--td-info); border-radius:9999px; transition:opacity 0.15s;">
+                <span>💬</span> <span>Peer Findings &amp; Discussion ↓</span>
+              </a>
+              <div style="font-size:0.8rem; color:var(--td-text-muted); font-family:monospace;">
+                PROTOCOL: ${esc(exp.id.toUpperCase())}
+              </div>
             </div>
           </div>
 
@@ -191,6 +204,9 @@ export async function renderExperimentDetail(container, experimentId) {
         </div>
       </article>
 
+      <!-- Peer Discussion & Findings Section (Firestore) -->
+      <div id="experimentCommentsContainer" style="margin-top:2.5rem; margin-bottom:2.5rem;"></div>
+
       <!-- Bottom Quick Navigation -->
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding:1rem 0;">
         <a href="#/" style="color:var(--td-info); font-size:0.9rem; font-weight:600; text-decoration:none;">
@@ -202,4 +218,30 @@ export async function renderExperimentDetail(container, experimentId) {
       </div>
     </div>
   `;
+
+  // Initialize real-time Firestore comments section
+  const commentsContainer = container.querySelector("#experimentCommentsContainer");
+  if (commentsContainer) {
+    activeCommentsCleanup = initCommentsSection(commentsContainer, exp.id);
+  }
+
+  // Smooth scroll to comments if requested by route or hash
+  if (window.location.hash.includes("comments") || window.location.hash.includes("experimentCommentsContainer")) {
+    setTimeout(() => {
+      const section = container.querySelector("#experimentCommentsContainer");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 150);
+  }
+
+  // Wire up the jump link in header
+  const jumpBtn = container.querySelector(".btn-jump-discussion");
+  jumpBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    const section = container.querySelector("#experimentCommentsContainer");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
 }

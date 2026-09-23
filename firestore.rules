@@ -267,6 +267,45 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // 8. Experiment Comments & Peer Discussion
+    match /comments/{commentId} {
+      // Public reading allowed for all visitors
+      allow read: if true;
+
+      // Registered users can post comments tied to their authenticated UID
+      allow create: if isSignedIn()
+                    && request.resource.data.authorId == request.auth.uid
+                    && request.resource.data.authorDisplayName is string
+                    && request.resource.data.experimentId is string
+                    && request.resource.data.content is string
+                    && request.resource.data.content.size() >= 1
+                    && request.resource.data.content.size() <= 3000
+                    && request.resource.data.createdAt is string
+                    && request.resource.data.keys().hasAll(['experimentId', 'authorId', 'authorDisplayName', 'content', 'createdAt']);
+
+      // Authors can edit content, or signed-in users can upvote
+      allow update: if isSignedIn() && (
+                      (
+                        resource.data.authorId == request.auth.uid
+                        && request.resource.data.authorId == resource.data.authorId
+                        && request.resource.data.experimentId == resource.data.experimentId
+                        && request.resource.data.content is string
+                        && request.resource.data.content.size() >= 1
+                        && request.resource.data.content.size() <= 3000
+                      )
+                      ||
+                      (
+                        request.resource.data.authorId == resource.data.authorId
+                        && request.resource.data.experimentId == resource.data.experimentId
+                        && request.resource.data.content == resource.data.content
+                      )
+                    );
+
+      // Authors can delete their own comments; moderators/admins can delete any comment
+      allow delete: if isSignedIn()
+                    && (resource.data.authorId == request.auth.uid || isModerator());
+    }
+
     // Default Deny
     match /{document=**} {
       allow read, write: if false;

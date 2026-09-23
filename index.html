@@ -1243,6 +1243,7 @@ function experimentShell(opts) {
   h += `</div>`;
   h += `<div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">`;
   if (opts.actions) h += opts.actions;
+  h += `<a href="#/experiments/${opts.id}#comments" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-info); font-size:0.78rem; text-decoration:none; font-weight:600;" title="Discuss findings with registered researchers"><span>💬 Discuss</span> ↗</a>`;
   h += `<a href="#/experiments/${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-info); font-size:0.78rem; text-decoration:none; font-weight:600;" title="Open isolated research protocol report"><span>🔬 Protocol Details</span> ↗</a>`;
   h += `<a href="#${opts.id}" data-scroll="${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-text-muted); font-size:0.78rem; text-decoration:none;" title="Direct anchor link"><span>🔗</span> #${opts.id}</a>`;
   h += `</div>`;
@@ -1258,7 +1259,17 @@ function experimentShell(opts) {
     h += `</ul></details>`;
   }
   h += opts.body;
-  h += `</div></article>`;
+  h += `</div>`;
+  h += `<div style="border-top:1px solid var(--td-border-subtle); padding:1rem 1.5rem; background:var(--td-bg-surface-elevated); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+    <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:var(--td-text-secondary);">
+      <span>💬</span>
+      <span>Have empirical data, questions, or replication notes on this experiment?</span>
+    </div>
+    <a href="#/experiments/${opts.id}#comments" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.4rem 0.85rem; border-radius:0.375rem; background:var(--td-info-bg); border:1px solid var(--td-info); color:var(--td-info); font-size:0.82rem; font-weight:600; text-decoration:none; transition:opacity 0.15s;">
+      <span>Discuss Findings (${opts.id.toUpperCase()})</span>
+      <span>→</span>
+    </a>
+  </div></article>`;
   return h;
 }
 
@@ -2831,7 +2842,8 @@ function showPage(hash) {
   }
   else if (route.startsWith("/experiments/")) {
     pageId = "page-experiment-detail";
-    const expId = decodeURIComponent(route.replace(/^\/experiments\//, "").replace(/\/$/, ""));
+    const rawExpId = route.replace(/^\/experiments\//, "").split("#")[0].split("?")[0].replace(/\/$/, "");
+    const expId = decodeURIComponent(rawExpId);
     asyncRenderPromise = renderExperimentDetail(document.getElementById("experimentDetailContent"), expId);
   }
   else if (route === "/compare" || route.startsWith("/compare?") || route.startsWith("/compare/")) {

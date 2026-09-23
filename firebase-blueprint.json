@@ -124,6 +124,27 @@
         "timestamp": { "type": "string", "format": "date-time", "description": "Exact action timestamp" }
       },
       "required": ["action", "actorId", "targetSubmissionId", "previousStatus", "newStatus", "reason", "timestamp"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "User discussion comment on experiment findings and empirical methodology",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique comment identifier" },
+        "experimentId": { "type": "string", "description": "Associated experiment ID" },
+        "authorId": { "type": "string", "description": "Firebase Auth UID of the registered commenter" },
+        "authorDisplayName": { "type": "string", "description": "Display name of the author" },
+        "authorEmail": { "type": "string", "format": "email", "description": "Email of the author" },
+        "authorPhotoURL": { "type": "string", "description": "Optional author avatar photo URL" },
+        "authorRole": { "type": "string", "enum": ["contributor", "moderator", "admin", "owner"], "description": "Role classification of the commenter" },
+        "content": { "type": "string", "description": "Comment text content discussing experiment findings", "maxLength": 3000, "minLength": 2 },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last updated timestamp" },
+        "isEdited": { "type": "boolean", "description": "Whether the comment was edited by the author" },
+        "likesCount": { "type": "number", "description": "Number of peer upvotes" },
+        "likedBy": { "type": "array", "description": "Array of user UIDs who upvoted this comment" }
+      },
+      "required": ["experimentId", "authorId", "authorDisplayName", "content", "createdAt"]
     }
   },
   "firestore": {
@@ -146,6 +167,10 @@
     "/admin_audit_logs/{logId}": {
       "schema": "AdminAuditLog",
       "description": "Immutable moderation audit log entries"
+    },
+    "/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Public experiment discussion threads and findings comments"
     }
   }
 }
