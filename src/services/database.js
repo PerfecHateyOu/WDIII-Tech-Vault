@@ -422,7 +422,7 @@ function normalizeEvidenceItem(item = {}) {
   };
 }
 
-function validateMeasurementsAgainstExperiment(experiment, measurements) {
+export function validateMeasurementsAgainstExperiment(experiment, measurements) {
   const errors = [];
 
   if (!measurements || typeof measurements !== "object" || Array.isArray(measurements)) {
@@ -531,12 +531,19 @@ export async function getApprovedSubmissionsForExperiment(experimentId) {
 /**
  * Retrieve approved community submissions for a device.
  */
-export async function getApprovedSubmissionsForDevice(deviceId) {
+export async function getApprovedSubmissionsForDevice(deviceId, experimentIds = null) {
   if (!deviceId) return [];
 
-  const inMemory = Array.from(inMemorySubmissions.values()).filter(
-    s => s.status === "approved" && s.deviceId === deviceId
+  const allowedExperimentIds = Array.isArray(experimentIds)
+    ? new Set(experimentIds.filter(Boolean))
+    : null;
+  const matchesScope = (submission) => (
+    submission.status === "approved" &&
+    submission.deviceId === deviceId &&
+    (!allowedExperimentIds || allowedExperimentIds.has(submission.experimentId))
   );
+
+  const inMemory = Array.from(inMemorySubmissions.values()).filter(matchesScope);
 
   const { fb, fs } = await getSdk();
   if (!fb || !fs || !fb.isFirebaseReady()) return inMemory;
@@ -548,10 +555,7 @@ export async function getApprovedSubmissionsForDevice(deviceId) {
     const snapshot = await fs.getDocs(fs.collection(db, "submissions"));
     const remote = snapshot.docs
       .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
-      .filter(submission =>
-        submission.status === "approved" &&
-        submission.deviceId === deviceId
-      );
+      .filter(matchesScope);
 
     const merged = new Map();
     for (const item of inMemory) merged.set(item.id, item);
@@ -561,6 +565,74 @@ export async function getApprovedSubmissionsForDevice(deviceId) {
     console.warn("Could not retrieve approved community submissions:", err);
     return inMemory;
   }
+}
+
+/**
+ * Retrieve a deterministic page of approved community submissions.
+ * The cursor is an object containing the last page's createdAt and id values.
+ */
+export async function getApprovedSubmissionsPage(options = {}) {
+  const {
+    deviceId = null,
+    experimentId = null,
+    pageSize = 20,
+    cursor = null
+  } = options;
+  const limit = Math.max(1, Math.min(100, Number(pageSize) || 20));
+  const matchesScope = (submission) => (
+    submission.status === "approved" &&
+    (!deviceId || submission.deviceId === deviceId) &&
+    (!experimentId || submission.experimentId === experimentId)
+  );
+  const compareNewestFirst = (left, right) => {
+    const createdAtOrder = String(right.createdAt || "").localeCompare(String(left.createdAt || ""));
+    return createdAtOrder || String(right.id || "").localeCompare(String(left.id || ""));
+  };
+  const isAfterCursor = (submission) => {
+    if (!cursor?.createdAt || !cursor?.id) return true;
+    const createdAtOrder = String(submission.createdAt || "").localeCompare(String(cursor.createdAt));
+    return createdAtOrder < 0 || (createdAtOrder === 0 && String(submission.id || "") < String(cursor.id));
+  };
+
+  const { fb, fs } = await getSdk();
+  if (fb && fs && fb.isFirebaseReady()) {
+    try {
+      const db = fb.getDb();
+      if (db && fs.query && fs.where && fs.orderBy && fs.limit) {
+        const constraints = [fs.where("status", "==", "approved")];
+        if (deviceId) constraints.push(fs.where("deviceId", "==", deviceId));
+        if (experimentId) constraints.push(fs.where("experimentId", "==", experimentId));
+        constraints.push(fs.orderBy("createdAt", "desc"));
+        if (fs.documentId) constraints.push(fs.orderBy(fs.documentId(), "desc"));
+        if (cursor && fs.startAfter) constraints.push(fs.startAfter(cursor.createdAt, cursor.id));
+        constraints.push(fs.limit(limit + 1));
+
+        const snapshot = await fs.getDocs(fs.query(fs.collection(db, "submissions"), ...constraints));
+        const rows = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+        const pageRows = rows.slice(0, limit);
+        const last = pageRows[pageRows.length - 1];
+        return {
+          submissions: pageRows,
+          hasMore: rows.length > limit,
+          nextCursor: rows.length > limit && last ? { createdAt: last.createdAt, id: last.id } : null
+        };
+      }
+    } catch (err) {
+      console.warn("Could not retrieve paged approved submissions:", err);
+    }
+  }
+
+  const rows = Array.from(inMemorySubmissions.values())
+    .filter(matchesScope)
+    .sort(compareNewestFirst)
+    .filter(isAfterCursor);
+  const pageRows = rows.slice(0, limit);
+  const last = pageRows[pageRows.length - 1];
+  return {
+    submissions: pageRows,
+    hasMore: rows.length > limit,
+    nextCursor: rows.length > limit && last ? { createdAt: last.createdAt, id: last.id } : null
+  };
 }
 
 /**
@@ -957,6 +1029,11 @@ export async function reviewSubmission(submissionId, reviewData = {}) {
 
   const reviewerUid = user?.uid || reviewData.reviewerId || "moderator";
   const reviewerName = profile?.displayName || user?.displayName || reviewData.reviewerName || "Moderator";
+
+  if (reviewerUid === existing.authorId || reviewerUid === existing.userId) {
+    throw new Error("Self-approval is not allowed.");
+  }
+
   const now = new Date().toISOString();
   const feedback = sanitizeText(String(reviewData.feedback || reviewData.reviewNotes || "")).slice(0, 5000);
 
