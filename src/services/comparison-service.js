@@ -170,7 +170,10 @@ export async function loadComparisonData(deviceIds = []) {
     // Community Submissions (strictly status === 'approved')
     let rawSubmissions = [];
     try {
-      rawSubmissions = await getApprovedSubmissionsForDevice(device.id);
+      rawSubmissions = await getApprovedSubmissionsForDevice(
+        device.id,
+        experimentIds
+      );
     } catch (err) {
       console.warn(`Could not load community submissions for ${device.id}:`, err);
     }
