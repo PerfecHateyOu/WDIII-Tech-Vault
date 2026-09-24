@@ -143,7 +143,7 @@ assert(
   'Security rules implement isValidMeasurementPayload helper'
 );
 assert(
-  /(?:measurements|values)\.keys\(\)\.hasOnly\(getExperimentDoc\(expId\)\.allowedMeasurementKeys\)/.test(rulesContent),
+  rulesContent.includes('measurements.keys().hasOnly(getExperimentDoc(expId).allowedMeasurementKeys)'),
   'Security rules enforce measurements.keys().hasOnly(parent experiment allowed keys)'
 );
 assert(
@@ -177,7 +177,7 @@ assert(
   'Moderator role helper verifies moderator, admin, or system owner'
 );
 assert(
-  /request\.resource\.data\.status in \['approved',\s*'rejected',\s*'needs_revision',\s*'pending_review',\s*'pending'\]/.test(rulesContent),
+  rulesContent.includes("request.resource.data.status in ['approved', 'rejected', 'needs_revision', 'pending_review', 'pending']"),
   'Only moderators can transition submissions to approved/rejected/needs_revision'
 );
 
