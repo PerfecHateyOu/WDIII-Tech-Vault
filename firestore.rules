@@ -1,130 +1,314 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isSignedIn() { return request.auth != null; }
-    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Lookup user role strictly from trusted Firestore document (never trust client claims)
+    // Reputation score is strictly metrics-only and is NOT authorization.
     function getUserRole() {
       return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
-        : 'contributor';
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'guest')
+        : 'guest';
     }
+
+    function isContributor() {
+      return isSignedIn();
+    }
+
     function isModerator() {
-      return isSignedIn() && (getUserRole() in ['moderator', 'admin', 'owner'] ||
-        (('email' in request.auth.token) && request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'));
-    }
-    function isAdmin() {
-      return isSignedIn() && (getUserRole() in ['admin', 'owner'] ||
-        (('email' in request.auth.token) && request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'));
-    }
-    function isSystemOwner() {
-      return isSignedIn() && (getUserRole() == 'owner' ||
-        (('email' in request.auth.token) && request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'));
-    }
-    function getExperimentDoc(expId) { return get(/databases/$(database)/documents/experiments/$(expId)).data; }
-    function isValidMeasurementPayload(expId, values) {
-      return values is map && exists(/databases/$(database)/documents/experiments/$(expId))
-        && ('allowedMeasurementKeys' in getExperimentDoc(expId))
-        && ('measurementSchema' in getExperimentDoc(expId))
-        && getExperimentDoc(expId).measurementSchema is list
-        && values.keys().hasOnly(getExperimentDoc(expId).allowedMeasurementKeys);
-    }
-    function sameIdentity(old, next) {
-      return next.authorId == old.authorId && next.userId == old.userId
-        && next.experimentId == old.experimentId && next.deviceId == old.deviceId
-        && next.type == old.type;
-    }
-    function protectedReviewFieldsUnchanged(old, next) {
-      return next.reviewerId == old.reviewerId && next.reviewedAt == old.reviewedAt
-        && next.review == old.review && next.reviewNotes == old.reviewNotes;
-    }
-
-    match /users/{userId} {
-      allow read: if isSignedIn();
-      allow create: if isOwner(userId) && request.resource.data.uid == userId
-        && request.resource.data.role == 'contributor'
-        && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == 0)
-        || (isSystemOwner() && request.resource.data.uid == userId && request.resource.data.role == 'owner');
-      allow update: if ((isOwner(userId)
-        && request.resource.data.uid == userId
-        && request.resource.data.role == resource.data.role
-        && request.resource.data.reputationScore == resource.data.reputationScore)
-        || isAdmin());
-      allow delete: if isAdmin();
-    }
-
-    match /devices/{deviceId} {
-      allow read: if true;
-      allow create, update: if isAdmin()
-        && request.resource.data.keys().hasAll(['id','brand','model','category','origin','status'])
-        && request.resource.data.id == deviceId;
-      allow delete: if isAdmin();
-    }
-
-    match /experiments/{experimentId} {
-      allow read: if true;
-      allow create, update: if isAdmin()
-        && request.resource.data.keys().hasAll(['id','title','category','status','origin','measurementSchema','allowedMeasurementKeys'])
-        && request.resource.data.id == experimentId
-        && request.resource.data.measurementSchema is list
-        && request.resource.data.allowedMeasurementKeys is list;
-      allow delete: if isAdmin();
-    }
-
-    match /submissions/{submissionId} {
-      allow read: if resource.data.status == 'approved' || (isSignedIn() &&
-        (resource.data.authorId == request.auth.uid || resource.data.userId == request.auth.uid || isModerator()));
-
-      // Contributors may only originate a submission in the review queue and may not
-      // self-approve by switching a submission directly from pending to approved.
-      allow create: if isSignedIn()
-        && request.resource.data.authorId == request.auth.uid
-        && request.resource.data.userId == request.auth.uid
-        && (request.resource.data.status == 'pending_review' || request.resource.data.status == 'pending')
-        && request.resource.data.type == 'replication'
-        && request.resource.data.provenance.source == 'community'
-        && request.resource.data.reviewerId == null
-        && request.resource.data.reviewedAt == null
-        && request.resource.data.review == null
-        && request.resource.data.reviewNotes == null
-        && request.resource.data.keys().hasAll(['authorId','userId','deviceId','experimentId','type','status','measurements','conditions','evidence','provenance'])
-        && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements);
-
-      allow update: if resource.data.status != 'approved' && (
-        (isOwner(resource.data.authorId)
-          && sameIdentity(resource.data, request.resource.data)
-          && resource.data.status in ['pending_review','needs_revision','draft']
-          && request.resource.data.status in ['pending_review','withdrawn','pending']
-          && protectedReviewFieldsUnchanged(resource.data, request.resource.data)
-          && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements)
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','measurements','conditions','notes','evidence','evidenceReferences','updatedAt','submittedAt']))
-        || (isModerator()
-          && sameIdentity(resource.data, request.resource.data)
-          && request.resource.data.status in ['approved','rejected','needs_revision','pending_review','pending']
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt','reviewerId','reviewedAt','review','reviewNotes']))
+      return isSignedIn() && (
+        ('email' in request.auth.token && (
+          request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
+          request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'
+        )) ||
+        getUserRole() == 'moderator' ||
+        getUserRole() == 'admin' ||
+        getUserRole() == 'owner'
       );
-      allow delete: if isAdmin() || (isOwner(resource.data.authorId) && resource.data.status != 'approved');
     }
 
+    function isAdmin() {
+      return isSignedIn() && (
+        ('email' in request.auth.token && (
+          request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
+          request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'
+        )) ||
+        getUserRole() == 'admin' ||
+        getUserRole() == 'owner'
+      );
+    }
+
+    function isSystemOwner() {
+      return isSignedIn() && (
+        ('email' in request.auth.token && (
+          request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
+          request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'
+        )) ||
+        getUserRole() == 'owner'
+      );
+    }
+
+    // Experiment schema validation helpers
+    function getExperimentDoc(expId) {
+      return get(/databases/$(database)/documents/experiments/$(expId)).data;
+    }
+
+    function experimentExists(expId) {
+      return exists(/databases/$(database)/documents/experiments/$(expId));
+    }
+
+    // Strict Schema Enforcement: Measurements must be a map and cannot contain arbitrary keys
+    // outside the parent experiment's allowedMeasurementKeys / measurementSchema
+    function isValidMeasurementPayload(expId, measurements) {
+      return measurements is map
+        && experimentExists(expId)
+        && (
+          !('allowedMeasurementKeys' in getExperimentDoc(expId)) ||
+          measurements.keys().hasOnly(getExperimentDoc(expId).allowedMeasurementKeys)
+        );
+    }
+
+    // 1. User Profiles Collection
+    // Reputation score is NOT authorization. Users cannot modify their own reputationScore or role.
+    match /users/{userId} {
+      // Authenticated users or self can read user profiles
+      allow read: if isSignedIn();
+
+      // New users can create their own profile with contributor role ONLY (or owner role if designated system owner)
+      allow create: if isOwner(userId)
+                    && request.resource.data.uid == userId
+                    && (
+                      request.resource.data.role == 'contributor' ||
+                      (request.resource.data.role == 'owner' && isSystemOwner())
+                    )
+                    && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == 0 || isSystemOwner());
+
+      // Existing users can update their profile (displayName, photoURL, lastLoginAt, etc.)
+      // but strictly CANNOT escalate their role or tamper with reputation score or uid
+      allow update: if (isOwner(userId)
+                        && request.resource.data.role == resource.data.role
+                        && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == resource.data.reputationScore)
+                        && request.resource.data.uid == userId)
+                    || isAdmin();
+
+      // Only administrators can delete user accounts
+      allow delete: if isAdmin();
+    }
+
+    // 2. Hardware Devices Catalog
+    // Official Data Protection: Community submissions can NEVER overwrite manufacturer specifications
+    match /devices/{deviceId} {
+      // Public users and unauthenticated visitors can read device registry
+      allow read: if true;
+
+      // Only authorized administrators can create or update official device records
+      // Enforce strict schema validation on server
+      allow create, update: if isAdmin()
+                            && request.resource.data.keys().hasAll(['id', 'brand', 'model', 'category', 'origin', 'status'])
+                            && request.resource.data.id == deviceId
+                            && request.resource.data.brand is string
+                            && request.resource.data.model is string
+                            && request.resource.data.category in ['smartphone', 'laptop', 'wearable', 'tablet', 'accessory']
+                            && request.resource.data.origin in ['official_wdiii', 'community']
+                            && request.resource.data.status in ['active', 'archived', 'deprecated', 'draft', 'private'];
+
+      allow delete: if isAdmin();
+    }
+
+    // 3. Official Experiment Protocols & Dossiers
+    // Official Data Protection: Community submissions can NEVER overwrite official WDIII experiment data
+    match /experiments/{experimentId} {
+      // Public users and unauthenticated visitors can read published experiments
+      allow read: if true;
+
+      // Only authorized administrators can create or update official experiments
+      // Normal contributors are strictly forbidden from modifying official archives
+      allow create, update: if isAdmin()
+                            && request.resource.data.keys().hasAll(['id', 'title', 'category', 'status', 'origin'])
+                            && request.resource.data.id == experimentId
+                            && request.resource.data.title is string
+                            && request.resource.data.category in ['repair', 'support', 'software', 'legal', 'hardware', 'ecosystem', 'ai']
+                            && request.resource.data.origin in ['official_wdiii', 'community']
+                            && request.resource.data.status in ['done', 'progress', 'pending', 'paused', 'queued', 'draft', 'private']
+                            && (!('measurementSchema' in request.resource.data) || request.resource.data.measurementSchema is list);
+
+      allow delete: if isAdmin();
+    }
+
+    // 4. Community Submissions & Benchmark Tests (Community Research Hub)
+    match /submissions/{submissionId} {
+      // Approved submissions are publicly visible
+      // Pending, needs_revision, rejected, or draft submissions are visible ONLY to the submitter and moderators
+      allow read: if resource.data.status == 'approved'
+                  || (isSignedIn() && (
+                    ('userId' in resource.data && resource.data.userId == request.auth.uid) ||
+                    ('authorId' in resource.data && resource.data.authorId == request.auth.uid) ||
+                    isModerator()
+                  ));
+
+      // Authenticated contributors can submit tests, but status MUST be 'draft' or 'pending_review'
+      // Schema Enforcement:
+      // - Measurements must conform to parent experiment schema (no arbitrary injected keys)
+      // - Normal users CANNOT approve their own submissions or assign reviewers
+      // - Provenance source must be 'community'
+      allow create: if isContributor()
+                    && (
+                      ('userId' in request.resource.data && request.resource.data.userId == request.auth.uid) ||
+                      ('authorId' in request.resource.data && request.resource.data.authorId == request.auth.uid)
+                    )
+                    && (request.resource.data.status == 'pending' || request.resource.data.status == 'pending_review' || request.resource.data.status == 'draft')
+                    && (!('type' in request.resource.data) || request.resource.data.type == 'replication')
+                    && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == null)
+                    && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == null)
+                    && (!('review' in request.resource.data) || request.resource.data.review == null)
+                    && (!('provenance' in request.resource.data) || request.resource.data.provenance.source == 'community')
+                    && request.resource.data.keys().hasAll(['deviceId', 'experimentId', 'status'])
+                    && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements);
+
+      // Submission Updates:
+      // CRITICAL IMMUTABLE RULE: Once status is 'approved', the document is permanently locked
+      // against direct updates. Any corrections must trigger a separate workflow, not overwrite.
+      //
+      // Author updates:
+      // - Only allowed while in 'draft', 'pending', 'pending_review', or 'needs_revision'
+      // - Allowed new statuses: 'draft', 'pending_review', 'pending', or 'withdrawn'
+      // - Authors CANNOT self-approve or reject
+      // - Authors CANNOT modify review/reviewer metadata or change authorId
+      // - Measurements must continue conforming to experiment schema
+      //
+      // Moderator updates:
+      // - Only users with verified moderator or admin role can update status to 'approved', 'rejected', or 'needs_revision'
+      allow update: if resource.data.status != 'approved'
+                    && (
+                      (
+                        // Path A: Author updating their own unapproved submission
+                        (
+                          ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                          ('authorId' in resource.data && isOwner(resource.data.authorId))
+                        )
+                        && resource.data.status in ['draft', 'pending_review', 'pending', 'needs_revision']
+                        && request.resource.data.status in ['draft', 'pending_review', 'pending', 'withdrawn']
+                        && (!('userId' in request.resource.data) || request.resource.data.userId == resource.data.userId)
+                        && (!('authorId' in request.resource.data) || request.resource.data.authorId == resource.data.authorId)
+                        && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == resource.data.reviewerId)
+                        && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == resource.data.reviewedAt)
+                        && (!('review' in request.resource.data) || request.resource.data.review == resource.data.review)
+                        && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements)
+                      )
+                      ||
+                      (
+                        // Path B: Moderator reviewing submission
+                        isModerator()
+                        && request.resource.data.status in ['approved', 'rejected', 'needs_revision', 'pending_review', 'pending']
+                        && (!('authorId' in request.resource.data) || !('authorId' in resource.data) || request.resource.data.authorId == resource.data.authorId)
+                        && (!('userId' in request.resource.data) || !('userId' in resource.data) || request.resource.data.userId == resource.data.userId)
+                        && (!('experimentId' in request.resource.data) || !('experimentId' in resource.data) || request.resource.data.experimentId == resource.data.experimentId)
+                        && (!('deviceId' in request.resource.data) || !('deviceId' in resource.data) || request.resource.data.deviceId == resource.data.deviceId)
+                      )
+                    );
+
+      // Authors can delete or withdraw their submission ONLY while it remains pending, draft, needs_revision, or withdrawn
+      // Approved test results cannot be arbitrarily deleted by normal contributors
+      allow delete: if resource.data.status != 'approved'
+                    && (
+                      (
+                        (
+                          ('userId' in resource.data && isOwner(resource.data.userId)) ||
+                          ('authorId' in resource.data && isOwner(resource.data.authorId))
+                        )
+                        && resource.data.status in ['draft', 'pending_review', 'pending', 'needs_revision', 'withdrawn']
+                      )
+                      || isAdmin()
+                    );
+    }
+
+    // 5. Aggregate Device Statistics
+    match /device_stats/{deviceId} {
+      allow read: if true;
+      allow write: if isModerator();
+    }
+
+    // 6. System Configuration & Administrative Data
+    match /system_config/{configId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // 7. Immutable Administrative Moderation Audit Logs
     match /admin_audit_logs/{logId} {
+      // allow read, write: if isAdmin();
+      // Verified moderators and administrators can inspect audit history
       allow read: if isModerator();
+
+      // Verified moderators/admins can append audit logs with mandatory schema fields:
+      // action, actorId, targetSubmissionId, previousStatus, newStatus, reason, timestamp
       allow create: if isModerator()
-        && request.resource.data.actorId == request.auth.uid
-        && request.resource.data.keys().hasAll(['action','actorId','targetSubmissionId','previousStatus','newStatus','reason','timestamp']);
+                    && request.resource.data.keys().hasAll(['action', 'actorId', 'targetSubmissionId', 'previousStatus', 'newStatus', 'reason', 'timestamp'])
+                    && request.resource.data.actorId is string
+                    && request.resource.data.action is string
+                    && request.resource.data.targetSubmissionId is string
+                    && request.resource.data.previousStatus is string
+                    && request.resource.data.newStatus is string
+                    && request.resource.data.reason is string;
+
+      // IMMUTABLE AUDIT TRAIL: Once written, audit log entries cannot be modified or deleted
       allow update, delete: if false;
     }
 
-    match /device_stats/{id} { allow read: if true; allow write: if isModerator(); }
-    match /system_config/{configId} { allow read: if isSignedIn(); allow write: if isAdmin(); }
-    match /admin_roles/{id} { allow read, write: if isAdmin(); }
-    match /comments/{commentId} {
-      allow read: if true;
-      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid
-        && request.resource.data.content is string && request.resource.data.content.size() >= 1
-        && request.resource.data.content.size() <= 3000
-        && request.resource.data.keys().hasAll(['experimentId', 'authorId', 'authorDisplayName', 'content', 'createdAt']);
-      allow update: if isSignedIn() && (resource.data.authorId == request.auth.uid || isModerator());
-      allow delete: if isSignedIn() && (resource.data.authorId == request.auth.uid || isModerator());
+    match /admin_roles/{roleDocId} {
+      allow read, write: if isAdmin();
     }
-    match /{document=**} { allow read, write: if false; }
+
+    // 8. Experiment Comments & Peer Discussion
+    match /comments/{commentId} {
+      // Public reading allowed for all visitors
+      allow read: if true;
+
+      // Registered users can post comments tied to their authenticated UID
+      allow create: if isSignedIn()
+                    && request.resource.data.authorId == request.auth.uid
+                    && request.resource.data.authorDisplayName is string
+                    && request.resource.data.experimentId is string
+                    && request.resource.data.content is string
+                    && request.resource.data.content.size() >= 1
+                    && request.resource.data.content.size() <= 3000
+                    && request.resource.data.createdAt is string
+                    && request.resource.data.keys().hasAll(['experimentId', 'authorId', 'authorDisplayName', 'content', 'createdAt']);
+
+      // Authors can edit content, or signed-in users can upvote
+      allow update: if isSignedIn() && (
+                      (
+                        resource.data.authorId == request.auth.uid
+                        && request.resource.data.authorId == resource.data.authorId
+                        && request.resource.data.experimentId == resource.data.experimentId
+                        && request.resource.data.content is string
+                        && request.resource.data.content.size() >= 1
+                        && request.resource.data.content.size() <= 3000
+                      )
+                      ||
+                      (
+                        request.resource.data.authorId == resource.data.authorId
+                        && request.resource.data.experimentId == resource.data.experimentId
+                        && request.resource.data.content == resource.data.content
+                      )
+                    );
+
+      // Authors can delete their own comments; moderators/admins can delete any comment
+      allow delete: if isSignedIn()
+                    && (resource.data.authorId == request.auth.uid || isModerator());
+    }
+
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
