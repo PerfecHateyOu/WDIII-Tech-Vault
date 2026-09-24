@@ -273,7 +273,7 @@ export function validateSubmissionMeasurements(
   measurements: Record<string, any>
 ): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
-  if (!measurements || typeof measurements !== 'object') {
+  if (!measurements || typeof measurements !== 'object' || Array.isArray(measurements)) {
     return { valid: false, errors: ['Measurements payload must be an object.'] };
   }
 
@@ -303,7 +303,7 @@ export function validateSubmissionMeasurements(
     
     if (field.type === 'number') {
       const num = Number(val);
-      if (isNaN(num)) {
+      if (!Number.isFinite(num)) {
         errors.push(`Measurement '${field.key}' must be a valid number.`);
       } else {
         if (field.min !== undefined && num < field.min) {

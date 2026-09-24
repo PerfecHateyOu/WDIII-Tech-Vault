@@ -13,7 +13,7 @@ import fs from 'fs';
 import path from 'path';
 import { OFFICIAL_EXPERIMENTS } from '../src/data/official-experiments.js';
 import { Phase6ASchemas } from '../src/types/community-hub-schema.ts';
-import { createSubmission, reviewSubmission } from '../src/services/database.js';
+import { createSubmission, reviewSubmission, validateMeasurementsAgainstExperiment, getApprovedSubmissionsPage } from '../src/services/database.js';
 
 let passed = 0;
 let failed = 0;
@@ -118,6 +118,41 @@ assert(exp5.allowedMeasurementKeys.includes('screenOnTimeHours'), 'Exp 5 schema 
 
 const exp9 = OFFICIAL_EXPERIMENTS.find(e => e.id === 'exp9');
 assert(exp9.allowedMeasurementKeys.includes('telemetryHostsContacted'), 'Exp 9 schema contains telemetryHostsContacted metric');
+
+// --- Measurement validation gate ---
+console.log('\n--- 2A. Measurement Payload Validation ---');
+const validationExperiment = {
+  measurementSchema: [
+    { key: 'numericValue', type: 'number', required: true, min: 0, max: 10 },
+    { key: 'textValue', type: 'string', required: true },
+    { key: 'flagValue', type: 'boolean', required: true }
+  ],
+  allowedMeasurementKeys: ['numericValue', 'textValue', 'flagValue']
+};
+assert(
+  validateMeasurementsAgainstExperiment(validationExperiment, { numericValue: 5, textValue: 'ok', flagValue: true }).valid,
+  'Measurement validator accepts number, string, and boolean fields'
+);
+assert(
+  !validateMeasurementsAgainstExperiment(validationExperiment, { numericValue: 5, textValue: 'ok' }).valid,
+  'Measurement validator rejects missing required fields'
+);
+assert(
+  !validateMeasurementsAgainstExperiment(validationExperiment, { numericValue: 11, textValue: 'ok', flagValue: true }).valid,
+  'Measurement validator rejects out-of-range numbers'
+);
+assert(
+  !validateMeasurementsAgainstExperiment(validationExperiment, { numericValue: Infinity, textValue: 'ok', flagValue: true }).valid,
+  'Measurement validator rejects non-finite numbers'
+);
+assert(
+  !validateMeasurementsAgainstExperiment(validationExperiment, { numericValue: 5, textValue: 'ok', flagValue: true, injected: 1 }).valid,
+  'Measurement validator rejects injected keys'
+);
+assert(
+  !validateMeasurementsAgainstExperiment(validationExperiment, []).valid,
+  'Measurement validator rejects array payloads'
+);
 
 // --- 3. JSON Schemas Exported from community-hub-schema.ts ---
 console.log('\n--- 3. JSON Schema Definitions in community-hub-schema.ts ---');
@@ -232,6 +267,19 @@ assert(Array.isArray(testSubmission.submission.evidence), 'Created submission ha
 assert(testSubmission.submission.provenance.source === 'community', 'Created submission has provenance source: "community"');
 assert(testSubmission.submission.provenance.protocolVersion === '1.0.0', 'Created submission has protocolVersion');
 
+// Contributors cannot approve their own pending submission.
+let selfApprovalDenied = false;
+try {
+  await reviewSubmission(testSubmission.submission.id, {
+    status: 'approved',
+    reviewerId: 'test-researcher-1',
+    reviewerName: 'Dr. Evelyn Vance'
+  });
+} catch (err) {
+  selfApprovalDenied = err.message.includes('Self-approval');
+}
+assert(selfApprovalDenied, 'Submission author cannot approve their own pending submission');
+
 // Test reviewSubmission transition to approved
 const reviewResult = await reviewSubmission(testSubmission.submission.id, {
   status: 'approved',
@@ -256,6 +304,21 @@ try {
   assert(err.message.includes('Immutable Record'), 'Reviewing approved submission throws immutable record error');
 }
 assert(immutableErrorThrown, 'Approved submission is strictly protected against direct updates');
+
+// --- Query and pagination gate ---
+console.log('\n--- 6. Approved Submission Query & Pagination ---');
+const firstPage = await getApprovedSubmissionsPage({
+  deviceId: 'apple-iphone-17-pro-max',
+  experimentId: 'exp1',
+  pageSize: 1
+});
+assert(firstPage.submissions.length === 1, 'Approved query returns the first page');
+assert(firstPage.submissions[0].status === 'approved', 'Approved query excludes pending submissions');
+assert(firstPage.hasMore === false, 'Approved query reports the final page boundary');
+const emptyPage = await getApprovedSubmissionsPage({ experimentId: 'does-not-exist' });
+assert(emptyPage.submissions.length === 0 && emptyPage.hasMore === false, 'Approved query returns an empty result for unknown experiments');
+const wrongDevicePage = await getApprovedSubmissionsPage({ deviceId: 'device-does-not-exist' });
+assert(wrongDevicePage.submissions.length === 0, 'Approved query excludes submissions for other devices');
 
 console.log(`\n================================================================================`);
 console.log(`   PHASE 6A FOUNDATION AUDIT: ${passed} PASSED, ${failed} FAILED`);
