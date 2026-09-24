@@ -5,9 +5,9 @@ const firestore = fs.readFileSync('firestore.rules', 'utf8');
 const storage = fs.readFileSync('storage.rules', 'utf8');
 
 assert.match(firestore, /request\.resource\.data\.status == 'pending_review'/);
-assert.match(firestore, /request\.resource\.data\.status != 'approved'/);
+assert.match(firestore, /resource\.data\.status != 'approved'/);
 assert.match(firestore, /affectedKeys\(\)\.hasOnly/);
-assert.match(firestore, /validMeasurements\(/);
+assert.match(firestore, /isValidMeasurementPayload\(/);
 assert.match(firestore, /reviewerId == null/);
 assert.match(storage, /allow update: if false/);
 assert.match(storage, /request\.resource\.size <= 8 \* 1024 \* 1024/);

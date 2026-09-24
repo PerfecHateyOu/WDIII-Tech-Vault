@@ -28,6 +28,58 @@ export async function getModerationQueue({ fb, fs, cursor = null, pageSize = 25 
   return queryPendingSubmissions({ fb, fs, cursor, pageSize });
 }
 
+export async function reviewSubmission({ fb, fs, submissionId, decision } = {}) {
+  const moderator = requireModerator(fb);
+  const validated = validateModerationDecision(decision);
+  const db = fb.getDb?.();
+  if (!db || !fs?.runTransaction) {
+    const error = new Error("Firestore moderation writes are unavailable.");
+    error.code = "FIRESTORE_UNAVAILABLE";
+    throw error;
+  }
+  if (!submissionId) {
+    const error = new Error("A submission ID is required.");
+    error.code = "SUBMISSION_ID_REQUIRED";
+    throw error;
+  }
+
+  const submissionRef = fs.doc(db, "submissions", submissionId);
+  const auditRef = fs.doc(db, "admin_audit_logs", `${submissionId}_${Date.now()}`);
+  await fs.runTransaction(db, async (transaction) => {
+    const snapshot = await transaction.get(submissionRef);
+    if (!snapshot.exists()) {
+      const error = new Error("Submission was not found.");
+      error.code = "SUBMISSION_NOT_FOUND";
+      throw error;
+    }
+    const current = snapshot.data();
+    if (current.status === "approved") {
+      const error = new Error("Approved submissions cannot be modified.");
+      error.code = "IMMUTABLE_RECORD";
+      throw error;
+    }
+    const now = fs.serverTimestamp();
+    transaction.update(submissionRef, {
+      status: validated.status,
+      reviewerId: moderator.uid,
+      reviewedAt: now,
+      review: validated.reason,
+      reviewNotes: validated.reason,
+      updatedAt: now
+    });
+    transaction.set(auditRef, {
+      action: "submission_review",
+      actorId: moderator.uid,
+      targetSubmissionId: submissionId,
+      previousStatus: current.status,
+      newStatus: validated.status,
+      reason: validated.reason,
+      timestamp: now
+    });
+  });
+  return { success: true, id: submissionId, status: validated.status };
+}
+
 /**
  * Validate review input before the write path. A production deployment should
  * execute the submission update and audit-log append in a trusted transaction.

@@ -4,7 +4,7 @@ import { validateModerationDecision } from "../src/services/moderation-service.j
 
 const storage = fs.readFileSync("storage.rules", "utf8");
 assert.match(storage, /match \/evidence\/\{userId\}\/\{fileName\}/);
-assert.match(storage, /allow create: if isOwner\(userId\)/);
+assert.match(storage, /allow create: if owner\(userId\)/);
 assert.match(storage, /allow update: if false/);
 assert.match(storage, /request\.resource\.size <= 10 \* 1024 \* 1024/);
 assert.throws(() => validateModerationDecision({ status: "rejected" }), /reason is required/i);

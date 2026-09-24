@@ -151,6 +151,21 @@ export async function getExperimentById(experimentId) {
 
 export async function getApprovedSubmissionsForDevice(deviceId) {
   if (!deviceId) return [];
+  if (typeof window !== "undefined") {
+    const { fb, fs } = await getSdk();
+    if (!fb?.isFirebaseReady?.() || !fs) {
+      const error = new Error("Firestore is unavailable.");
+      error.code = "FIRESTORE_UNAVAILABLE";
+      throw error;
+    }
+    const result = await queryApprovedSubmissions({
+      fb,
+      fs,
+      field: "deviceId",
+      value: String(deviceId)
+    });
+    return result.items;
+  }
   return clone(
     [...submissionStore.values()]
       .filter(item => item && item.deviceId === String(deviceId) && item.status === "approved")
@@ -194,12 +209,11 @@ export async function createSubmission(payload = {}) {
     measurements,
     conditions: payload.conditions || {},
     evidence,
-    review: {
-      reviewerId: null,
-      reviewerName: null,
-      notes: null,
-      reviewedAt: null
-    },
+    userId: payload.userId,
+    reviewerId: null,
+    reviewedAt: null,
+    review: null,
+    reviewNotes: null,
     provenance: {
       source: "community",
       protocolVersion: "1.0.0",
@@ -227,7 +241,17 @@ export async function createSubmission(payload = {}) {
     updatedAt: sanitized.updatedAt
   };
 
-  submissionStore.set(id, submission);
+  if (typeof window !== "undefined") {
+    const { fb, fs } = await getSdk();
+    if (!fb?.isFirebaseReady?.() || !fs) {
+      const error = new Error("Firestore is unavailable.");
+      error.code = "FIRESTORE_UNAVAILABLE";
+      throw error;
+    }
+    await fs.setDoc(fs.doc(fb.getDb(), "submissions", id), submission);
+  } else {
+    submissionStore.set(id, submission);
+  }
 
   return {
     success: true,
@@ -238,7 +262,19 @@ export async function createSubmission(payload = {}) {
 
 export async function reviewSubmission(submissionId, options = {}) {
   const id = submissionId || options.submissionId;
-  const record = submissionStore.get(String(id));
+  let record = submissionStore.get(String(id));
+  let fs = null;
+  let fb = null;
+  if (typeof window !== "undefined") {
+    ({ fb, fs } = await getSdk());
+    if (!fb?.isFirebaseReady?.() || !fs) {
+      const error = new Error("Firestore is unavailable.");
+      error.code = "FIRESTORE_UNAVAILABLE";
+      throw error;
+    }
+    const snapshot = await fs.getDoc(fs.doc(fb.getDb(), "submissions", String(id)));
+    record = snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+  }
 
   if (!record) {
     const error = new Error(`Submission '${id}' was not found.`);
@@ -278,7 +314,18 @@ export async function reviewSubmission(submissionId, options = {}) {
     updatedAt: new Date().toISOString()
   };
 
-  submissionStore.set(String(id), updated);
+  if (typeof window !== "undefined") {
+    await fs.updateDoc(fs.doc(fb.getDb(), "submissions", String(id)), {
+      status: updated.status,
+      reviewerId: updated.review.reviewerId,
+      reviewedAt: updated.review.reviewedAt,
+      review: updated.review.notes,
+      reviewNotes: updated.review.notes,
+      updatedAt: updated.updatedAt
+    });
+  } else {
+    submissionStore.set(String(id), updated);
+  }
 
   return {
     success: true,
