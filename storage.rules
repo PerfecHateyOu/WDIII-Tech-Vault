@@ -19,11 +19,11 @@ service firebase.storage {
       return (request.resource.contentType.matches('image/.*') && request.resource.size <= 8 * 1024 * 1024) ||
         (!request.resource.contentType.matches('image/.*') && request.resource.size <= 10 * 1024 * 1024);
     }
-    match /evidence/{uid}/{fileName} {
-      allow read: if owner(uid) || moderator();
-      allow create: if owner(uid) && evidenceType() && evidenceSize();
+    match /evidence/{userId}/{fileName} {
+      allow read: if owner(userId) || moderator();
+      allow create: if owner(userId) && evidenceType() && evidenceSize();
       allow update: if false;
-      allow delete: if owner(uid) || moderator();
+      allow delete: if owner(userId) || moderator();
     }
     match /avatars/{uid}/{fileName} {
       allow read: if true;

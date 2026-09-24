@@ -1,37 +1,32 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function owner(uid) { return signedIn() && request.auth.uid == uid; }
-    // Claims are the single authorization source shared with Storage rules.
-    // Role claims must be provisioned by trusted server/Admin SDK code.
-    function claimRole() {
-      return signedIn() && ('role' in request.auth.token)
-        ? request.auth.token.role
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function getUserRole() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
         : 'contributor';
     }
-    function moderator() {
-      return signedIn() && (claimRole() in ['moderator', 'admin', 'owner'] ||
+    function isModerator() {
+      return isSignedIn() && (getUserRole() in ['moderator', 'admin', 'owner'] ||
         (('email' in request.auth.token) && request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'));
     }
-    function admin() {
-      return signedIn() && (claimRole() in ['admin', 'owner'] ||
+    function isAdmin() {
+      return isSignedIn() && (getUserRole() in ['admin', 'owner'] ||
         (('email' in request.auth.token) && request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'));
     }
-    function systemOwner() {
-      return signedIn() && (claimRole() == 'owner' ||
+    function isSystemOwner() {
+      return isSignedIn() && (getUserRole() == 'owner' ||
         (('email' in request.auth.token) && request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'));
     }
-    function experimentExists(id) { return exists(/databases/$(database)/documents/experiments/$(id)); }
-    function experiment(id) { return get(/databases/$(database)/documents/experiments/$(id)).data; }
-    // Fail closed: an experiment must publish both an allow-list and a schema.
-    // Client-side validation is never the authorization boundary.
-    function validMeasurements(id, values) {
-      return values is map && experimentExists(id)
-        && ('allowedMeasurementKeys' in experiment(id))
-        && ('measurementSchema' in experiment(id))
-        && experiment(id).measurementSchema is list
-        && values.keys().hasOnly(experiment(id).allowedMeasurementKeys);
+    function getExperimentDoc(expId) { return get(/databases/$(database)/documents/experiments/$(expId)).data; }
+    function isValidMeasurementPayload(expId, values) {
+      return values is map && exists(/databases/$(database)/documents/experiments/$(expId))
+        && ('allowedMeasurementKeys' in getExperimentDoc(expId))
+        && ('measurementSchema' in getExperimentDoc(expId))
+        && getExperimentDoc(expId).measurementSchema is list
+        && values.keys().hasOnly(getExperimentDoc(expId).allowedMeasurementKeys);
     }
     function sameIdentity(old, next) {
       return next.authorId == old.authorId && next.userId == old.userId
@@ -43,45 +38,48 @@ service cloud.firestore {
         && next.review == old.review && next.reviewNotes == old.reviewNotes;
     }
 
-    match /users/{uid} {
-      allow read: if signedIn();
-      allow create: if owner(uid) && request.resource.data.uid == uid
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId) && request.resource.data.uid == userId
         && request.resource.data.role == 'contributor'
         && (!('reputationScore' in request.resource.data) || request.resource.data.reputationScore == 0)
-        || (systemOwner() && request.resource.data.uid == uid && request.resource.data.role == 'owner');
-      allow update: if (owner(uid)
-        && request.resource.data.uid == uid
+        || (isSystemOwner() && request.resource.data.uid == userId && request.resource.data.role == 'owner');
+      allow update: if ((isOwner(userId)
+        && request.resource.data.uid == userId
         && request.resource.data.role == resource.data.role
         && request.resource.data.reputationScore == resource.data.reputationScore)
-        || admin();
-      allow delete: if admin();
+        || isAdmin());
+      allow delete: if isAdmin();
     }
 
-    match /devices/{id} {
+    match /devices/{deviceId} {
       allow read: if true;
-      allow write: if admin()
+      allow create, update: if isAdmin()
         && request.resource.data.keys().hasAll(['id','brand','model','category','origin','status'])
-        && request.resource.data.id == id;
+        && request.resource.data.id == deviceId;
+      allow delete: if isAdmin();
     }
 
-    match /experiments/{id} {
+    match /experiments/{experimentId} {
       allow read: if true;
-      allow write: if admin()
+      allow create, update: if isAdmin()
         && request.resource.data.keys().hasAll(['id','title','category','status','origin','measurementSchema','allowedMeasurementKeys'])
-        && request.resource.data.id == id
+        && request.resource.data.id == experimentId
         && request.resource.data.measurementSchema is list
         && request.resource.data.allowedMeasurementKeys is list;
+      allow delete: if isAdmin();
     }
 
-    match /submissions/{id} {
-      allow read: if resource.data.status == 'approved' || (signedIn() &&
-        (resource.data.authorId == request.auth.uid || resource.data.userId == request.auth.uid || moderator()));
+    match /submissions/{submissionId} {
+      allow read: if resource.data.status == 'approved' || (isSignedIn() &&
+        (resource.data.authorId == request.auth.uid || resource.data.userId == request.auth.uid || isModerator()));
 
-      // Contributors may only originate a submission in the review queue.
-      allow create: if signedIn()
+      // Contributors may only originate a submission in the review queue and may not
+      // self-approve by switching a submission directly from pending to approved.
+      allow create: if isSignedIn()
         && request.resource.data.authorId == request.auth.uid
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.status == 'pending_review'
+        && (request.resource.data.status == 'pending_review' || request.resource.data.status == 'pending')
         && request.resource.data.type == 'replication'
         && request.resource.data.provenance.source == 'community'
         && request.resource.data.reviewerId == null
@@ -89,45 +87,43 @@ service cloud.firestore {
         && request.resource.data.review == null
         && request.resource.data.reviewNotes == null
         && request.resource.data.keys().hasAll(['authorId','userId','deviceId','experimentId','type','status','measurements','conditions','evidence','provenance'])
-        && validMeasurements(request.resource.data.experimentId, request.resource.data.measurements);
+        && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements);
 
-      // Approved records are immutable. Authors can edit only content fields and
-      // cannot change ownership, protocol identity, status into a review decision,
-      // or any moderator metadata.
       allow update: if resource.data.status != 'approved' && (
-        (owner(resource.data.authorId)
+        (isOwner(resource.data.authorId)
           && sameIdentity(resource.data, request.resource.data)
           && resource.data.status in ['pending_review','needs_revision','draft']
-          && request.resource.data.status in ['pending_review','withdrawn']
+          && request.resource.data.status in ['pending_review','withdrawn','pending']
           && protectedReviewFieldsUnchanged(resource.data, request.resource.data)
-          && validMeasurements(request.resource.data.experimentId, request.resource.data.measurements)
+          && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements)
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','measurements','conditions','notes','evidence','evidenceReferences','updatedAt','submittedAt']))
-        || (moderator()
+        || (isModerator()
           && sameIdentity(resource.data, request.resource.data)
-          && request.resource.data.status in ['approved','rejected','needs_revision','pending_review']
+          && request.resource.data.status in ['approved','rejected','needs_revision','pending_review','pending']
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt','reviewerId','reviewedAt','review','reviewNotes']))
       );
-      allow delete: if admin() || (owner(resource.data.authorId) && resource.data.status != 'approved');
+      allow delete: if isAdmin() || (isOwner(resource.data.authorId) && resource.data.status != 'approved');
     }
 
-    match /admin_audit_logs/{id} {
-      allow read: if moderator();
-      allow create: if moderator()
+    match /admin_audit_logs/{logId} {
+      allow read: if isModerator();
+      allow create: if isModerator()
         && request.resource.data.actorId == request.auth.uid
         && request.resource.data.keys().hasAll(['action','actorId','targetSubmissionId','previousStatus','newStatus','reason','timestamp']);
       allow update, delete: if false;
     }
 
-    match /device_stats/{id} { allow read: if true; allow write: if moderator(); }
-    match /system_config/{id} { allow read: if signedIn(); allow write: if admin(); }
-    match /admin_roles/{id} { allow read, write: if admin(); }
-    match /comments/{id} {
+    match /device_stats/{id} { allow read: if true; allow write: if isModerator(); }
+    match /system_config/{configId} { allow read: if isSignedIn(); allow write: if isAdmin(); }
+    match /admin_roles/{id} { allow read, write: if isAdmin(); }
+    match /comments/{commentId} {
       allow read: if true;
-      allow create: if signedIn() && request.resource.data.authorId == request.auth.uid
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid
         && request.resource.data.content is string && request.resource.data.content.size() >= 1
-        && request.resource.data.content.size() <= 3000;
-      allow update: if signedIn() && (resource.data.authorId == request.auth.uid || moderator());
-      allow delete: if signedIn() && (resource.data.authorId == request.auth.uid || moderator());
+        && request.resource.data.content.size() <= 3000
+        && request.resource.data.keys().hasAll(['experimentId', 'authorId', 'authorDisplayName', 'content', 'createdAt']);
+      allow update: if isSignedIn() && (resource.data.authorId == request.auth.uid || isModerator());
+      allow delete: if isSignedIn() && (resource.data.authorId == request.auth.uid || isModerator());
     }
     match /{document=**} { allow read, write: if false; }
   }
