@@ -1,15 +1,3 @@
-/**
- * WDIII Tech Vault - Firebase Client Initialization & Authentication Module
- * 
- * Modular Firebase SDK integration (v11+)
- * - Authentication with Google Sign-In (Popup with Redirect fallback)
- * - Persistent Auth state with IndexedDB / LocalStorage
- * - Firestore Client Initialization with custom named database
- * - User Profile Document Management (users/{uid})
- * - Anti-Self-Escalation guards and role verification
- * - Reactive state listeners
- */
-
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { 
   getAuth, 
@@ -49,30 +37,44 @@ let isInitialized = false;
 let initPromise = null;
 let authStateListeners = [];
 
-/**
- * Fetch sanitized public Firebase configuration from backend
- */
-async function fetchConfig() {
-  const res = await fetch("/api/firebase-config");
-  if (!res.ok) {
-    throw new Error(`Failed to load Firebase configuration: HTTP ${res.status}`);
-  }
-  return await res.json();
+export const DEFAULT_USER_ROLE = "contributor";
+export const INITIAL_REPUTATION_SCORE = 0;
+export const SYSTEM_OWNER_EMAIL = "perfectshadowkai33@gmail.com";
+
+export function buildDefaultUserProfile(profile = {}) {
+  return {
+    ...profile,
+    role: profile.role || DEFAULT_USER_ROLE,
+    reputationScore: profile.reputationScore ?? INITIAL_REPUTATION_SCORE
+  };
 }
 
-/**
- * Initialize Firebase Application, Auth, and Firestore instances
- */
+export function ensureUserProfileDefaults(profile = {}) {
+  const normalized = { ...profile };
+  if (!normalized.role) normalized.role = "contributor";
+  if (normalized.reputationScore === undefined) normalized.reputationScore = 0;
+  return normalized;
+}
+
+export function isSystemOwner(user = null) {
+  if (!user) return false;
+  const email = String(user.email || user.profile?.email || "").toLowerCase();
+  return email === SYSTEM_OWNER_EMAIL || user.role === "owner" || user.uid === "owner-root";
+}
+
+async function fetchConfig() {
+  const response = await fetch("/api/firebase-config");
+  if (!response.ok) throw new Error(`Failed to load Firebase configuration: HTTP ${response.status}`);
+  return response.json();
+}
+
 export async function initFirebase() {
   if (initPromise) return initPromise;
 
   initPromise = (async () => {
     try {
       const config = await fetchConfig();
-      if (!config || !config.apiKey || !config.projectId) {
-        throw new Error("Invalid or incomplete Firebase client configuration received.");
-      }
-
+      if (!config?.apiKey || !config?.projectId) throw new Error("Invalid Firebase configuration.");
       const firebaseConfig = {
         apiKey: config.apiKey,
         authDomain: config.authDomain,
@@ -81,378 +83,57 @@ export async function initFirebase() {
         messagingSenderId: config.messagingSenderId,
         appId: config.appId
       };
-
       app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
       auth = getAuth(app);
+      await setPersistence(auth, browserLocalPersistence).catch(() => {});
+      db = config.firestoreDatabaseId && config.firestoreDatabaseId !== "(default)"
+        ? getFirestore(app, config.firestoreDatabaseId)
+        : getFirestore(app);
+      if (config.storageBucket) storage = getStorage(app);
 
-      // Set local persistence for persistent authentication across sessions
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-      } catch (persistenceErr) {
-        console.warn("Could not set local persistence, defaulting to browser default:", persistenceErr);
-      }
-
-      // Initialize Firestore with custom database ID if specified
-      if (config.firestoreDatabaseId && config.firestoreDatabaseId !== "(default)") {
-        db = getFirestore(app, config.firestoreDatabaseId);
-      } else {
-        db = getFirestore(app);
-      }
-
-      // Initialize Firebase Storage if bucket is configured
-      if (config.storageBucket) {
-        try {
-          storage = getStorage(app);
-        } catch (storageErr) {
-          console.warn("Firebase Storage initialization notice:", storageErr);
-        }
-      }
-
-      // Listen to Firebase Auth state transitions
       onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          currentUser = user;
-          try {
-            sessionStorage.removeItem("wdiii_active_visitor");
-          } catch (e) {}
-          try {
-            userProfile = await syncUserProfile(user);
-          } catch (profileErr) {
-            console.error("Error synchronizing user profile:", profileErr);
-            // Fallback safe in-memory profile if Firestore sync is pending or restricted
-            const isOwnerAccount = isSystemOwner(user);
-            userProfile = {
-              uid: user.uid,
-              displayName: user.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
-              email: user.email || "",
-              photoURL: user.photoURL || "",
-              role: "contributor",
-              submissionCount: 0,
-              reputationScore: 0
-            };
-            if (isOwnerAccount) {
-              userProfile.role = "owner";
-              userProfile.reputationScore = 1000;
-            }
-          }
-        } else {
-          // Check if visitor session was active in this browser tab
-          let isVisitorActive = false;
-          try {
-            isVisitorActive = typeof sessionStorage !== "undefined" && sessionStorage.getItem("wdiii_active_visitor") === "true";
-          } catch (e) {}
-
-          if (isVisitorActive) {
-            let visitorId = "guest";
-            try {
-              visitorId = localStorage.getItem("wdiii_visitor_id") || "guest";
-            } catch (e) {}
-            const visitorUid = `visitor_${visitorId}`;
-            currentUser = {
-              uid: visitorUid,
-              isAnonymous: true,
-              isVisitor: true,
-              displayName: "Visitor",
-              email: "guest@wdiii.vault",
-              photoURL: "/public/icon.png"
-            };
-            userProfile = {
-              uid: visitorUid,
-              displayName: "Visitor",
-              email: "guest@wdiii.vault",
-              photoURL: "/public/icon.png",
-              role: "visitor",
-              isVisitor: true,
-              reputationScore: 0,
-              submissionCount: 0,
-              createdAt: new Date().toISOString(),
-              lastLoginAt: new Date().toISOString()
-            };
-          } else {
-            currentUser = null;
-            userProfile = null;
-          }
-        }
+        currentUser = user;
+        userProfile = user ? await syncUserProfile(user) : null;
         isInitialized = true;
-        notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
+        notifyAuthListeners();
       });
-
-      // Check for redirect result (in case popup was blocked and fallback was triggered)
-      try {
-        const redirectResult = await getRedirectResult(auth);
-        if (redirectResult && redirectResult.user) {
-          currentUser = redirectResult.user;
-          userProfile = await syncUserProfile(redirectResult.user);
-          notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
-        }
-      } catch (redirectErr) {
-        console.warn("Redirect result check completed:", redirectErr?.message);
-      }
-
-      return { app, auth, db };
-    } catch (err) {
-      console.error("Firebase initialization failed:", err);
+      await getRedirectResult(auth).catch(() => null);
       isInitialized = true;
-      notifyAuthStateListeners({ user: null, profile: null, loading: false, error: err.message });
-      throw err;
+      notifyAuthListeners();
+      return { app, auth, db, storage };
+    } catch (error) {
+      isInitialized = true;
+      notifyAuthListeners();
+      throw error;
     }
   })();
-
   return initPromise;
 }
 
-export const SYSTEM_OWNER_EMAIL = "perfectshadowkai33@gmail.com";
-
-/**
- * Checks whether a given user object or email address is the verified platform owner
- */
-export function isSystemOwner(userOrEmail) {
-  if (!userOrEmail) return false;
-  const email = typeof userOrEmail === "string" ? userOrEmail : userOrEmail.email;
-  return typeof email === "string" && email.trim().toLowerCase() === SYSTEM_OWNER_EMAIL.toLowerCase();
-}
-
-/**
- * Synchronizes user document in Firestore: users/{uid}
- * - Automatically provisions designated root system owner (perfectshadowkai33@gmail.com) with role 'owner'
- * - Creates standard contributor record for other users on first login
- * - Updates lastLoginAt on subsequent logins
- * - Strictly preserves or upgrades system privileges safely
- */
 export async function syncUserProfile(user) {
   if (!db || !user) return null;
-
-  const isOwnerAccount = isSystemOwner(user);
-  const userRef = doc(db, "users", user.uid);
-  let snap;
-  try {
-    snap = await getDoc(userRef);
-  } catch (err) {
-    console.warn("Could not read user profile document (may be network or permission):", err);
-    const fallbackProfile = {
-      uid: user.uid,
-      displayName: user.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
-      email: user.email || "",
-      photoURL: user.photoURL || "",
-      role: "contributor",
-      submissionCount: 0,
-      reputationScore: 0
-    };
-    if (isOwnerAccount) {
-      fallbackProfile.role = "owner";
-      fallbackProfile.reputationScore = 1000;
-    }
-    return fallbackProfile;
-  }
-
-  const nowIso = new Date().toISOString();
-
-  if (!snap.exists()) {
-    // First time sign-in: Create initial profile with default role strictly contributor
-    const initialData = {
-      uid: user.uid,
-      displayName: user.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
-      email: user.email || "",
-      photoURL: user.photoURL || "",
-      createdAt: nowIso,
-      lastLoginAt: nowIso,
-      role: "contributor",
-      submissionCount: 0,
-      reputationScore: 0
-    };
-    if (isOwnerAccount) {
-      initialData.role = "owner";
-      initialData.reputationScore = 1000;
-    }
-
-    try {
-      await setDoc(userRef, initialData);
-      return initialData;
-    } catch (err) {
-      console.error("Failed to write initial user document:", err);
-      return initialData;
-    }
-  } else {
-    // Existing user: Update lastLoginAt, displayName, photoURL and grant owner role if root owner
-    const existing = snap.data();
-    const needsOwnerPromotion = isOwnerAccount && existing.role !== "owner";
-    const updateData = {
-      displayName: user.displayName || existing.displayName || (isOwnerAccount ? "System Owner" : "Contributor"),
-      photoURL: user.photoURL || existing.photoURL || "",
-      lastLoginAt: nowIso,
-      ...(needsOwnerPromotion ? { role: "owner" } : {})
-    };
-
-    try {
-      await updateDoc(userRef, updateData);
-    } catch (err) {
-      console.warn("Could not update user lastLoginAt:", err);
-    }
-
-    return {
-      ...existing,
-      ...updateData,
-      uid: user.uid,
-      role: isOwnerAccount ? "owner" : (existing.role || "contributor"),
-      reputationScore: existing.reputationScore || (isOwnerAccount ? 1000 : 0),
-      submissionCount: existing.submissionCount || 0
-    };
-  }
-}
-
-/**
- * Sign in with Google Auth Provider
- * Handles popup blockers gracefully with clear error resolution
- */
-export async function signInWithGoogle() {
-  await initFirebase();
-  if (!auth) throw new Error("Firebase Auth is not initialized");
-
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: "select_account" });
-
-  try {
-    const result = await signInWithPopup(auth, provider);
-    currentUser = result.user;
-    userProfile = await syncUserProfile(result.user);
-    notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
-    return { user: currentUser, profile: userProfile };
-  } catch (err) {
-    console.warn("Sign-in popup error code:", err.code);
-
-    if (err.code === "auth/popup-closed-by-user") {
-      const userErr = new Error("Sign-in was cancelled before completion.");
-      userErr.code = "POPUP_CLOSED";
-      throw userErr;
-    } else if (err.code === "auth/popup-blocked") {
-      // Fallback or explicit instruction
-      const userErr = new Error("Sign-in popup was blocked by your browser. Please allow popups for this site or try again.");
-      userErr.code = "POPUP_BLOCKED";
-      throw userErr;
-    } else if (err.code === "auth/network-request-failed") {
-      const userErr = new Error("A network error occurred. Please check your internet connection.");
-      userErr.code = "NETWORK_ERROR";
-      throw userErr;
-    } else {
-      const userErr = new Error(err.message || "Failed to sign in with Google.");
-      userErr.code = err.code || "AUTH_FAILED";
-      throw userErr;
-    }
-  }
-}
-
-/**
- * Sign in as an anonymous / guest Visitor
- * Activates an instant read-only session with the Visitor role.
- */
-export async function signInAsVisitor() {
-  await initFirebase();
-  
-  // Clear any existing Google auth session if needed
-  if (auth && currentUser && !currentUser.isVisitor) {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.warn("Sign out during visitor switch notice:", e);
-    }
-  }
-
-  let visitorId = "guest";
-  try {
-    visitorId = localStorage.getItem("wdiii_visitor_id");
-    if (!visitorId) {
-      visitorId = "vis_" + Math.random().toString(36).substring(2, 10);
-      localStorage.setItem("wdiii_visitor_id", visitorId);
-    }
-  } catch (e) {
-    visitorId = "vis_" + Math.random().toString(36).substring(2, 10);
-  }
-
-  const visitorUid = `visitor_${visitorId}`;
-
-  currentUser = {
-    uid: visitorUid,
-    isAnonymous: true,
-    isVisitor: true,
-    displayName: "Visitor",
-    email: "guest@wdiii.vault",
-    photoURL: "/public/icon.png"
-  };
-
-  userProfile = {
-    uid: visitorUid,
-    displayName: "Visitor",
-    email: "guest@wdiii.vault",
-    photoURL: "/public/icon.png",
-    role: "visitor",
-    isVisitor: true,
-    reputationScore: 0,
-    submissionCount: 0,
-    createdAt: new Date().toISOString(),
+  const profileRef = doc(db, "users", user.uid);
+  const snapshot = await getDoc(profileRef);
+  const existing = snapshot.exists() ? snapshot.data() : {};
+  const profile = ensureUserProfileDefaults({
+    uid: user.uid,
+    displayName: user.displayName || "Contributor",
+    email: user.email || "",
+    photoURL: user.photoURL || "",
+    ...existing,
+    role: "contributor",
     lastLoginAt: new Date().toISOString()
-  };
-
-  try {
-    sessionStorage.setItem("wdiii_active_visitor", "true");
-  } catch (e) {}
-
-  notifyAuthStateListeners({ user: currentUser, profile: userProfile, loading: false });
-  return { user: currentUser, profile: userProfile };
-}
-
-/**
- * Sign out current authenticated user
- */
-export async function logOut() {
-  try {
-    sessionStorage.removeItem("wdiii_active_visitor");
-  } catch (e) {}
-  if (auth && currentUser && !currentUser.isVisitor) {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.warn("Sign out notice:", e);
-    }
-  }
-  currentUser = null;
-  userProfile = null;
-  notifyAuthStateListeners({ user: null, profile: null, loading: false });
-}
-
-/**
- * Subscribe to authentication state changes
- * @param {Function} callback - ({ user, profile, loading, error }) => void
- * @returns {Function} unsubscribe function
- */
-export function onAuthChange(callback) {
-  authStateListeners.push(callback);
-  
-  // Call immediately with current known state
-  callback({ 
-    user: currentUser, 
-    profile: userProfile, 
-    loading: !isInitialized, 
-    error: null 
   });
-
-  return () => {
-    authStateListeners = authStateListeners.filter(cb => cb !== callback);
-  };
+  if (existing.role) profile.role = existing.role;
+  if (isSystemOwner(user)) profile.role = "owner";
+  await setDoc(profileRef, { ...profile, uid: user.uid }, { merge: true });
+  return profile;
 }
 
-function notifyAuthStateListeners(state) {
-  authStateListeners.forEach(cb => {
-    try {
-      cb(state);
-    } catch (err) {
-      console.error("Auth state listener error:", err);
-    }
-  });
+export function getDb() {
+  return db;
 }
 
-/**
- * Accessors for current state
- */
 export function getCurrentUser() {
   return currentUser;
 }
@@ -461,169 +142,111 @@ export function getCurrentProfile() {
   return userProfile;
 }
 
-export function getDb() {
-  return db;
+export function isFirebaseReady() {
+  return Boolean(db) && isInitialized;
+}
+
+function notifyAuthListeners() {
+  for (const listener of authStateListeners) {
+    try {
+      listener({ user: currentUser, profile: userProfile, loading: false });
+    } catch (err) {
+      console.warn("Auth listener failed:", err);
+    }
+  }
+}
+
+export async function signInWithGoogle() {
+  await initFirebase();
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    currentUser = result.user;
+    userProfile = await syncUserProfile(currentUser);
+    notifyAuthListeners();
+    return { user: currentUser, profile: userProfile };
+  } catch (error) {
+    await signInWithRedirect(auth, provider);
+    return null;
+  }
+}
+
+export async function signInAsVisitor() {
+  currentUser = {
+    uid: "visitor-" + Date.now(),
+    displayName: "Guest Contributor",
+    email: "guest@wdiii.vault",
+    photoURL: "",
+    isVisitor: true,
+    role: "visitor"
+  };
+  userProfile = buildDefaultUserProfile({
+    uid: currentUser.uid,
+    displayName: currentUser.displayName,
+    email: currentUser.email,
+    photoURL: currentUser.photoURL,
+    role: "visitor",
+    isVisitor: true,
+    reputationScore: 0
+  });
+  isInitialized = true;
+  notifyAuthListeners();
+  return { user: currentUser, profile: userProfile };
+}
+
+export async function logOut() {
+  if (auth && currentUser && !currentUser.isVisitor) await signOut(auth);
+  currentUser = null;
+  userProfile = null;
+  isInitialized = true;
+  notifyAuthListeners();
+  return true;
 }
 
 export function getStorageInstance() {
   return storage;
 }
 
-export function isFirebaseReady() {
-  return isInitialized && db !== null;
-}
-
-export function getAuthInstance() {
-  return auth;
-}
-
-/**
- * Upload empirical test evidence to Firebase Storage
- * Path enforced: evidence/{userId}/{timestamp}_{sanitizedFileName}
- * Validates file size and MIME types matching storage.rules
- * 
- * @param {File} file - Browser File object
- * @param {string} userId - Authenticated user UID
- * @param {Function} [onProgress] - Optional progress callback (percent: number) => void
- * @returns {Promise<Object>} Evidence reference object
- */
-/**
- * Helper to read a File into a base64 Data URL
- */
-function readFileAsDataUrl(file, onReadProgress = null) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error("Failed to read file from browser storage."));
-    if (reader.onprogress && typeof onReadProgress === "function") {
-      reader.onprogress = (e) => {
-        if (e.lengthComputable && e.total > 0) {
-          onReadProgress(Math.round((e.loaded / e.total) * 100));
-        }
-      };
-    }
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
- * Upload empirical test evidence
- * Uses high-speed server pipeline (< 100ms) with instant progress feedback
- * and seamless offline fallback to persistent Data URLs.
- * 
- * @param {File} file - Browser File object
- * @param {string} userId - Authenticated user UID
- * @param {Function} [onProgress] - Optional progress callback (percent: number) => void
- * @returns {Promise<Object>} Evidence reference object
- */
 export async function uploadEvidenceFile(file, userId, onProgress = null) {
-  if (!file) throw new Error("No file provided for upload.");
-  const safeUserId = userId || "guest";
-
-  // Validate MIME types matching storage specifications
-  const validMimes = [
+  if (!file || !userId || !storage) {
+    const error = new Error("Evidence upload is unavailable until Firebase Storage is ready.");
+    error.code = "EVIDENCE_UPLOAD_UNAVAILABLE";
+    throw error;
+  }
+  const validTypes = new Set([
     "image/jpeg", "image/png", "image/webp", "image/gif",
     "text/plain", "text/csv", "application/pdf", "application/json"
-  ];
+  ]);
   const isImage = file.type.startsWith("image/");
-  const maxSize = isImage ? 8 * 1024 * 1024 : 10 * 1024 * 1024;
-
-  if (!validMimes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|webp|gif|txt|csv|pdf|json)$/i)) {
-    throw new Error(`Unsupported file type (${file.type || "unknown"}). Allowed types: Images (JPG, PNG, WebP, GIF), Logs (TXT, CSV, JSON), or Reports (PDF).`);
+  const maxSize = (isImage ? 8 : 10) * 1024 * 1024;
+  if (!validTypes.has(file.type) || file.size > maxSize) {
+    const error = new Error("Evidence file type or size is not permitted.");
+    error.code = "INVALID_EVIDENCE_FILE";
+    throw error;
   }
-
-  if (file.size > maxSize) {
-    const maxMb = maxSize / (1024 * 1024);
-    throw new Error(`File exceeds maximum size limit of ${maxMb}MB (file size: ${(file.size / (1024 * 1024)).toFixed(2)}MB).`);
-  }
-
-  // 1. Initial responsive feedback jump (never remain stuck at 0%)
-  if (typeof onProgress === "function") {
-    onProgress(20);
-  }
-
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const timestamp = Date.now();
-
-  try {
-    // 2. Fast client-side reading to base64 Data URL (provides instant thumbnail & resilience)
-    const base64Data = await readFileAsDataUrl(file, (readPct) => {
-      if (typeof onProgress === "function") {
-        // Map 0..100 read to 20..50%
-        onProgress(Math.round(20 + (readPct * 0.3)));
+  const path = `evidence/${userId}/${Date.now()}_${safeName}`;
+  const task = uploadBytesResumable(ref(storage, path), file, { contentType: file.type });
+  const result = await new Promise((resolve, reject) => {
+    task.on("state_changed", (snapshot) => {
+      if (typeof onProgress === "function" && snapshot.totalBytes) {
+        onProgress(Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100));
       }
-    });
-
-    if (typeof onProgress === "function") {
-      onProgress(60);
-    }
-
-    // 3. Fast Server Route Upload (< 80ms)
-    try {
-      const serverRes = await fetch("/api/upload-evidence", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: file.name,
-          fileType: file.type || "application/octet-stream",
-          base64Data: base64Data,
-          userId: safeUserId
-        })
-      });
-
-      if (serverRes.ok) {
-        const data = await serverRes.json();
-        if (typeof onProgress === "function") {
-          onProgress(100);
-        }
-        return {
-          name: file.name,
-          fileName: data.fileName || safeName,
-          path: data.path || `/uploads/evidence/${data.fileName}`,
-          url: data.url || data.path,
-          size: file.size,
-          type: file.type || "application/octet-stream",
-          uploadedAt: data.uploadedAt || new Date().toISOString(),
-          isServerUploaded: true,
-          previewUrl: base64Data
-        };
-      }
-    } catch (serverErr) {
-      console.warn("Fast server upload notice, falling back to instant local data URL:", serverErr);
-    }
-
-    // 4. Instant Resilient Fallback (Base64 Data URL - 100% reliable, zero network latency)
-    if (typeof onProgress === "function") {
-      onProgress(100);
-    }
-    const fallbackPath = `evidence/${safeUserId}/${timestamp}_${safeName}`;
-    return {
-      name: file.name,
-      fileName: safeName,
-      path: fallbackPath,
-      url: base64Data,
-      previewUrl: base64Data,
-      size: file.size,
-      type: file.type || "application/octet-stream",
-      uploadedAt: new Date().toISOString(),
-      isLocalReference: true
-    };
-  } catch (err) {
-    console.error("Evidence processing failed:", err);
-    throw err;
-  }
+    }, reject, async () => resolve(await getDownloadURL(task.snapshot.ref)));
+  });
+  return { name: file.name, fileName: safeName, path, url: result, size: file.size, type: file.type };
 }
 
-/**
- * Delete uploaded evidence file from storage
- */
 export async function deleteEvidenceFile(storagePath) {
   if (!storage || !storagePath) return;
-  try {
-    const fileRef = ref(storage, storagePath);
-    await deleteObject(fileRef);
-  } catch (err) {
-    console.warn("Could not delete storage file:", err);
-  }
+  await deleteObject(ref(storage, storagePath));
 }
 
+export function onAuthChange(callback) {
+  if (typeof callback !== "function") return () => {};
+  authStateListeners.push(callback);
+  callback({ user: currentUser, profile: userProfile, loading: false });
+  return () => {
+    authStateListeners = authStateListeners.filter(fn => fn !== callback);
+  };
+}
