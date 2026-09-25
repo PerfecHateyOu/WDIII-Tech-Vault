@@ -22,8 +22,8 @@
     "name": "Consumer Tech Documentation",
     "headline": "Consumer Tech Documentation — Real-world experiments and findings",
     "description": "Real-world experiments, case studies, and documented findings across repair, service, software, and hardware.",
-    "version": "V5.7.1",
-    "dateModified": "2026-09-23",
+    "version": "V5.7.2",
+    "dateModified": "2026-09-26",
     "author": { "@type": "Person", "name": "WDIII" },
     "publisher": { "@type": "Organization", "name": "TechStack Archive" },
     "hasPart": [
@@ -37,7 +37,8 @@
       { "@type": "TechArticle", "name": "Experiment 7: Pixel Pro Generations Findings" },
       { "@type": "TechArticle", "name": "Experiment 9: Comprehensive Apple Ecosystem Security Audit" },
       { "@type": "TechArticle", "name": "Queued Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol", "disambiguatingDescription": "Experiment 8 is queued and currently being reworked." },
-      { "@type": "TechArticle", "name": "Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey", "disambiguatingDescription": "Paused. Longitudinal 12-month survey." }
+      { "@type": "TechArticle", "name": "Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey", "disambiguatingDescription": "Paused. Longitudinal 12-month survey." },
+      { "@type": "TechArticle", "name": "Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e", "disambiguatingDescription": "In Progress. Validating Apple iOS 27 performance claims and isolated Gemini, Claude, and ChatGPT Siri AI integration." }
     ]
   }
   </script>
@@ -177,7 +178,7 @@
       <a href="#/logo" class="btnOpenLogoModal" style="color:var(--td-info); font-weight:500;">🏷️ Brand Logo</a>
     </nav>
     <p style="margin:0; display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
-      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 23, 2026 (V5.7.1) |</span>
+      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 26, 2026 (V5.7.2) |</span>
       <a href="#/logo" class="wdiii-mini-badge btnOpenLogoModal" title="WDIII Official Brand" style="text-decoration:none;">
         <img src="/logo.svg" alt="WDIII" loading="lazy" style="height:12px; width:auto; display:block;" />
       </a>
@@ -1932,6 +1933,68 @@ function buildQueued() {
           <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Expected Deliverables</h4>
           <ul style="margin:1rem 0; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc;"><li style="margin-bottom:0.25rem;">Performance regression curves (per OS version)</li><li style="margin-bottom:0.25rem;">Quarterly stability reports</li><li style="margin-bottom:0.25rem;">Battery efficiency comparison over time</li><li style="margin-bottom:0.25rem;">App compatibility matrix and breaking change log</li><li style="margin-bottom:0.25rem;">Update impact analysis (minor version degradation patterns)</li><li style="margin-bottom:0.25rem;">Recommendations for optimal update timing</li></ul>
           ${statusBox("var(--td-warning)","Paused. Devices were provisioned and data collection commenced at iOS 26.x baseline / iOS 27.x launch. Will resume from last collected data point.")}
+        </div>
+      </article>
+      <article id="queue3" data-search="queued in-progress active experiment 12 ios 27 performance siri ai chatbot integration iphone 16e gemini claude chatgpt responsiveness battery apple c1" class="td-experiment" style="border-left:4px solid var(--td-info); opacity:0.95; margin-top:2.5rem;">
+        <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
+          <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-info-bg); color:var(--td-info); border:1px solid var(--td-info);">Active Testing</span>
+          <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Experiment 12: iOS 27 Performance &amp; AI Chatbot Integration on iPhone 16e</h3>
+          ${statusBadge("progress","In Progress")}
+        </div>
+        <div class="td-experiment-body">
+          <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; margin:1.5rem 0; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Target Device</span><span style="font-size:0.95rem; color:#fff; font-weight:500;">iPhone 16e</span></div>
+            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Model Code</span><span style="font-size:0.95rem; color:var(--td-info); font-family:monospace;">iPhone17,5</span></div>
+            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">OS Primary</span><span style="font-size:0.95rem; color:#fff; font-weight:500;">iOS 27.0 (final)</span></div>
+            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Tracking Track</span><span style="font-size:0.95rem; color:var(--td-text-secondary);">27.1, 27.2+</span></div>
+          </div>
+
+          <h4 style="color:#fff; margin:1.5rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Objective</h4>
+          <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Validate Apple's iOS 27 performance claims (responsiveness, battery life, system stability, claimed "up to 60%" improvements) on iPhone 16e. Test isolated integration of Gemini, Claude, and ChatGPT with Siri AI. Verify headline features announced during iOS 27 presentation through firsthand testing.</p>
+
+          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Scope &amp; Methodology</h4>
+          <div style="background:var(--td-bg-surface-elevated); border-left:3px solid var(--td-info); padding:1.25rem; margin:1rem 0 1.5rem; border-radius:0.25rem;">
+            <p style="color:var(--td-text-secondary); margin:0; line-height:1.6;"><strong style="color:#fff;">Single-Device Controlled Setup:</strong> Testing follows WDIII archive documentation standards. All testing is strictly scoped to single-device performance on the iPhone 16e (Model iPhone17,5) under controlled laboratory conditions (not extrapolated as universal across the entire iPhone 16 lineup). Performance claims are validated directly against Apple's stated improvements. AI chatbot integration is tested in isolation using controlled side-by-side comparisons with identical prompts across all three services.</p>
+          </div>
+
+          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Test Procedures Underway</h4>
+          ${queuedCard("var(--td-info)","A. Performance Claims Validation","Responsiveness &amp; Power",`
+            <ul style="margin:0.5rem 0 0.5rem 1.25rem; color:var(--td-text-secondary); font-size:0.9rem; line-height:1.5;">
+              <li><strong>Responsiveness:</strong> Cold/warm launch times across system and third-party apps, UI responsiveness under sustained compute load, multitasking switching latency, Quartz Debugger frametime analysis.</li>
+              <li><strong>Battery Life:</strong> Standardized workload drain rates, 8-hour standby behavior, daily cycle patterns, and charge cycle thermal dissipation curves.</li>
+              <li><strong>System Stability:</strong> Crash/hang logging, thermal throttling thresholds, and memory pressure management.</li>
+            </ul>
+          `)}
+          ${queuedCard("var(--td-ai)","B. AI Chatbot Integration","Siri AI Routing",`
+            <ul style="margin:0.5rem 0 0.5rem 1.25rem; color:var(--td-text-secondary); font-size:0.9rem; line-height:1.5;">
+              <li><strong>Direct Integration:</strong> Isolated side-by-side prompt execution across Gemini, Claude, and ChatGPT under uniform network states.</li>
+              <li><strong>Siri Handoff:</strong> Measuring intent recognition, handoff latency between voice trigger and stream onset, and permission session persistence.</li>
+              <li><strong>Quality &amp; Context:</strong> Multi-turn conversation retention and response formatting fidelity across Siri session boundaries.</li>
+            </ul>
+          `)}
+          ${queuedCard("var(--td-success)","C. Headline Features Verification","Hardware Completeness",`
+            <ul style="margin:0.5rem 0 0.5rem 1.25rem; color:var(--td-text-secondary); font-size:0.9rem; line-height:1.5;">
+              <li><strong>Apple Intelligence:</strong> Functional availability and on-device model throughput on iPhone 16e (A18 silicon, 8GB RAM).</li>
+              <li><strong>Cellular Modem:</strong> Real-world signal acquisition and handoff on Apple's in-house C1 modem architecture.</li>
+              <li><strong>Camera Pipeline:</strong> Shutter lag, computational HDR frame stacking speed, and sustained video capture thermal throttling.</li>
+            </ul>
+          `)}
+
+          ${insightPreview("<strong>Preview:</strong> When published, Experiment 12 will provide the first empirical, independent audit of Apple's claimed 60% responsiveness gain alongside quantitative latency benchmarks comparing Gemini, Claude, and ChatGPT integration with Siri AI on production firmware.")}
+
+          <div style="background:rgba(255,149,0,0.08); border-left:3px solid var(--td-warning); padding:1rem 1.25rem; border-radius:0.25rem; margin:1.5rem 0;">
+            <p style="margin:0; font-size:0.875rem; color:var(--td-warning);"><strong>⚠️ Documented Limitations:</strong> Scoped exclusively to iPhone 16e (n=1). Controlled side-by-side test conditions do not encompass every carrier or multi-user permutation. Initial observations reflect iOS 27.0 release build; subsequent updates (27.1, 27.2+) will be tracked sequentially.</p>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--td-border-subtle);">
+            <div style="font-size:0.85rem; color:var(--td-text-muted);">
+              <strong>Status:</strong> <span style="color:var(--td-info);">⚡ Active Testing Underway</span> · iPhone 16e (iPhone17,5) · iOS 27.0
+            </div>
+            <a href="/experiment-12.html" class="td-btn-secondary" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; border-radius:0.375rem; background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); color:#fff; text-decoration:none; font-size:0.85rem; font-weight:500;">
+              <span>📄 View Dedicated Protocol Page</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
         </div>
       </article>
     </section>
