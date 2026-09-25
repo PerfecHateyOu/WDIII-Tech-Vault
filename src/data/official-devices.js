@@ -167,9 +167,9 @@ export const OFFICIAL_DEVICES = [
     origin: "official_wdiii",
     sources: ["WDIII Experiment 5 Cross-Platform Battery Test", "WDIII FA-02 Baseline Setup"],
     createdAt: "2026-08-01T00:00:00.000Z",
-    updatedAt: "2026-09-13T00:00:00.000Z",
+    updatedAt: "2026-09-25T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["exp5", "fa02"]
+    experimentsInvolved: ["exp5", "fa02", "exp12"]
   },
   {
     id: "apple-iphone-16-pro-max",

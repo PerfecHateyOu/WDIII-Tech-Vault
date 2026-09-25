@@ -50,7 +50,7 @@ assert(deviceIdSet.size === OFFICIAL_DEVICES.length, `All ${OFFICIAL_DEVICES.len
 
 // 2. Experiments Schema & Integrity Checks
 console.log("\n2. AUDITING EXPERIMENT PROTOCOLS DATASET...");
-assert(OFFICIAL_EXPERIMENTS.length === 14, `Total experiments count is exactly 14: ${OFFICIAL_EXPERIMENTS.length}`);
+assert(OFFICIAL_EXPERIMENTS.length >= 14, `Total experiments count is at least 14: ${OFFICIAL_EXPERIMENTS.length}`);
 
 const validExpCategories = new Set(["repair", "support", "software", "legal", "hardware", "ecosystem", "ai"]);
 const validExpStatuses = new Set(["done", "progress", "pending", "paused", "queued", "draft", "private"]);

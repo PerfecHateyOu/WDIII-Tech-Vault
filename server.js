@@ -54,7 +54,9 @@ app.use((req, res, next) => {
       '/Consumer_Tech_Documentation_V5_6_1.html',
       '/Consumer_Tech_Documentation_V5_6_1',
       '/Consumer_Tech_Documentation_V5_6_2.html',
-      '/Consumer_Tech_Documentation_V5_6_2'
+      '/Consumer_Tech_Documentation_V5_6_2',
+      '/experiment-12',
+      '/experiment-12.html'
     ]);
     if (!allowedHtmlPaths.has(decodedPath)) {
       return res.status(404).send('Not found');
@@ -161,6 +163,11 @@ app.use('/src', (req, res, next) => {
   }
   
   next();
+});
+
+// ===== Experiment 12 Standalone Route =====
+app.get(['/experiment-12', '/experiment-12.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'experiment-12.html'));
 });
 
 // ===== Root SPA Route & Approved Legacy Aliases =====
