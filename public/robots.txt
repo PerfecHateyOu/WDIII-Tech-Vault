@@ -1,7 +1,25 @@
 # Robots.txt for CTC — WDIII Tech Vault
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /download/
+Allow: /api/
+Allow: /llms.txt
+Allow: /experiment-12
+Disallow: /api/firebase-config
+
+# AI crawlers & external fetch tools explicitly allowed
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
 
 Sitemap: https://ais-dev-s6igsku5zq33xja3k5cejd-858792364131.us-east1.run.app/sitemap.xml

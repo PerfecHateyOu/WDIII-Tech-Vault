@@ -2,6 +2,8 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { OFFICIAL_EXPERIMENTS } from './src/data/official-experiments.js';
+import { OFFICIAL_DEVICES } from './src/data/official-devices.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +13,22 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 
 app.use(express.json({ limit: '10mb' }));
+
+// ===== Universal CORS Middleware: External Tools, Fetchers & Scripts =====
+// Enables external tools, scripts, and AI agents to fetch, view, and summarize data
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, User-Agent');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type, ETag, Date, X-Total-Count');
+  res.setHeader('Access-Control-Max-Age', '86400');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  next();
+});
 
 // ===== Security Middleware: Deny Access to Private & Sensitive Files =====
 const SENSITIVE_PATTERNS = [
@@ -90,6 +108,97 @@ app.get('/api/firebase-config', (req, res) => {
   res.status(404).json({ error: 'Config not found' });
 });
 
+// ===== Public Vault Summary API for External Tools & Summarizers =====
+app.get('/api/summary', (req, res) => {
+  const summaryPayload = {
+    title: 'Consumer Tech Documentation — WDIII Tech Vault',
+    version: 'V5.7.3',
+    lastUpdated: 'September 26, 2026',
+    description: 'Empirical experiments, hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, ecosystem integrations, and mobile AI.',
+    author: 'WDIII',
+    stats: {
+      totalExperiments: OFFICIAL_EXPERIMENTS.length,
+      totalDevices: OFFICIAL_DEVICES.length,
+      categories: [...new Set(OFFICIAL_EXPERIMENTS.map(e => e.category))]
+    },
+    experiments: OFFICIAL_EXPERIMENTS.map(exp => ({
+      id: exp.id,
+      number: exp.experimentNumber,
+      title: exp.title,
+      category: exp.category,
+      status: exp.statusLabel || exp.status,
+      objective: exp.objective || exp.researchQuestion,
+      verdict: exp.verdict || null,
+      observations: exp.observations || [],
+      devices: exp.devices || []
+    })),
+    devices: OFFICIAL_DEVICES.map(dev => ({
+      id: dev.id,
+      name: dev.model || dev.name,
+      model: dev.model,
+      brand: dev.brand,
+      releaseYear: dev.releaseYear,
+      chipset: dev.specifications?.processor || dev.chipset,
+      experimentsInvolved: dev.experimentsInvolved || []
+    }))
+  };
+
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.json(summaryPayload);
+});
+
+// ===== Public Experiments API for External Tools =====
+app.get('/api/experiments', (req, res) => {
+  const { category, status } = req.query;
+  let results = OFFICIAL_EXPERIMENTS;
+  if (category) {
+    results = results.filter(e => (e.category || '').toLowerCase() === String(category).toLowerCase());
+  }
+  if (status) {
+    results = results.filter(e => (e.status || '').toLowerCase() === String(status).toLowerCase());
+  }
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('X-Total-Count', String(results.length));
+  res.json({ total: results.length, experiments: results });
+});
+
+app.get('/api/experiments/:id', (req, res) => {
+  const targetId = req.params.id.toLowerCase();
+  const exp = OFFICIAL_EXPERIMENTS.find(e => 
+    e.id.toLowerCase() === targetId || 
+    `exp${e.experimentNumber}`.toLowerCase() === targetId ||
+    e.experimentNumber === targetId
+  );
+  if (!exp) {
+    return res.status(404).json({ error: `Experiment '${req.params.id}' not found` });
+  }
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.json(exp);
+});
+
+// ===== Public Devices API for External Tools =====
+app.get('/api/devices', (req, res) => {
+  const { brand } = req.query;
+  let results = OFFICIAL_DEVICES;
+  if (brand) {
+    results = results.filter(d => (d.brand || '').toLowerCase() === String(brand).toLowerCase());
+  }
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('X-Total-Count', String(results.length));
+  res.json({ total: results.length, devices: results });
+});
+
+app.get('/api/devices/:id', (req, res) => {
+  const targetId = req.params.id.toLowerCase();
+  const dev = OFFICIAL_DEVICES.find(d => d.id.toLowerCase() === targetId);
+  if (!dev) {
+    return res.status(404).json({ error: `Device '${req.params.id}' not found` });
+  }
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.json(dev);
+});
+
 // ===== Explicit Brand Asset Download Routes =====
 app.get(['/download/logo.svg', '/download/wdiii-logo.svg'], (req, res) => {
   const filePath = path.join(__dirname, 'public', 'logo.svg');
@@ -163,6 +272,16 @@ app.use('/src', (req, res, next) => {
   }
   
   next();
+});
+
+// ===== LLMs / AI Summary Plaintext Route =====
+app.get('/llms.txt', (req, res) => {
+  const llmsPath = path.join(__dirname, 'public', 'llms.txt');
+  if (fs.existsSync(llmsPath)) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    return res.sendFile(llmsPath);
+  }
+  res.status(404).send('llms.txt not found');
 });
 
 // ===== Experiment 12 Standalone Route =====

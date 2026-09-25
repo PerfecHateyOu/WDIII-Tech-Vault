@@ -4,7 +4,7 @@
  */
 
 export const CONFIG = {
-  VERSION: 'V5.7.2',
+  VERSION: 'V5.7.3',
   LAST_UPDATED: 'September 26, 2026',
   STORAGE_KEYS: {
     theme: 'ctd-theme',

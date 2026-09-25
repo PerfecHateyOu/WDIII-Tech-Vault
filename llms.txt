@@ -1,0 +1,87 @@
+# Consumer Tech Documentation (WDIII Tech Vault)
+> Real-world experiments, empirical hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, hardware teardowns, ecosystem integrations, and mobile AI.
+
+- **Author**: WDIII
+- **Version**: V5.7.3
+- **Last Updated**: September 26, 2026
+- **Status**: Live Independent Research Archive
+
+## Overview
+The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consumer electronic hardware and operating systems under controlled laboratory and real-world conditions. Every experiment includes explicit methodology, test parameters, quantitative measurements, observations, and conclusive verdicts.
+
+## Official Experiments & Findings
+
+### Experiment 1: Apple vs Samsung Mail-In Repair
+- **Category**: Repair | **Status**: Completed (Done)
+- **Devices Tested**: iPhone 17 Pro Max, Samsung Galaxy S26 Ultra
+- **Objective**: Compare official manufacturer mail-in repair turnaround, total cost, customer communication, and physical repair quality for identical level 9 cracked screen damage.
+- **Results**: Apple completed repair in 2 days at $600 with pristine quality and proactive communication. Samsung took ~1 month ($289–$300) due to a 14-day administrative failure where an incorrect email address delayed the payment link, requiring a full re-dispatch, though physical repair quality was also pristine.
+- **Verdict**: Winner: Apple. Apple charges double ($600 vs $300) but delivers in 2 days with zero friction. Samsung's administrative failure erased every cost advantage.
+
+### Experiment 2: Repair Channel Tiers (Apple Store vs AASP vs Independent)
+- **Category**: Repair | **Status**: Completed (Done)
+- **Objective**: Assess pricing, turnaround, parts provenance, and technician competency across official Apple Store Genius Bar, Apple Authorized Service Providers (AASP), and third-party independent shops.
+- **Verdict**: Apple Store offers fastest turnaround and genuine calibration; AASPs match genuine parts but have variable lead times; independent shops offer cost savings but face software calibration lockouts.
+
+### Experiment 3: Customer Service Support Phone Test
+- **Category**: Support | **Status**: Completed (Done)
+- **Objective**: Test hold times, tiered escalation, and technical knowledge across consumer tech phone support channels.
+- **Verdict**: First-contact resolution rates are significantly higher when support agents have direct diagnostic telemetries.
+
+### Experiment 4: iOS Performance Over Time
+- **Category**: Software | **Status**: Completed (Done)
+- **Objective**: Track frame times, app cold-launch latency, and thermal throttling across major iOS version updates on older iPhone hardware.
+- **Verdict**: Controlled point releases stabilize after 2–3 weeks of spotlight indexing; initial battery complaints correlate with background photo library analysis.
+
+### Case Study: Samsung Battery Swelling Settlement
+- **Category**: Legal / Hardware | **Status**: Completed (Done)
+- **Objective**: Document legal claims, battery chemistry degeneration factors, and consumer compensation regarding legacy pouch battery swelling.
+
+### Experiment 5: Pixel vs iPhone Battery Endurance
+- **Category**: Hardware | **Status**: Completed (Done)
+- **Devices Tested**: Pixel 7 Pro, iPhone 16 Pro Max, iPhone 16e, Galaxy S26 Ultra
+- **Objective**: Side-by-side empirical battery drainage testing across Google Pixel and Apple iPhone flagships under standardized video streaming, web browsing, and 5G cellular workloads.
+- **Verdict**: iPhone displays superior standby efficiency and SoC efficiency under mixed workloads; Pixel excels in camera processing but drains faster under continuous cellular loads.
+
+### Experiment 6: AASP Repair Channel In-Depth
+- **Category**: Repair | **Status**: Completed (Done)
+- **Objective**: Evaluate Best Buy Geek Squad and independent AASPs handling genuine Apple display and battery replacements.
+
+### Experiment 7: Thermal Throttling Under Sustained Workloads
+- **Category**: Hardware | **Status**: Completed (Done)
+- **Objective**: Measure surface and core temperatures, clock-speed drop-offs, and game frame stability on flagship phones under sustained 3D compute.
+
+### Experiment 8: Ecosystem Lock-In & Transition Friction
+- **Category**: Ecosystem | **Status**: Rework in progress
+- **Objective**: Measure data loss, messaging transition friction, and subscription carryover when switching platforms.
+
+### Experiment 9: Network Telemetry & Background Data Auditing
+- **Category**: Software | **Status**: Completed (Done)
+- **Objective**: Packet inspection and DNS telemetry tracking of factory-reset smartphones during idle and active use.
+
+### Experiment 10: Drop & Impact Resistance Baseline
+- **Category**: Hardware | **Status**: Completed (Done)
+- **Objective**: Standardized drop tests on ceramic glass and titanium/aluminum frames.
+
+### Experiment 11: Fast Charging Degradation & Thermals
+- **Category**: Hardware | **Status**: Completed (Done)
+- **Objective**: Assess 45W vs 25W vs 15W Qi charging cycles, thermals, and projected health degradation.
+
+### Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e
+- **Category**: Software / AI | **Status**: In Progress
+- **Target Hardware**: iPhone 16e (Model iPhone17,5)
+- **OS Baseline**: iOS 27.0 (tracking 27.1, 27.2+)
+- **Objective**: Validate Apple's iOS 27 performance claims (responsiveness, battery life, system stability, claimed "up to 60%" improvements) on iPhone 16e. Test isolated integration of Gemini, Claude, and ChatGPT with Siri AI. Verify headline features announced during iOS 27 presentation through firsthand testing.
+- **Procedures**: Responsiveness testing, battery life testing, system stability, Siri AI chatbot isolated latency/accuracy comparisons, hardware feature validation.
+- **Standalone Document**: `/experiment-12.html`
+
+## Programmatic Fetching APIs (CORS Enabled)
+All endpoints return `Access-Control-Allow-Origin: *` for seamless cross-origin fetching by external tools, scripts, and AI agents:
+- `GET /api/summary`: Complete machine-readable JSON summary of the entire archive.
+- `GET /api/experiments`: Full list of all 15 experiments with measurement schemas and verdicts.
+- `GET /api/experiments/:id`: Query a single experiment by ID or number (e.g. `/api/experiments/exp1`, `/api/experiments/exp12`).
+- `GET /api/devices`: Hardware devices registry with specifications and benchmarks.
+- `GET /api/devices/:id`: Query a single device record.
+- `GET /llms.txt`: This plain-text documentation.
+- `GET /`: Complete HTML single-page application.
+- `GET /experiment-12.html`: Standalone Experiment 12 protocol document.
