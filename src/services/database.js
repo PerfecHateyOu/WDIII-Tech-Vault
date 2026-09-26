@@ -374,12 +374,14 @@ function createAuditLogId() {
 }
 
 /**
- * Append an immutable moderation audit log entry.
+ * Build an immutable moderation audit log record.
  * Schema mirrors the mandatory fields enforced by firestore.rules:
  * action, actorId, targetSubmissionId, previousStatus, newStatus, reason, timestamp.
+ * Building the record is a pure operation; callers are responsible for persisting it
+ * (see reviewSubmission, which commits it atomically alongside the submission update).
  */
-async function writeAuditLog(entry) {
-  const record = {
+function buildAuditLogRecord(entry) {
+  return {
     id: createAuditLogId(),
     action: String(entry.action || "review"),
     actorId: String(entry.actorId || "unknown"),
@@ -388,24 +390,8 @@ async function writeAuditLog(entry) {
     previousStatus: String(entry.previousStatus || ""),
     newStatus: String(entry.newStatus || ""),
     reason: sanitizeText(String(entry.reason || "")).slice(0, 5000),
-    timestamp: new Date().toISOString()
+    timestamp: entry.timestamp || new Date().toISOString()
   };
-
-  inMemoryAuditLogs.push(record);
-
-  const { fb, fs } = await getSdk();
-  if (fb && fs && fb.isFirebaseReady()) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        await fs.setDoc(fs.doc(db, "admin_audit_logs", record.id), record);
-      }
-    } catch (err) {
-      console.warn("Could not persist audit log to Firestore:", err);
-    }
-  }
-
-  return record;
 }
 
 /**
@@ -1131,29 +1117,47 @@ export async function reviewSubmission(submissionId, reviewData = {}) {
     }
   };
 
-  const updatedRecord = { ...existing, ...updates };
-  inMemorySubmissions.set(submissionId, updatedRecord);
-
-  if (fb && fs && fb.isFirebaseReady()) {
-    try {
-      const db = fb.getDb();
-      if (db) {
-        await fs.updateDoc(fs.doc(db, "submissions", submissionId), updates);
-      }
-    } catch (err) {
-      console.warn("Could not update review in Firestore:", err);
-    }
-  }
-
-  const auditLog = await writeAuditLog({
+  const auditRecord = buildAuditLogRecord({
     action: `review_${status}`,
     actorId: reviewerUid,
     actorName: reviewerName,
     targetSubmissionId: submissionId,
     previousStatus: existing.status,
     newStatus: status,
-    reason: feedback
+    reason: feedback,
+    timestamp: now
   });
+
+  // Commit the submission update and the audit log append atomically. If another
+  // moderator has already finalized this submission (or the write is otherwise
+  // rejected), the transaction throws and NEITHER the in-memory cache nor the
+  // returned result claims success — a stale-read race must never be able to
+  // report success while persisting an audit entry for a transition that didn't
+  // actually happen in Firestore.
+  if (fb && fs && fb.isFirebaseReady()) {
+    const db = fb.getDb();
+    if (db) {
+      const subRef = fs.doc(db, "submissions", submissionId);
+      const auditRef = fs.doc(db, "admin_audit_logs", auditRecord.id);
+
+      await fs.runTransaction(db, async (tx) => {
+        const liveSnap = await tx.get(subRef);
+        if (!liveSnap.exists()) {
+          throw new Error("Submission not found.");
+        }
+        const liveStatus = liveSnap.data().status;
+        if (liveStatus === "approved" || liveStatus === "rejected") {
+          throw new Error("Immutable Record: This submission has already been finalized by another moderator.");
+        }
+        tx.update(subRef, updates);
+        tx.set(auditRef, auditRecord);
+      });
+    }
+  }
+
+  const updatedRecord = { ...existing, ...updates };
+  inMemorySubmissions.set(submissionId, updatedRecord);
+  inMemoryAuditLogs.push(auditRecord);
 
   return {
     success: true,
@@ -1161,7 +1165,7 @@ export async function reviewSubmission(submissionId, reviewData = {}) {
     status,
     ...updatedRecord,
     submission: updatedRecord,
-    auditLog
+    auditLog: auditRecord
   };
 }
 
