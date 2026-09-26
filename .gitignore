@@ -1,3 +1,6 @@
+# Antigravity large binary files
+.antigravity/
+
 # Node.js dependencies & builds
 node_modules/
 dist/
