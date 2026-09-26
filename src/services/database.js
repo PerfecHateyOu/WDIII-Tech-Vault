@@ -364,6 +364,85 @@ export async function syncVaultToFirestore() {
 // ==========================================
 
 const inMemorySubmissions = new Map();
+const inMemoryAuditLogs = [];
+
+function createAuditLogId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `audit_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+/**
+ * Append an immutable moderation audit log entry.
+ * Schema mirrors the mandatory fields enforced by firestore.rules:
+ * action, actorId, targetSubmissionId, previousStatus, newStatus, reason, timestamp.
+ */
+async function writeAuditLog(entry) {
+  const record = {
+    id: createAuditLogId(),
+    action: String(entry.action || "review"),
+    actorId: String(entry.actorId || "unknown"),
+    actorName: sanitizeText(String(entry.actorName || "Moderator")).slice(0, 200),
+    targetSubmissionId: String(entry.targetSubmissionId || ""),
+    previousStatus: String(entry.previousStatus || ""),
+    newStatus: String(entry.newStatus || ""),
+    reason: sanitizeText(String(entry.reason || "")).slice(0, 5000),
+    timestamp: new Date().toISOString()
+  };
+
+  inMemoryAuditLogs.push(record);
+
+  const { fb, fs } = await getSdk();
+  if (fb && fs && fb.isFirebaseReady()) {
+    try {
+      const db = fb.getDb();
+      if (db) {
+        await fs.setDoc(fs.doc(db, "admin_audit_logs", record.id), record);
+      }
+    } catch (err) {
+      console.warn("Could not persist audit log to Firestore:", err);
+    }
+  }
+
+  return record;
+}
+
+/**
+ * Retrieve moderation audit log entries, most recent first.
+ * Optionally scoped to a single submission.
+ */
+export async function getAuditLogs(options = {}) {
+  const { submissionId = null, limit = 50 } = options;
+
+  const inMemory = inMemoryAuditLogs.filter(log =>
+    !submissionId || log.targetSubmissionId === submissionId
+  );
+
+  const { fb, fs } = await getSdk();
+  let remote = [];
+  if (fb && fs && fb.isFirebaseReady()) {
+    try {
+      const db = fb.getDb();
+      if (db) {
+        const snapshot = await fs.getDocs(fs.collection(db, "admin_audit_logs"));
+        remote = snapshot.docs
+          .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+          .filter(log => !submissionId || log.targetSubmissionId === submissionId);
+      }
+    } catch (err) {
+      console.warn("Could not retrieve audit logs:", err);
+    }
+  }
+
+  const merged = new Map();
+  for (const log of inMemory) merged.set(log.id, log);
+  for (const log of remote) merged.set(log.id, log);
+
+  return Array.from(merged.values())
+    .sort((a, b) => String(b.timestamp || "").localeCompare(String(a.timestamp || "")))
+    .slice(0, limit);
+}
 
 function createSubmissionId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -1066,12 +1145,23 @@ export async function reviewSubmission(submissionId, reviewData = {}) {
     }
   }
 
+  const auditLog = await writeAuditLog({
+    action: `review_${status}`,
+    actorId: reviewerUid,
+    actorName: reviewerName,
+    targetSubmissionId: submissionId,
+    previousStatus: existing.status,
+    newStatus: status,
+    reason: feedback
+  });
+
   return {
     success: true,
     id: submissionId,
     status,
     ...updatedRecord,
-    submission: updatedRecord
+    submission: updatedRecord,
+    auditLog
   };
 }
 
