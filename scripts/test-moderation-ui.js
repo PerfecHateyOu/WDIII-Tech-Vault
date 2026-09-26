@@ -118,6 +118,34 @@ assert(
 const recentLogs = await getAuditLogs({ limit: 10 });
 assert(recentLogs.some(l => l.id === logEntry.id), "getAuditLogs() without a submissionId filter still surfaces the entry");
 
+// --- 6. Atomic Commit: Submission Update + Audit Append ---
+// Regression coverage for a race where two moderators act on the same submission:
+// a stale second write must never be able to report success and persist an audit
+// entry for a transition that never actually happened in Firestore.
+console.log("\n--- 6. Atomic Review Commit (Race-Condition Hardening) ---");
+const databaseCode = fs.readFileSync(path.join(ROOT, "src/services/database.js"), "utf8");
+
+assert(databaseCode.includes("fs.runTransaction(db, async (tx) =>"), "reviewSubmission commits inside a Firestore transaction");
+
+const transactionBody = databaseCode.slice(
+  databaseCode.indexOf("fs.runTransaction(db, async (tx) =>"),
+  databaseCode.indexOf("fs.runTransaction(db, async (tx) =>") + 900
+);
+assert(transactionBody.includes("tx.get(subRef)"), "Transaction re-reads the live submission state before committing");
+assert(
+  transactionBody.includes('liveStatus === "approved" || liveStatus === "rejected"'),
+  "Transaction rejects the write if another moderator already finalized the submission"
+);
+assert(transactionBody.includes("tx.update(subRef, updates)"), "Transaction updates the submission document");
+assert(transactionBody.includes("tx.set(auditRef, auditRecord)"), "Transaction writes the audit log entry in the same commit as the submission update");
+
+const inMemoryCommitIndex = databaseCode.indexOf("inMemorySubmissions.set(submissionId, updatedRecord);", databaseCode.indexOf("export async function reviewSubmission"));
+const transactionIndex = databaseCode.indexOf("fs.runTransaction(db, async (tx) =>");
+assert(
+  transactionIndex > 0 && inMemoryCommitIndex > transactionIndex,
+  "In-memory cache is only updated after the transaction has committed, never before"
+);
+
 console.log("================================================================================");
 console.log(`   MODERATOR REVIEW WORKBENCH AUDIT COMPLETE: ${passed} PASSED, ${failed} FAILED`);
 console.log("================================================================================");
