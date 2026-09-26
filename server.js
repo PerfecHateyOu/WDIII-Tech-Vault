@@ -245,10 +245,6 @@ const staticOptions = {
 
 app.use(express.static(path.join(__dirname, 'public'), staticOptions));
 
-// ===== Static Serving: Modular CSS & JS Directories =====
-app.use('/css', express.static(path.join(__dirname, 'css'), staticOptions));
-app.use('/js', express.static(path.join(__dirname, 'js'), staticOptions));
-
 // ===== Static Serving: Approved Frontend Modules & Images in /src =====
 const APPROVED_SRC_EXTS = new Set([
   '.js', '.mjs', '.css', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.gif', '.ico'
@@ -286,7 +282,7 @@ app.get('/llms.txt', (req, res) => {
 
 // ===== Experiment 12 Standalone Route =====
 app.get(['/experiment-12', '/experiment-12.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'experiment-12.html'));
+  res.sendFile(path.join(__dirname, 'public', 'experiment-12.html'));
 });
 
 // ===== Root SPA Route & Approved Legacy Aliases =====
