@@ -199,6 +199,72 @@ app.get('/api/devices/:id', (req, res) => {
   res.json(dev);
 });
 
+// ===== Community Evidence Upload =====
+// Accepts a base64-encoded file, writes it to public/uploads/evidence/, and returns its path.
+// Cloud Run note: this filesystem is ephemeral — persisted uploads belong in Firebase Storage.
+app.post('/api/upload-evidence', (req, res) => {
+  const { fileName, fileType, base64Data, userId } = req.body || {};
+
+  if (!fileName || !base64Data) {
+    return res.status(400).json({ error: 'fileName and base64Data are required' });
+  }
+
+  const ALLOWED_TYPES = new Set([
+    'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+    'application/pdf', 'video/mp4', 'video/webm'
+  ]);
+  if (fileType && !ALLOWED_TYPES.has(fileType)) {
+    return res.status(415).json({ error: 'Unsupported file type' });
+  }
+
+  const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+  const base64Payload = base64Data.includes(',') ? base64Data.split(',')[1] : base64Data;
+  if (Buffer.byteLength(base64Payload, 'base64') > MAX_BYTES) {
+    return res.status(413).json({ error: 'File exceeds 10 MB limit' });
+  }
+
+  try {
+    const safeUserId = (userId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
+    const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 200);
+    const timestamp = Date.now();
+    const outFileName = `${timestamp}_${safeName}`;
+    const uploadDir = path.join(__dirname, 'public', 'uploads', 'evidence', safeUserId);
+
+    fs.mkdirSync(uploadDir, { recursive: true });
+    fs.writeFileSync(path.join(uploadDir, outFileName), Buffer.from(base64Payload, 'base64'));
+
+    const filePath = `/uploads/evidence/${safeUserId}/${outFileName}`;
+    return res.json({
+      fileName: outFileName,
+      path: filePath,
+      url: filePath,
+      uploadedAt: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('Evidence upload error:', err);
+    return res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
+// ===== Contact / General Form Submission =====
+// Validates and acknowledges form submissions. Wire up an email provider or Firestore here when ready.
+app.post('/api/submit', (req, res) => {
+  const { name, email, message, type } = req.body || {};
+
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    return res.status(400).json({ error: 'message is required' });
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+  if (message.trim().length > 5000) {
+    return res.status(400).json({ error: 'Message exceeds 5000 character limit' });
+  }
+
+  console.log(`[/api/submit] type=${type || 'contact'} name=${name || '—'} email=${email || '—'}`);
+  return res.json({ ok: true, message: 'Submission received' });
+});
+
 // ===== Explicit Brand Asset Download Routes =====
 app.get(['/download/logo.svg', '/download/wdiii-logo.svg'], (req, res) => {
   const filePath = path.join(__dirname, 'public', 'logo.svg');
