@@ -88,7 +88,7 @@ export async function renderDevicesCatalog(container) {
     <!-- Results Status Count -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; padding:0 0.25rem;">
       <span id="deviceCountLabel" style="font-size:0.875rem; color:var(--td-text-muted); font-weight:500;">Loading registry…</span>
-      <span style="font-size:0.78rem; color:var(--td-text-muted); letter-spacing:0.04em;">Official WDIII Archive Verified Data</span>
+      <span style="font-size:0.78rem; color:var(--td-text-muted); letter-spacing:0.04em;">Official WDIII Archive Data</span>
     </div>
 
     <!-- Devices Grid Container -->
@@ -119,7 +119,7 @@ export async function renderDevicesCatalog(container) {
     });
 
     if (countLabel) {
-      countLabel.textContent = `Showing ${devices.length} verified device${devices.length === 1 ? '' : 's'}`;
+      countLabel.textContent = `Showing ${devices.length} device${devices.length === 1 ? '' : 's'}`;
     }
 
     if (devices.length === 0) {
