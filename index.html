@@ -51,7 +51,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/style.css?v=5.7.5" />
 </head>
 <body>
 
@@ -530,6 +530,11 @@
   </footer>
 </div>
 
+<!-- Serve app modules from a versioned path so browsers holding copies cached under the
+     old year-long "immutable" header fetch the current code. Bump with each release. -->
+<script type="importmap">
+{ "imports": { "/src/": "/v/5.7.5/src/", "/js/": "/v/5.7.5/js/" } }
+</script>
 <script type="module">
 import app, { themeManager, modalManager, formManager, navigationManager, showToast, escapeHTML } from "/js/main.js";
 import { initFirebase, onAuthChange, logOut } from "/src/services/firebase.js";
