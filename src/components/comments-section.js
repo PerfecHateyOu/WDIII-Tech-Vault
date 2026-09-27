@@ -329,7 +329,7 @@ export function initCommentsSection(container, experimentId) {
           const isAuthor = currentUser && currentUser.uid === comment.authorId;
           const isEditing = editingCommentId === comment.id;
           const authorRole = comment.authorRole || "contributor";
-          const isAuthorOwner = authorRole === "owner" || (comment.authorEmail && comment.authorEmail.toLowerCase() === "perfectshadowkai33@gmail.com");
+          const isAuthorOwner = authorRole === "owner";
           const liked = currentUser && Array.isArray(comment.likedBy) && comment.likedBy.includes(currentUser.uid);
 
           return `
