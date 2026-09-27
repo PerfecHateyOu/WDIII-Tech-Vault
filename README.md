@@ -43,6 +43,21 @@ npm start &        # in one terminal
 npm test           # in another
 ```
 
+## ☁️ Deploying (Firebase Hosting + Cloud Run)
+
+Production runs `server.js` on **Cloud Run**, with **Firebase Hosting** in front:
+
+- **Hosting** serves `public/` (CSS, JS, icons, `llms.txt`, sitemap) straight from the CDN.
+- **Everything else** (`/`, `/api/*`, `/download/*`, `/src/*`, `/experiment-12`) is rewritten to the `wdiii-tech-vault` Cloud Run service, so every server route and access control still applies.
+
+```bash
+npm run deploy:run       # build & deploy server.js to Cloud Run (us-central1)
+npm run deploy:hosting   # deploy Hosting config + public/
+npm run deploy           # both, in order
+```
+
+Requires the `gcloud` and `firebase` CLIs, logged in to the project in `.firebaserc`. The Cloud Run service name and region must match the `run` rewrite in `firebase.json`.
+
 ## 📁 Structure
 
 | Path | Purpose |

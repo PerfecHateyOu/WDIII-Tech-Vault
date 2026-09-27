@@ -1,0 +1,24 @@
+# Keep the Cloud Run image to what server.js actually serves
+.git
+.gitignore
+.github
+.agents
+.vscode
+.antigravity
+.firebaserc
+.env*
+node_modules
+dist
+build
+archive
+scripts
+*.md
+LICENSE
+firebase.json
+firestore.rules
+storage.rules
+firestore.indexes.json
+firebase-blueprint.json
+src/**/*.test.js
+Dockerfile
+.dockerignore

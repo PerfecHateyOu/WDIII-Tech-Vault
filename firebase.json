@@ -1,26 +1,47 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
-      "firebase.json",
-      ".firebaserc",
       "**/.*",
       "**/node_modules/**",
-      "server.js",
-      "package*.json",
-      "LICENSE",
-      "README.md",
-      "metadata.json",
-      "archive/**"
+      "uploads/**"
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(css|js|png|jpg|svg|ico|webp)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, must-revalidate"
+          }
+        ]
+      }
     ],
     "rewrites": [
       {
-        "source": "/consumer-tech-documentation",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/fodder-archive",
-        "destination": "/fodder-archive.html"
+        "source": "**",
+        "run": {
+          "serviceId": "wdiii-tech-vault",
+          "region": "us-central1"
+        }
       }
     ],
     "cleanUrls": false,
