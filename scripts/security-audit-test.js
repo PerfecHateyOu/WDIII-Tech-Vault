@@ -165,12 +165,12 @@ async function runAudit() {
   const firestoreContent = fs.readFileSync('firestore.rules', 'utf8');
   check('firestore.rules contains default-deny rule', true, firestoreContent.includes('allow read, write: if false;'));
   check('firestore.rules forbids self-role escalation', true, firestoreContent.includes("request.resource.data.role == 'contributor'"));
-  check('firestore.rules blocks self-approval of submissions', true, firestoreContent.includes("request.resource.data.status == 'pending'"));
+  check('firestore.rules blocks all new or edited submissions', true, /match \/submissions\/\{submissionId\}[\s\S]*?allow create, update: if false;/.test(firestoreContent));
 
   const storageContent = fs.readFileSync('storage.rules', 'utf8');
   check('storage.rules contains default-deny rule', true, storageContent.includes('allow read, write: if false;'));
-  check('storage.rules isolates uploads by UID', true, storageContent.includes('match /evidence/{userId}/{fileName}'));
-  check('storage.rules restricts upload size & types', true, storageContent.includes('request.resource.size <= 10 * 1024 * 1024'));
+  check('storage.rules blocks visitor evidence uploads', true, /match \/evidence\/\{allPaths=\*\*\}[\s\S]*?allow create, update: if false;/.test(storageContent));
+  check('storage.rules has no user-writable paths', true, !/isOwner\(/.test(storageContent));
 
   console.log(`\nAudit Results: ${totalPassed} Passed, ${totalFailed} Failed\n`);
   if (totalFailed > 0) {

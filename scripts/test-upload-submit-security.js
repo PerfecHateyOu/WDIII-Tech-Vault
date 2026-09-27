@@ -1,5 +1,5 @@
 /**
- * Evidence upload & submit endpoint hardening audit.
+ * Submit endpoint hardening audit (the evidence upload endpoint is retired).
  * Requires the server running on localhost:3000 (npm start).
  * Covers the unauthenticated surface; the authenticated path needs a real Firebase ID token.
  */
@@ -28,20 +28,12 @@ function request(method, path, { body, headers = {} } = {}) {
   });
 }
 
-const svgXss = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>').toString('base64');
+console.log('\n=== UPLOAD & SUBMIT SECURITY AUDIT ===\n--- /api/upload-evidence (retired) ---');
 
-console.log('\n=== UPLOAD & SUBMIT SECURITY AUDIT ===\n--- /api/upload-evidence ---');
+let r = await request('POST', '/api/upload-evidence', { body: { fileName: 'x.png', fileType: 'image/png', base64Data: 'AA==' }, headers: { Authorization: 'Bearer x' } });
+check('Evidence upload endpoint no longer exists (404)', r.status === 404, `got ${r.status}`);
 
-let r = await request('POST', '/api/upload-evidence', { body: { fileName: 'x.svg', fileType: 'image/png', base64Data: svgXss, userId: 'someone_else' } });
-check('Rejects upload without Authorization header (401)', r.status === 401, `got ${r.status}`);
-
-r = await request('POST', '/api/upload-evidence', { body: { fileName: 'x.svg', base64Data: svgXss }, headers: { Authorization: 'Bearer not-a-real-token' } });
-check('Rejects forged/invalid ID token (401)', r.status === 401, `got ${r.status}`);
-
-r = await request('POST', '/api/upload-evidence', { body: { fileName: 'x.png', fileType: 'image/png', base64Data: svgXss } });
-check('Client-supplied userId is not trusted (still 401)', r.status === 401, `got ${r.status}`);
-
-r = await request('POST', '/api/upload-evidence', { body: '{not json', headers: { Authorization: 'Bearer x' } });
+r = await request('POST', '/api/submit', { body: '{not json', headers: { 'Content-Type': 'application/json' } });
 check('Malformed JSON rejected (400)', r.status === 400, `got ${r.status}`);
 
 console.log('\n--- /api/submit ---');
