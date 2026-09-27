@@ -19,7 +19,7 @@ The site is a single-page app (`index.html`). The Fodder Archive lives inside it
 ## ✨ Platform features
 
 - **Documentation viewer:** theme switcher, search, section navigation, and Google Drive dossier export
-- **Community Hub:** Firebase auth, community experiment submissions with evidence uploads, a moderation dashboard, and per-experiment comments
+- **Community Hub:** Firebase auth and per-experiment comments from registered accounts
 - **Data tools:** a device comparison view and comparison engine and device stats
 - **Security:** hardened Firestore and Storage rules, server-side blocking of source and config files, and a CodeQL workflow
 
