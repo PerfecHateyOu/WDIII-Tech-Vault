@@ -46,5 +46,14 @@
     ],
     "cleanUrls": false,
     "trailingSlash": false
+  },
+  "firestore": [
+    {
+      "database": "ai-studio-wdiiitechvault-10c4fd51-d323-4980-a9ba-99afe9a25944",
+      "rules": "firestore.rules"
+    }
+  ],
+  "storage": {
+    "rules": "storage.rules"
   }
 }
