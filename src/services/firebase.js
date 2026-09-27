@@ -560,12 +560,23 @@ export async function uploadEvidenceFile(file, userId, onProgress = null) {
 
     // 3. Fast Server Route Upload (< 80ms)
     try {
+      // Server verifies the Firebase ID token and takes the uid from it
+      const idToken = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
+      if (!idToken) {
+        throw new Error("No Firebase session; using local data URL fallback");
+      }
       const serverRes = await fetch("/api/upload-evidence", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`
+        },
         body: JSON.stringify({
           fileName: file.name,
-          fileType: file.type || "application/octet-stream",
+          fileType: file.type || ({
+            jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif",
+            txt: "text/plain", csv: "text/csv", pdf: "application/pdf", json: "application/json"
+          })[(file.name.split(".").pop() || "").toLowerCase()] || "application/octet-stream",
           base64Data: base64Data,
           userId: safeUserId
         })
