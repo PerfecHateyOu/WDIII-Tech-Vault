@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import { initializeApp as initAdminApp, getApps as getAdminApps } from 'firebase-admin/app';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
+import { getStorage } from 'firebase-admin/storage';
 import { OFFICIAL_EXPERIMENTS } from './src/data/official-experiments.js';
 import { OFFICIAL_DEVICES } from './src/data/official-devices.js';
 
@@ -290,7 +291,7 @@ app.post(
   rateLimit({ windowMs: 10 * 60 * 1000, max: 30, key: (req) => `ip:${req.ip}` }),
   requireFirebaseUser,
   rateLimit({ windowMs: 10 * 60 * 1000, max: 20, key: (req) => `uid:${req.user.uid}` }),
-  (req, res) => {
+  async (req, res) => {
     const { fileName, fileType, base64Data } = req.body || {};
 
     if (typeof fileName !== 'string' || typeof base64Data !== 'string' || typeof fileType !== 'string') {
@@ -318,16 +319,22 @@ app.post(
       const stem = path.parse(fileName).name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80) || 'evidence';
       const outFileName = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}_${stem}.${policy.ext}`;
       const uid = req.user.uid.replace(/[^a-zA-Z0-9_-]/g, '_');
-      const uploadDir = path.join(__dirname, 'public', 'uploads', 'evidence', uid);
+      const storagePath = `uploads/evidence/${uid}/${outFileName}`;
 
-      fs.mkdirSync(uploadDir, { recursive: true });
-      fs.writeFileSync(path.join(uploadDir, outFileName), buffer, { flag: 'wx' });
+      const adminApp = getAdminApps()[0] || initAdminApp();
+      const bucket = getStorage(adminApp).bucket();
+      const fileRef = bucket.file(storagePath);
+      await fileRef.save(buffer, {
+        metadata: { contentType: fileType },
+        resumable: false
+      });
+      await fileRef.makePublic();
+      const url = fileRef.publicUrl();
 
-      const filePath = `/uploads/evidence/${uid}/${outFileName}`;
       return res.status(201).json({
         fileName: outFileName,
-        path: filePath,
-        url: filePath,
+        path: storagePath,
+        url,
         size: buffer.length,
         type: fileType,
         uploadedAt: new Date().toISOString()
@@ -384,18 +391,6 @@ app.get(['/download/logo.jpg', '/download/wdiii-logo.jpg'], (req, res) => {
   res.status(404).send('logo.jpg not found');
 });
 
-// Serve /uploads statically with dedicated route
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), {
-  dotfiles: 'ignore',
-  index: false,
-  setHeaders: (res) => {
-    // User content: never sniff, never execute, never render as a document on this origin
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
-    res.setHeader('Content-Disposition', 'attachment');
-    res.setHeader('Cache-Control', 'private, max-age=3600');
-  }
-}));
 
 // Fallback for unmatched API routes to ensure JSON 404
 app.all('/api/*', (req, res) => {
