@@ -1,6 +1,9 @@
 # Antigravity large binary files
 .antigravity/
 
+# Firebase CLI cache
+.firebase/
+
 # Node.js dependencies & builds
 node_modules/
 dist/
