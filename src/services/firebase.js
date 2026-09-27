@@ -599,7 +599,17 @@ export async function uploadEvidenceFile(file, userId, onProgress = null) {
           previewUrl: base64Data
         };
       }
+      // Signed-in user but the server rejected or failed the upload: surface it instead of
+      // silently storing a data URL (which gets truncated when saved to Firestore).
+      if (serverRes.status !== 401 && serverRes.status !== 403) {
+        let message = `Upload failed (HTTP ${serverRes.status})`;
+        try { message = (await serverRes.json()).error || message; } catch (_) {}
+        const uploadErr = new Error(message);
+        uploadErr.isServerRejection = true;
+        throw uploadErr;
+      }
     } catch (serverErr) {
+      if (serverErr && serverErr.isServerRejection) throw serverErr;
       console.warn("Fast server upload notice, falling back to instant local data URL:", serverErr);
     }
 

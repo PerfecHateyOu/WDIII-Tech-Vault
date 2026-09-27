@@ -209,20 +209,39 @@ app.get('/api/devices/:id', (req, res) => {
   res.json(dev);
 });
 
-// ===== Firebase Admin (ID token verification only) =====
-// Only needs the project ID: token verification uses Google's public certs, no service account.
+// ===== Firebase Admin (shared app: ID token verification + Storage) =====
+// Token verification only needs projectId (Google public certs). Storage needs the bucket name,
+// and the Cloud Run service account's default credentials for writes.
+let adminApp = null;
+function getAdminApp() {
+  if (adminApp) return adminApp;
+  let cfg = {};
+  try {
+    cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'firebase-applet-config.json'), 'utf8'));
+  } catch { /* fall back to env */ }
+  const projectId = cfg.projectId || process.env.GOOGLE_CLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID;
+  const storageBucket = cfg.storageBucket || process.env.FIREBASE_STORAGE_BUCKET;
+  if (!projectId) throw new Error('Firebase projectId not configured');
+  adminApp = getAdminApps()[0] || initAdminApp({ projectId, ...(storageBucket ? { storageBucket } : {}) });
+  return adminApp;
+}
+
 let adminAuth = null;
 function getAdminAuthInstance() {
-  if (adminAuth) return adminAuth;
-  let projectId = process.env.GOOGLE_CLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID;
-  try {
-    const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'firebase-applet-config.json'), 'utf8'));
-    projectId = cfg.projectId || projectId;
-  } catch { /* fall back to env */ }
-  if (!projectId) throw new Error('Firebase projectId not configured');
-  const app = getAdminApps()[0] || initAdminApp({ projectId });
-  adminAuth = getAdminAuth(app);
+  if (!adminAuth) adminAuth = getAdminAuth(getAdminApp());
   return adminAuth;
+}
+
+let evidenceBucket = null;
+function getEvidenceBucket() {
+  if (!evidenceBucket) evidenceBucket = getStorage(getAdminApp()).bucket(); // throws clearly if no storageBucket
+  return evidenceBucket;
+}
+
+// Same URL shape the client SDK's getDownloadURL() returns: unguessable token, works with
+// uniform bucket-level access, no public ACL on the object.
+function firebaseDownloadUrl(bucketName, objectPath, token) {
+  return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(objectPath)}?alt=media&token=${token}`;
 }
 
 async function requireFirebaseUser(req, res, next) {
@@ -319,17 +338,26 @@ app.post(
       const stem = path.parse(fileName).name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80) || 'evidence';
       const outFileName = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}_${stem}.${policy.ext}`;
       const uid = req.user.uid.replace(/[^a-zA-Z0-9_-]/g, '_');
-      const storagePath = `uploads/evidence/${uid}/${outFileName}`;
+      // evidence/{uid}/... matches storage.rules, so owner/moderator reads and deletes via the client SDK work
+      const storagePath = `evidence/${uid}/${outFileName}`;
+      const downloadToken = crypto.randomUUID();
 
-      const adminApp = getAdminApps()[0] || initAdminApp();
-      const bucket = getStorage(adminApp).bucket();
+      const bucket = getEvidenceBucket();
       const fileRef = bucket.file(storagePath);
       await fileRef.save(buffer, {
-        metadata: { contentType: fileType },
-        resumable: false
+        resumable: false,
+        preconditionOpts: { ifGenerationMatch: 0 }, // never overwrite existing evidence
+        metadata: {
+          contentType: fileType,
+          contentDisposition: 'attachment',
+          cacheControl: 'private, max-age=3600',
+          metadata: {
+            firebaseStorageDownloadTokens: downloadToken,
+            uploadedBy: req.user.uid
+          }
+        }
       });
-      await fileRef.makePublic();
-      const url = fileRef.publicUrl();
+      const url = firebaseDownloadUrl(bucket.name, storagePath, downloadToken);
 
       return res.status(201).json({
         fileName: outFileName,
@@ -340,7 +368,7 @@ app.post(
         uploadedAt: new Date().toISOString()
       });
     } catch (err) {
-      console.error('Evidence upload error:', err.message);
+      console.error('Evidence upload error:', err.code || '', err.message);
       return res.status(500).json({ error: 'Upload failed' });
     }
   }
