@@ -70,4 +70,5 @@ One `incidents.csv` row per sync failure, dropout, crash or forced re-pair.
 ## Status
 
 - Protocol approved: 2026-09-27
-- Day 0: not started
+- Day 0: in progress. Device baseline recorded 2026-09-27 (`devices.csv` acquired dates and versions, `health.csv` m00 rows, condition photos).
+  Still to log: per-ecosystem re-pairing, continuity-feature check, 50MB test file, and the week-0 session.

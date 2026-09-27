@@ -1,13 +1,13 @@
 device_id,ecosystem,category,manufacturer,model,in_registry,acquired_date,os_at_baseline,notes
-apple-iphone-16e,apple,phone,Apple,iPhone 16e,yes,,,Also the Experiment 12 device
-apple-macbook-pro-m2-pro,apple,laptop,Apple,MacBook Pro M2 Pro (32GB unified memory / 1TB),yes,,,
-apple-watch-se-3,apple,watch,Apple,Apple Watch SE 3,yes,,,
-apple-airpods-5,apple,earbuds,Apple,AirPods 5,yes,,,Confirm exact model name from Settings
-google-pixel-10-pro,google,phone,Google,Pixel 10 Pro,yes,,,
-samsung-galaxy-chromebook-plus-15,google,laptop,Samsung,Galaxy Chromebook Plus 15.6in (Intel Core 3 / 8GB / 256GB),yes,,,Samsung hardware running ChromeOS; counted in the Google ecosystem
-google-pixel-watch-4,google,watch,Google,Pixel Watch 4,yes,,,
-google-pixel-buds-pro-2,google,earbuds,Google,Pixel Buds Pro 2,yes,,,
-samsung-galaxy-s26-ultra,samsung,phone,Samsung,Galaxy S26 Ultra,yes,,,
-samsung-galaxy-book4-edge-15,samsung,laptop,Samsung,Galaxy Book4 Edge Copilot+ PC 15.6in (Windows 11),yes,,,
-samsung-galaxy-watch8,samsung,watch,Samsung,Galaxy Watch8,yes,,,
-samsung-galaxy-buds4-pro,samsung,earbuds,Samsung,Galaxy Buds4 Pro,yes,,,
+apple-iphone-16e,apple,phone,Apple,iPhone 16e,yes,2025-05-02,iOS 27.0,Also the Experiment 12 device
+apple-macbook-pro-m2-pro,apple,laptop,Apple,MacBook Pro M2 Pro (32GB unified memory / 1TB),yes,2024-11-15,macOS 27.0,
+apple-watch-se-3,apple,watch,Apple,Apple Watch SE 3,yes,2025-09-19,watchOS 27.0,
+apple-airpods-5,apple,earbuds,Apple,AirPods 5,yes,2026-09-18,firmware 9A350,Model name confirmed as AirPods 5 in Settings on 2026-09-27
+google-pixel-10-pro,google,phone,Google,Pixel 10 Pro,yes,2025-08-22,Android 17,
+samsung-galaxy-chromebook-plus-15,google,laptop,Samsung,Galaxy Chromebook Plus 15.6in (Intel Core 3 / 8GB / 256GB),yes,2025-02-14,ChromeOS 150,Samsung hardware running ChromeOS; counted in the Google ecosystem
+google-pixel-watch-4,google,watch,Google,Pixel Watch 4,yes,2025-10-12,Wear OS 6.0,
+google-pixel-buds-pro-2,google,earbuds,Google,Pixel Buds Pro 2,yes,2025-03-05,firmware 5.9.0,
+samsung-galaxy-s26-ultra,samsung,phone,Samsung,Galaxy S26 Ultra,yes,2026-03-11,One UI 9,
+samsung-galaxy-book4-edge-15,samsung,laptop,Samsung,Galaxy Book4 Edge Copilot+ PC 15.6in (Windows 11),yes,2025-08-10,Windows 11 Home 26H2,
+samsung-galaxy-watch8,samsung,watch,Samsung,Galaxy Watch8,yes,2025-07-30,One UI 8 Watch,
+samsung-galaxy-buds4-pro,samsung,earbuds,Samsung,Galaxy Buds4 Pro,yes,2026-03-11,firmware R640XXU0AZA1,
