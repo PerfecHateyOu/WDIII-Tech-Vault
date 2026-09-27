@@ -10,23 +10,12 @@
       "package*.json",
       "LICENSE",
       "README.md",
-      "metadata.json"
+      "metadata.json",
+      "archive/**"
     ],
     "rewrites": [
       {
-        "source": "/Document V5.2.3.htm",
-        "destination": "/index.html"
-      },
-      {
         "source": "/consumer-tech-documentation",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/Consumer_Tech_Documentation_V5_5_2.html",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/Consumer_Tech_Documentation_V5_5_4.html",
         "destination": "/index.html"
       },
       {
