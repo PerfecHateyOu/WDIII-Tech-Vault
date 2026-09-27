@@ -22,4 +22,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://ais-dev-s6igsku5zq33xja3k5cejd-858792364131.us-east1.run.app/sitemap.xml
+Sitemap: https://project-95f7ca57-6daa-40f6-90b.web.app/sitemap.xml
