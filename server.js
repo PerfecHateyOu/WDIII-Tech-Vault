@@ -276,28 +276,45 @@ app.all('/api/*', (req, res) => {
 });
 
 // ===== Static Serving: Dedicated Public Assets Directory ONLY =====
+// File names aren't content-hashed, so scripts and styles must revalidate on
+// every load (cheap 304s via ETag) or visitors keep stale code after deploys.
+const REVALIDATE_EXTS = new Set(['.html', '.js', '.mjs', '.css']);
+function setCacheHeaders(res, filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext === '.html') {
+    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+  } else if (REVALIDATE_EXTS.has(ext)) {
+    res.setHeader('Cache-Control', 'no-cache');
+  } else {
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+  }
+}
+
 const staticOptions = {
   index: false,
   dotfiles: 'ignore',
   fallthrough: true,
-  maxAge: 31536000000,
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
-    } else {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    }
-  }
+  setHeaders: setCacheHeaders
 };
 
 app.use(express.static(path.join(__dirname, 'public'), staticOptions));
+
+// Versioned aliases (/v/<version>/js/..., /v/<version>/src/...) used by the import map
+// in index.html. A new URL per release bypasses copies cached under the old
+// year-long "immutable" header.
+const VERSION_SEGMENT = /^[\w.-]{1,32}$/;
+function checkVersion(req, res, next) {
+  if (!VERSION_SEGMENT.test(req.params.version)) return res.status(404).send('Not found');
+  next();
+}
+app.use('/v/:version/js', checkVersion, express.static(path.join(__dirname, 'public', 'js'), staticOptions));
 
 // ===== Static Serving: Approved Frontend Modules & Images in /src =====
 const APPROVED_SRC_EXTS = new Set([
   '.js', '.mjs', '.css', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.gif', '.ico'
 ]);
 
-app.use('/src', (req, res, next) => {
+function serveSrc(req, res, next) {
   const ext = path.extname(req.path).toLowerCase();
   if (!APPROVED_SRC_EXTS.has(ext)) {
     return res.status(404).send('Not found');
@@ -311,11 +328,15 @@ app.use('/src', (req, res, next) => {
   }
 
   if (fs.existsSync(absolutePath) && fs.statSync(absolutePath).isFile()) {
-    return res.sendFile(absolutePath);
+    setCacheHeaders(res, absolutePath);
+    return res.sendFile(absolutePath, { cacheControl: false });
   }
   
   next();
-});
+}
+
+app.use('/src', serveSrc);
+app.use('/v/:version/src', checkVersion, serveSrc);
 
 // ===== LLMs / AI Summary Plaintext Route =====
 app.get('/llms.txt', (req, res) => {
@@ -345,7 +366,9 @@ app.get([
   '/Consumer_Tech_Documentation_V5_6_2.html',
   '/Consumer_Tech_Documentation_V5_6_2'
 ], (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  // index.html carries the import map, so it must always be revalidated.
+  setCacheHeaders(res, 'index.html');
+  res.sendFile(path.join(__dirname, 'index.html'), { cacheControl: false });
 });
 
 // ===== Final 404 Catch-All Handler =====
