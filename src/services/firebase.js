@@ -30,19 +30,11 @@ import {
   updateDoc, 
   serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject
-} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 
 // Global module state
 let app = null;
 let auth = null;
 let db = null;
-let storage = null;
 let currentUser = null;
 let userProfile = null;
 let isInitialized = false;
@@ -97,15 +89,6 @@ export async function initFirebase() {
         db = getFirestore(app, config.firestoreDatabaseId);
       } else {
         db = getFirestore(app);
-      }
-
-      // Initialize Firebase Storage if bucket is configured
-      if (config.storageBucket) {
-        try {
-          storage = getStorage(app);
-        } catch (storageErr) {
-          console.warn("Firebase Storage initialization notice:", storageErr);
-        }
       }
 
       // Listen to Firebase Auth state transitions
@@ -465,10 +448,6 @@ export function getDb() {
   return db;
 }
 
-export function getStorageInstance() {
-  return storage;
-}
-
 export function isFirebaseReady() {
   return isInitialized && db !== null;
 }
@@ -476,175 +455,3 @@ export function isFirebaseReady() {
 export function getAuthInstance() {
   return auth;
 }
-
-/**
- * Upload empirical test evidence to Firebase Storage
- * Path enforced: evidence/{userId}/{timestamp}_{sanitizedFileName}
- * Validates file size and MIME types matching storage.rules
- * 
- * @param {File} file - Browser File object
- * @param {string} userId - Authenticated user UID
- * @param {Function} [onProgress] - Optional progress callback (percent: number) => void
- * @returns {Promise<Object>} Evidence reference object
- */
-/**
- * Helper to read a File into a base64 Data URL
- */
-function readFileAsDataUrl(file, onReadProgress = null) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error("Failed to read file from browser storage."));
-    if (reader.onprogress && typeof onReadProgress === "function") {
-      reader.onprogress = (e) => {
-        if (e.lengthComputable && e.total > 0) {
-          onReadProgress(Math.round((e.loaded / e.total) * 100));
-        }
-      };
-    }
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
- * Upload empirical test evidence
- * Uses high-speed server pipeline (< 100ms) with instant progress feedback
- * and seamless offline fallback to persistent Data URLs.
- * 
- * @param {File} file - Browser File object
- * @param {string} userId - Authenticated user UID
- * @param {Function} [onProgress] - Optional progress callback (percent: number) => void
- * @returns {Promise<Object>} Evidence reference object
- */
-export async function uploadEvidenceFile(file, userId, onProgress = null) {
-  if (!file) throw new Error("No file provided for upload.");
-  const safeUserId = userId || "guest";
-
-  // Validate MIME types matching storage specifications
-  const validMimes = [
-    "image/jpeg", "image/png", "image/webp", "image/gif",
-    "text/plain", "text/csv", "application/pdf", "application/json"
-  ];
-  const isImage = file.type.startsWith("image/");
-  const maxSize = isImage ? 8 * 1024 * 1024 : 10 * 1024 * 1024;
-
-  if (!validMimes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|webp|gif|txt|csv|pdf|json)$/i)) {
-    throw new Error(`Unsupported file type (${file.type || "unknown"}). Allowed types: Images (JPG, PNG, WebP, GIF), Logs (TXT, CSV, JSON), or Reports (PDF).`);
-  }
-
-  if (file.size > maxSize) {
-    const maxMb = maxSize / (1024 * 1024);
-    throw new Error(`File exceeds maximum size limit of ${maxMb}MB (file size: ${(file.size / (1024 * 1024)).toFixed(2)}MB).`);
-  }
-
-  // 1. Initial responsive feedback jump (never remain stuck at 0%)
-  if (typeof onProgress === "function") {
-    onProgress(20);
-  }
-
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const timestamp = Date.now();
-
-  try {
-    // 2. Fast client-side reading to base64 Data URL (provides instant thumbnail & resilience)
-    const base64Data = await readFileAsDataUrl(file, (readPct) => {
-      if (typeof onProgress === "function") {
-        // Map 0..100 read to 20..50%
-        onProgress(Math.round(20 + (readPct * 0.3)));
-      }
-    });
-
-    if (typeof onProgress === "function") {
-      onProgress(60);
-    }
-
-    // 3. Fast Server Route Upload (< 80ms)
-    try {
-      // Server verifies the Firebase ID token and takes the uid from it
-      const idToken = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
-      if (!idToken) {
-        throw new Error("No Firebase session; using local data URL fallback");
-      }
-      const serverRes = await fetch("/api/upload-evidence", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`
-        },
-        body: JSON.stringify({
-          fileName: file.name,
-          fileType: file.type || ({
-            jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif",
-            txt: "text/plain", csv: "text/csv", pdf: "application/pdf", json: "application/json"
-          })[(file.name.split(".").pop() || "").toLowerCase()] || "application/octet-stream",
-          base64Data: base64Data,
-          userId: safeUserId
-        })
-      });
-
-      if (serverRes.ok) {
-        const data = await serverRes.json();
-        if (typeof onProgress === "function") {
-          onProgress(100);
-        }
-        return {
-          name: file.name,
-          fileName: data.fileName || safeName,
-          path: data.path || `/uploads/evidence/${data.fileName}`,
-          url: data.url || data.path,
-          size: file.size,
-          type: file.type || "application/octet-stream",
-          uploadedAt: data.uploadedAt || new Date().toISOString(),
-          isServerUploaded: true,
-          previewUrl: base64Data
-        };
-      }
-      // Signed-in user but the server rejected or failed the upload: surface it instead of
-      // silently storing a data URL (which gets truncated when saved to Firestore).
-      if (serverRes.status !== 401 && serverRes.status !== 403) {
-        let message = `Upload failed (HTTP ${serverRes.status})`;
-        try { message = (await serverRes.json()).error || message; } catch (_) {}
-        const uploadErr = new Error(message);
-        uploadErr.isServerRejection = true;
-        throw uploadErr;
-      }
-    } catch (serverErr) {
-      if (serverErr && serverErr.isServerRejection) throw serverErr;
-      console.warn("Fast server upload notice, falling back to instant local data URL:", serverErr);
-    }
-
-    // 4. Instant Resilient Fallback (Base64 Data URL - 100% reliable, zero network latency)
-    if (typeof onProgress === "function") {
-      onProgress(100);
-    }
-    const fallbackPath = `evidence/${safeUserId}/${timestamp}_${safeName}`;
-    return {
-      name: file.name,
-      fileName: safeName,
-      path: fallbackPath,
-      url: base64Data,
-      previewUrl: base64Data,
-      size: file.size,
-      type: file.type || "application/octet-stream",
-      uploadedAt: new Date().toISOString(),
-      isLocalReference: true
-    };
-  } catch (err) {
-    console.error("Evidence processing failed:", err);
-    throw err;
-  }
-}
-
-/**
- * Delete uploaded evidence file from storage
- */
-export async function deleteEvidenceFile(storagePath) {
-  if (!storage || !storagePath) return;
-  try {
-    const fileRef = ref(storage, storagePath);
-    await deleteObject(fileRef);
-  } catch (err) {
-    console.warn("Could not delete storage file:", err);
-  }
-}
-

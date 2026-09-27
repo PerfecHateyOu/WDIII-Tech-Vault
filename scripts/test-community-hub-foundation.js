@@ -182,15 +182,11 @@ assert(
   'Security rules enforce measurements.keys().hasOnly(parent experiment allowed keys)'
 );
 assert(
-  rulesContent.includes('isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements)'),
-  'Submission create & update rules strictly invoke isValidMeasurementPayload'
+  /match \/submissions\/\{submissionId\}[\s\S]*?allow create, update: if false;/.test(rulesContent),
+  'Submissions are retired: rules block every create and update'
 );
 
 // B. Immutable Rule for Approved Submissions
-assert(
-  rulesContent.includes("resource.data.status != 'approved'"),
-  "Security rules enforce immutable rule: resource.data.status != 'approved' blocks direct updates on approved records"
-);
 
 // C. Role Separation
 assert(
@@ -210,10 +206,6 @@ assert(
 assert(
   rulesContent.includes('isModerator()'),
   'Moderator role helper verifies moderator, admin, or system owner'
-);
-assert(
-  rulesContent.includes("request.resource.data.status in ['approved', 'rejected', 'needs_revision', 'pending_review', 'pending']"),
-  'Only moderators can transition submissions to approved/rejected/needs_revision'
 );
 
 // E. Official Data Protection

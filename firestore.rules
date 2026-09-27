@@ -143,7 +143,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // 4. Community Submissions & Benchmark Tests (Community Research Hub)
+    // 4. Community Submissions (retired, read-only archive)
     match /submissions/{submissionId} {
       // Approved submissions are publicly visible
       // Pending, needs_revision, rejected, or draft submissions are visible ONLY to the submitter and moderators
@@ -154,80 +154,10 @@ service cloud.firestore {
                     isModerator()
                   ));
 
-      // Authenticated contributors can submit tests, but status MUST be 'draft' or 'pending_review'
-      // Schema Enforcement:
-      // - Measurements must conform to parent experiment schema (no arbitrary injected keys)
-      // - Normal users CANNOT approve their own submissions or assign reviewers
-      // - Provenance source must be 'community'
-      allow create: if isContributor()
-                    && (
-                      ('userId' in request.resource.data && request.resource.data.userId == request.auth.uid) ||
-                      ('authorId' in request.resource.data && request.resource.data.authorId == request.auth.uid)
-                    )
-                    && (request.resource.data.status == 'pending' || request.resource.data.status == 'pending_review' || request.resource.data.status == 'draft')
-                    && (!('type' in request.resource.data) || request.resource.data.type == 'replication')
-                    && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == null)
-                    && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == null)
-                    && (!('review' in request.resource.data) || request.resource.data.review == null)
-                    && (!('provenance' in request.resource.data) || request.resource.data.provenance.source == 'community')
-                    && request.resource.data.keys().hasAll(['deviceId', 'experimentId', 'status'])
-                    && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements);
-
-      // Submission Updates:
-      // CRITICAL IMMUTABLE RULE: Once status is 'approved', the document is permanently locked
-      // against direct updates. Any corrections must trigger a separate workflow, not overwrite.
-      //
-      // Author updates:
-      // - Only allowed while in 'draft', 'pending', 'pending_review', or 'needs_revision'
-      // - Allowed new statuses: 'draft', 'pending_review', 'pending', or 'withdrawn'
-      // - Authors CANNOT self-approve or reject
-      // - Authors CANNOT modify review/reviewer metadata or change authorId
-      // - Measurements must continue conforming to experiment schema
-      //
-      // Moderator updates:
-      // - Only users with verified moderator or admin role can update status to 'approved', 'rejected', or 'needs_revision'
-      allow update: if resource.data.status != 'approved'
-                    && (
-                      (
-                        // Path A: Author updating their own unapproved submission
-                        (
-                          ('userId' in resource.data && isOwner(resource.data.userId)) ||
-                          ('authorId' in resource.data && isOwner(resource.data.authorId))
-                        )
-                        && resource.data.status in ['draft', 'pending_review', 'pending', 'needs_revision']
-                        && request.resource.data.status in ['draft', 'pending_review', 'pending', 'withdrawn']
-                        && (!('userId' in request.resource.data) || request.resource.data.userId == resource.data.userId)
-                        && (!('authorId' in request.resource.data) || request.resource.data.authorId == resource.data.authorId)
-                        && (!('reviewerId' in request.resource.data) || request.resource.data.reviewerId == resource.data.reviewerId)
-                        && (!('reviewedAt' in request.resource.data) || request.resource.data.reviewedAt == resource.data.reviewedAt)
-                        && (!('review' in request.resource.data) || request.resource.data.review == resource.data.review)
-                        && isValidMeasurementPayload(request.resource.data.experimentId, request.resource.data.measurements)
-                      )
-                      ||
-                      (
-                        // Path B: Moderator reviewing submission
-                        isModerator()
-                        && request.resource.data.status in ['approved', 'rejected', 'needs_revision', 'pending_review', 'pending']
-                        && (!('authorId' in request.resource.data) || !('authorId' in resource.data) || request.resource.data.authorId == resource.data.authorId)
-                        && (!('userId' in request.resource.data) || !('userId' in resource.data) || request.resource.data.userId == resource.data.userId)
-                        && (!('experimentId' in request.resource.data) || !('experimentId' in resource.data) || request.resource.data.experimentId == resource.data.experimentId)
-                        && (!('deviceId' in request.resource.data) || !('deviceId' in resource.data) || request.resource.data.deviceId == resource.data.deviceId)
-                      )
-                    );
-
-      // Authors can delete or withdraw their submission ONLY while it remains pending, draft, needs_revision, or withdrawn
-      // Approved test results cannot be arbitrarily deleted by normal contributors
-      allow delete: if resource.data.status != 'approved'
-                    && (
-                      (
-                        (
-                          ('userId' in resource.data && isOwner(resource.data.userId)) ||
-                          ('authorId' in resource.data && isOwner(resource.data.authorId))
-                        )
-                        && resource.data.status in ['draft', 'pending_review', 'pending', 'needs_revision', 'withdrawn']
-                      )
-                      || isAdmin()
-                    );
+      // Community submissions are retired: this is a personal site, so no one can
+      // create or edit submissions. Existing approved records stay readable.
+      allow create, update: if false;
+      allow delete: if isAdmin();
     }
 
     // 5. Aggregate Device Statistics

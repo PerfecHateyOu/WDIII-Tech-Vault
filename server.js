@@ -2,10 +2,6 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import crypto from 'crypto';
-import { initializeApp as initAdminApp, getApps as getAdminApps } from 'firebase-admin/app';
-import { getAuth as getAdminAuth } from 'firebase-admin/auth';
-import { getStorage } from 'firebase-admin/storage';
 import { OFFICIAL_EXPERIMENTS } from './src/data/official-experiments.js';
 import { OFFICIAL_DEVICES } from './src/data/official-devices.js';
 
@@ -18,11 +14,7 @@ const HOST = '0.0.0.0';
 
 app.set('trust proxy', true); // Behind Firebase Hosting / Cloud Run: use X-Forwarded-For for client IP
 
-const UPLOAD_ROUTE = '/api/upload-evidence';
-const defaultJson = express.json({ limit: '1mb' });
-// 10 MB file -> ~13.4 MB base64, plus JSON envelope
-const uploadJson = express.json({ limit: '14mb' });
-app.use((req, res, next) => (req.path === UPLOAD_ROUTE ? uploadJson : defaultJson)(req, res, next));
+app.use(express.json({ limit: '1mb' }));
 
 // ===== Universal CORS Middleware: External Tools, Fetchers & Scripts =====
 // Enables external tools, scripts, and AI agents to fetch, view, and summarize data
@@ -209,56 +201,6 @@ app.get('/api/devices/:id', (req, res) => {
   res.json(dev);
 });
 
-// ===== Firebase Admin (shared app: ID token verification + Storage) =====
-// Token verification only needs projectId (Google public certs). Storage needs the bucket name,
-// and the Cloud Run service account's default credentials for writes.
-let adminApp = null;
-function getAdminApp() {
-  if (adminApp) return adminApp;
-  let cfg = {};
-  try {
-    cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'firebase-applet-config.json'), 'utf8'));
-  } catch { /* fall back to env */ }
-  const projectId = cfg.projectId || process.env.GOOGLE_CLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID;
-  const storageBucket = cfg.storageBucket || process.env.FIREBASE_STORAGE_BUCKET;
-  if (!projectId) throw new Error('Firebase projectId not configured');
-  adminApp = getAdminApps()[0] || initAdminApp({ projectId, ...(storageBucket ? { storageBucket } : {}) });
-  return adminApp;
-}
-
-let adminAuth = null;
-function getAdminAuthInstance() {
-  if (!adminAuth) adminAuth = getAdminAuth(getAdminApp());
-  return adminAuth;
-}
-
-let evidenceBucket = null;
-function getEvidenceBucket() {
-  if (!evidenceBucket) evidenceBucket = getStorage(getAdminApp()).bucket(); // throws clearly if no storageBucket
-  return evidenceBucket;
-}
-
-// Same URL shape the client SDK's getDownloadURL() returns: unguessable token, works with
-// uniform bucket-level access, no public ACL on the object.
-function firebaseDownloadUrl(bucketName, objectPath, token) {
-  return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(objectPath)}?alt=media&token=${token}`;
-}
-
-async function requireFirebaseUser(req, res, next) {
-  const match = /^Bearer (.+)$/.exec(req.get('Authorization') || '');
-  if (!match) return res.status(401).json({ error: 'Sign-in required' });
-  try {
-    const decoded = await getAdminAuthInstance().verifyIdToken(match[1]);
-    if (decoded.firebase?.sign_in_provider === 'anonymous') {
-      return res.status(403).json({ error: 'Anonymous accounts cannot upload evidence' });
-    }
-    req.user = { uid: decoded.uid };
-    return next();
-  } catch {
-    return res.status(401).json({ error: 'Invalid or expired session' });
-  }
-}
-
 // ===== Simple in-memory rate limiter (per Cloud Run instance) =====
 function rateLimit({ windowMs, max, key }) {
   const hits = new Map();
@@ -281,98 +223,6 @@ function rateLimit({ windowMs, max, key }) {
     return next();
   };
 }
-
-// ===== Evidence type policy (mirrors storage.rules) =====
-// Extension is derived from the validated type, never from the client's filename.
-const EVIDENCE_TYPES = {
-  'image/jpeg':       { ext: 'jpg',  maxBytes: 8 * 1024 * 1024,  magic: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff },
-  'image/png':        { ext: 'png',  maxBytes: 8 * 1024 * 1024,  magic: (b) => b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) },
-  'image/gif':        { ext: 'gif',  maxBytes: 8 * 1024 * 1024,  magic: (b) => b.subarray(0, 4).toString('latin1') === 'GIF8' },
-  'image/webp':       { ext: 'webp', maxBytes: 8 * 1024 * 1024,  magic: (b) => b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WEBP' },
-  'application/pdf':  { ext: 'pdf',  maxBytes: 10 * 1024 * 1024, magic: (b) => b.subarray(0, 5).toString('latin1') === '%PDF-' },
-  'text/plain':       { ext: 'txt',  maxBytes: 10 * 1024 * 1024, magic: isPlainText },
-  'text/csv':         { ext: 'csv',  maxBytes: 10 * 1024 * 1024, magic: isPlainText },
-  'application/json': { ext: 'json', maxBytes: 10 * 1024 * 1024, magic: (b) => { try { JSON.parse(b.toString('utf8')); return true; } catch { return false; } } }
-};
-
-function isPlainText(buf) {
-  if (buf.includes(0)) return false;
-  const text = buf.toString('utf8');
-  if (text.includes('\uFFFD')) return false;                    // not valid UTF-8
-  return !/<\s*(script|svg|html|iframe|object)\b/i.test(text.slice(0, 4096)); // markup posing as text
-}
-
-// ===== Community Evidence Upload =====
-// Auth required; uid comes from the verified ID token, not the request body.
-// Cloud Run note: this filesystem is in-memory and ephemeral — move writes to Firebase Storage.
-app.post(
-  UPLOAD_ROUTE,
-  rateLimit({ windowMs: 10 * 60 * 1000, max: 30, key: (req) => `ip:${req.ip}` }),
-  requireFirebaseUser,
-  rateLimit({ windowMs: 10 * 60 * 1000, max: 20, key: (req) => `uid:${req.user.uid}` }),
-  async (req, res) => {
-    const { fileName, fileType, base64Data } = req.body || {};
-
-    if (typeof fileName !== 'string' || typeof base64Data !== 'string' || typeof fileType !== 'string') {
-      return res.status(400).json({ error: 'fileName, fileType and base64Data are required' });
-    }
-
-    const policy = EVIDENCE_TYPES[fileType];
-    if (!policy) {
-      return res.status(415).json({ error: 'Unsupported file type' });
-    }
-
-    const base64Payload = base64Data.includes(',') ? base64Data.slice(base64Data.indexOf(',') + 1) : base64Data;
-    const buffer = Buffer.from(base64Payload, 'base64');
-    if (buffer.length === 0) {
-      return res.status(400).json({ error: 'Empty file' });
-    }
-    if (buffer.length > policy.maxBytes) {
-      return res.status(413).json({ error: `File exceeds ${policy.maxBytes / (1024 * 1024)} MB limit for ${fileType}` });
-    }
-    if (!policy.magic(buffer)) {
-      return res.status(415).json({ error: 'File contents do not match declared type' });
-    }
-
-    try {
-      const stem = path.parse(fileName).name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80) || 'evidence';
-      const outFileName = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}_${stem}.${policy.ext}`;
-      const uid = req.user.uid.replace(/[^a-zA-Z0-9_-]/g, '_');
-      // evidence/{uid}/... matches storage.rules, so owner/moderator reads and deletes via the client SDK work
-      const storagePath = `evidence/${uid}/${outFileName}`;
-      const downloadToken = crypto.randomUUID();
-
-      const bucket = getEvidenceBucket();
-      const fileRef = bucket.file(storagePath);
-      await fileRef.save(buffer, {
-        resumable: false,
-        preconditionOpts: { ifGenerationMatch: 0 }, // never overwrite existing evidence
-        metadata: {
-          contentType: fileType,
-          contentDisposition: 'attachment',
-          cacheControl: 'private, max-age=3600',
-          metadata: {
-            firebaseStorageDownloadTokens: downloadToken,
-            uploadedBy: req.user.uid
-          }
-        }
-      });
-      const url = firebaseDownloadUrl(bucket.name, storagePath, downloadToken);
-
-      return res.status(201).json({
-        fileName: outFileName,
-        path: storagePath,
-        url,
-        size: buffer.length,
-        type: fileType,
-        uploadedAt: new Date().toISOString()
-      });
-    } catch (err) {
-      console.error('Evidence upload error:', err.code || '', err.message);
-      return res.status(500).json({ error: 'Upload failed' });
-    }
-  }
-);
 
 // ===== Contact / General Form Submission =====
 // Validates and acknowledges only; nothing is persisted yet. No PII is logged.
