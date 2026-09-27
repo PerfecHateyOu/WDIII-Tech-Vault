@@ -238,6 +238,7 @@ export async function renderCompareView(container) {
             <option value="android">Android</option>
             <option value="macos">macOS</option>
             <option value="windows">Windows</option>
+            <option value="chromeos">ChromeOS</option>
           </select>
 
           <select id="pickerFilterYear" style="padding:0.45rem; border-radius:0.375rem; border:1px solid var(--td-border); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.8rem; outline:none; cursor:pointer;">
@@ -383,7 +384,7 @@ export async function renderCompareView(container) {
 
       if (year !== "all") {
         if (year === "2023") {
-          if (d.releaseYear && d.releaseYear >= 2024) return false;
+          if (!d.releaseYear || d.releaseYear >= 2024) return false;
         } else if (String(d.releaseYear) !== year) {
           return false;
         }

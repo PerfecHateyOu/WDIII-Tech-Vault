@@ -61,7 +61,7 @@ export const OFFICIAL_DEVICES = [
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-13T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["exp1"]
+    experimentsInvolved: ["exp1", "queued-exp8"]
   },
   {
     id: "apple-iphone-15",
@@ -169,7 +169,7 @@ export const OFFICIAL_DEVICES = [
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-25T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["exp5", "fa02", "exp12"]
+    experimentsInvolved: ["exp5", "fa02", "exp12", "queued-exp8"]
   },
   {
     id: "apple-iphone-16-pro-max",
@@ -358,7 +358,7 @@ export const OFFICIAL_DEVICES = [
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-13T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["exp5", "exp7", "fa02"]
+    experimentsInvolved: ["exp5", "exp7", "fa02", "queued-exp8"]
   },
   {
     id: "samsung-galaxy-s20-fe",

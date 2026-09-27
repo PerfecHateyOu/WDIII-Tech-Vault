@@ -127,6 +127,7 @@ export async function getDevices(options = {}) {
       if (operatingSystem === "android" && !os.includes("android") && !os.includes("one ui") && !os.includes("emui") && !os.includes("coloros") && !os.includes("oxygenos") && !os.includes("funtouch") && !os.includes("miui")) return false;
       if (operatingSystem === "macos" && !os.includes("macos")) return false;
       if (operatingSystem === "windows" && !os.includes("windows")) return false;
+      if (operatingSystem === "chromeos" && !os.includes("chromeos")) return false;
     }
 
     return true;

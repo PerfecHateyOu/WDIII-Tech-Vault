@@ -70,9 +70,13 @@ const SCHEMAS = {
     { key: "gatekeeperBypassResistance", label: "Gatekeeper Bypass Resistance", type: "number", unit: "Score", required: false, min: 1, max: 10 }
   ],
   'queued-exp8': [
-    { key: "dropCyclesSurvived", label: "Drop Test Cycles Survived", type: "number", unit: "Drops", required: true, min: 0, max: 50 },
-    { key: "hingeResistanceDelta", label: "Hinge Torque Degradation", type: "number", unit: "%", required: false, min: 0, max: 100 },
-    { key: "ipRatingMaintained", label: "Water/Dust Seal Integrity Maintained", type: "boolean", required: false }
+    { key: "clipboardP2lSeconds", label: "Clipboard Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },
+    { key: "clipboardL2pSeconds", label: "Clipboard Laptop → Phone", type: "number", unit: "Seconds", required: false, min: 0 },
+    { key: "fileTransferSeconds", label: "50MB File Transfer Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },
+    { key: "notifWatchSeconds", label: "Phone → Watch Notification Delivery", type: "number", unit: "Seconds", required: false, min: 0 },
+    { key: "audioSwitchSeconds", label: "Earbud Audio Auto-Switch Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },
+    { key: "batteryHealthPct", label: "Battery Health (where exposed)", type: "number", unit: "%", required: false, min: 0, max: 100 },
+    { key: "cycleCount", label: "Battery Cycle Count (where exposed)", type: "number", unit: "Cycles", required: false, min: 0 }
   ],
   'queued-exp10': [
     { key: "crashFrequencyPerWeek", label: "System Crash Frequency", type: "number", unit: "Crashes/Wk", required: true, min: 0, max: 50 },
