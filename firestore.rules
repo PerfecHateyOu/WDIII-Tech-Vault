@@ -25,7 +25,7 @@ service cloud.firestore {
 
     function isModerator() {
       return isSignedIn() && (
-        ('email' in request.auth.token && (
+        ('email' in request.auth.token && request.auth.token.email_verified == true && (
           request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
           request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'
         )) ||
@@ -37,7 +37,7 @@ service cloud.firestore {
 
     function isAdmin() {
       return isSignedIn() && (
-        ('email' in request.auth.token && (
+        ('email' in request.auth.token && request.auth.token.email_verified == true && (
           request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
           request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'
         )) ||
@@ -48,7 +48,7 @@ service cloud.firestore {
 
     function isSystemOwner() {
       return isSignedIn() && (
-        ('email' in request.auth.token && (
+        ('email' in request.auth.token && request.auth.token.email_verified == true && (
           request.auth.token.email == 'perfectshadowkai33@gmail.com' ||
           request.auth.token.email.lower() == 'perfectshadowkai33@gmail.com'
         )) ||
@@ -79,8 +79,8 @@ service cloud.firestore {
     // 1. User Profiles Collection
     // Reputation score is NOT authorization. Users cannot modify their own reputationScore or role.
     match /users/{userId} {
-      // Authenticated users or self can read user profiles
-      allow read: if isSignedIn();
+      // Profiles hold emails: readable only by their owner and admins
+      allow read: if isOwner(userId) || isAdmin();
 
       // New users can create their own profile with contributor role ONLY (or owner role if designated system owner)
       allow create: if isOwner(userId)

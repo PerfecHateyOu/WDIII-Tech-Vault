@@ -9,7 +9,7 @@ service firebase.storage {
     function isModerator() {
       return isSignedIn() && (
         ('role' in request.auth.token && (request.auth.token.role in ['moderator', 'admin', 'owner'])) ||
-        request.auth.token.email == 'perfectshadowkai33@gmail.com'
+        (request.auth.token.email_verified == true && request.auth.token.email == 'perfectshadowkai33@gmail.com')
       );
     }
 
