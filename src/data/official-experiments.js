@@ -1358,48 +1358,55 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "queued",
     "statusLabel": "Queued",
     "origin": "official_wdiii",
-    "researchQuestion": "How do interconnected devices from Apple, Google, and Samsung maintain sync integrity, peripheral handoff, and hardware reliability over an extended 24-month lifecycle?",
-    "objective": "Formalize the multi-year protocol for tracking cross-device ecosystem handoff failures, Bluetooth peripheral synchronization drifts, and hardware mechanical degradation across 3 rival ecosystems.",
-    "methodology": "Tri-ecosystem testing grid pairing phone + laptop + smartwatch + earbuds for Apple, Google, and Samsung under synchronized daily usage scripts.",
-    "conditions": "24-month observation horizon, automated daily sync logging, periodic sensor drift calibration checks.",
-    "protocol": "1. Deploy 3 complete hardware suites (Apple, Google, Samsung). 2. Execute 100 clipboard and handoff transfers daily. 3. Monitor notifications delivery latency across paired smartwatches. 4. Track battery wear degradation curves at 6, 12, 18, and 24 months.",
+    "researchQuestion": "Over 24 months, how smoothly and reliably does each of three ecosystems (Apple, Google, Samsung) perform its cross-device features (clipboard sync, file transfer, phone-to-watch notifications and earbud audio switching), and how do battery health and physical condition of the 12 devices change over the same period?",
+    "objective": "Track cross-device feature reliability and hardware longevity for three four-device ecosystems (phone, laptop, watch, earbuds each) over 24 months, using a fixed weekly, monthly and checkpoint protocol that stays sustainable for one person.",
+    "methodology": "Stationary setup: all 12 devices are used under the same stationary conditions. The study measures whether each ecosystem performs its cross-device features smoothly, not raw performance. Weekly timed trials per ecosystem: clipboard phone to laptop (5 trials) and laptop to phone (5), a 50MB file transfer phone to laptop via AirDrop or Quick Share (3), phone-to-watch notification delivery (5) and automatic earbud audio switching from phone to laptop (3). Each trial is logged as success (1/0) and, when successful, seconds. Timing uses a stopwatch, so resolution is about ±1 s; the same method is kept for all 24 months. Monthly battery health, cycle count and issue logging per device; full checkpoints at months 6, 12, 18 and 24. Raw data lives in data/exp-08/*.csv (devices.csv, weekly.csv, health.csv, incidents.csv).",
+    "conditions": "12 owned devices in a stationary setup, single owner, single location. 24-month observation window starting at day 0; day 0 has not started. Each device is updated to the current stable OS and firmware at day 0, and OS and firmware versions are logged in every session. The same standard 50MB test file is used on every phone and laptop.",
+    "protocol": "Protocol v1.0, approved 2026-09-27 (data/exp-08/README.md). DAY 0 (baseline, once, before any weekly data counts): for every device, record acquired_date and os_at_baseline in devices.csv, update to the current stable OS and firmware and note the versions, log a health.csv row with checkpoint m00, and take condition photos (front, back, edges, screen on white). For each ecosystem, unpair and re-pair every accessory from scratch and note friction, confirm clipboard sync, file sharing, phone-to-laptop notifications and audio auto-switch are on, place the standard 50MB test file on every phone and laptop, and run one full weekly session (week 0). WEEKLY (about 15 minutes per ecosystem): one weekly.csv row per trial for clipboard_p2l (5 trials), clipboard_l2p (5), file_transfer (3), notif_watch (5, with dismiss sync Y/N in notes) and audio_switch (3), recording phone OS, laptop OS and accessory firmware versions. MONTHLY (about 10 minutes): one health.csv row per device with battery health and cycle count where the OS exposes them (not_exposed otherwise, never estimated) and any issues noticed. CHECKPOINTS at months 6, 12, 18 and 24 (about 1 hour): full battery rundown on each phone and laptop, condition photos in the day-0 views, unpair and re-pair every accessory, plus the monthly measurements and one weekly session. INCIDENTS (whenever they happen): one incidents.csv row per sync failure, dropout, crash or forced re-pair.",
     "measurements": null,
-    "results": "Testing protocol formalized and queued. Baseline telemetry servers active.",
-    "observations": [
-      "Hardware cohorts acquired and cataloged in WDIII Tech Vault repository.",
-      "Automated notification latency probes configured on dedicated gateway."
-    ],
-    "limitations": "Long-duration lifecycle study currently in setup phase.",
-    "verdict": "Protocol approved by research board. Testing commencing upon hardware cohort burn-in.",
+    "results": "No data has been collected yet. Day 0 (baseline) has not started.",
+    "observations": [],
+    "limitations": "The laptops are in different hardware tiers (MacBook Pro M2 Pro, Galaxy Chromebook Plus, Galaxy Book4 Edge); this is a disclosure only, since the study measures ecosystem smoothness, not power. The Google-ecosystem laptop is Samsung hardware running ChromeOS. Battery health and cycle count are not exposed on some watches and earbuds; those values are recorded as not_exposed rather than estimated. OS and firmware updates over 24 months are a confound; versions are logged in every session so update effects can be traced. Single owner, single location. Stopwatch timing limits resolution to about ±1 s.",
+    "verdict": "TBD — requires collected data; no data has been collected yet.",
     "devices": [
-      "apple-iphone-15-pro",
+      "apple-iphone-16e",
+      "apple-macbook-pro-m2-pro",
+      "apple-watch-se-3",
+      "apple-airpods-5",
       "google-pixel-10-pro",
+      "samsung-galaxy-chromebook-plus-15",
+      "google-pixel-watch-4",
+      "google-pixel-buds-pro-2",
       "samsung-galaxy-s26-ultra",
-      "apple-macbook-air-m3-2024"
+      "samsung-galaxy-book4-edge-15",
+      "samsung-galaxy-watch8",
+      "samsung-galaxy-buds4-pro"
     ],
     "sources": [
-      "WDIII Protocol RFC-088",
-      "Ecosystem Reliability Test Definition v1.0"
+      "data/exp-08/README.md (protocol v1.0, day-0 checklist)",
+      "data/exp-08/devices.csv (device list)",
+      "data/exp-08/weekly.csv, health.csv, incidents.csv (raw data log, empty until day 0)"
     ],
     "tags": [
-      "Ecosystem Protocol",
+      "Ecosystem Reliability",
       "Hardware Longevity",
+      "Cross-Device Features",
       "Queued Study"
     ],
-    "scope": "24-month multi-device tracking protocol across 3 major ecosystems",
-    "search": "exp-8 queued cross-platform ecosystem reliability protocol",
+    "scope": "24-month study of 12 owned devices (phone, laptop, watch and earbuds for Apple, Google and Samsung) in a stationary setup",
+    "search": "exp-8 queued cross-platform ecosystem reliability hardware longevity apple google samsung clipboard file transfer airdrop quick share notifications watch earbuds audio switch battery health",
     "toc": [
       {
-        "id": "q8-scope",
-        "label": "Protocol Scope"
+        "id": "q8-setup",
+        "label": "Devices & Setup"
       },
       {
-        "id": "q8-methodology",
-        "label": "Testing Grid"
+        "id": "q8-protocol",
+        "label": "Protocol Cadence"
       },
       {
-        "id": "q8-schedule",
-        "label": "Execution Milestones"
+        "id": "q8-limitations",
+        "label": "Limitations"
       }
     ],
     "relatedExperiments": [
@@ -1413,22 +1420,53 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
-    "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "updatedAt": "2026-09-27T00:00:00.000Z",
+    "protocolVersion": "1.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "dropCyclesSurvived",
-        "label": "Drop Test Cycles Survived",
+        "key": "clipboardP2lSeconds",
+        "label": "Clipboard Phone → Laptop",
         "type": "number",
-        "unit": "Drops",
-        "required": true,
-        "min": 0,
-        "max": 50
+        "unit": "Seconds",
+        "required": false,
+        "min": 0
       },
       {
-        "key": "hingeResistanceDelta",
-        "label": "Hinge Torque Degradation",
+        "key": "clipboardL2pSeconds",
+        "label": "Clipboard Laptop → Phone",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0
+      },
+      {
+        "key": "fileTransferSeconds",
+        "label": "50MB File Transfer Phone → Laptop",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0
+      },
+      {
+        "key": "notifWatchSeconds",
+        "label": "Phone → Watch Notification Delivery",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0
+      },
+      {
+        "key": "audioSwitchSeconds",
+        "label": "Earbud Audio Auto-Switch Phone → Laptop",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0
+      },
+      {
+        "key": "batteryHealthPct",
+        "label": "Battery Health (where exposed)",
         "type": "number",
         "unit": "%",
         "required": false,
@@ -1436,16 +1474,22 @@ export const OFFICIAL_EXPERIMENTS = [
         "max": 100
       },
       {
-        "key": "ipRatingMaintained",
-        "label": "Water/Dust Seal Integrity Maintained",
-        "type": "boolean",
-        "required": false
+        "key": "cycleCount",
+        "label": "Battery Cycle Count (where exposed)",
+        "type": "number",
+        "unit": "Cycles",
+        "required": false,
+        "min": 0
       }
     ],
     "allowedMeasurementKeys": [
-      "dropCyclesSurvived",
-      "hingeResistanceDelta",
-      "ipRatingMaintained"
+      "clipboardP2lSeconds",
+      "clipboardL2pSeconds",
+      "fileTransferSeconds",
+      "notifWatchSeconds",
+      "audioSwitchSeconds",
+      "batteryHealthPct",
+      "cycleCount"
     ]
   },
   {
