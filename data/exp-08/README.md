@@ -54,9 +54,11 @@ One `health.csv` row per device, with `checkpoint` = `monthly`.
 - **Battery health and cycle count:** fill them in where the OS shows them. For example: iPhone under Settings → Battery; macOS in System Information → Power; Windows via `powercfg /batteryreport`. Where a device doesn't expose them (common for watches and earbuds), write `not_exposed` rather than estimating.
 - **`issues`:** anything noticed since last month; details go in `incidents.csv`.
 
-## Checkpoints at months 6, 12, 18 and 24: about 1 hour
+## Checkpoints at months 6, 12, 18 and 24: about 1 hour hands-on, plus the battery rundowns
 
 `health.csv` rows use `checkpoint` = `m06`, `m12`, `m18` or `m24`.
+
+The hands-on work (measurements, photos, re-pairing, the weekly session) takes about 1 hour. The battery rundowns take several hours on top of that; they can run in parallel in the background.
 
 - A full battery rundown on each phone and laptop, recorded in the row's `notes`.
 - Condition photos, same views as day 0.
