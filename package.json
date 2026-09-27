@@ -11,7 +11,8 @@
     "test": "node scripts/security-audit-test.js && node scripts/test-auth-firestore.js && node scripts/test-database-integration.js && node scripts/test-device-stats.js && node scripts/test-compare-view.js && node scripts/test-comparison-system.js && node scripts/test-comments-integration.js && node scripts/test-community-hub-foundation.js && node scripts/test-cors-and-external-tools.js && node scripts/test-upload-submit-security.js && node scripts/test-seo-urls.js",
     "deploy:run": "gcloud run deploy wdiii-tech-vault --source . --region us-central1 --allow-unauthenticated",
     "deploy:hosting": "firebase deploy --only hosting",
-    "deploy": "npm run deploy:run && npm run deploy:hosting"
+    "deploy": "npm run deploy:run && npm run deploy:hosting",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-wdiii-rules \"node scripts/test-comments-rules.js\""
   },
   "dependencies": {
     "express": "^4.21.2"
@@ -21,5 +22,9 @@
   },
   "overrides": {
     "uuid": "^11.1.1"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^11.10.0"
   }
 }

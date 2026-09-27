@@ -266,13 +266,12 @@ export async function addComment({ experimentId, content }) {
   const sanitizedContent = sanitizeText(rawContent);
   const now = new Date().toISOString();
   const isOwner = isSystemOwner(currentUser);
-  const role = isOwner ? "owner" : (profile?.role || "contributor");
+  const role = isOwner ? "owner" : "contributor"; // rules only accept these two
 
   const commentPayload = {
     experimentId: String(experimentId),
     authorId: currentUser.uid,
     authorDisplayName: profile?.displayName || currentUser.displayName || "Registered Researcher",
-    authorEmail: currentUser.email || "",
     authorPhotoURL: currentUser.photoURL || profile?.photoURL || "",
     authorRole: role,
     content: sanitizedContent,

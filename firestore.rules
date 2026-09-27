@@ -202,38 +202,59 @@ service cloud.firestore {
       // Public reading allowed for all visitors
       allow read: if true;
 
-      // Registered users can post comments tied to their authenticated UID
-      allow create: if isSignedIn()
+      // Registered users only: a real, verified account (anonymous-auth and unverified
+      // email/password accounts are rejected). Google sign-in always has a verified email.
+      function isRegisteredUser() {
+        return isSignedIn()
+          && request.auth.token.firebase.sign_in_provider != 'anonymous'
+          && request.auth.token.get('email_verified', false) == true;
+      }
+
+      // Comments are publicly readable, so no email or other private fields may be stored.
+      // Owner badge can only be claimed by the verified owner.
+      allow create: if isRegisteredUser()
                     && request.resource.data.authorId == request.auth.uid
+                    && request.resource.data.keys().hasAll(['experimentId', 'authorId', 'authorDisplayName', 'content', 'createdAt'])
+                    && request.resource.data.keys().hasOnly(['experimentId', 'authorId', 'authorDisplayName', 'authorPhotoURL', 'authorRole',
+                                                             'content', 'createdAt', 'updatedAt', 'isEdited', 'likesCount', 'likedBy'])
                     && request.resource.data.authorDisplayName is string
+                    && request.resource.data.authorDisplayName.size() >= 1
+                    && request.resource.data.authorDisplayName.size() <= 80
                     && request.resource.data.experimentId is string
                     && request.resource.data.content is string
                     && request.resource.data.content.size() >= 1
                     && request.resource.data.content.size() <= 3000
                     && request.resource.data.createdAt is string
-                    && request.resource.data.keys().hasAll(['experimentId', 'authorId', 'authorDisplayName', 'content', 'createdAt']);
+                    && request.resource.data.get('authorRole', 'contributor') in ['contributor', 'owner']
+                    && (request.resource.data.get('authorRole', 'contributor') == 'contributor' || isSystemOwner())
+                    && request.resource.data.get('likesCount', 0) == 0
+                    && request.resource.data.get('likedBy', []) == [];
 
-      // Authors can edit content, or signed-in users can upvote
-      allow update: if isSignedIn() && (
+      allow update: if isRegisteredUser() && (
+                      // Author edits: only the text and edit markers may change
                       (
                         resource.data.authorId == request.auth.uid
-                        && request.resource.data.authorId == resource.data.authorId
-                        && request.resource.data.experimentId == resource.data.experimentId
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['content', 'updatedAt', 'isEdited'])
                         && request.resource.data.content is string
                         && request.resource.data.content.size() >= 1
                         && request.resource.data.content.size() <= 3000
                       )
                       ||
+                      // Like / unlike: only likedBy + likesCount, only your own uid, count must match
                       (
-                        request.resource.data.authorId == resource.data.authorId
-                        && request.resource.data.experimentId == resource.data.experimentId
-                        && request.resource.data.content == resource.data.content
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likedBy', 'likesCount'])
+                        && request.resource.data.likedBy is list
+                        && request.resource.data.likedBy.size() == request.resource.data.likedBy.toSet().size()
+                        && request.resource.data.likesCount == request.resource.data.likedBy.size()
+                        && request.resource.data.likedBy.toSet().difference(resource.data.get('likedBy', []).toSet())
+                             .union(resource.data.get('likedBy', []).toSet().difference(request.resource.data.likedBy.toSet()))
+                             .hasOnly([request.auth.uid])
                       )
                     );
 
       // Authors can delete their own comments; moderators/admins can delete any comment
-      allow delete: if isSignedIn()
-                    && (resource.data.authorId == request.auth.uid || isModerator());
+      allow delete: if isModerator()
+                    || (isRegisteredUser() && (resource.data.authorId == request.auth.uid || isModerator()));
     }
 
     // Default Deny
