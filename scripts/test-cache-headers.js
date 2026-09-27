@@ -33,11 +33,13 @@ check(`import map /src/ points at /v/${version}/src/`, map['/src/'] === `/v/${ve
 check(`import map /js/ points at /v/${version}/js/`, map['/js/'] === `/v/${version}/js/`, `got ${map['/js/']}`);
 check('import map comes before the module script', html.indexOf('type="importmap"') < html.indexOf('<script type="module">'));
 check(`stylesheet link is versioned ?v=${version}`, html.includes(`/css/style.css?v=${version}`));
+check(`preflight link is versioned ?v=${version} and follows style.css`, html.includes(`/css/preflight.css?v=${version}`) && html.indexOf('/css/style.css') < html.indexOf('/css/preflight.css'));
+check('Tailwind Play CDN is not loaded', !html.includes('cdn.tailwindcss.com'));
 
 const firebase = fs.readFileSync('firebase.json', 'utf8');
 check('firebase.json no longer marks assets immutable', !firebase.includes('immutable'));
 
-for (const path of ['/src/utils/sanitize.js', `/v/${version}/src/utils/sanitize.js`, '/js/main.js', `/v/${version}/js/main.js`, '/css/style.css']) {
+for (const path of ['/src/utils/sanitize.js', `/v/${version}/src/utils/sanitize.js`, '/js/main.js', `/v/${version}/js/main.js`, '/css/style.css', '/css/preflight.css']) {
   const r = await get(path);
   check(`GET ${path} -> 200, Cache-Control no-cache`, r.status === 200 && r.cache === 'no-cache', `got ${r.status} "${r.cache}"`);
 }
