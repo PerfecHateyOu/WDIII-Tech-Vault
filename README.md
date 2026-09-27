@@ -25,7 +25,7 @@ The site is a single-page app (`index.html`). The Fodder Archive lives inside it
 
 ## 🚀 Running locally
 
-Requires Node.js v18 or later.
+Requires Node.js v22 or later (firebase-admin 14).
 
 ```bash
 git clone https://github.com/PerfecHateyOu/WDIII-Tech-Vault.git
