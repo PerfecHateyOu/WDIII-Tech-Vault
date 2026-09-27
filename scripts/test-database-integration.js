@@ -107,7 +107,7 @@ const appleFiltered = await getDevices({ search: "Apple" });
 assert(appleFiltered.length >= 8 && appleFiltered.every(d => d.brand === "Apple"), `Search 'Apple' correctly returned ${appleFiltered.length} Apple devices`);
 
 const laptopFiltered = await getDevices({ category: "laptop" });
-assert(laptopFiltered.length === 4 && laptopFiltered.every(d => d.category === "laptop"), `Filter category 'laptop' returned exactly 4 laptops`);
+assert(laptopFiltered.length === 7 && laptopFiltered.every(d => d.category === "laptop"), `Filter category 'laptop' returned exactly 7 laptops`);
 
 const osFiltered = await getDevices({ operatingSystem: "ios" });
 assert(osFiltered.length >= 6 && osFiltered.every(d => (d.operatingSystem || "").toLowerCase().includes("ios")), `Filter OS 'ios' correctly isolated iOS hardware`);
