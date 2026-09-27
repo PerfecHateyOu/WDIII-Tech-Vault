@@ -2,7 +2,8 @@
  * Release file audit (static, no server needed).
  * The Dockerfile copies package-lock.json and runs `npm ci`, so a missing or
  * out-of-sync lockfile breaks every Cloud Run deploy. Version bumps deleted it
- * twice (5.7.5 and 5.7.6); this catches that before it reaches main.
+ * twice (5.7.5 and 5.7.6), and the 5.8.0 bump stripped every integrity hash;
+ * this catches both before they reach main.
  */
 import fs from 'fs';
 
@@ -24,6 +25,11 @@ if (hasLock) {
   check('lockfile root package version matches', lock.packages?.['']?.version === pkg.version, `got ${lock.packages?.['']?.version}`);
   const missing = Object.keys(pkg.dependencies || {}).filter((d) => !lock.packages?.[`node_modules/${d}`]);
   check('every dependency is in the lockfile', missing.length === 0, `missing: ${missing.join(', ')}`);
+  // Without integrity hashes `npm ci` still succeeds but no longer verifies what it downloads.
+  const unverified = Object.entries(lock.packages || {})
+    .filter(([name, meta]) => name && !meta.link && !meta.inBundle && (!meta.integrity || !meta.resolved))
+    .map(([name]) => name.replace(/^node_modules\//, ''));
+  check('every locked package has resolved + integrity', unverified.length === 0, `${unverified.length} without: ${unverified.slice(0, 5).join(', ')}`);
 }
 
 const dockerfile = fs.readFileSync('Dockerfile', 'utf8');
