@@ -1,1 +1,64 @@
 date,ecosystem,test,trial,success,seconds,phone_os,laptop_os,accessory_fw,notes
+2026-09-27,apple,clipboard_p2l,1,1,2.3,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_p2l,2,1,1.6,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_p2l,3,1,1.5,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_p2l,4,1,1.8,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_p2l,5,1,1.4,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_l2p,1,1,2.1,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_l2p,2,1,1.4,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_l2p,3,1,1.6,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_l2p,4,1,1.5,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,clipboard_l2p,5,1,1.3,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,file_transfer,1,1,4.8,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,file_transfer,2,1,3.9,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,file_transfer,3,1,4.1,iOS 27.0,macOS 27.0,,week 0
+2026-09-27,apple,notif_watch,1,1,1.2,iOS 27.0,macOS 27.0,watchOS 27.0,week 0; dismiss_sync=Y
+2026-09-27,apple,notif_watch,2,1,1.1,iOS 27.0,macOS 27.0,watchOS 27.0,week 0; dismiss_sync=Y
+2026-09-27,apple,notif_watch,3,1,1.4,iOS 27.0,macOS 27.0,watchOS 27.0,week 0; dismiss_sync=Y
+2026-09-27,apple,notif_watch,4,1,1.0,iOS 27.0,macOS 27.0,watchOS 27.0,week 0; dismiss_sync=Y
+2026-09-27,apple,notif_watch,5,1,1.3,iOS 27.0,macOS 27.0,watchOS 27.0,week 0; dismiss_sync=Y
+2026-09-27,apple,audio_switch,1,1,2.4,iOS 27.0,macOS 27.0,firmware 9A350,week 0
+2026-09-27,apple,audio_switch,2,1,2.1,iOS 27.0,macOS 27.0,firmware 9A350,week 0
+2026-09-27,apple,audio_switch,3,1,2.6,iOS 27.0,macOS 27.0,firmware 9A350,week 0
+2026-09-27,google,clipboard_p2l,1,1,3.4,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_p2l,2,1,2.2,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_p2l,3,1,2.0,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_p2l,4,1,2.1,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_p2l,5,1,1.9,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_l2p,1,1,3.1,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_l2p,2,1,2.5,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_l2p,3,1,2.2,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_l2p,4,1,2.0,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,clipboard_l2p,5,1,2.3,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,file_transfer,1,1,5.8,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,file_transfer,2,1,5.1,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,file_transfer,3,1,4.9,Android 17,ChromeOS 150,,week 0
+2026-09-27,google,notif_watch,1,1,1.8,Android 17,ChromeOS 150,Wear OS 6.0,week 0; dismiss_sync=Y
+2026-09-27,google,notif_watch,2,1,1.5,Android 17,ChromeOS 150,Wear OS 6.0,week 0; dismiss_sync=Y
+2026-09-27,google,notif_watch,3,1,1.6,Android 17,ChromeOS 150,Wear OS 6.0,week 0; dismiss_sync=Y
+2026-09-27,google,notif_watch,4,1,1.4,Android 17,ChromeOS 150,Wear OS 6.0,week 0; dismiss_sync=Y
+2026-09-27,google,notif_watch,5,1,1.7,Android 17,ChromeOS 150,Wear OS 6.0,week 0; dismiss_sync=Y
+2026-09-27,google,audio_switch,1,1,3.2,Android 17,ChromeOS 150,firmware 5.9.0,week 0
+2026-09-27,google,audio_switch,2,1,2.8,Android 17,ChromeOS 150,firmware 5.9.0,week 0
+2026-09-27,google,audio_switch,3,1,3.0,Android 17,ChromeOS 150,firmware 5.9.0,week 0
+2026-09-27,samsung,clipboard_p2l,1,1,2.1,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_p2l,2,1,1.7,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_p2l,3,1,1.6,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_p2l,4,1,1.8,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_p2l,5,1,1.5,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_l2p,1,1,2.0,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_l2p,2,1,1.6,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_l2p,3,1,1.5,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_l2p,4,1,1.7,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,clipboard_l2p,5,1,1.4,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,file_transfer,1,1,4.2,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,file_transfer,2,1,3.7,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,file_transfer,3,1,3.6,One UI 9,Windows 11 Home 26H2,,week 0
+2026-09-27,samsung,notif_watch,1,1,1.3,One UI 9,Windows 11 Home 26H2,One UI 8 Watch,week 0; dismiss_sync=Y
+2026-09-27,samsung,notif_watch,2,1,1.1,One UI 9,Windows 11 Home 26H2,One UI 8 Watch,week 0; dismiss_sync=Y
+2026-09-27,samsung,notif_watch,3,1,1.2,One UI 9,Windows 11 Home 26H2,One UI 8 Watch,week 0; dismiss_sync=Y
+2026-09-27,samsung,notif_watch,4,1,1.0,One UI 9,Windows 11 Home 26H2,One UI 8 Watch,week 0; dismiss_sync=Y
+2026-09-27,samsung,notif_watch,5,1,1.4,One UI 9,Windows 11 Home 26H2,One UI 8 Watch,week 0; dismiss_sync=Y
+2026-09-27,samsung,audio_switch,1,1,2.5,One UI 9,Windows 11 Home 26H2,firmware R640XXU0AZA1,week 0
+2026-09-27,samsung,audio_switch,2,1,2.2,One UI 9,Windows 11 Home 26H2,firmware R640XXU0AZA1,week 0
+2026-09-27,samsung,audio_switch,3,1,2.4,One UI 9,Windows 11 Home 26H2,firmware R640XXU0AZA1,week 0
