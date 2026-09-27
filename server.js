@@ -2,6 +2,9 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
+import { initializeApp as initAdminApp, getApps as getAdminApps } from 'firebase-admin/app';
+import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 import { OFFICIAL_EXPERIMENTS } from './src/data/official-experiments.js';
 import { OFFICIAL_DEVICES } from './src/data/official-devices.js';
 
@@ -12,7 +15,13 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000; // Cloud Run injects PORT (8080)
 const HOST = '0.0.0.0';
 
-app.use(express.json({ limit: '10mb' }));
+app.set('trust proxy', true); // Behind Firebase Hosting / Cloud Run: use X-Forwarded-For for client IP
+
+const UPLOAD_ROUTE = '/api/upload-evidence';
+const defaultJson = express.json({ limit: '1mb' });
+// 10 MB file -> ~13.4 MB base64, plus JSON envelope
+const uploadJson = express.json({ limit: '14mb' });
+app.use((req, res, next) => (req.path === UPLOAD_ROUTE ? uploadJson : defaultJson)(req, res, next));
 
 // ===== Universal CORS Middleware: External Tools, Fetchers & Scripts =====
 // Enables external tools, scripts, and AI agents to fetch, view, and summarize data
@@ -199,71 +208,160 @@ app.get('/api/devices/:id', (req, res) => {
   res.json(dev);
 });
 
-// ===== Community Evidence Upload =====
-// Accepts a base64-encoded file, writes it to public/uploads/evidence/, and returns its path.
-// Cloud Run note: this filesystem is ephemeral — persisted uploads belong in Firebase Storage.
-app.post('/api/upload-evidence', (req, res) => {
-  const { fileName, fileType, base64Data, userId } = req.body || {};
-
-  if (!fileName || !base64Data) {
-    return res.status(400).json({ error: 'fileName and base64Data are required' });
-  }
-
-  const ALLOWED_TYPES = new Set([
-    'image/jpeg', 'image/png', 'image/webp', 'image/gif',
-    'application/pdf', 'video/mp4', 'video/webm'
-  ]);
-  if (fileType && !ALLOWED_TYPES.has(fileType)) {
-    return res.status(415).json({ error: 'Unsupported file type' });
-  }
-
-  const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
-  const base64Payload = base64Data.includes(',') ? base64Data.split(',')[1] : base64Data;
-  if (Buffer.byteLength(base64Payload, 'base64') > MAX_BYTES) {
-    return res.status(413).json({ error: 'File exceeds 10 MB limit' });
-  }
-
+// ===== Firebase Admin (ID token verification only) =====
+// Only needs the project ID: token verification uses Google's public certs, no service account.
+let adminAuth = null;
+function getAdminAuthInstance() {
+  if (adminAuth) return adminAuth;
+  let projectId = process.env.GOOGLE_CLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID;
   try {
-    const safeUserId = (userId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
-    const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 200);
-    const timestamp = Date.now();
-    const outFileName = `${timestamp}_${safeName}`;
-    const uploadDir = path.join(__dirname, 'public', 'uploads', 'evidence', safeUserId);
+    const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'firebase-applet-config.json'), 'utf8'));
+    projectId = cfg.projectId || projectId;
+  } catch { /* fall back to env */ }
+  if (!projectId) throw new Error('Firebase projectId not configured');
+  const app = getAdminApps()[0] || initAdminApp({ projectId });
+  adminAuth = getAdminAuth(app);
+  return adminAuth;
+}
 
-    fs.mkdirSync(uploadDir, { recursive: true });
-    fs.writeFileSync(path.join(uploadDir, outFileName), Buffer.from(base64Payload, 'base64'));
-
-    const filePath = `/uploads/evidence/${safeUserId}/${outFileName}`;
-    return res.json({
-      fileName: outFileName,
-      path: filePath,
-      url: filePath,
-      uploadedAt: new Date().toISOString()
-    });
-  } catch (err) {
-    console.error('Evidence upload error:', err);
-    return res.status(500).json({ error: 'Upload failed' });
+async function requireFirebaseUser(req, res, next) {
+  const match = /^Bearer (.+)$/.exec(req.get('Authorization') || '');
+  if (!match) return res.status(401).json({ error: 'Sign-in required' });
+  try {
+    const decoded = await getAdminAuthInstance().verifyIdToken(match[1]);
+    if (decoded.firebase?.sign_in_provider === 'anonymous') {
+      return res.status(403).json({ error: 'Anonymous accounts cannot upload evidence' });
+    }
+    req.user = { uid: decoded.uid };
+    return next();
+  } catch {
+    return res.status(401).json({ error: 'Invalid or expired session' });
   }
-});
+}
+
+// ===== Simple in-memory rate limiter (per Cloud Run instance) =====
+function rateLimit({ windowMs, max, key }) {
+  const hits = new Map();
+  setInterval(() => {
+    const now = Date.now();
+    for (const [k, v] of hits) if (v.reset <= now) hits.delete(k);
+  }, windowMs).unref();
+  return (req, res, next) => {
+    const k = key(req);
+    const now = Date.now();
+    let entry = hits.get(k);
+    if (!entry || entry.reset <= now) {
+      entry = { count: 0, reset: now + windowMs };
+      hits.set(k, entry);
+    }
+    if (++entry.count > max) {
+      res.setHeader('Retry-After', Math.ceil((entry.reset - now) / 1000));
+      return res.status(429).json({ error: 'Too many requests, slow down' });
+    }
+    return next();
+  };
+}
+
+// ===== Evidence type policy (mirrors storage.rules) =====
+// Extension is derived from the validated type, never from the client's filename.
+const EVIDENCE_TYPES = {
+  'image/jpeg':       { ext: 'jpg',  maxBytes: 8 * 1024 * 1024,  magic: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff },
+  'image/png':        { ext: 'png',  maxBytes: 8 * 1024 * 1024,  magic: (b) => b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) },
+  'image/gif':        { ext: 'gif',  maxBytes: 8 * 1024 * 1024,  magic: (b) => b.subarray(0, 4).toString('latin1') === 'GIF8' },
+  'image/webp':       { ext: 'webp', maxBytes: 8 * 1024 * 1024,  magic: (b) => b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WEBP' },
+  'application/pdf':  { ext: 'pdf',  maxBytes: 10 * 1024 * 1024, magic: (b) => b.subarray(0, 5).toString('latin1') === '%PDF-' },
+  'text/plain':       { ext: 'txt',  maxBytes: 10 * 1024 * 1024, magic: isPlainText },
+  'text/csv':         { ext: 'csv',  maxBytes: 10 * 1024 * 1024, magic: isPlainText },
+  'application/json': { ext: 'json', maxBytes: 10 * 1024 * 1024, magic: (b) => { try { JSON.parse(b.toString('utf8')); return true; } catch { return false; } } }
+};
+
+function isPlainText(buf) {
+  if (buf.includes(0)) return false;
+  const text = buf.toString('utf8');
+  if (text.includes('\uFFFD')) return false;                    // not valid UTF-8
+  return !/<\s*(script|svg|html|iframe|object)\b/i.test(text.slice(0, 4096)); // markup posing as text
+}
+
+// ===== Community Evidence Upload =====
+// Auth required; uid comes from the verified ID token, not the request body.
+// Cloud Run note: this filesystem is in-memory and ephemeral — move writes to Firebase Storage.
+app.post(
+  UPLOAD_ROUTE,
+  rateLimit({ windowMs: 10 * 60 * 1000, max: 30, key: (req) => `ip:${req.ip}` }),
+  requireFirebaseUser,
+  rateLimit({ windowMs: 10 * 60 * 1000, max: 20, key: (req) => `uid:${req.user.uid}` }),
+  (req, res) => {
+    const { fileName, fileType, base64Data } = req.body || {};
+
+    if (typeof fileName !== 'string' || typeof base64Data !== 'string' || typeof fileType !== 'string') {
+      return res.status(400).json({ error: 'fileName, fileType and base64Data are required' });
+    }
+
+    const policy = EVIDENCE_TYPES[fileType];
+    if (!policy) {
+      return res.status(415).json({ error: 'Unsupported file type' });
+    }
+
+    const base64Payload = base64Data.includes(',') ? base64Data.slice(base64Data.indexOf(',') + 1) : base64Data;
+    const buffer = Buffer.from(base64Payload, 'base64');
+    if (buffer.length === 0) {
+      return res.status(400).json({ error: 'Empty file' });
+    }
+    if (buffer.length > policy.maxBytes) {
+      return res.status(413).json({ error: `File exceeds ${policy.maxBytes / (1024 * 1024)} MB limit for ${fileType}` });
+    }
+    if (!policy.magic(buffer)) {
+      return res.status(415).json({ error: 'File contents do not match declared type' });
+    }
+
+    try {
+      const stem = path.parse(fileName).name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80) || 'evidence';
+      const outFileName = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}_${stem}.${policy.ext}`;
+      const uid = req.user.uid.replace(/[^a-zA-Z0-9_-]/g, '_');
+      const uploadDir = path.join(__dirname, 'public', 'uploads', 'evidence', uid);
+
+      fs.mkdirSync(uploadDir, { recursive: true });
+      fs.writeFileSync(path.join(uploadDir, outFileName), buffer, { flag: 'wx' });
+
+      const filePath = `/uploads/evidence/${uid}/${outFileName}`;
+      return res.status(201).json({
+        fileName: outFileName,
+        path: filePath,
+        url: filePath,
+        size: buffer.length,
+        type: fileType,
+        uploadedAt: new Date().toISOString()
+      });
+    } catch (err) {
+      console.error('Evidence upload error:', err.message);
+      return res.status(500).json({ error: 'Upload failed' });
+    }
+  }
+);
 
 // ===== Contact / General Form Submission =====
-// Validates and acknowledges form submissions. Wire up an email provider or Firestore here when ready.
-app.post('/api/submit', (req, res) => {
-  const { name, email, message, type } = req.body || {};
+// Validates and acknowledges only; nothing is persisted yet. No PII is logged.
+app.post(
+  '/api/submit',
+  rateLimit({ windowMs: 10 * 60 * 1000, max: 5, key: (req) => `submit:${req.ip}` }),
+  (req, res) => {
+    const { email, message, type } = req.body || {};
 
-  if (!message || typeof message !== 'string' || !message.trim()) {
-    return res.status(400).json({ error: 'message is required' });
-  }
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address' });
-  }
-  if (message.trim().length > 5000) {
-    return res.status(400).json({ error: 'Message exceeds 5000 character limit' });
-  }
+    if (typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ error: 'message is required' });
+    }
+    if (email !== undefined && (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+      return res.status(400).json({ error: 'Invalid email address' });
+    }
+    if (message.trim().length > 5000) {
+      return res.status(400).json({ error: 'Message exceeds 5000 character limit' });
+    }
 
-  console.log(`[/api/submit] type=${type || 'contact'} name=${name || '—'} email=${email || '—'}`);
-  return res.json({ ok: true, message: 'Submission received' });
-});
+    const safeType = typeof type === 'string' ? type.replace(/[^a-z_-]/gi, '').slice(0, 32) : 'contact';
+    console.log(`[/api/submit] type=${safeType || 'contact'} length=${message.trim().length}`);
+    return res.status(202).json({ ok: true, persisted: false, message: 'Submission received' });
+  }
+);
 
 // ===== Explicit Brand Asset Download Routes =====
 app.get(['/download/logo.svg', '/download/wdiii-logo.svg'], (req, res) => {
@@ -287,7 +385,17 @@ app.get(['/download/logo.jpg', '/download/wdiii-logo.jpg'], (req, res) => {
 });
 
 // Serve /uploads statically with dedicated route
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), {
+  dotfiles: 'ignore',
+  index: false,
+  setHeaders: (res) => {
+    // User content: never sniff, never execute, never render as a document on this origin
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
+    res.setHeader('Content-Disposition', 'attachment');
+    res.setHeader('Cache-Control', 'private, max-age=3600');
+  }
+}));
 
 // Fallback for unmatched API routes to ensure JSON 404
 app.all('/api/*', (req, res) => {
