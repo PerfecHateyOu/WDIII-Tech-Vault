@@ -15,6 +15,12 @@ function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+// A record whose OS or any spec field is still "TBD…" hasn't been verified yet.
+function hasPendingSpecs(device) {
+  const values = [device.operatingSystem, ...Object.values(device.specifications || {})];
+  return values.some(v => typeof v === "string" && v.trim().toUpperCase().startsWith("TBD"));
+}
+
 function formatSpec(val) {
   if (val === null || val === undefined || val === "") {
     return `<span style="color:var(--td-text-muted); font-style:italic; font-size:0.82rem;">—</span>`;
@@ -75,6 +81,7 @@ export async function renderDevicesCatalog(container) {
         <button class="device-filter-os" data-os="android" style="padding:0.25rem 0.625rem; border-radius:9999px; font-size:0.78rem; font-weight:600; cursor:pointer; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-secondary);">Android</button>
         <button class="device-filter-os" data-os="macos" style="padding:0.25rem 0.625rem; border-radius:9999px; font-size:0.78rem; font-weight:600; cursor:pointer; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-secondary);">macOS</button>
         <button class="device-filter-os" data-os="windows" style="padding:0.25rem 0.625rem; border-radius:9999px; font-size:0.78rem; font-weight:600; cursor:pointer; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-secondary);">Windows</button>
+<button class="device-filter-os" data-os="chromeos" style="padding:0.25rem 0.625rem; border-radius:9999px; font-size:0.78rem; font-weight:600; cursor:pointer; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-secondary);">ChromeOS</button>
       </div>
     </div>
 
@@ -238,9 +245,15 @@ function renderDeviceCard(device) {
               ${esc(device.operatingSystem)}
             </span>
           ` : ""}
-          <span style="font-size:0.72rem; padding:0.15rem 0.5rem; border-radius:0.25rem; background:rgba(52, 211, 153, 0.1); border:1px solid rgba(52, 211, 153, 0.25); color:var(--td-success);">
-            Verified Spec
-          </span>
+          ${hasPendingSpecs(device) ? `
+            <span style="font-size:0.72rem; padding:0.15rem 0.5rem; border-radius:0.25rem; background:var(--td-warning-bg); border:1px solid var(--td-warning); color:var(--td-warning);">
+              Specs TBD
+            </span>
+          ` : `
+            <span style="font-size:0.72rem; padding:0.15rem 0.5rem; border-radius:0.25rem; background:rgba(52, 211, 153, 0.1); border:1px solid rgba(52, 211, 153, 0.25); color:var(--td-success);">
+              Verified Spec
+            </span>
+          `}
         </div>
 
         <!-- Quick Spec Snapshot -->
@@ -391,7 +404,7 @@ export async function renderDeviceDetail(container, deviceId) {
       <!-- Technical Specifications Section -->
       <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border); border-radius:0.75rem; padding:1.75rem; margin-bottom:2rem;">
         <h3 style="color:#fff; font-size:1.2rem; font-weight:700; margin:0 0 1.25rem; display:flex; align-items:center; gap:0.5rem;">
-          <span>⚙️</span> <span>Verified Technical Specifications</span>
+          <span>⚙️</span> <span>${hasPendingSpecs(device) ? "Technical Specifications (partly TBD)" : "Verified Technical Specifications"}</span>
         </h3>
 
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1px; background:var(--td-border-subtle); border:1px solid var(--td-border-subtle); border-radius:0.5rem; overflow:hidden;">
@@ -446,7 +459,7 @@ export async function renderDeviceDetail(container, deviceId) {
         </div>
 
         <div style="margin-top:0.75rem; font-size:0.75rem; color:var(--td-text-muted);">
-          * Note: Specifications reflect empirically tested configurations or official manufacturer technical documentation. Missing or unverified fields are documented as "—" rather than extrapolated.
+          * Note: Specifications reflect empirically tested configurations or official manufacturer technical documentation. Missing fields are shown as "—" and unverified fields as "TBD" rather than extrapolated.
         </div>
       </div>
 
