@@ -84,7 +84,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "5G, Wi-Fi 6, Bluetooth 5.3, UWB"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 2 Repair Channel Tiers Test (3 identical units)", "Official Apple Store", "AASP & Independent Repair Logs"],
+    sources: ["WDIII Experiment 2 Repair Channel Comparison (3 identical units)"],
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-13T00:00:00.000Z",
     status: "active",
@@ -516,7 +516,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "5G, Wi-Fi 6, Bluetooth 5.0, UWB"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Case Study — Swollen battery split phone casing"],
+    sources: ["WDIII Case Study — Swollen battery documented"],
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-13T00:00:00.000Z",
     status: "archived",

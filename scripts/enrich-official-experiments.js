@@ -11,57 +11,38 @@ const SCHEMAS = {
     { key: "adminIssueOccurred", label: "Administrative / Logistical Failure", type: "boolean", required: false }
   ],
   exp2: [
-    { key: "channelTier", label: "Repair Channel Tier", type: "string", required: true },
-    { key: "repairCost", label: "Total Repair Cost", type: "number", unit: "USD", required: true, min: 0, max: 2000 },
-    { key: "turnaroundHours", label: "Turnaround Time", type: "number", unit: "Hours", required: true, min: 0, max: 500 },
-    { key: "turnaroundDays", label: "Turnaround Days", type: "number", unit: "Days", required: false, min: 0, max: 60 },
-    { key: "qualityRating", label: "Repair Quality Rating", type: "number", unit: "/ 10", required: false, min: 1, max: 10 },
-    { key: "genuinePartVerified", label: "OEM Genuine Part Verified", type: "boolean", required: false },
-    { key: "warrantyMonths", label: "Warranty Coverage", type: "number", unit: "Months", required: false, min: 0, max: 36 }
+    { key: "repairCostUsd", label: "Repair cost", type: "number", required: true, unit: "USD", min: 0, max: 5000 },
+    { key: "turnaroundDays", label: "Turnaround", type: "number", required: false, unit: "days", min: 0, max: 120 },
+    { key: "waterproofingPreserved", label: "Waterproofing preserved", type: "boolean", required: false },
+    { key: "warrantyProvided", label: "Warranty provided", type: "boolean", required: false }
   ],
   exp3: [
-    { key: "holdTimeMinutes", label: "Initial Hold Time", type: "number", unit: "Minutes", required: true, min: 0, max: 180 },
-    { key: "waitMinutes", label: "Wait Duration", type: "number", unit: "Minutes", required: false, min: 0, max: 240 },
-    { key: "resolutionDays", label: "Resolution Time", type: "number", unit: "Days", required: true, min: 0, max: 90 },
-    { key: "escalationsCount", label: "Escalation Count", type: "number", unit: "Tiers", required: false, min: 0, max: 20 },
-    { key: "resolutionRate", label: "Resolution Success Rate", type: "number", unit: "%", required: false, min: 0, max: 100 },
-    { key: "satisfactionScore", label: "Support Satisfaction Score", type: "number", unit: "Score", required: false, min: 1, max: 10 }
+    { key: "supportRating", label: "Support rating", type: "number", required: true, unit: "/ 5", min: 0, max: 5 },
+    { key: "correctAnswerGiven", label: "Correct answer given", type: "boolean", required: false }
   ],
   exp4: [
-    { key: "geekbenchSingleCore", label: "Geekbench Single-Core", type: "number", unit: "Points", required: true, min: 0, max: 10000 },
-    { key: "geekbenchMultiCore", label: "Geekbench Multi-Core", type: "number", unit: "Points", required: true, min: 0, max: 30000 },
-    { key: "appLaunchRunTime", label: "Cold App Launch Duration", type: "number", unit: "Seconds", required: true, min: 0, max: 30 },
-    { key: "thermalPeak", label: "Peak Temperature Under Load", type: "number", unit: "°C", required: false, min: 15, max: 90 },
-    { key: "primaryScore", label: "Benchmark Overall Score", type: "number", unit: "Score", required: false, min: 0, max: 50000 }
+    { key: "bootSpeedDeltaPercent", label: "Boot speed change", type: "number", required: false, unit: "%", min: -100, max: 100 },
+    { key: "appLoadDeltaPercent", label: "App loading change", type: "number", required: false, unit: "%", min: -100, max: 100 },
+    { key: "thermalStabilityPercent", label: "3DMark thermal stability", type: "number", required: false, unit: "%", min: 0, max: 100 },
+    { key: "batteryRemainingPercent", label: "Battery remaining (same workload)", type: "number", required: true, unit: "%", min: 0, max: 100 }
   ],
   casestudy: [
-    { key: "swollenUnits", label: "Swollen Battery Count", type: "number", unit: "Units", required: true, min: 0, max: 100 },
-    { key: "controlUnits", label: "Control Batch Size", type: "number", unit: "Units", required: true, min: 1, max: 1000 },
-    { key: "peakTempC", label: "Peak Storage Temp", type: "number", unit: "°C", required: false, min: -20, max: 100 },
-    { key: "storageTemp", label: "Ambient Storage Temperature", type: "number", unit: "°C", required: false, min: -10, max: 60 },
-    { key: "corporateResponseReceived", label: "Formal Manufacturer Response", type: "boolean", required: false }
+    { key: "devicesAffected", label: "Devices affected", type: "number", required: true, min: 0, max: 100 },
+    { key: "settlementUsd", label: "Settlement", type: "number", required: false, unit: "USD", min: 0, max: 100000 },
+    { key: "daysWithoutResponse", label: "Days without response", type: "number", required: false, unit: "days", min: 0, max: 3650 }
   ],
   exp5: [
-    { key: "screenOnTimeHours", label: "Screen-On Time", type: "number", unit: "Hours", required: true, min: 0, max: 30 },
-    { key: "screenOnTimeMinutes", label: "Screen-On Time (Minutes)", type: "number", unit: "Minutes", required: false, min: 0, max: 1800 },
-    { key: "chargeTimeMinutes", label: "0-100% Charge Duration", type: "number", unit: "Minutes", required: false, min: 0, max: 300 },
-    { key: "peakTempC", label: "Peak Temperature During Fast Charging", type: "number", unit: "°C", required: false, min: 15, max: 80 },
-    { key: "standbyDrainPercent", label: "24h Standby Drain", type: "number", unit: "%", required: false, min: 0, max: 100 },
-    { key: "batteryHealthPercent", label: "Maximum Battery Health", type: "number", unit: "%", required: false, min: 50, max: 100 }
+    { key: "screenOnTimeHours", label: "Screen-on time", type: "number", required: true, unit: "hours", min: 0, max: 48 },
+    { key: "enduranceDays", label: "Endurance per charge", type: "number", required: false, unit: "days", min: 0, max: 7 }
   ],
   exp6: [
-    { key: "intakeWait", label: "Intake Wait Duration", type: "number", unit: "Minutes", required: true, min: 0, max: 240 },
-    { key: "repairDuration", label: "Repair Work Duration", type: "number", unit: "Hours", required: true, min: 0, max: 48 },
-    { key: "cost", label: "Total Cost", type: "number", unit: "USD", required: true, min: 0, max: 2000 },
-    { key: "repairCost", label: "Total Cost (USD)", type: "number", unit: "USD", required: false, min: 0, max: 2000 },
-    { key: "systemConfigStatus", label: "Apple System Config Validation", type: "string", required: true },
-    { key: "seamUniformity", label: "Chassis Seam Uniformity", type: "number", unit: "/ 10", required: false, min: 1, max: 10 }
+    { key: "repairCostUsd", label: "Repair cost", type: "number", required: true, unit: "USD", min: 0, max: 5000 },
+    { key: "defectsFound", label: "Defects found", type: "number", required: false, min: 0, max: 100 },
+    { key: "warrantyExtended", label: "Warranty extended", type: "boolean", required: false }
   ],
   exp7: [
-    { key: "displayPeakNits", label: "Display Peak Brightness", type: "number", unit: "Nits", required: true, min: 100, max: 4000 },
-    { key: "tensorThermalThrottle", label: "Thermal Throttle Percent", type: "number", unit: "%", required: true, min: 0, max: 100 },
-    { key: "modemSignalDbm", label: "Cellular Signal Strength", type: "number", unit: "dBm", required: false, min: -140, max: -40 },
-    { key: "primaryScore", label: "Overall Generational Score", type: "number", unit: "Score", required: false, min: 0, max: 100 }
+    { key: "thermalRating", label: "Thermal rating", type: "string", required: false },
+    { key: "uiFluidity", label: "UI fluidity", type: "string", required: false }
   ],
   exp9: [
     { key: "telemetryHostsContacted", label: "Telemetry Hosts Contacted", type: "number", unit: "Hosts", required: true, min: 0, max: 500 },
@@ -88,22 +69,21 @@ const SCHEMAS = {
     { key: "geekbenchMulti", label: "Geekbench 6 Multi-Core (optional)", type: "number", unit: "Points", required: false, min: 0 }
   ],
   fa01: [
-    { key: "codeGenerationSeconds", label: "Generation Latency", type: "number", unit: "Seconds", required: true, min: 1, max: 300 },
-    { key: "syntaxCorrectnessScore", label: "Syntax Correctness", type: "number", unit: "/ 10", required: true, min: 1, max: 10 },
-    { key: "promptIterations", label: "Refinement Prompts Needed", type: "number", unit: "Prompts", required: false, min: 0, max: 20 },
-    { key: "primaryScore", label: "Overall Evaluation Score", type: "number", unit: "Score", required: false, min: 0, max: 100 }
+    { key: "ownerScore", label: "Owner score", type: "number", unit: "/ 10", required: true, min: 0, max: 10 }
   ],
   fa02: [
-    { key: "messagingFriction", label: "SMS/RCS Messaging Friction", type: "number", unit: "/ 10", required: true, min: 1, max: 10 },
-    { key: "laptopBatteryDelta", label: "Battery Endurance Delta", type: "number", unit: "Hours", required: true, min: -10, max: 10 },
-    { key: "fileTransferFriction", label: "Cross-Device Transfer Friction", type: "number", unit: "/ 10", required: true, min: 1, max: 10 },
-    { key: "frictionSeconds", label: "Workflow Delay Duration", type: "number", unit: "Seconds", required: false, min: 0, max: 1000 }
+    { key: "durationDays", label: "Duration", type: "number", unit: "days", required: true, min: 1, max: 365 },
+    { key: "accountsMigrated", label: "Accounts migrated", type: "number", required: false, min: 0, max: 500 },
+    { key: "firstWindowsLoginMinutes", label: "First Windows login", type: "number", unit: "minutes", required: false, min: 0, max: 600 }
   ],
   fa03: [
-    { key: "cinebenchMultiScore", label: "Cinebench Compute Score", type: "number", unit: "Points", required: true, min: 100, max: 30000 },
-    { key: "batteryLifeHours", label: "Video Streaming Battery Life", type: "number", unit: "Hours", required: true, min: 1, max: 30 },
-    { key: "weightGrams", label: "Measured Chassis Weight", type: "number", unit: "Grams", required: false, min: 500, max: 4000 },
-    { key: "primaryScore", label: "Benchmark Overall Score", type: "number", unit: "Score", required: false, min: 0, max: 100 }
+    { key: "usageWeeks", label: "Alternating use period", type: "number", unit: "weeks", required: true, min: 1, max: 104 }
+  ],
+  exp12: [
+    { key: "appLaunchTimeDeltaPct", label: "App Launch Responsiveness Improvement", type: "number", unit: "%", required: true, min: -50, max: 100 },
+    { key: "siriAiHandoffLatencyMs", label: "Siri AI Handoff Latency", type: "number", unit: "ms", required: true, min: 100, max: 10000 },
+    { key: "standbyBatteryDrainPerHour", label: "Standby Battery Drain Rate", type: "number", unit: "%/hr", required: false, min: 0, max: 10 },
+    { key: "headlineFeaturesVerified", label: "Headline Features Functionally Verified", type: "number", unit: "Features", required: false, min: 0, max: 30 }
   ]
 };
 

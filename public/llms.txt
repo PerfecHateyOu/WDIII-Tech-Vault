@@ -3,7 +3,7 @@
 
 - **Author**: WDIII
 - **Version**: V5.9
-- **Last Updated**: September 27, 2026
+- **Last Updated**: September 28, 2026
 - **Status**: Live Independent Research Archive
 
 ## Overview
@@ -18,38 +18,52 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Results**: Apple completed repair in 2 days at $600 with pristine quality and proactive communication. Samsung took ~1 month ($289–$300) due to a 14-day administrative failure where an incorrect email address delayed the payment link, requiring a full re-dispatch, though physical repair quality was also pristine.
 - **Verdict**: Winner: Apple. Apple charges double ($600 vs $300) but delivers in 2 days with zero friction. Samsung's administrative failure erased every cost advantage.
 
-### Experiment 2: Repair Channel Tiers (Apple Store vs AASP vs Independent)
+### Experiment 2: Repair Channel Comparison
 - **Category**: Repair | **Status**: Completed (Done)
-- **Objective**: Assess pricing, turnaround, parts provenance, and technician competency across official Apple Store Genius Bar, Apple Authorized Service Providers (AASP), and third-party independent shops.
-- **Verdict**: Apple Store offers fastest turnaround and genuine calibration; AASPs match genuine parts but have variable lead times; independent shops offer cost savings but face software calibration lockouts.
+- **Devices Tested**: 3 identical iPhone 15s with identical level 9 screen and back-glass damage (one per channel)
+- **Objective**: Compare Official Apple, a third-party shop using genuine parts, and a cheap unauthorized shop using generic parts on cost, turnaround, quality, waterproofing and warranty.
+- **Results**: Official Apple charged $399 (8 days in total), with a pristine result and waterproofing kept. The genuine-parts third party quoted $450 with no quality checks or warranty, then couldn't source parts, so the repair was cancelled before any work was done. The cheap unauthorized shop charged $220 with a 1-day turnaround, but used generic parts, super-glued the back glass (losing waterproofing), fitted a noticeably thicker screen and gave no warranty.
+- **Verdict**: Winner: Official Apple ($399, 8 days total), the only option that preserved waterproofing, warranty and part authenticity.
 
-### Experiment 3: Customer Service Support Phone Test
+### Experiment 3: Customer Service Quality Test
 - **Category**: Support | **Status**: Completed (Done)
-- **Objective**: Test hold times, tiered escalation, and technical knowledge across consumer tech phone support channels.
-- **Verdict**: First-contact resolution rates are significantly higher when support agents have direct diagnostic telemetries.
+- **Objective**: Ask phone support at 8 smartphone brands the same question ("My phone screen is going black"; the correct answer is that the battery is draining and needs charging) and score speed to the correct answer, troubleshooting quality, accuracy and helpfulness.
+- **Results**: Huawei 4.5/5, Xiaomi 4.5/5, OPPO 3.5/5, OnePlus 3/5, Apple 2.5/5, Vivo 1/5, Samsung 0/5, BlackBerry 0/5. Vivo answered quickly but wouldn't help and offered email instead; Samsung's automated system hung up; BlackBerry required a fee to speak to a human.
+- **Verdict**: Winners: Huawei & Xiaomi (tied at 4.5/5). One call per brand, so anecdotal rather than a statistical sample.
 
-### Experiment 4: iOS Performance Over Time
+### Experiment 4: iOS Performance Comparison (Historical)
 - **Category**: Software | **Status**: Completed (Done)
-- **Objective**: Track frame times, app cold-launch latency, and thermal throttling across major iOS version updates on older iPhone hardware.
-- **Verdict**: Controlled point releases stabilize after 2–3 weeks of spotlight indexing; initial battery complaints correlate with background photo library analysis.
+- **Devices Tested**: iPhone 15 Pro
+- **Objective**: Compare iOS 18.6 and iOS 26.0.1 on the same iPhone 15 Pro, following iOS 26 through to 26.4.2.
+- **Results**: iOS 26 was faster in every performance test (boot, storage transfer, 8–13% faster app loading, browser benchmarks) but had lower 3DMark thermal stability (70.9% vs 88.4%) and worse battery (66% vs 74% remaining on the same workload at 26.0.1, 71% by 26.4.2).
+- **Verdict**: iOS 26 is the better OS, but only after the dust settled several months post-launch. Wait for the .2 or .3 release before updating a daily driver.
 
-### Case Study: Samsung Battery Swelling Settlement
+### Case Study: Samsung Battery Failures & Corporate Accountability
 - **Category**: Legal / Hardware | **Status**: Completed (Done)
-- **Objective**: Document legal claims, battery chemistry degeneration factors, and consumer compensation regarding legacy pouch battery swelling.
+- **Objective**: Document battery swelling in stored Samsung devices from 2016–2020, Samsung's response, the escalation and the outcome.
+- **Results**: Seven devices swelled (Galaxy S8, S10, S10e, Note 8 ×2, Z Fold 2, S20 FE); newer Galaxy S21–S26 models, non-Samsung devices and an iPhone 5c in the same storage did not. The S20 FE failed at 18 months against Samsung's own 5-year battery claim. After 50 days without a substantive response and complaints to the CPSC and BBB plus a consumer rights attorney, Samsung settled on June 18.
+- **Verdict**: $1,020 cash settlement across 7 devices, no NDA.
 
-### Experiment 5: Pixel vs iPhone Battery Endurance
+### Experiment 5: Battery Life — Google Pixel Pro vs iPhone
 - **Category**: Hardware | **Status**: Completed (Done)
-- **Devices Tested**: Pixel 7 Pro, iPhone 16 Pro Max, iPhone 16e, Galaxy S26 Ultra
-- **Objective**: Side-by-side empirical battery drainage testing across Google Pixel and Apple iPhone flagships under standardized video streaming, web browsing, and 5G cellular workloads.
-- **Verdict**: iPhone displays superior standby efficiency and SoC efficiency under mixed workloads; Pixel excels in camera processing but drains faster under continuous cellular loads.
+- **Devices Tested**: Pixel 6 Pro, Pixel 7 Pro, Pixel 8 Pro, Pixel 9 Pro, Pixel 10 Pro, iPhone 13, iPhone 15 Pro, iPhone 16e (all on brand-new batteries)
+- **Objective**: Compare real-world screen-on time and daily endurance rather than synthetic benchmarks.
+- **Results**: The Pixel 10 Pro and iPhone 16e tied at about 1.5 days. The Pixel 9 Pro, with the smallest battery (4700 mAh), came 2nd among the Pixels, well ahead of the 5003 mAh Pixel 6 Pro.
+- **Verdict**: Winner: Pixel 10 Pro & iPhone 16e (tied, ~1.5 days). Chip efficiency beats raw battery capacity.
 
-### Experiment 6: AASP Repair Channel In-Depth
+### Experiment 6: AASP Repair Test — iFix
 - **Category**: Repair | **Status**: Completed (Done)
-- **Objective**: Evaluate Best Buy Geek Squad and independent AASPs handling genuine Apple display and battery replacements.
+- **Devices Tested**: iPhone 16 Pro Max with level 9 screen and back-glass damage (data contributed by MTA)
+- **Objective**: Test whether an Apple Authorized Service Provider (iFix) delivers Official Apple repair quality, the channel missing from Experiment 2.
+- **Results**: $599, with quality identical to Official Apple: the same warranty extension, no defects, and waterproofing and parts authentication preserved. Costs aren't directly comparable with Experiment 2, which used an iPhone 15.
+- **Verdict**: An AASP is a legitimate alternative to Official Apple when an Apple Store isn't accessible.
 
-### Experiment 7: Thermal Throttling Under Sustained Workloads
+### Experiment 7: Google Pixel Pro Generation Comparison
 - **Category**: Hardware | **Status**: Completed (Done)
-- **Objective**: Measure surface and core temperatures, clock-speed drop-offs, and game frame stability on flagship phones under sustained 3D compute.
+- **Devices Tested**: Pixel 6 Pro through Pixel 10 Pro (Tensor G1–G5), one unit per generation
+- **Objective**: Compare five Pixel Pro generations on chips, cameras and real-world performance.
+- **Results**: Tensor G1–G4, made on Samsung processes, throttled under heavy use; the TSMC-made G5 in the 10 Pro runs cooler and didn't throttle during long video recording. Camera megapixel counts have stayed the same since the 7 Pro, and the biggest gains came from processing.
+- **Verdict**: Buy the 10 Pro, keep the 8 Pro, skip the rest.
 
 ### Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity
 - **Category**: Ecosystem | **Status**: In Progress (protocol v1.0 approved 2026-09-27; day 0 and week 0 recorded 2026-09-27; no analysis yet)
