@@ -1259,10 +1259,7 @@ export const OFFICIAL_EXPERIMENTS = [
     ],
     "limitations": "Tests conducted on consumer production firmware; internal diagnostic modes not evaluated.",
     "verdict": "Apple provides robust consumer security, but privacy requires manual user intervention: users must enable Advanced Data Protection and set AirDrop to 'Contacts Only' or 'Off'.",
-    "devices": [
-      "apple-iphone-15-pro",
-      "apple-macbook-air-m3-2024"
-    ],
+    "devices": [],
     "sources": [
       "WDIII Security Lab Packet Captures",
       "Wireshark Trace Dumps",
@@ -1725,7 +1722,7 @@ export const OFFICIAL_EXPERIMENTS = [
     "origin": "official_wdiii",
     "researchQuestion": "What happens when an Apple user moves phone, desktop, cloud, accessories and account authentication off Apple for 30 days?",
     "objective": "Log the real friction of a complete 30-day exit from the Apple ecosystem to a Pixel 10 Pro and a Windows laptop.",
-    "methodology": "Personal 30-day friction log. Primary phone: Pixel 10 Pro. Desktop: HP Victus 15-fa2013dx (Windows). Watch: Pixel Watch. Earphones: Sony WF (Google's buds were tried and found okay). Baseline before the switch: iPhone 16e and a Mac laptop.",
+    "methodology": "Personal 30-day friction log. Primary phone: Pixel 10 Pro. Desktop: HP Victus 15-fa2013dx (Windows). Watch: Pixel Watch. Earphones: Sony WF (Google's buds were tried and found okay). Baseline before the switch: iPhone 16e and an older MacBook Air.",
     "conditions": "30 consecutive days, everyday personal use, single user.",
     "protocol": "Week 1 setup and migration; weeks 2–3 daily use with friction logged as it happened; week 4 return to Apple and reflection.",
     "measurements": {
@@ -1908,8 +1905,7 @@ export const OFFICIAL_EXPERIMENTS = [
     "measurements": {
       "responsivenessGain": "Tracking (target: up to 60%)",
       "siriHandoffLatency": "Testing in progress",
-      "batteryDrainStandardRate": "Active logging",
-      "modelComparisonSet": "Gemini 2.5 / Claude 3.7 / GPT-4o"
+      "batteryDrainStandardRate": "Active logging"
     },
     "results": "Testing actively underway on iOS 27.0 (final) on iPhone 16e. App launch profiling and Siri AI chatbot integration benchmarks in progress.",
     "observations": [
