@@ -523,33 +523,6 @@ export const OFFICIAL_DEVICES = [
     experimentsInvolved: ["casestudy"]
   },
   {
-    id: "apple-macbook-air-m3-2024",
-    brand: "Apple",
-    model: "MacBook Air 13\" M3 (2024)",
-    category: "laptop",
-    releaseYear: 2024,
-    operatingSystem: "macOS Sonoma / Sequoia",
-    specifications: {
-      processor: "Apple M3 (8-core CPU / 10-core GPU, 3nm)",
-      ram: "16GB Unified Memory",
-      storage: "512GB SSD",
-      display: "13.6\" Liquid Retina IPS",
-      resolution: "2560 x 1664",
-      refreshRate: "60Hz",
-      batteryCapacity: "52.6Wh",
-      charging: "35W Dual USB-C / MagSafe 3",
-      cameras: "1080p FaceTime HD",
-      weight: "1.24 kg",
-      connectivity: "Wi-Fi 6E, Bluetooth 5.3, 2x Thunderbolt / USB 4, MagSafe 3"
-    },
-    origin: "official_wdiii",
-    sources: ["Referenced by Experiment 9; specifications unverified (pending registry audit)"],
-    createdAt: "2026-08-01T00:00:00.000Z",
-    updatedAt: "2026-09-13T00:00:00.000Z",
-    status: "active",
-    experimentsInvolved: ["exp9"]
-  },
-  {
     id: "apple-macbook-pro-16-m2-pro-16gb",
     brand: "Apple",
     model: "MacBook Pro 16\" (M2 Pro)",
