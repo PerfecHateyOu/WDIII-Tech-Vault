@@ -636,28 +636,47 @@ details > summary::-webkit-details-marker {
    the blocks inside each entry all pick up the notebook palette.
    ===================================================================== */
 #page-fodder {
-  /* notebook palette (dark) */
-  --fa-paper: #141a17;
-  --fa-grid: rgba(143, 190, 150, 0.075);
-  --fa-ink: #e4e8e1;
-  --fa-pencil: #93a096;
-  --fa-rule: #4a6b53;
-  --fa-line: rgba(143, 190, 150, 0.18);
-  --fa-marker: #e2d64a;
-  --fa-marker-ink: #17190f;
+  /* The Fodder Archive is always on light "paper", whatever the site theme is. */
+  color-scheme: light;
+
+  /* notebook palette */
+  --fa-paper: #eef3e8;
+  --fa-grid: #dbe6d3;
+  --fa-ink: #1f2a22;
+  --fa-pencil: #56645a;
+  --fa-rule: #93b593;
+  --fa-line: #c6d6bc;
+  --fa-marker: #f0e24a;
+  --fa-marker-ink: #1f2a22;
   --fa-hand: "Recursive", ui-rounded, "Segoe UI", system-ui, sans-serif;
   --fa-margin: 5.5rem;
 
-  /* site variables remapped for this page only */
+  /* site variables remapped for this page only (surfaces and text) */
   --td-bg-base: var(--fa-paper);
-  --td-bg-surface: #18201b;
-  --td-bg-surface-elevated: #1c251f;
-  --td-bg-card: #19211c;
-  --td-border: rgba(143, 190, 150, 0.18);
-  --td-border-subtle: rgba(143, 190, 150, 0.28);
+  --td-bg-surface: #e6eddf;
+  --td-bg-surface-elevated: #dfe8d7;
+  --td-bg-card: #f5f8f1;
+  --td-border: #c6d6bc;
+  --td-border-subtle: #b3c9a8;
   --td-text-primary: var(--fa-ink);
-  --td-text-secondary: #cdd5ca;
+  --td-text-secondary: #37443b;
   --td-text-muted: var(--fa-pencil);
+
+  /* status colours: the site's light-theme values, readable on paper */
+  --td-info: #2563eb;
+  --td-info-bg: #e3f0ff;
+  --td-success: #15803d;
+  --td-success-bg: #e8f5e9;
+  --td-error: #dc2626;
+  --td-error-bg: #ffebee;
+  --td-ai: #7c3aed;
+  --td-ai-bg: #ede9fe;
+  --td-ecosystem: #d97706;
+  --td-ecosystem-bg: #fffbeb;
+  --td-warning: #b45309;
+  --td-warning-bg: #fffbeb;
+  --td-pending: #ea580c;
+  --td-pending-bg: #fff3e0;
 
   font-family: var(--fa-hand);
   font-variation-settings: "CASL" 0;
@@ -667,27 +686,13 @@ details > summary::-webkit-details-marker {
     linear-gradient(90deg, var(--fa-grid) 1px, transparent 1px);
   background-size: 1.25rem 1.25rem;
   color: var(--fa-ink);
+  min-height: 100vh;
 }
-.light-theme #page-fodder {
-  --fa-paper: #eef3e8;
-  --fa-grid: #dbe6d3;
-  --fa-ink: #1f2a22;
-  --fa-pencil: #56645a;
-  --fa-rule: #93b593;
-  --fa-line: #c6d6bc;
-  --fa-marker: #f0e24a;
-  --fa-marker-ink: #1f2a22;
-
-  --td-bg-surface: #e6eddf;
-  --td-bg-surface-elevated: #dfe8d7;
-  --td-bg-card: #f5f8f1;
-  --td-border: #c6d6bc;
-  --td-border-subtle: #b3c9a8;
-  --td-text-secondary: #37443b;
-}
-/* entry content written with hard-coded white headings stays readable on light paper */
-.light-theme #page-fodder [style*="color:#fff"],
-.light-theme #page-fodder [style*="color: #fff"] { color: var(--fa-ink) !important; }
+/* entry content written with hard-coded white text stays readable on paper */
+#page-fodder [style*="color:#fff"],
+#page-fodder [style*="color: #fff"] { color: var(--fa-ink) !important; }
+/* the theme switch has no effect on this page, so it is hidden here */
+#page-fodder #themeToggleFodder { display: none; }
 
 /* ---- Header -------------------------------------------------------- */
 #page-fodder .fa-notebook-header {
