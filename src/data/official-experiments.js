@@ -1610,31 +1610,21 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "progress",
     "statusLabel": "In Progress",
     "origin": "official_wdiii",
-    "researchQuestion": "Does iOS 27 deliver Apple's claimed responsiveness, battery efficiency, and stability improvements on iPhone 16e, and how reliably do Gemini, Claude, and ChatGPT integrate with Siri AI under isolated testing?",
-    "objective": "Validate Apple's iOS 27 performance claims (responsiveness, battery life, system stability, claimed 'up to 60%' improvements) on iPhone 16e. Test isolated integration of Gemini, Claude, and ChatGPT with Siri AI. Verify headline features announced during iOS 27 presentation through firsthand testing.",
-    "methodology": "Controlled single-device testing on iPhone 16e (iPhone17,5) running iOS 27.0 (tracking through 27.1, 27.2+). Cold/warm app launch timings, automated load responsiveness, battery drain cycle logging, and isolated side-by-side prompt execution across Gemini, Claude, and ChatGPT with Siri AI handoff.",
-    "conditions": "iPhone 16e (A18, 8GB RAM, Apple C1 modem), iOS 27.0 release build, controlled 21°C lab ambient, standardized Wi-Fi test network, identical prompts across all AI services.",
-    "protocol": "1. Baseline setup on iPhone 16e running clean iOS 27.0. 2. Responsiveness testing: launch time logging, UI frametime under load, multitasking switching latency. 3. Battery drain testing: standard workload consumption, 8-hour standby drain, thermal profiles. 4. Siri AI Chatbot Integration: execute identical prompt sequences on Gemini, Claude, and ChatGPT measuring latency, handoff reliability, and multi-turn context retention. 5. Headline feature verification: validate functional completeness of announced iOS 27 presentation features.",
-    "measurements": {
-      "responsivenessGain": "Tracking (target: up to 60%)",
-      "siriHandoffLatency": "Testing in progress",
-      "batteryDrainStandardRate": "Active logging"
-    },
-    "results": "Testing actively underway on iOS 27.0 (final) on iPhone 16e. App launch profiling and Siri AI chatbot integration benchmarks in progress.",
-    "observations": [
-      "iPhone 16e hardware baseline initialized with iOS 27.0 clean installation.",
-      "Siri AI chatbot dispatch framework active for Gemini, Claude, and ChatGPT isolated prompt sets.",
-      "Initial warm launch speed shows measurable improvements on system utilities."
-    ],
-    "limitations": "Single-device testing strictly scoped to iPhone 16e (n=1). Controlled side-by-side comparisons rather than general multi-user field averages. Cannot be extrapolated across the entire iPhone 16 lineup.",
-    "verdict": "Active testing in progress. Final verdict pending completion of 27.0 baseline benchmarks and minor update regression passes.",
+    "researchQuestion": "Does iOS 27 deliver Apple's claimed improvements — including \"up to 60%\" better app responsiveness — on iPhone 16e, and how do Gemini, Claude and ChatGPT compare through Siri once third-party support ships?",
+    "objective": "Test Apple's iOS 27 claims on one iPhone 16e with stopwatch launch timing, overnight standby drain and crash counts; later, compare Gemini, Claude and ChatGPT through Siri with identical prompts.",
+    "methodology": "Single iPhone 16e (iPhone17,5) on iOS 27.0, with later iOS 27 updates tracked as released. Cold and warm app launch times timed with a stopwatch. Battery: overnight standby drain (start %, end %, hours). Stability: count of new crash logs in Analytics Data. Battery and stability use the same methods as Experiment 10, in a separate log. AI chatbot comparison (identical prompts; latency, handoff reliability, multi-turn context) starts once third-party Siri support ships.",
+    "conditions": "One owned iPhone 16e, temperature-controlled room (about 21°C). The same phone is used for Experiment 10.",
+    "protocol": "A. Launch timing, standby drain and crash counts on iOS 27.0 and later updates. B. AI chatbots via Siri: not started, waiting for third-party support. C. Headline feature verification: TBD.",
+    "measurements": null,
+    "results": "Testing is underway on iOS 27.0; no results yet. The AI chatbot tests have not started.",
+    "observations": [],
+    "limitations": "One device (n=1). Stopwatch timing can only catch large differences. The AI chatbot part depends on when third-party Siri support ships. The same phone is shared with Experiment 10.",
+    "verdict": "TBD — no results yet.",
     "devices": [
       "apple-iphone-16e"
     ],
     "sources": [
-      "WDIII iOS 27 Laboratory Test Suite",
-      "Apple iOS 27 Keynote Performance Specifications",
-      "Xcode Instruments & Quartz Debugger Frametime Logs"
+      "Owner's own testing"
     ],
     "tags": [
       "iOS 27",
@@ -1642,10 +1632,9 @@ export const OFFICIAL_EXPERIMENTS = [
       "Siri AI",
       "Gemini",
       "Claude",
-      "ChatGPT",
-      "Benchmark"
+      "ChatGPT"
     ],
-    "scope": "Controlled single-device performance & AI chatbot integration testing on iPhone 16e",
+    "scope": "Single-device testing on iPhone 16e (n=1)",
     "search": "exp-12 experiment 12 ios 27 performance siri ai chatbot integration iphone 16e gemini claude chatgpt responsiveness battery",
     "toc": [
       {
@@ -1684,52 +1673,51 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-09-25T00:00:00.000Z",
-    "updatedAt": "2026-09-25T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "appLaunchTimeDeltaPct",
-        "label": "App Launch Responsiveness Improvement",
+        "key": "coldLaunchSeconds",
+        "label": "Cold launch time",
+        "type": "number",
+        "unit": "seconds",
+        "required": false,
+        "min": 0,
+        "max": 60
+      },
+      {
+        "key": "warmLaunchSeconds",
+        "label": "Warm launch time",
+        "type": "number",
+        "unit": "seconds",
+        "required": false,
+        "min": 0,
+        "max": 60
+      },
+      {
+        "key": "standbyDrainPercent",
+        "label": "Overnight standby drain",
         "type": "number",
         "unit": "%",
-        "required": true,
-        "min": -50,
+        "required": false,
+        "min": 0,
         "max": 100
       },
       {
-        "key": "siriAiHandoffLatencyMs",
-        "label": "Siri AI Handoff Latency",
+        "key": "newCrashLogs",
+        "label": "New crash logs",
         "type": "number",
-        "unit": "ms",
-        "required": true,
-        "min": 100,
-        "max": 10000
-      },
-      {
-        "key": "standbyBatteryDrainPerHour",
-        "label": "Standby Battery Drain Rate",
-        "type": "number",
-        "unit": "%/hr",
         "required": false,
         "min": 0,
-        "max": 10
-      },
-      {
-        "key": "headlineFeaturesVerified",
-        "label": "Headline Features Functionally Verified",
-        "type": "number",
-        "unit": "Features",
-        "required": false,
-        "min": 0,
-        "max": 30
+        "max": 1000
       }
     ],
     "allowedMeasurementKeys": [
-      "appLaunchTimeDeltaPct",
-      "siriAiHandoffLatencyMs",
-      "standbyBatteryDrainPerHour",
-      "headlineFeaturesVerified"
+      "coldLaunchSeconds",
+      "warmLaunchSeconds",
+      "standbyDrainPercent",
+      "newCrashLogs"
     ]
   }
 ];
