@@ -544,6 +544,7 @@ import { renderDevicesCatalog, renderDeviceDetail } from "/src/ui/devices-view.j
 import { renderExperimentDetail } from "/src/ui/experiment-detail-view.js";
 import { renderCompareView } from "/src/ui/compare-view.js";
 import { startTopProgress, completeTopProgress } from "/src/utils/loading-bar.js";
+import { OFFICIAL_EXPERIMENTS } from "/src/data/official-experiments.js";
 
 // Initialize Firebase SDK immediately
 initFirebase().catch(err => {
@@ -1982,193 +1983,68 @@ function buildQueued() {
   `;
 }
 
-function buildFa01() {
-  function metaCard(items) {
-    let h = `<div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; margin-bottom:2rem; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">`;
-    items.forEach(m => { h += `<div style="display:flex; flex-direction:column; gap:0.125rem;"><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600;">${m.label}</span><span style="font-size:0.92rem; color:${m.error?'var(--td-error)':'var(--td-text-primary)'};">${m.value}</span></div>`; });
-    h += `</div>`;
-    return h;
-  }
+// ===== Fodder Archive: rendered from src/data/official-experiments.js (single source) =====
+// Each FA entry's page content lives in its `sections` array. Edit the data, not this file.
+function metaCard(items) {
+  let h = `<div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; margin-bottom:2rem; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">`;
+  items.forEach(m => { h += `<div style="display:flex; flex-direction:column; gap:0.125rem;"><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600;">${m.label}</span><span style="font-size:0.92rem; color:${m.error?'var(--td-error)':'var(--td-text-primary)'};">${m.value}</span></div>`; });
+  h += `</div>`;
+  return h;
+}
+const SECTION_GROUP_STYLE = {
+  stack: "display:grid; gap:0.5rem; margin-bottom:2rem;",
+  cards: "display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-bottom:2rem;"
+};
+function renderSections(blocks) {
+  return (blocks || []).map(b => {
+    switch (b.type) {
+      case "heading":    return sectionH3(b.id, b.text);
+      case "paragraph":
+        if (b.variant === "note")  return `<p style="color:var(--td-text-secondary); font-size:0.85rem; margin-bottom:1rem; font-style:italic;">${b.html}</p>`;
+        if (b.variant === "small") return `<p style="color:var(--td-text-secondary); font-size:0.9rem; margin-bottom:2rem;">${b.html}</p>`;
+        return `<p style="color:var(--td-text-secondary); margin-bottom:${b.tight ? "1rem" : "2rem"};">${b.html}</p>`;
+      case "notice":     return `<div style="display:inline-flex; align-items:center; gap:0.375rem; font-size:0.75rem; color:var(--td-text-muted); background:var(--td-bg-card); border:1px dashed var(--td-border-subtle); padding:0.25rem 0.625rem; border-radius:9999px; margin-bottom:2rem;">${b.html}</div>`;
+      case "meta":       return metaCard(b.items);
+      case "table":      return dataTable(b.caption, b.headers, b.rows, b.highlightRows);
+      case "ranking":    return rankingRow(b.tone, b.title, b.value, b.valueColor, b.body);
+      case "insight":    return insightCard(b.tone, b.title, b.body);
+      case "keyFinding": return keyFinding(b.title, b.body);
+      case "conclusion": return conclusion(b.title, b.body);
+      case "timeline":   return timeline(b.items);
+      case "related":    return relatedExperiments(b.items);
+      case "group":      return `<div style="${SECTION_GROUP_STYLE[b.layout] || SECTION_GROUP_STYLE.stack}">${renderSections(b.children)}</div>`;
+      case "code":       return `<pre style="background:#161616; border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; overflow-x:auto; margin:1.5rem 0; font-size:0.85rem;" class="td-scrollbar"><code style="font-family:ui-monospace,monospace; color:#e0e0e0; line-height:1.6;">${esc(b.text)}</code></pre>`;
+      case "callout":
+        return `<div style="background:var(--td-bg-surface-elevated); padding:1.5rem; border-radius:0.375rem; margin-bottom:2rem;"><strong style="color:#fff; display:block; margin-bottom:0.5rem;">${b.title}</strong>` +
+          b.paragraphs.map((p, i) => `<p style="color:var(--td-text-secondary); margin:${i === b.paragraphs.length - 1 ? "0" : "0 0 0.5rem"};">${p}</p>`).join("") + `</div>`;
+      case "checklist":
+        return `<div id="${b.id}" style="margin-top:2rem; padding:2rem; background:var(--td-bg-surface-elevated); border-radius:0.375rem; border:1px solid var(--td-border);"><h3 style="color:#fff; margin:0 0 1.5rem; font-size:1.125rem; font-weight:600;">${b.title}</h3><ul style="list-style:none; padding:0; margin:0;">` +
+          b.items.map((it, i) => `<li style="padding:0.5rem 0; ${i < b.items.length - 1 ? "border-bottom:1px solid var(--td-border); " : ""}color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:var(--td-${it.tone});">${it.mark}</span><span><strong style="color:#fff">${it.name}</strong> — ${it.text}</span></li>`).join("") + `</ul></div>`;
+      case "footnote":   return `<div style="font-size:0.82rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); padding-top:1rem; margin-top:2rem;">${b.html}</div>`;
+      default:
+        console.warn("Unknown section block type:", b.type);
+        return "";
+    }
+  }).join("");
+}
+function buildFromEntry(e) {
   return experimentShell({
-    id:"fa01", category:"ai", title:"FA-01 — Which AI Builds Our Website Best?",
-    status:"done", statusLabel:"Done", tags:["5 Models Tested","Cold Prompt Only"],
-    scope:"📋 n=1 per model — anecdotal comparison, not a statistical sample",
-    search:"fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude",
-    toc:[{id:"fa01-setup",label:"Experiment Setup"},{id:"fa01-owner-rankings",label:"Owner Rankings"},{id:"fa01-claude-assessment",label:"Claude's Assessment"},{id:"fa01-divergence",label:"Where They Diverge"},{id:"fa01-findings",label:"Key Findings"},{id:"fa01-recommendation",label:"Recommendation"}],
-    body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:1rem;">Five AI assistants — DeepSeek, Gemini, Grok, ChatGPT, and Claude — were each given the same blind prompt: <em style="color:var(--td-text-primary);">"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software."</em> No examples, no reference to this site, no guidance beyond the bare prompt. Rated on design execution, code quality, structure, and functionality. Inspired by ChatGPT's earlier attempt to rebuild this site and calling it "Version 6."</p>
-      <div style="display:inline-flex; align-items:center; gap:0.375rem; font-size:0.75rem; color:var(--td-text-muted); background:var(--td-bg-card); border:1px dashed var(--td-border-subtle); padding:0.25rem 0.625rem; border-radius:9999px; margin-bottom:2rem;">⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Click "view submitted file" to judge the raw output yourself.</div>
-      ${sectionH3("fa01-setup","Experiment Setup")}
-      ${metaCard([{label:"Prompt",value:'"Build a consumer tech documentation website in HTML for real-world smartphone, repair, and software experiments"'},{label:"Models Tested",value:"Claude · ChatGPT · Gemini · Grok · DeepSeek"},{label:"Guidance Given",value:"None — cold prompt only",error:true},{label:"Content Requirement",value:"Each AI invented its own placeholder content"},{label:"Judged On",value:"Design · Code quality · Structure · Functionality"}])}
-      ${sectionH3("fa01-owner-rankings","Full Rankings — Owner Assessment")}
-      <div style="display:grid; gap:0.5rem; margin-bottom:2rem;">
-        ${rankingRow("success","🥇 Grok — 9.0/10","9.0","success","Full SPA with working JS view-routing, a real light/dark toggle with persisted state, hero stats, timeline component, and per-experiment detail pages. The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized.")}
-        ${rankingRow("warning","🥈 ChatGPT — 7.0/10","7.0","warning","Sidebar doc layout with a working theme toggle and a live search bar that filters page sections by typed text — a genuinely useful feature none of the others attempted. Let down by sloppy markup (stray br tags instead of CSS spacing) and fairly generic visual styling.")}
-        ${rankingRow("warning","🥈 DeepSeek — 7.0/10","7.0","warning","The most visually refined of the five — soft light theme, gradient-text logo, polished card and code-block styling, genuinely nice sidebar/grid layout. Purely static though: nav tabs and links don't go anywhere, no interactivity at all.")}
-        ${rankingRow("error","4th — Gemini — 6.5/10","6.5","error","Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections.")}
-        ${rankingRow("error","5th — Claude — 4.5/10","4.5","error","Plain dark card layout, static table, zero interactivity, and the thinnest content of the five. Functional and clean but clearly the least effort — kept here for transparency. The data is the data.")}
-      </div>
-      ${sectionH3("fa01-claude-assessment","Claude's Independent Assessment")}
-      <p style="color:var(--td-text-secondary); font-size:0.85rem; margin-bottom:1rem; font-style:italic;">Note: this assessment was generated separately by Claude before seeing the owner's rankings above. Scores differ — make of that what you will.</p>
-      <div style="display:grid; gap:0.5rem; margin-bottom:2rem;">
-        ${rankingRow("success","🥇 Claude — Editorial Foundation","1st","success","Three intentional font families (Playfair Display, Inter, IBM Plex Mono), full design token system with semantic naming, sticky sidebar with active state navigation, status badges (COMPLETE / PENDING / ON HOLD), light/dark pill toggle, and responsive typography via clamp(). Most architecturally sophisticated of the five. Missing: no actual experiment data — a polished shell rather than a completed document.")}
-        ${rankingRow("success","🥈 Gemini — Functional Dashboard","2nd","success","Fixed sidebar, live search filtering nav items, [data-theme] attribute toggle with localStorage, copy-to-clipboard on code blocks, JS tab routing with fadeIn animations, status dots, and a .callout component system with modifiers. Structurally well-built. Fatal flaw: content went completely off-brief (OpenWrt router flashing, VLAN containment) — nothing to do with smartphones or repair.")}
-        ${rankingRow("warning","3rd — DeepSeek — Most Visually Distinctive","3rd","warning","Light theme by default, gradient text headline, branded icon in header, clean card system, sidebar meta-info section with active experiment count and maintainer handles, syntax-highlighted code blocks. Went off-brief (developer docs portal via npm, not consumer tech). No dark mode, no accessibility attributes, no print styles.")}
-        ${rankingRow("warning","4th — Grok — Most Ambitious, Most Dependent","4th","warning","Space Grotesk headings, yellow accent scheme, large hero section, animated pulse indicator, category filter buttons, JS-populated experiment cards. Relies entirely on Tailwind CSS and Font Awesome CDNs — if either goes down, the entire design collapses. Content is fabricated. Visually impressive but not self-contained.")}
-        ${rankingRow("error","5th — ChatGPT — Recycled, Not Built","5th","error","Three conflicting :root blocks that contradict each other, CSS variables defined but never actually used, Experiment 3 rating bars rendering as empty (no width values), content stopping at Experiment 3, title still reading \"v3\". Essentially recycled the original version of this site and called it a new submission. Least original, least complete, most structurally broken.")}
-      </div>
-      ${sectionH3("fa01-divergence","Where The Two Assessments Diverge")}
-      ${dataTable("Comparison of owner vs Claude assessments — highlighting disagreements",[{label:"Model"},{label:"Owner Rank",center:true},{label:"Claude Rank",center:true},{label:"Difference",center:true}],[
-        [{primary:true,text:"Grok"},{center:true,badge:"success",text:"1st"},{center:true,badge:"warning",text:"4th"},{center:true,badge:"error",text:"▼ 3"}],
-        [{primary:true,text:"ChatGPT"},{center:true,badge:"success",text:"2nd"},{center:true,badge:"error",text:"5th"},{center:true,badge:"error",text:"▼ 3"}],
-        [{primary:true,text:"DeepSeek"},{center:true,badge:"success",text:"2nd"},{center:true,badge:"warning",text:"3rd"},{center:true,badge:"warning",text:"▼ 1"}],
-        [{primary:true,text:"Gemini"},{center:true,badge:"error",text:"4th"},{center:true,badge:"success",text:"2nd"},{center:true,badge:"success",text:"▲ 2"}],
-        [{primary:true,text:"Claude"},{center:true,badge:"error",text:"5th"},{center:true,badge:"success",text:"1st"},{center:true,badge:"success",text:"▲ 4"}]
-      ])}
-      <p style="color:var(--td-text-secondary); font-size:0.9rem; margin-bottom:2rem;">The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing, persisted state, and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does.</p>
-      ${sectionH3("fa01-findings","Key Findings")}
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-bottom:2rem;">
-        ${insightCard("info","Architecture Beat Aesthetics","The deciding factor wasn't color palette or typography — every entry looked reasonably professional. What separated Grok from the pack was building actual information architecture (routable views, reusable detail templates, real state) rather than a single static scroll of cards.")}
-        ${insightCard("warning","Content Interpretation Varied Wildly","Only Claude and Grok stayed close to the brief. Gemini built a network admin dashboard. DeepSeek built a developer docs portal. ChatGPT recycled existing work. \"Consumer tech documentation website\" meant five completely different things to five different models.")}
-        ${insightCard("info","Interactivity Was Rare","Only Grok (view routing + persisted theme) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only.")}
-        ${insightCard("warning","Self-Containement Matters","Grok's entry depends on two external CDNs (Tailwind + Font Awesome). Every other submission was fully self-contained. For a documentation site meant to be archived and shared, CDN dependency is a real long-term risk.")}
-      </div>
-      ${conclusion("Owner's Winner: Grok · Claude's Winner: Claude · Honest Winner: Probably Grok","The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation and persistent state. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running.")}
-      <div id="fa01-recommendation" style="margin-top:2rem; padding:2rem; background:var(--td-bg-surface-elevated); border-radius:0.375rem; border:1px solid var(--td-border);"><h3 style="color:#fff; margin:0 0 1.5rem; font-size:1.125rem; font-weight:600;">Which AI Should You Use for Web Development?</h3><ul style="list-style:none; padding:0; margin:0;"><li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span><span><strong style="color:#fff">Grok</strong> — Best for full-page builds with real interactivity and SPA structure</span></li><li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span><span><strong style="color:#fff">DeepSeek</strong> — Best for polished visual design and refined UI</span></li><li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span><span><strong style="color:#fff">ChatGPT</strong> — Best for adding specific features (search, theme toggle) to existing work</span></li><li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:var(--td-warning);">⚠️</span><span><strong style="color:#fff">Gemini</strong> — Good structure, but verify content stays on-brief</span></li><li style="padding:0.5rem 0; color:var(--td-text-secondary); display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; font-size:1.125rem; color:var(--td-error);">✗</span><span><strong style="color:#fff">Claude</strong> — Solid foundation, but needs the most hand-holding to produce complete content</span></li></ul></div>
-      ${relatedExperiments([{id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"}])}
-    `
+    id: e.id, category: e.category, title: e.title, status: e.status, statusLabel: e.statusLabel,
+    tags: e.tags, scope: e.scope, search: e.search, toc: e.toc,
+    body: renderSections(e.sections)
   });
 }
-
-function buildFa02() {
-  function metaCard(items) {
-    let h = `<div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; margin-bottom:2rem; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">`;
-    items.forEach(m => { h += `<div style="display:flex; flex-direction:column; gap:0.125rem;"><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600;">${m.label}</span><span style="font-size:0.92rem; color:var(--td-text-primary);">${m.value}</span></div>`; });
-    h += `</div>`;
-    return h;
-  }
-  return experimentShell({
-    id:"fa02", category:"ecosystem", title:"FA-02 — One Month Out of the Apple Ecosystem",
-    status:"done", statusLabel:"Done", tags:["30 Days","Friction Log","Ecosystem Lock-In Study"],
-    scope:"📋 n=1 — personal experience, not a controlled study",
-    search:"fa-02 one month out of the apple ecosystem ecosystem study ecosystem exit friction log pixel samsung windows lock-in",
-    toc:[{id:"fa02-setup",label:"Setup & Baseline"},{id:"fa02-timeline",label:"30-Day Journey"},{id:"fa02-friction",label:"Friction Log"},{id:"fa02-implications",label:"Ecosystem Lock-In"},{id:"fa02-verdict",label:"Final Verdict"}],
-    body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">A 30-day attempt to leave the Apple ecosystem completely: phone, desktop, cloud, accessories and account authentication all moved to a Pixel 10 Pro and a Windows laptop. This is a personal friction log, not a controlled study.</p>
-      ${insightCard("warning","Executive Summary","One month away from Apple revealed a painful truth: the ecosystem works so well when all parts align that you don't realize how much it's doing for you until it's gone. The friction wasn't insurmountable, but it was relentless. Every single task involved a workaround, a subscription, or a compromise that iOS/Mac handled transparently.")}
-      ${sectionH3("fa02-setup","Setup & Baseline")}
-      ${metaCard([{label:"Duration",value:"30 days"},{label:"Primary Device",value:"Pixel 10 Pro"},{label:"Desktop",value:"HP Victus 15-fa2013dx"},{label:"Baseline (Before)",value:"iPhone 16e + older MacBook Air"},{label:"Scope",value:"Complete ecosystem exit: phone, desktop, cloud, accessories, auth"}])}
-      <pre style="background:#161616; border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; overflow-x:auto; margin:1.5rem 0; font-size:0.85rem;" class="td-scrollbar"><code style="font-family:ui-monospace,monospace; color:#e0e0e0; line-height:1.6;"># device-swap.log — week 1 baseline capture
-device: "Pixel 10 Pro"
-desktop: "HP Victus 15-fa2013dx"
-prior_setup: "iPhone 16e + older MacBook Air"
-accounts_migrated: 14
-windows_first_login_time: "30m" // just to reach desktop</code></pre>
-      ${sectionH3("fa02-timeline","The 30-Day Journey")}
-      ${timeline([
-        {tone:"warning",title:"Week 1 — The Unpacking",body:"Setup Pixel 10 Pro and HP Victus. Initial excitement about customization and stock Android freedom quickly replaced by setup friction — 30 minutes just to log into Windows, bloated with unnecessary software, subscription gateways for basic features."},
-        {tone:"error",title:"Week 2 — The Cracks Appear",body:"App quality on Pixel noticeably worse than iPhone — UI glitches, screen ratio issues, login problems. Windows-Pixel pairing failed repeatedly. Authentication migration revealed data loss: only recent history preserved; older account data disappeared."},
-        {tone:"error",title:"Week 3 — The Breaking Point",body:"Windows performance unplugged became unusable (\"like a laggy Android tablet from 20 years ago\"). Accessory ecosystem collapsed — Pixel has 3 notable accessory brands vs iPhone's ~100. Health metrics on Google Watch wildly inaccurate."},
-        {tone:"success",title:"Week 4 — Return & Reflection",body:"Returning to iPhone and Mac was far easier than leaving. The ecosystem pulls you back in. Verdict: Apple's lock-in is real, but it's a side effect of design coherence, not malice. The best ecosystem is the one you don't notice until you leave."}
-      ])}
-      ${sectionH3("fa02-friction","The Friction Log — Key Findings")}
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-bottom:2rem;">
-        ${insightCard("error","Account Migration Was Deceptive","Backing up photos, apps, and data seemed straightforward until the moment of truth. Each account linked to Apple ID required 5–10 minutes of reconfiguration to switch to Google accounts. Worse: only the most recent portion of each account was preserved. All historical data from when accounts were first created on Apple ID was lost.")}
-        ${insightCard("warning","App Quality on Pixel vs iPhone","Apps on Pixel 10 Pro work, but with consistent quality issues compared to iPhone: screen ratio problems, occasional lag and UI glitches, forgetting account logins mid-session, failure to send authentication codes. Even Google's own apps aren't optimized for their hardware.")}
-        ${insightCard("error","Desktop Transition: The Breaking Point","Windows setup was atrocious (30 minutes just to log in), bloated with unnecessary software, required $130/year subscriptions for features free on Mac, and pairing Pixel with Windows required downloading an app just for the OS to recognize the phone. No harmony — every integration felt like a workaround.")}
-        ${insightCard("warning","Accessory Ecosystem Collapse","iPhone has ~100 brands worth of accessories. Pixel has 3 notable options. Windows laptop had almost nothing. Customization — a core desire — became impossible. This isn't just convenience; it's a meaningful reduction in how you can personalize your devices.")}
-        ${insightCard("warning","Peripheral Hardware (Watch, Earphones)","Earphones were an easy swap to Sony WF. Google Buds were \"okay\" but Sony met requirements. Google Watch paired well but health metrics were wildly inaccurate — heartbeat, step count, calorie burn all significantly off compared to Apple Watch.")}
-        ${insightCard("info","Pixel 10 Pro: The Phone Itself","<strong style='color:#fff'>The good:</strong> Stock Android offers features and customization iOS doesn't have. Rear camera is exceptional. <strong style='color:#fff'>The bad:</strong> Front-facing camera is poor — not comparable to iPhone's selfie quality. Gaming heats up quickly despite the new chipset.")}
-        ${insightCard("error","Authentication Hell: The Final Straw","Most accounts require two-factor authentication via iPhone. To use Pixel as the only phone requires: logging into accounts on iPhone, re-authenticating to Pixel, then re-authenticating everything else to work only on Pixel. Even after all this, \"it barely works.\" This created a dependency loop where you can't fully leave the iPhone behind.")}
-
-      </div>
-      ${sectionH3("fa02-implications","What This Reveals About Ecosystem Lock-In")}
-      <div style="display:grid; gap:0.5rem; margin-bottom:2rem;">
-        ${rankingRow("warning","The Paradox","","","Apple's ecosystem is so seamless when you're inside it that you never notice how much integration is happening. Phone, watch, MacBook, iPad, Apple TV — they all work in harmony. You rely on that harmony without thinking about it.")}
-        ${rankingRow("warning","Google's Counter-Offer","","","Individual features that outclass Apple. Stock Android customization, Pixel camera software, hardware options. But these don't integrate. Each one requires a workaround to the next.")}
-        ${rankingRow("error","Windows Is Brutal","","","It's not just \"different.\" It's bloated, subscription-gated, and requires you to solve puzzles to do things that Mac handles automatically. This was the true deal-breaker.")}
-        ${rankingRow("success","Returning Was Easier Than Leaving","","","After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow.")}
-      </div>
-      ${sectionH3("fa02-verdict","Final Verdict")}
-      <div style="background:var(--td-bg-surface-elevated); padding:1.5rem; border-radius:0.375rem; margin-bottom:2rem;"><strong style="color:#fff; display:block; margin-bottom:0.5rem;">Going Forward</strong><p style="color:var(--td-text-secondary); margin:0 0 0.5rem;">Keeping Pixel 10 Pro as part of daily rotation — it's genuinely good as a phone and reliable on Android stock. Everything else (Windows, Google ecosystem beyond the phone, desktop integration, accessories) was "completely tolerable but just so annoying." The experiment confirmed: <strong style="color:var(--td-info);">Apple's lock-in isn't just marketing. The ecosystem actually works better when all parts are in harmony.</strong></p><p style="color:var(--td-text-secondary); margin:0;">Never doing a full ecosystem exit again. The compromises weren't insurmountable, but they were relentless. Now it's clear why people stay.</p></div>
-      ${conclusion("Key Takeaway for Consumer Tech","Ecosystem lock-in is real, but it's not sinister — it's a side effect of design coherence. Apple makes you stay because leaving is so much harder than staying. Google has the individual parts but not the glue. Windows is still playing catch-up. The best ecosystem is the one you don't notice you're in until you leave.")}
-      ${relatedExperiments([
-        {id:"fa01",label:"🤖 Also see: FA-01 — Which AI Builds Our Website Best?"},
-        {id:"fa03",label:"💻 Also see: FA-03 — Laptop Comparison Project"}
-      ])}
-    `
-  });
-}
-
-function buildFa03() {
-  function metaCard(items) {
-    let h = `<div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; margin-bottom:2rem; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">`;
-    items.forEach(m => { h += `<div style="display:flex; flex-direction:column; gap:0.125rem;"><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600;">${m.label}</span><span style="font-size:0.92rem; color:var(--td-text-primary);">${m.value}</span></div>`; });
-    h += `</div>`;
-    return h;
-  }
-  return experimentShell({
-    id: "fa03",
-    category: "hardware",
-    title: "FA-03 — Two Months, Two Laptops: MacBook Pro 16\" (M2 Pro) vs. Acer Aspire 14 AI",
-    status: "done",
-    statusLabel: "Done",
-    tags: ["~2 Months", "Alternating Daily Use", "Personal Impressions"],
-    scope: "📋 n=1 — personal impressions from daily use, no benchmarks",
-    search: "fa-03 two laptops macbook pro 16 m2 pro acer aspire 14 ai core ultra 7 256v arc 140v daily use productivity gaming ecosystem",
-    toc: [
-      { id: "fa03-setup", label: "Setup" },
-      { id: "fa03-impressions", label: "Impressions" },
-      { id: "fa03-verdict", label: "Verdict" }
-    ],
-    body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">About two months of alternating daily use between two laptops: one day on the MacBook Pro 16", the next on the Acer Aspire 14 AI. The same everyday work on both, plus gaming on the Aspire. These are personal impressions from real use, not measured benchmarks.</p>
-
-      ${sectionH3("fa03-setup", "Setup")}
-      ${metaCard([
-        {label:"Duration", value:"About 2 months"},
-        {label:"Method", value:"Alternating daily: one day per laptop"},
-        {label:"Workloads (both)", value:"Canvas, streaming, CSS / web work, Adobe apps"},
-        {label:"Extra (Aspire)", value:"Gaming, used a lot"}
-      ])}
-      ${dataTable("Configurations as used", [{label:"Spec"},{label:"MacBook Pro 16\""},{label:"Acer Aspire 14 AI"}], [
-        [{primary:true,text:"Chip"},{text:"Apple M2 Pro"},{text:"Intel Core Ultra 7 256V"}],
-        [{primary:true,text:"Graphics"},{text:"—"},{text:"Intel Arc 140V"}],
-        [{primary:true,text:"Memory"},{text:"16GB"},{text:"16GB"}],
-        [{primary:true,text:"Storage"},{text:"512GB SSD"},{text:"1TB"}],
-        [{primary:true,text:"Display size"},{text:"16\""},{text:"14\""}],
-        [{primary:true,text:"Notes"},{text:"Gray"},{text:"Refurbished"}]
-      ])}
-
-      ${sectionH3("fa03-impressions", "Impressions")}
-      ${dataTable("Side-by-side impressions from daily use", [{label:"Area"},{label:"MacBook Pro 16\""},{label:"Acer Aspire 14 AI"}], [
-        [{primary:true,text:"Browsing"},{text:"About equal"},{text:"About equal"}],
-        [{primary:true,text:"Productive work (Canvas, CSS, Adobe)"},{badge:"success",text:"Worked very well; looked and felt smoother"},{badge:"warning",text:"Capable, but not as fast or smooth"}],
-        [{primary:true,text:"Build quality"},{badge:"success",text:"Felt noticeably better"},{text:"—"}],
-        [{primary:true,text:"Gaming"},{text:"—"},{badge:"success",text:"A real strength; used a lot"}],
-        [{primary:true,text:"Ecosystem"},{badge:"success",text:"Seamless for someone already in Apple's ecosystem"},{text:"—"}]
-      ])}
-      ${keyFinding("Key Finding", "For everyday browsing the two were about equal. The difference showed in productive work: the MacBook Pro looked and felt smoother, helped by its build quality, while the Aspire handled the same work, just not as fast or as smoothly.")}
-
-      ${sectionH3("fa03-verdict", "Verdict")}
-      ${conclusion("Both are good laptops — for different people", "For someone already in Apple's ecosystem, the MacBook Pro 16\" is the smoother, better-built productivity machine and works seamlessly with everything else. The Acer Aspire 14 AI proves itself too: it does the same productive work, only slower, and adds gaming that the Mac setup was not used for.")}
-
-      <div style="font-size:0.82rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); padding-top:1rem; margin-top:2rem;">
-        <strong>FA-03</strong> | Status: Done — personal impressions<br>
-        Source: owner's firsthand daily use over about two months. No benchmarks, thermal, battery or repair measurements were taken; none are claimed.
-      </div>
-
-      ${relatedExperiments([
-        {id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"},
-        {to:"#/experiments/queued-exp8",label:"🔄 Also see: Experiment 8 — Cross-Platform Ecosystem Reliability"}
-      ])}
-    `
-  });
+function renderFodderArchive() {
+  return OFFICIAL_EXPERIMENTS
+    .filter(e => /^FA-\d+$/.test(e.experimentNumber) && Array.isArray(e.sections))
+    .sort((x, y) => x.experimentNumber.localeCompare(y.experimentNumber, undefined, { numeric: true }))
+    .map(buildFromEntry)
+    .join("");
 }
 
 // ===== Render content =====
 document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildQueued();
-document.getElementById("fodderContent").innerHTML = buildFa01()+buildFa02()+buildFa03();
+document.getElementById("fodderContent").innerHTML = renderFodderArchive();
 
 // ===== Routing =====
 function showPage(hash) {

@@ -1381,7 +1381,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "5 Models Tested",
       "Cold Prompt Only"
     ],
-    "scope": "n=1 per model — anecdotal comparison, not a statistical sample",
+    "scope": "📋 n=1 per model — anecdotal comparison, not a statistical sample",
     "search": "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude",
     "toc": [
       {
@@ -1403,6 +1403,10 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "id": "fa01-findings",
         "label": "Key Findings"
+      },
+      {
+        "id": "fa01-recommendation",
+        "label": "Recommendation"
       }
     ],
     "relatedExperiments": [],
@@ -1423,6 +1427,380 @@ export const OFFICIAL_EXPERIMENTS = [
     ],
     "allowedMeasurementKeys": [
       "ownerScore"
+    ],
+    "sections": [
+      {
+        "type": "paragraph",
+        "variant": "lead",
+        "tight": true,
+        "html": "Five AI assistants — DeepSeek, Gemini, Grok, ChatGPT, and Claude — were each given the same blind prompt: <em style=\"color:var(--td-text-primary);\">\"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software.\"</em> No examples, no reference to this site, no guidance beyond the bare prompt. Rated on design execution, code quality, structure, and functionality. Inspired by ChatGPT's earlier attempt to rebuild this site and calling it \"Version 6.\""
+      },
+      {
+        "type": "notice",
+        "html": "⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Click \"view submitted file\" to judge the raw output yourself."
+      },
+      {
+        "type": "heading",
+        "id": "fa01-setup",
+        "text": "Experiment Setup"
+      },
+      {
+        "type": "meta",
+        "items": [
+          {
+            "label": "Prompt",
+            "value": "\"Build a consumer tech documentation website in HTML for real-world smartphone, repair, and software experiments\""
+          },
+          {
+            "label": "Models Tested",
+            "value": "Claude · ChatGPT · Gemini · Grok · DeepSeek"
+          },
+          {
+            "label": "Guidance Given",
+            "value": "None — cold prompt only",
+            "error": true
+          },
+          {
+            "label": "Content Requirement",
+            "value": "Each AI invented its own placeholder content"
+          },
+          {
+            "label": "Judged On",
+            "value": "Design · Code quality · Structure · Functionality"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa01-owner-rankings",
+        "text": "Full Rankings — Owner Assessment"
+      },
+      {
+        "type": "group",
+        "layout": "stack",
+        "children": [
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥇 Grok — 9.0/10",
+            "value": "9.0",
+            "valueColor": "success",
+            "body": "Full SPA with working JS view-routing, a real light/dark toggle with persisted state, hero stats, timeline component, and per-experiment detail pages. The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized."
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "🥈 ChatGPT — 7.0/10",
+            "value": "7.0",
+            "valueColor": "warning",
+            "body": "Sidebar doc layout with a working theme toggle and a live search bar that filters page sections by typed text — a genuinely useful feature none of the others attempted. Let down by sloppy markup (stray br tags instead of CSS spacing) and fairly generic visual styling."
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "🥈 DeepSeek — 7.0/10",
+            "value": "7.0",
+            "valueColor": "warning",
+            "body": "The most visually refined of the five — soft light theme, gradient-text logo, polished card and code-block styling, genuinely nice sidebar/grid layout. Purely static though: nav tabs and links don't go anywhere, no interactivity at all."
+          },
+          {
+            "type": "ranking",
+            "tone": "error",
+            "title": "4th — Gemini — 6.5/10",
+            "value": "6.5",
+            "valueColor": "error",
+            "body": "Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections."
+          },
+          {
+            "type": "ranking",
+            "tone": "error",
+            "title": "5th — Claude — 4.5/10",
+            "value": "4.5",
+            "valueColor": "error",
+            "body": "Plain dark card layout, static table, zero interactivity, and the thinnest content of the five. Functional and clean but clearly the least effort — kept here for transparency. The data is the data."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa01-claude-assessment",
+        "text": "Claude's Independent Assessment"
+      },
+      {
+        "type": "paragraph",
+        "variant": "note",
+        "html": "Note: this assessment was generated separately by Claude before seeing the owner's rankings above. Scores differ — make of that what you will."
+      },
+      {
+        "type": "group",
+        "layout": "stack",
+        "children": [
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥇 Claude — Editorial Foundation",
+            "value": "1st",
+            "valueColor": "success",
+            "body": "Three intentional font families (Playfair Display, Inter, IBM Plex Mono), full design token system with semantic naming, sticky sidebar with active state navigation, status badges (COMPLETE / PENDING / ON HOLD), light/dark pill toggle, and responsive typography via clamp(). Most architecturally sophisticated of the five. Missing: no actual experiment data — a polished shell rather than a completed document."
+          },
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥈 Gemini — Functional Dashboard",
+            "value": "2nd",
+            "valueColor": "success",
+            "body": "Fixed sidebar, live search filtering nav items, [data-theme] attribute toggle with localStorage, copy-to-clipboard on code blocks, JS tab routing with fadeIn animations, status dots, and a .callout component system with modifiers. Structurally well-built. Fatal flaw: content went completely off-brief (OpenWrt router flashing, VLAN containment) — nothing to do with smartphones or repair."
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "3rd — DeepSeek — Most Visually Distinctive",
+            "value": "3rd",
+            "valueColor": "warning",
+            "body": "Light theme by default, gradient text headline, branded icon in header, clean card system, sidebar meta-info section with active experiment count and maintainer handles, syntax-highlighted code blocks. Went off-brief (developer docs portal via npm, not consumer tech). No dark mode, no accessibility attributes, no print styles."
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "4th — Grok — Most Ambitious, Most Dependent",
+            "value": "4th",
+            "valueColor": "warning",
+            "body": "Space Grotesk headings, yellow accent scheme, large hero section, animated pulse indicator, category filter buttons, JS-populated experiment cards. Relies entirely on Tailwind CSS and Font Awesome CDNs — if either goes down, the entire design collapses. Content is fabricated. Visually impressive but not self-contained."
+          },
+          {
+            "type": "ranking",
+            "tone": "error",
+            "title": "5th — ChatGPT — Recycled, Not Built",
+            "value": "5th",
+            "valueColor": "error",
+            "body": "Three conflicting :root blocks that contradict each other, CSS variables defined but never actually used, Experiment 3 rating bars rendering as empty (no width values), content stopping at Experiment 3, title still reading \"v3\". Essentially recycled the original version of this site and called it a new submission. Least original, least complete, most structurally broken."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa01-divergence",
+        "text": "Where The Two Assessments Diverge"
+      },
+      {
+        "type": "table",
+        "caption": "Comparison of owner vs Claude assessments — highlighting disagreements",
+        "headers": [
+          {
+            "label": "Model"
+          },
+          {
+            "label": "Owner Rank",
+            "center": true
+          },
+          {
+            "label": "Claude Rank",
+            "center": true
+          },
+          {
+            "label": "Difference",
+            "center": true
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Grok"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "1st"
+            },
+            {
+              "center": true,
+              "badge": "warning",
+              "text": "4th"
+            },
+            {
+              "center": true,
+              "badge": "error",
+              "text": "▼ 3"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "ChatGPT"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "2nd"
+            },
+            {
+              "center": true,
+              "badge": "error",
+              "text": "5th"
+            },
+            {
+              "center": true,
+              "badge": "error",
+              "text": "▼ 3"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "DeepSeek"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "2nd"
+            },
+            {
+              "center": true,
+              "badge": "warning",
+              "text": "3rd"
+            },
+            {
+              "center": true,
+              "badge": "warning",
+              "text": "▼ 1"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Gemini"
+            },
+            {
+              "center": true,
+              "badge": "error",
+              "text": "4th"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "2nd"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "▲ 2"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Claude"
+            },
+            {
+              "center": true,
+              "badge": "error",
+              "text": "5th"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "1st"
+            },
+            {
+              "center": true,
+              "badge": "success",
+              "text": "▲ 4"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "paragraph",
+        "variant": "small",
+        "html": "The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing, persisted state, and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does."
+      },
+      {
+        "type": "heading",
+        "id": "fa01-findings",
+        "text": "Key Findings"
+      },
+      {
+        "type": "group",
+        "layout": "cards",
+        "children": [
+          {
+            "type": "insight",
+            "tone": "info",
+            "title": "Architecture Beat Aesthetics",
+            "body": "The deciding factor wasn't color palette or typography — every entry looked reasonably professional. What separated Grok from the pack was building actual information architecture (routable views, reusable detail templates, real state) rather than a single static scroll of cards."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "Content Interpretation Varied Wildly",
+            "body": "Only Claude and Grok stayed close to the brief. Gemini built a network admin dashboard. DeepSeek built a developer docs portal. ChatGPT recycled existing work. \"Consumer tech documentation website\" meant five completely different things to five different models."
+          },
+          {
+            "type": "insight",
+            "tone": "info",
+            "title": "Interactivity Was Rare",
+            "body": "Only Grok (view routing + persisted theme) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "Self-Containement Matters",
+            "body": "Grok's entry depends on two external CDNs (Tailwind + Font Awesome). Every other submission was fully self-contained. For a documentation site meant to be archived and shared, CDN dependency is a real long-term risk."
+          }
+        ]
+      },
+      {
+        "type": "conclusion",
+        "title": "Owner's Winner: Grok · Claude's Winner: Claude · Honest Winner: Probably Grok",
+        "body": "The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation and persistent state. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running."
+      },
+      {
+        "type": "checklist",
+        "id": "fa01-recommendation",
+        "title": "Which AI Should You Use for Web Development?",
+        "items": [
+          {
+            "tone": "success",
+            "mark": "✓",
+            "name": "Grok",
+            "text": "Best for full-page builds with real interactivity and SPA structure"
+          },
+          {
+            "tone": "success",
+            "mark": "✓",
+            "name": "DeepSeek",
+            "text": "Best for polished visual design and refined UI"
+          },
+          {
+            "tone": "success",
+            "mark": "✓",
+            "name": "ChatGPT",
+            "text": "Best for adding specific features (search, theme toggle) to existing work"
+          },
+          {
+            "tone": "warning",
+            "mark": "⚠️",
+            "name": "Gemini",
+            "text": "Good structure, but verify content stays on-brief"
+          },
+          {
+            "tone": "error",
+            "mark": "✗",
+            "name": "Claude",
+            "text": "Solid foundation, but needs the most hand-holding to produce complete content"
+          }
+        ]
+      },
+      {
+        "type": "related",
+        "items": [
+          {
+            "id": "fa02",
+            "label": "🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"
+          }
+        ]
+      }
     ]
   },
   {
@@ -1465,7 +1843,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "Friction Log",
       "Ecosystem Lock-In Study"
     ],
-    "scope": "n=1 — personal experience, not a controlled study",
+    "scope": "📋 n=1 — personal experience, not a controlled study",
     "search": "fa-02 one month out of the apple ecosystem friction log pixel 10 pro windows hp victus lock-in",
     "toc": [
       {
@@ -1528,6 +1906,210 @@ export const OFFICIAL_EXPERIMENTS = [
       "durationDays",
       "accountsMigrated",
       "firstWindowsLoginMinutes"
+    ],
+    "sections": [
+      {
+        "type": "paragraph",
+        "variant": "lead",
+        "html": "A 30-day attempt to leave the Apple ecosystem completely: phone, desktop, cloud, accessories and account authentication all moved to a Pixel 10 Pro and a Windows laptop. This is a personal friction log, not a controlled study."
+      },
+      {
+        "type": "insight",
+        "tone": "warning",
+        "title": "Executive Summary",
+        "body": "One month away from Apple revealed a painful truth: the ecosystem works so well when all parts align that you don't realize how much it's doing for you until it's gone. The friction wasn't insurmountable, but it was relentless. Every single task involved a workaround, a subscription, or a compromise that iOS/Mac handled transparently."
+      },
+      {
+        "type": "heading",
+        "id": "fa02-setup",
+        "text": "Setup & Baseline"
+      },
+      {
+        "type": "meta",
+        "items": [
+          {
+            "label": "Duration",
+            "value": "30 days"
+          },
+          {
+            "label": "Primary Device",
+            "value": "Pixel 10 Pro"
+          },
+          {
+            "label": "Desktop",
+            "value": "HP Victus 15-fa2013dx"
+          },
+          {
+            "label": "Baseline (Before)",
+            "value": "iPhone 16e + older MacBook Air"
+          },
+          {
+            "label": "Scope",
+            "value": "Complete ecosystem exit: phone, desktop, cloud, accessories, auth"
+          }
+        ]
+      },
+      {
+        "type": "code",
+        "text": "# device-swap.log — week 1 baseline capture\ndevice: \"Pixel 10 Pro\"\ndesktop: \"HP Victus 15-fa2013dx\"\nprior_setup: \"iPhone 16e + older MacBook Air\"\naccounts_migrated: 14\nwindows_first_login_time: \"30m\" // just to reach desktop"
+      },
+      {
+        "type": "heading",
+        "id": "fa02-timeline",
+        "text": "The 30-Day Journey"
+      },
+      {
+        "type": "timeline",
+        "items": [
+          {
+            "tone": "warning",
+            "title": "Week 1 — The Unpacking",
+            "body": "Setup Pixel 10 Pro and HP Victus. Initial excitement about customization and stock Android freedom quickly replaced by setup friction — 30 minutes just to log into Windows, bloated with unnecessary software, subscription gateways for basic features."
+          },
+          {
+            "tone": "error",
+            "title": "Week 2 — The Cracks Appear",
+            "body": "App quality on Pixel noticeably worse than iPhone — UI glitches, screen ratio issues, login problems. Windows-Pixel pairing failed repeatedly. Authentication migration revealed data loss: only recent history preserved; older account data disappeared."
+          },
+          {
+            "tone": "error",
+            "title": "Week 3 — The Breaking Point",
+            "body": "Windows performance unplugged became unusable (\"like a laggy Android tablet from 20 years ago\"). Accessory ecosystem collapsed — Pixel has 3 notable accessory brands vs iPhone's ~100. Health metrics on Google Watch wildly inaccurate."
+          },
+          {
+            "tone": "success",
+            "title": "Week 4 — Return & Reflection",
+            "body": "Returning to iPhone and Mac was far easier than leaving. The ecosystem pulls you back in. Verdict: Apple's lock-in is real, but it's a side effect of design coherence, not malice. The best ecosystem is the one you don't notice until you leave."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa02-friction",
+        "text": "The Friction Log — Key Findings"
+      },
+      {
+        "type": "group",
+        "layout": "cards",
+        "children": [
+          {
+            "type": "insight",
+            "tone": "error",
+            "title": "Account Migration Was Deceptive",
+            "body": "Backing up photos, apps, and data seemed straightforward until the moment of truth. Each account linked to Apple ID required 5–10 minutes of reconfiguration to switch to Google accounts. Worse: only the most recent portion of each account was preserved. All historical data from when accounts were first created on Apple ID was lost."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "App Quality on Pixel vs iPhone",
+            "body": "Apps on Pixel 10 Pro work, but with consistent quality issues compared to iPhone: screen ratio problems, occasional lag and UI glitches, forgetting account logins mid-session, failure to send authentication codes. Even Google's own apps aren't optimized for their hardware."
+          },
+          {
+            "type": "insight",
+            "tone": "error",
+            "title": "Desktop Transition: The Breaking Point",
+            "body": "Windows setup was atrocious (30 minutes just to log in), bloated with unnecessary software, required $130/year subscriptions for features free on Mac, and pairing Pixel with Windows required downloading an app just for the OS to recognize the phone. No harmony — every integration felt like a workaround."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "Accessory Ecosystem Collapse",
+            "body": "iPhone has ~100 brands worth of accessories. Pixel has 3 notable options. Windows laptop had almost nothing. Customization — a core desire — became impossible. This isn't just convenience; it's a meaningful reduction in how you can personalize your devices."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "Peripheral Hardware (Watch, Earphones)",
+            "body": "Earphones were an easy swap to Sony WF. Google Buds were \"okay\" but Sony met requirements. Google Watch paired well but health metrics were wildly inaccurate — heartbeat, step count, calorie burn all significantly off compared to Apple Watch."
+          },
+          {
+            "type": "insight",
+            "tone": "info",
+            "title": "Pixel 10 Pro: The Phone Itself",
+            "body": "<strong style='color:#fff'>The good:</strong> Stock Android offers features and customization iOS doesn't have. Rear camera is exceptional. <strong style='color:#fff'>The bad:</strong> Front-facing camera is poor — not comparable to iPhone's selfie quality. Gaming heats up quickly despite the new chipset."
+          },
+          {
+            "type": "insight",
+            "tone": "error",
+            "title": "Authentication Hell: The Final Straw",
+            "body": "Most accounts require two-factor authentication via iPhone. To use Pixel as the only phone requires: logging into accounts on iPhone, re-authenticating to Pixel, then re-authenticating everything else to work only on Pixel. Even after all this, \"it barely works.\" This created a dependency loop where you can't fully leave the iPhone behind."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa02-implications",
+        "text": "What This Reveals About Ecosystem Lock-In"
+      },
+      {
+        "type": "group",
+        "layout": "stack",
+        "children": [
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "The Paradox",
+            "value": "",
+            "valueColor": "",
+            "body": "Apple's ecosystem is so seamless when you're inside it that you never notice how much integration is happening. Phone, watch, MacBook, iPad, Apple TV — they all work in harmony. You rely on that harmony without thinking about it."
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "Google's Counter-Offer",
+            "value": "",
+            "valueColor": "",
+            "body": "Individual features that outclass Apple. Stock Android customization, Pixel camera software, hardware options. But these don't integrate. Each one requires a workaround to the next."
+          },
+          {
+            "type": "ranking",
+            "tone": "error",
+            "title": "Windows Is Brutal",
+            "value": "",
+            "valueColor": "",
+            "body": "It's not just \"different.\" It's bloated, subscription-gated, and requires you to solve puzzles to do things that Mac handles automatically. This was the true deal-breaker."
+          },
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "Returning Was Easier Than Leaving",
+            "value": "",
+            "valueColor": "",
+            "body": "After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa02-verdict",
+        "text": "Final Verdict"
+      },
+      {
+        "type": "callout",
+        "title": "Going Forward",
+        "paragraphs": [
+          "Keeping Pixel 10 Pro as part of daily rotation — it's genuinely good as a phone and reliable on Android stock. Everything else (Windows, Google ecosystem beyond the phone, desktop integration, accessories) was \"completely tolerable but just so annoying.\" The experiment confirmed: <strong style=\"color:var(--td-info);\">Apple's lock-in isn't just marketing. The ecosystem actually works better when all parts are in harmony.</strong>",
+          "Never doing a full ecosystem exit again. The compromises weren't insurmountable, but they were relentless. Now it's clear why people stay."
+        ]
+      },
+      {
+        "type": "conclusion",
+        "title": "Key Takeaway for Consumer Tech",
+        "body": "Ecosystem lock-in is real, but it's not sinister — it's a side effect of design coherence. Apple makes you stay because leaving is so much harder than staying. Google has the individual parts but not the glue. Windows is still playing catch-up. The best ecosystem is the one you don't notice you're in until you leave."
+      },
+      {
+        "type": "related",
+        "items": [
+          {
+            "id": "fa01",
+            "label": "🤖 Also see: FA-01 — Which AI Builds Our Website Best?"
+          },
+          {
+            "id": "fa03",
+            "label": "💻 Also see: FA-03 — Laptop Comparison Project"
+          }
+        ]
+      }
     ]
   },
   {
@@ -1563,7 +2145,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "Alternating Daily Use",
       "Personal Impressions"
     ],
-    "scope": "n=1 — personal impressions from daily use, no benchmarks",
+    "scope": "📋 n=1 — personal impressions from daily use, no benchmarks",
     "search": "fa-03 two laptops macbook pro 16 m2 pro acer aspire 14 ai core ultra 7 256v arc 140v daily use productivity gaming ecosystem",
     "toc": [
       {
@@ -1600,6 +2182,247 @@ export const OFFICIAL_EXPERIMENTS = [
     ],
     "allowedMeasurementKeys": [
       "usageWeeks"
+    ],
+    "sections": [
+      {
+        "type": "paragraph",
+        "variant": "lead",
+        "html": "About two months of alternating daily use between two laptops: one day on the MacBook Pro 16\", the next on the Acer Aspire 14 AI. The same everyday work on both, plus gaming on the Aspire. These are personal impressions from real use, not measured benchmarks."
+      },
+      {
+        "type": "heading",
+        "id": "fa03-setup",
+        "text": "Setup"
+      },
+      {
+        "type": "meta",
+        "items": [
+          {
+            "label": "Duration",
+            "value": "About 2 months"
+          },
+          {
+            "label": "Method",
+            "value": "Alternating daily: one day per laptop"
+          },
+          {
+            "label": "Workloads (both)",
+            "value": "Canvas, streaming, CSS / web work, Adobe apps"
+          },
+          {
+            "label": "Extra (Aspire)",
+            "value": "Gaming, used a lot"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "caption": "Configurations as used",
+        "headers": [
+          {
+            "label": "Spec"
+          },
+          {
+            "label": "MacBook Pro 16\""
+          },
+          {
+            "label": "Acer Aspire 14 AI"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Chip"
+            },
+            {
+              "text": "Apple M2 Pro"
+            },
+            {
+              "text": "Intel Core Ultra 7 256V"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Graphics"
+            },
+            {
+              "text": "—"
+            },
+            {
+              "text": "Intel Arc 140V"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Memory"
+            },
+            {
+              "text": "16GB"
+            },
+            {
+              "text": "16GB"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Storage"
+            },
+            {
+              "text": "512GB SSD"
+            },
+            {
+              "text": "1TB"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Display size"
+            },
+            {
+              "text": "16\""
+            },
+            {
+              "text": "14\""
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Notes"
+            },
+            {
+              "text": "Gray"
+            },
+            {
+              "text": "Refurbished"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa03-impressions",
+        "text": "Impressions"
+      },
+      {
+        "type": "table",
+        "caption": "Side-by-side impressions from daily use",
+        "headers": [
+          {
+            "label": "Area"
+          },
+          {
+            "label": "MacBook Pro 16\""
+          },
+          {
+            "label": "Acer Aspire 14 AI"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Browsing"
+            },
+            {
+              "text": "About equal"
+            },
+            {
+              "text": "About equal"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Productive work (Canvas, CSS, Adobe)"
+            },
+            {
+              "badge": "success",
+              "text": "Worked very well; looked and felt smoother"
+            },
+            {
+              "badge": "warning",
+              "text": "Capable, but not as fast or smooth"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Build quality"
+            },
+            {
+              "badge": "success",
+              "text": "Felt noticeably better"
+            },
+            {
+              "text": "—"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Gaming"
+            },
+            {
+              "text": "—"
+            },
+            {
+              "badge": "success",
+              "text": "A real strength; used a lot"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Ecosystem"
+            },
+            {
+              "badge": "success",
+              "text": "Seamless for someone already in Apple's ecosystem"
+            },
+            {
+              "text": "—"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "keyFinding",
+        "title": "Key Finding",
+        "body": "For everyday browsing the two were about equal. The difference showed in productive work: the MacBook Pro looked and felt smoother, helped by its build quality, while the Aspire handled the same work, just not as fast or as smoothly."
+      },
+      {
+        "type": "heading",
+        "id": "fa03-verdict",
+        "text": "Verdict"
+      },
+      {
+        "type": "conclusion",
+        "title": "Both are good laptops — for different people",
+        "body": "For someone already in Apple's ecosystem, the MacBook Pro 16\" is the smoother, better-built productivity machine and works seamlessly with everything else. The Acer Aspire 14 AI proves itself too: it does the same productive work, only slower, and adds gaming that the Mac setup was not used for."
+      },
+      {
+        "type": "footnote",
+        "html": "<strong>FA-03</strong> | Status: Done — personal impressions<br> Source: owner's firsthand daily use over about two months. No benchmarks, thermal, battery or repair measurements were taken; none are claimed."
+      },
+      {
+        "type": "related",
+        "items": [
+          {
+            "id": "fa02",
+            "label": "🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"
+          },
+          {
+            "to": "#/experiments/queued-exp8",
+            "label": "🔄 Also see: Experiment 8 — Cross-Platform Ecosystem Reliability"
+          }
+        ]
+      }
     ]
   },
   {
