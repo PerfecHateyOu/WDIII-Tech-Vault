@@ -555,7 +555,7 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "id": "queued-exp10",
-        "label": "⏳ Queued Exp 10 — iOS 26 vs iOS 27 Survey"
+        "label": "⏸️ Paused Exp 10 — Year-Long iOS 26 vs iOS 27 Survey"
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
@@ -1495,71 +1495,94 @@ export const OFFICIAL_EXPERIMENTS = [
   {
     "id": "queued-exp10",
     "experimentNumber": "10",
-    "title": "Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey",
+    "title": "Paused Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e",
     "category": "software",
-    "status": "queued",
-    "statusLabel": "Queued",
+    "status": "paused",
+    "statusLabel": "Paused",
     "origin": "official_wdiii",
-    "researchQuestion": "Does multi-year data support consumer claims that next-generation major iOS updates introduce cumulative battery wear and UI frame rate drops?",
-    "objective": "Execute a longitudinal 365-day quantitative survey measuring app startup latency, background battery drain, and thermal throttling across consecutive major iOS releases.",
-    "methodology": "Dual-device control setup running automated nightly telemetry captures, Geekbench compute logs, and UI frametime recordings using Xcode Instruments.",
-    "conditions": "Identical iPhone hardware batches, controlled ambient lab environment, identical network loads.",
-    "protocol": "1. Lock baseline iPhone units to iOS 26.x and upgrade companion units to iOS 27.x. 2. Run automated nightly 10-app launch cycle. 3. Record standby battery loss percentage over 8-hour sleep window. 4. Track dropped display frames with Quartz Debugger.",
+    "researchQuestion": "On the same iPhone 16e, how do standby battery drain, built-in app launch times and stability on iOS 27 compare with the same phone on iOS 26, and how do they change across iOS 27 point updates over a year?",
+    "objective": "Compare one iPhone 16e before (phase A, iOS 26) and after (phase B, iOS 27) the major update, and track phase B for a year with a fixed weekly and monthly routine.",
+    "methodology": "Single-device before/after design. Phase A was collected on iOS 26; the phone is now on iOS 27, and phase B continues from a resume-day baseline. Weekly: overnight standby drain (start %, end %, hours) under fixed conditions, a count of new crash logs from Settings → Privacy & Security → Analytics & Improvements → Analytics Data, and cold-launch times for five built-in apps (Settings, Camera, Safari, Messages, Maps; 3 stopwatch trials each, about ±0.3 s resolution). Monthly: battery maximum capacity, cycle count, free storage and optional Geekbench 6 scores. Every iOS update and every noticed crash, hang or broken feature is logged when it happens. Raw data lives in data/exp-10/*.csv (updates.csv, weekly.csv, launches.csv, monthly.csv, incidents.csv).",
+    "conditions": "One owned iPhone 16e, single owner. Phase A on iOS 26 (dates TBD). Phase B on iOS 27 from resume day, which has not happened yet. The overnight standby conditions are fixed on resume day and kept for the rest of the study (TBD — to be written in data/exp-10/README.md). The same phone is used for Experiment 12, which keeps a separate log.",
+    "protocol": "Protocol v1.0 (data/exp-10/README.md). RESUME DAY (phase B baseline, once): add the iOS 26 → 27 update to updates.csv, record the current version and build, log a monthly.csv row, write down the standby conditions, and run one full weekly session (phase B week 0). WEEKLY (about 10 minutes): one weekly.csv row with overnight standby start %, end % and hours, plus the number of new Analytics Data crash logs since the last session; 15 launches.csv rows (Settings, Camera, Safari, Messages and Maps, 3 trials each: close the app, wait 5 seconds, time from tap until usable). MONTHLY (about 15 minutes): one monthly.csv row with maximum capacity, cycle count, free storage, and optional Geekbench 6 single- and multi-core scores. WHENEVER THEY HAPPEN: one updates.csv row per iOS update with its build number; one incidents.csv row per crash, hang, bug or app compatibility problem.",
     "measurements": null,
-    "results": "Protocol queued awaiting release milestone.",
-    "observations": [
-      "Initial calibration scripts verified on iOS 18 / iOS 26 test harnesses."
-    ],
-    "limitations": "Pending release schedule.",
-    "verdict": "Awaiting next major operating system release window.",
+    "results": "Phase A (iOS 26) data was collected before the experiment was paused, but it has not been added to the data log yet. No phase B (iOS 27) data has been collected. No comparison has been made.",
+    "observations": [],
+    "limitations": "One device, so results describe this iPhone 16e only. Phases A and B cannot run side by side: Apple stops signing older iOS versions shortly after a major release, so phase A cannot be repeated. The battery ages between phases, so battery and speed differences mix the OS change with wear; maximum capacity and cycle count are logged alongside so wear can be shown but not removed. Phase A methods may not match the phase B protocol exactly (TBD — depends on what was recorded in phase A). Stopwatch launch timing (about ±0.3 s) can only catch large slowdowns. Crash log counts depend on iPhone Analytics sharing being on. The phone is also used for Experiment 12, which can affect battery readings; such sessions are noted in the log.",
+    "verdict": "TBD — requires phase A data in the log and phase B data; no comparison has been made.",
     "devices": [
-      "apple-iphone-15-pro",
-      "apple-iphone-17-pro-max"
+      "apple-iphone-16e"
     ],
     "sources": [
-      "WDIII Protocol RFC-102",
-      "Xcode Instruments Test Harness"
+      "data/exp-10/README.md (protocol v1.0, resume-day checklist)",
+      "data/exp-10/updates.csv, weekly.csv, launches.csv, monthly.csv, incidents.csv (raw data log; phase A not yet added, phase B not started)"
     ],
     "tags": [
       "iOS Longitudinal",
       "Software Performance",
-      "Queued Survey"
+      "Battery",
+      "Paused Study"
     ],
-    "scope": "365-day multi-device longitudinal data collection",
-    "search": "exp-10 queued year-long ios survey performance battery",
+    "scope": "Year-long before/after survey of one iPhone 16e: iOS 26 (phase A) vs iOS 27 (phase B)",
+    "search": "exp-10 paused year-long ios 26 ios 27 survey iphone 16e standby battery drain app launch crash logs before after",
     "toc": [
       {
-        "id": "q10-protocol",
-        "label": "Survey Protocol"
+        "id": "q10-design",
+        "label": "Before/After Design"
       },
       {
-        "id": "q10-metrics",
-        "label": "Telemetry Points"
+        "id": "q10-protocol",
+        "label": "Protocol Cadence"
+      },
+      {
+        "id": "q10-limitations",
+        "label": "Limitations"
       }
     ],
     "relatedExperiments": [
       {
         "id": "exp4",
         "label": "📈 Experiment 4 — Historical iOS Performance"
+      },
+      {
+        "id": "exp12",
+        "label": "📱 Experiment 12 — iOS 27 Performance & AI Chatbot Integration on iPhone 16e"
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
-    "protocolVersion": "1.0.0",
+    "updatedAt": "2026-09-27T00:00:00.000Z",
+    "protocolVersion": "1.0",
     "version": "1.0.0",
     "measurementSchema": [
       {
-        "key": "crashFrequencyPerWeek",
-        "label": "System Crash Frequency",
+        "key": "standbyDrainPctPerHour",
+        "label": "Overnight Standby Drain",
         "type": "number",
-        "unit": "Crashes/Wk",
-        "required": true,
+        "unit": "%/hour",
+        "required": false,
         "min": 0,
-        "max": 50
+        "max": 100
       },
       {
-        "key": "memoryPressureAvg",
-        "label": "Average Memory Pressure",
+        "key": "appLaunchSeconds",
+        "label": "Built-in App Launch Time (mean of 15 trials)",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0,
+        "max": 60
+      },
+      {
+        "key": "newCrashLogsPerWeek",
+        "label": "New Crash Logs (Analytics Data)",
+        "type": "number",
+        "unit": "Logs/Wk",
+        "required": false,
+        "min": 0
+      },
+      {
+        "key": "maxCapacityPct",
+        "label": "Battery Maximum Capacity",
         "type": "number",
         "unit": "%",
         "required": false,
@@ -1567,19 +1590,38 @@ export const OFFICIAL_EXPERIMENTS = [
         "max": 100
       },
       {
-        "key": "batteryDegradationMonthly",
-        "label": "Monthly Battery Capacity Loss",
+        "key": "cycleCount",
+        "label": "Battery Cycle Count",
         "type": "number",
-        "unit": "%",
+        "unit": "Cycles",
         "required": false,
-        "min": 0,
-        "max": 10
+        "min": 0
+      },
+      {
+        "key": "geekbenchSingle",
+        "label": "Geekbench 6 Single-Core (optional)",
+        "type": "number",
+        "unit": "Points",
+        "required": false,
+        "min": 0
+      },
+      {
+        "key": "geekbenchMulti",
+        "label": "Geekbench 6 Multi-Core (optional)",
+        "type": "number",
+        "unit": "Points",
+        "required": false,
+        "min": 0
       }
     ],
     "allowedMeasurementKeys": [
-      "crashFrequencyPerWeek",
-      "memoryPressureAvg",
-      "batteryDegradationMonthly"
+      "standbyDrainPctPerHour",
+      "appLaunchSeconds",
+      "newCrashLogsPerWeek",
+      "maxCapacityPct",
+      "cycleCount",
+      "geekbenchSingle",
+      "geekbenchMulti"
     ]
   },
   {
@@ -2032,7 +2074,7 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "id": "queued-exp10",
-        "label": "⏳ Queued Exp 10 — Year-Long iOS 26 vs iOS 27 Survey"
+        "label": "⏸️ Paused Exp 10 — Year-Long iOS 26 vs iOS 27 Survey"
       },
       {
         "id": "fa01",

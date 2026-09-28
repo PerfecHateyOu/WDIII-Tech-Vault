@@ -59,9 +59,10 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Category**: Software | **Status**: Completed (Done)
 - **Objective**: Packet inspection and DNS telemetry tracking of factory-reset smartphones during idle and active use.
 
-### Experiment 10: Drop & Impact Resistance Baseline
-- **Category**: Hardware | **Status**: Completed (Done)
-- **Objective**: Standardized drop tests on ceramic glass and titanium/aluminum frames.
+### Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e
+- **Category**: Software | **Status**: Paused (phase A on iOS 26 collected but not yet in the data log; phase B on iOS 27 not started; no comparison made)
+- **Target Hardware**: iPhone 16e (one device, before/after design; separate from Experiment 12)
+- **Objective**: Compare standby battery drain, built-in app launch times and stability on the same iPhone 16e before (iOS 26) and after (iOS 27) the major update, then track iOS 27 point updates for a year.
 
 ### Experiment 11: Fast Charging Degradation & Thermals
 - **Category**: Hardware | **Status**: Completed (Done)

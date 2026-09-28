@@ -79,9 +79,13 @@ const SCHEMAS = {
     { key: "cycleCount", label: "Battery Cycle Count (where exposed)", type: "number", unit: "Cycles", required: false, min: 0 }
   ],
   'queued-exp10': [
-    { key: "crashFrequencyPerWeek", label: "System Crash Frequency", type: "number", unit: "Crashes/Wk", required: true, min: 0, max: 50 },
-    { key: "memoryPressureAvg", label: "Average Memory Pressure", type: "number", unit: "%", required: false, min: 0, max: 100 },
-    { key: "batteryDegradationMonthly", label: "Monthly Battery Capacity Loss", type: "number", unit: "%", required: false, min: 0, max: 10 }
+    { key: "standbyDrainPctPerHour", label: "Overnight Standby Drain", type: "number", unit: "%/hour", required: false, min: 0, max: 100 },
+    { key: "appLaunchSeconds", label: "Built-in App Launch Time (mean of 15 trials)", type: "number", unit: "Seconds", required: false, min: 0, max: 60 },
+    { key: "newCrashLogsPerWeek", label: "New Crash Logs (Analytics Data)", type: "number", unit: "Logs/Wk", required: false, min: 0 },
+    { key: "maxCapacityPct", label: "Battery Maximum Capacity", type: "number", unit: "%", required: false, min: 0, max: 100 },
+    { key: "cycleCount", label: "Battery Cycle Count", type: "number", unit: "Cycles", required: false, min: 0 },
+    { key: "geekbenchSingle", label: "Geekbench 6 Single-Core (optional)", type: "number", unit: "Points", required: false, min: 0 },
+    { key: "geekbenchMulti", label: "Geekbench 6 Multi-Core (optional)", type: "number", unit: "Points", required: false, min: 0 }
   ],
   fa01: [
     { key: "codeGenerationSeconds", label: "Generation Latency", type: "number", unit: "Seconds", required: true, min: 1, max: 300 },

@@ -8,6 +8,7 @@
     "start": "node server.js",
     "build": "node scripts/build.js",
     "lint": "node --check server.js",
+    "test": "node scripts/security-audit-test.js && node scripts/test-auth-firestore.js && node scripts/test-database-integration.js && node scripts/test-device-stats.js && node scripts/test-compare-view.js && node scripts/test-comparison-system.js && node scripts/test-comments-integration.js && node scripts/test-community-hub-foundation.js && node scripts/test-cors-and-external-tools.js && node scripts/test-upload-submit-security.js && node scripts/test-seo-urls.js && node scripts/test-exp08-data.js && node scripts/test-exp10-data.js && node scripts/test-cache-headers.js",
     "test": "node scripts/security-audit-test.js && node scripts/test-auth-firestore.js && node scripts/test-database-integration.js && node scripts/test-device-stats.js && node scripts/test-compare-view.js && node scripts/test-comparison-system.js && node scripts/test-comments-integration.js && node scripts/test-community-hub-foundation.js && node scripts/test-cors-and-external-tools.js && node scripts/test-upload-submit-security.js && node scripts/test-seo-urls.js && node scripts/test-exp08-data.js && node scripts/test-cache-headers.js && node scripts/test-release-files.js",
     "deploy:run": "gcloud run deploy wdiii-tech-vault --source . --region us-central1 --allow-unauthenticated",
     "deploy:hosting": "firebase deploy --only hosting",
