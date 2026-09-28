@@ -43,7 +43,7 @@
       { "@type": "TechArticle", "name": "Experiment 7: Pixel Pro Generations Findings" },
       { "@type": "TechArticle", "name": "Experiment 9: Comprehensive Apple Ecosystem Security Audit" },
       { "@type": "TechArticle", "name": "Queued Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol", "disambiguatingDescription": "Queued. Protocol v1.0 approved 2026-09-27; day 0 has not started." },
-      { "@type": "TechArticle", "name": "Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey", "disambiguatingDescription": "Paused. Longitudinal 12-month survey." },
+      { "@type": "TechArticle", "name": "Paused Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e", "disambiguatingDescription": "Paused. Before/after survey of one iPhone 16e on iOS 26 and iOS 27; phase A collected, phase B not started." },
       { "@type": "TechArticle", "name": "Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e", "disambiguatingDescription": "In Progress. Validating Apple iOS 27 performance claims and isolated Gemini, Claude, and ChatGPT Siri AI integration." }
     ]
   }
@@ -1885,29 +1885,42 @@ function buildQueued() {
           ${statusBox("var(--td-pending)","Queued. Protocol v1.0 approved 2026-09-27. Day 0 has not started, and no data has been collected yet.")}
         </div>
       </article>
-      <article id="queue2" data-search="queued ios 26 27 year long survey data comparison performance" class="td-experiment" style="border-left:4px solid var(--td-pending); opacity:0.95;">
+      <article id="queue2" data-search="paused ios 26 27 year long survey iphone 16e before after standby battery drain app launch crash logs" class="td-experiment" style="border-left:4px solid var(--td-warning); opacity:0.95;">
         <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
-          ${queuedLabel()}
-          <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey</h3>
+          <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-warning-bg); color:var(--td-warning); border:1px solid var(--td-warning);">Paused</span>
+          <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Paused Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e</h3>
           ${statusBadge("paused","Paused")}
         </div>
         <div class="td-experiment-body">
-          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Objective</h4>
-          <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Longitudinal performance and stability comparison across iOS 26 and iOS 27 over a 12-month period. Will document real-world usage patterns, performance degradation curves, battery efficiency, app compatibility, and OS-level stability throughout the lifecycle of both versions.</p>
-          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Scope &amp; Methodology</h4>
-          <ul style="margin:1rem 0; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc;">
-            <li style="margin-bottom:0.25rem;">Dual-device setup (iOS 26 device + iOS 27 device, identical hardware baseline)</li>
-            <li style="margin-bottom:0.25rem;">Identical app suite and usage patterns on both devices</li>
-            <li style="margin-bottom:0.25rem;">Daily performance metrics collection:<ul style="margin-top:0.5rem; padding-left:1.5rem; list-style:disc;"><li>Battery drain rate (consistent workload)</li><li>App launch times</li><li>System responsiveness</li><li>RAM efficiency</li><li>Thermal behavior</li></ul></li>
-            <li style="margin-bottom:0.25rem;">App compatibility tracking (crashes, hangs, deprecated features)</li>
-            <li style="margin-bottom:0.25rem;">OS update frequency and stability between minor versions</li>
-            <li style="margin-bottom:0.25rem;">Feature deprecation and breaking changes</li>
-            <li style="margin-bottom:0.25rem;">Security update velocity and timing</li>
+          <h4 style="color:#fff; margin:1rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Question</h4>
+          <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">On the same iPhone 16e, how do standby battery drain, built-in app launch times and stability on iOS 27 compare with the same phone on iOS 26, and how do they change across iOS 27 point updates over a year?</p>
+
+          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Before/After Design</h4>
+          <ul style="margin:0 0 1.5rem; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc;">
+            <li style="margin-bottom:0.25rem;"><strong>Phase A (iOS 26):</strong> collected on this iPhone 16e before the experiment was paused. It has not been added to the data log yet.</li>
+            <li style="margin-bottom:0.25rem;"><strong>Phase B (iOS 27):</strong> the phone is now on iOS 27. Phase B starts from a resume-day baseline, which has not happened yet.</li>
+            <li style="margin-bottom:0.25rem;">One phone, so the two phases cannot run side by side. The same phone is used for Experiment 12, which keeps a separate log.</li>
           </ul>
-          ${insightPreview("<strong>Preview:</strong> Does iOS 27 maintain performance parity with iOS 26 throughout a full year? Do minor updates improve or degrade stability? At what point in each OS lifecycle do users experience meaningful slowdown?")}
-          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Expected Deliverables</h4>
-          <ul style="margin:1rem 0; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc;"><li style="margin-bottom:0.25rem;">Performance regression curves (per OS version)</li><li style="margin-bottom:0.25rem;">Quarterly stability reports</li><li style="margin-bottom:0.25rem;">Battery efficiency comparison over time</li><li style="margin-bottom:0.25rem;">App compatibility matrix and breaking change log</li><li style="margin-bottom:0.25rem;">Update impact analysis (minor version degradation patterns)</li><li style="margin-bottom:0.25rem;">Recommendations for optimal update timing</li></ul>
-          ${statusBox("var(--td-warning)","Paused. Devices were provisioned and data collection commenced at iOS 26.x baseline / iOS 27.x launch. Will resume from last collected data point.")}
+
+          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Protocol v1.0</h4>
+          <ul style="margin:1rem 0; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc;">
+            <li style="margin-bottom:0.25rem;"><strong>Resume day (once):</strong> log the iOS 27 update and build, record battery health, fix the overnight standby conditions, and run one full weekly session.</li>
+            <li style="margin-bottom:0.25rem;"><strong>Weekly (about 10 min):</strong> overnight standby drain under fixed conditions, new crash logs from iPhone Analytics Data, and cold-launch times for Settings, Camera, Safari, Messages and Maps (3 trials each).</li>
+            <li style="margin-bottom:0.25rem;"><strong>Monthly (about 15 min):</strong> battery maximum capacity, cycle count, free storage, and optional Geekbench 6 scores.</li>
+            <li style="margin-bottom:0.25rem;"><strong>Whenever they happen:</strong> every iOS update, and every crash, hang, bug or app compatibility problem.</li>
+          </ul>
+          <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Launch timing uses a stopwatch (about ±0.3 s resolution). The iOS version is logged in every row. Raw data lives in <code>data/exp-10/*.csv</code>.</p>
+
+          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">Limitations</h4>
+          <ul style="margin:1rem 0; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc;">
+            <li style="margin-bottom:0.25rem;">One device: results describe this iPhone 16e only.</li>
+            <li style="margin-bottom:0.25rem;">Apple stops signing older iOS versions shortly after a major release, so phase A cannot be repeated.</li>
+            <li style="margin-bottom:0.25rem;">The battery ages between phases, so differences mix the OS change with wear. Maximum capacity and cycle count are logged so wear can be shown, not removed.</li>
+            <li style="margin-bottom:0.25rem;">Phase A methods may not match the phase B protocol exactly.</li>
+            <li style="margin-bottom:0.25rem;">Stopwatch timing can only catch large slowdowns.</li>
+          </ul>
+
+          ${statusBox("var(--td-warning)","Paused. Phase A (iOS 26) was collected but is not in the data log yet. Phase B (iOS 27) has not started, and no comparison has been made.")}
         </div>
       </article>
       <article id="queue3" data-search="queued in-progress active experiment 12 ios 27 performance siri ai chatbot integration iphone 16e gemini claude chatgpt responsiveness battery apple c1" class="td-experiment" style="border-left:4px solid var(--td-info); opacity:0.95; margin-top:2.5rem;">
