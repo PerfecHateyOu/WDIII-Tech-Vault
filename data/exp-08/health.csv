@@ -1,1 +1,13 @@
 date,device_id,checkpoint,battery_health_pct,cycle_count,storage_free_gb,os_version,issues,notes
+2026-09-27,apple-iphone-16e,m00,93,348,101.8,iOS 27.0,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,apple-macbook-pro-m2-pro,m00,96,112,342.5,macOS 27.0,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,apple-watch-se-3,m00,98,not_exposed,14.2,watchOS 27.0,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,apple-airpods-5,m00,not_exposed,not_exposed,,firmware 9A350,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,google-pixel-10-pro,m00,100,18,388.1,Android 17,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,samsung-galaxy-chromebook-plus-15,m00,99,45,184.0,ChromeOS 150,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,google-pixel-watch-4,m00,99,not_exposed,22.4,Wear OS 6.0,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,google-pixel-buds-pro-2,m00,not_exposed,not_exposed,,firmware 5.9.0,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,samsung-galaxy-s26-ultra,m00,99,84,312.6,One UI 9,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,samsung-galaxy-book4-edge-15,m00,99,52,620.4,Windows 11 Home 26H2,,Condition photos: Experiment8_Day0 (stored locally; not in repo); Battery health from powercfg /batteryreport: full-charge 61200 mWh / design 61800 mWh (99.0%)
+2026-09-27,samsung-galaxy-watch8,m00,97,not_exposed,11.5,One UI 8 Watch,,Condition photos: Experiment8_Day0 (stored locally; not in repo)
+2026-09-27,samsung-galaxy-buds4-pro,m00,not_exposed,not_exposed,,firmware R640XXU0AZA1,,Condition photos: Experiment8_Day0 (stored locally; not in repo)

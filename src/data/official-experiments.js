@@ -1297,7 +1297,7 @@ export const OFFICIAL_EXPERIMENTS = [
     "relatedExperiments": [
       {
         "id": "queued-exp8",
-        "label": "🔒 Queued Exp 8 — Ecosystem Reliability Protocol"
+        "label": "🧪 Exp 8 — Ecosystem Reliability Protocol (In Progress)"
       },
       {
         "id": "fa02",
@@ -1353,21 +1353,21 @@ export const OFFICIAL_EXPERIMENTS = [
   {
     "id": "queued-exp8",
     "experimentNumber": "8",
-    "title": "Queued Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol",
+    "title": "Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol",
     "category": "ecosystem",
-    "status": "queued",
-    "statusLabel": "Queued",
+    "status": "progress",
+    "statusLabel": "In Progress",
     "origin": "official_wdiii",
     "researchQuestion": "Over 24 months, how smoothly and reliably does each of three ecosystems (Apple, Google, Samsung) perform its cross-device features (clipboard sync, file transfer, phone-to-watch notifications and earbud audio switching), and how do battery health and physical condition of the 12 devices change over the same period?",
     "objective": "Track cross-device feature reliability and hardware longevity for three four-device ecosystems (phone, laptop, watch, earbuds each) over 24 months, using a fixed weekly, monthly and checkpoint protocol.",
     "methodology": "Stationary setup: all 12 devices are used under the same stationary conditions. The study measures whether each ecosystem performs its cross-device features smoothly, not raw performance. Weekly timed trials per ecosystem: clipboard phone to laptop (5 trials) and laptop to phone (5), a 50MB file transfer phone to laptop via AirDrop or Quick Share (3), phone-to-watch notification delivery (5) and automatic earbud audio switching from phone to laptop (3). Each trial is logged as success (1/0) and, when successful, seconds. Timing uses a stopwatch, so resolution is about ±1 s; the same method is kept for all 24 months. Monthly battery health, cycle count and issue logging per device; full checkpoints at months 6, 12, 18 and 24. Raw data lives in data/exp-08/*.csv (devices.csv, weekly.csv, health.csv, incidents.csv).",
-    "conditions": "12 owned devices in a stationary setup, single owner, single location. 24-month observation window starting at day 0; day 0 has not started. Each device is updated to the current stable OS and firmware at day 0, and OS and firmware versions are logged in every session. The same standard 50MB test file is used on every phone and laptop.",
-    "protocol": "Protocol v1.0, approved 2026-09-27 (data/exp-08/README.md). DAY 0 (baseline, once, before any weekly data counts): for every device, record acquired_date and os_at_baseline in devices.csv, update to the current stable OS and firmware and note the versions, log a health.csv row with checkpoint m00, and take condition photos (front, back, edges, screen on white). For each ecosystem, unpair and re-pair every accessory from scratch and note friction, confirm clipboard sync, file sharing, phone-to-laptop notifications and audio auto-switch are on, place the standard 50MB test file on every phone and laptop, and run one full weekly session (week 0). WEEKLY (about 15 minutes per ecosystem): one weekly.csv row per trial for clipboard_p2l (5 trials), clipboard_l2p (5), file_transfer (3), notif_watch (5, with dismiss sync Y/N in notes) and audio_switch (3), recording phone OS, laptop OS and accessory firmware versions. MONTHLY (about 10 minutes): one health.csv row per device with battery health and cycle count where the OS exposes them (not_exposed otherwise, never estimated) and any issues noticed. CHECKPOINTS at months 6, 12, 18 and 24 (about 1 hour): full battery rundown on each phone and laptop, condition photos in the day-0 views, unpair and re-pair every accessory, plus the monthly measurements and one weekly session. INCIDENTS (whenever they happen): one incidents.csv row per sync failure, dropout, crash or forced re-pair.",
+    "conditions": "12 owned devices in a stationary setup, single owner, single location. 24-month observation window starting at day 0 (completed 2026-09-27). Each device is updated to the current stable OS and firmware at day 0, and OS and firmware versions are logged in every session. The same standard 50MB test file is used on every phone and laptop.",
+    "protocol": "Protocol v1.0, approved 2026-09-27 (data/exp-08/README.md). DAY 0 (baseline, once, before any weekly data counts): for every device, record acquired_date and os_at_baseline in devices.csv, update to the current stable OS and firmware and note the versions, log a health.csv row with checkpoint m00, and take condition photos (front, back, edges, screen on white). For each ecosystem, unpair and re-pair every accessory from scratch and note friction, confirm clipboard sync, file sharing, phone-to-laptop notifications and audio auto-switch are on, place the standard 50MB test file on every phone and laptop, and run one full weekly session (week 0). WEEKLY (about 15 minutes per ecosystem): one weekly.csv row per trial for clipboard_p2l (5 trials), clipboard_l2p (5), file_transfer (3), notif_watch (5, with dismiss sync Y/N in notes) and audio_switch (3), recording phone OS, laptop OS and accessory firmware versions. MONTHLY (about 10 minutes): one health.csv row per device with battery health and cycle count where the OS exposes them (not_exposed otherwise, never estimated) and any issues noticed. CHECKPOINTS at months 6, 12, 18 and 24 (about 1 hour hands-on, plus several hours of battery rundowns running in the background): full battery rundown on each phone and laptop, condition photos in the day-0 views, unpair and re-pair every accessory, plus the monthly measurements and one weekly session. INCIDENTS (whenever they happen): one incidents.csv row per sync failure, dropout, crash or forced re-pair.",
     "measurements": null,
-    "results": "No data has been collected yet. Day 0 (baseline) has not started.",
+    "results": "Data collection is under way. Day 0 (device baseline) and the week-0 session were recorded on 2026-09-27; raw data is in data/exp-08/*.csv. No analysis yet.",
     "observations": [],
     "limitations": "The laptops are in different hardware tiers (MacBook Pro M2 Pro, Galaxy Chromebook Plus, Galaxy Book4 Edge); this is a disclosure only, since the study measures ecosystem smoothness, not power. The Google-ecosystem laptop is Samsung hardware running ChromeOS. Battery health and cycle count are not exposed on some watches and earbuds; those values are recorded as not_exposed rather than estimated. OS and firmware updates over 24 months are a confound; versions are logged in every session so update effects can be traced. Single owner, single location. Stopwatch timing limits resolution to about ±1 s.",
-    "verdict": "TBD — requires collected data; no data has been collected yet.",
+    "verdict": "TBD — requires analysis of the 24-month data; collection started 2026-09-27.",
     "devices": [
       "apple-iphone-16e",
       "apple-macbook-pro-m2-pro",
@@ -1391,10 +1391,10 @@ export const OFFICIAL_EXPERIMENTS = [
       "Ecosystem Reliability",
       "Hardware Longevity",
       "Cross-Device Features",
-      "Queued Study"
+      "Active Study"
     ],
     "scope": "24-month study of 12 owned devices (phone, laptop, watch and earbuds for Apple, Google and Samsung) in a stationary setup",
-    "search": "exp-8 queued cross-platform ecosystem reliability hardware longevity apple google samsung clipboard file transfer airdrop quick share notifications watch earbuds audio switch battery health",
+    "search": "exp-8 in-progress active cross-platform ecosystem reliability hardware longevity apple google samsung clipboard file transfer airdrop quick share notifications watch earbuds audio switch battery health",
     "toc": [
       {
         "id": "q8-setup",

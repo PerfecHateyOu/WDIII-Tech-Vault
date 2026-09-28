@@ -100,7 +100,7 @@ export async function renderExperimentDetail(container, experimentId) {
                 ${esc(exp.category)}
               </span>
               <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; padding:0.2rem 0.6rem; border-radius:9999px; border:1px solid var(--td-success); background:var(--td-success-bg); color:var(--td-success);">
-                ${esc(exp.status)}
+                ${esc(exp.statusLabel || exp.status)}
               </span>
               ${exp.scope ? `
                 <span style="font-size:0.75rem; color:var(--td-text-muted); background:var(--td-bg-card); border:1px dashed var(--td-border-subtle); padding:0.2rem 0.6rem; border-radius:9999px;">

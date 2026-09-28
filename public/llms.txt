@@ -2,7 +2,7 @@
 > Real-world experiments, empirical hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, hardware teardowns, ecosystem integrations, and mobile AI.
 
 - **Author**: WDIII
-- **Version**: V5.7.6
+- **Version**: V5.8
 - **Last Updated**: September 27, 2026
 - **Status**: Live Independent Research Archive
 
@@ -52,7 +52,7 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Objective**: Measure surface and core temperatures, clock-speed drop-offs, and game frame stability on flagship phones under sustained 3D compute.
 
 ### Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity
-- **Category**: Ecosystem | **Status**: Queued (protocol v1.0 approved 2026-09-27; day 0 not started, no data collected yet)
+- **Category**: Ecosystem | **Status**: In Progress (protocol v1.0 approved 2026-09-27; day 0 and week 0 recorded 2026-09-27; no analysis yet)
 - **Objective**: Track cross-device feature reliability (clipboard sync, file transfer, phone-to-watch notifications, earbud audio switching) and hardware longevity for Apple, Google and Samsung, with a phone, laptop, watch and earbuds each, over 24 months.
 
 ### Experiment 9: Network Telemetry & Background Data Auditing

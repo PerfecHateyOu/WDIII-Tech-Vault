@@ -28,7 +28,7 @@
     "url": "https://project-95f7ca57-6daa-40f6-90b.web.app/",
     "headline": "Consumer Tech Documentation — Real-world experiments and findings",
     "description": "Real-world experiments, case studies, and documented findings across repair, service, software, and hardware.",
-    "version": "V5.7.6",
+    "version": "V5.8",
     "dateModified": "2026-09-27",
     "author": { "@type": "Person", "name": "WDIII" },
     "publisher": { "@type": "Organization", "name": "TechStack Archive" },
@@ -44,14 +44,16 @@
       { "@type": "TechArticle", "name": "Experiment 9: Comprehensive Apple Ecosystem Security Audit" },
       { "@type": "TechArticle", "name": "Queued Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol", "disambiguatingDescription": "Queued. Protocol v1.0 approved 2026-09-27; day 0 has not started." },
       { "@type": "TechArticle", "name": "Paused Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e", "disambiguatingDescription": "Paused. Before/after survey of one iPhone 16e on iOS 26 and iOS 27; phase A collected, phase B not started." },
+      { "@type": "TechArticle", "name": "Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol", "disambiguatingDescription": "In Progress. Protocol v1.0 approved 2026-09-27; day 0 completed 2026-09-27." },
+      { "@type": "TechArticle", "name": "Queued Experiment 10: Year-Long iOS 26 vs iOS 27 Data Survey", "disambiguatingDescription": "Paused. Longitudinal 12-month survey." },
       { "@type": "TechArticle", "name": "Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e", "disambiguatingDescription": "In Progress. Validating Apple iOS 27 performance claims and isolated Gemini, Claude, and ChatGPT Siri AI integration." }
     ]
   }
   </script>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
-  <link rel="stylesheet" href="/css/style.css?v=5.7.6" />
-  <link rel="stylesheet" href="/css/preflight.css?v=5.7.6" />
+  <link rel="stylesheet" href="/css/style.css?v=5.8.1" />
+  <link rel="stylesheet" href="/css/preflight.css?v=5.8.1" />
 </head>
 <body>
 
@@ -184,12 +186,12 @@
       <a href="#/logo" class="btnOpenLogoModal" style="color:var(--td-info); font-weight:500;">🏷️ Brand Logo</a>
     </nav>
     <p style="margin:0; display:flex; align-items:center; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
-      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 27, 2026 (V5.7.6) |</span>
+      <span>Consumer Tech Documentation — Real-world experiments and findings | Last updated September 27, 2026 (V5.8) |</span>
       <a href="#/logo" class="wdiii-mini-badge btnOpenLogoModal" title="WDIII Official Brand" style="text-decoration:none;">
         <img src="/logo.svg" alt="WDIII" loading="lazy" style="height:12px; width:auto; display:block;" />
       </a>
     </p>
-    <p style="margin:0.5rem 0 0; font-size:0.8rem; opacity:0.85;">*Experiment 8 is queued: protocol v1.0 approved 2026-09-27, day 0 not started.</p>
+    <p style="margin:0.5rem 0 0; font-size:0.8rem; opacity:0.85;">*Experiment 8 is in progress: protocol v1.0 approved and day 0 completed 2026-09-27.</p>
   </footer>
 </div>
 
@@ -533,7 +535,7 @@
 <!-- Serve app modules from a versioned path so browsers holding copies cached under the
      old year-long "immutable" header fetch the current code. Bump with each release. -->
 <script type="importmap">
-{ "imports": { "/src/": "/v/5.7.6/src/", "/js/": "/v/5.7.6/js/" } }
+{ "imports": { "/src/": "/v/5.8.1/src/", "/js/": "/v/5.8.1/js/" } }
 </script>
 <script type="module">
 import app, { themeManager, modalManager, formManager, navigationManager, showToast, escapeHTML } from "/js/main.js";
@@ -681,7 +683,7 @@ const HOME_TABS = [
   { id: "exp6", icon: "🏪", label: "Exp 6", sub: "AASP Repair Test", search: "exp-6 aasp repair test ifix authorized" },
   { id: "exp7", icon: "📷", label: "Exp 7", sub: "Pixel Pro Generations", search: "exp-7 pixel pro generation comparison tensor chip camera" },
   { id: "exp9", icon: "🔐", label: "Exp 9", sub: "Apple Security Audit", search: "exp-9 apple ecosystem security audit authentication find my airdrop awdl" },
-  { id: "queued", icon: "⏳", label: "Queued", sub: "Upcoming Research", search: "queued pending upcoming experiments security ios survey exp 8 experiment 8 rework" },
+  { id: "queued", icon: "⏳", label: "Queued", sub: "Upcoming Research", search: "queued pending upcoming experiments security ios survey exp 8 experiment 8 in progress" },
   { to: "#/fodder", icon: "🗂️", label: "Fodder", sub: "Side Experiments ↗", search: "fodder archive side experiments ai comparison ecosystem exit" },
 ];
 const FODDER_TABS = [
@@ -1844,13 +1846,13 @@ function buildQueued() {
       <div style="text-align:center; margin-bottom:3rem;">
         <h2 style="font-size:clamp(1.6rem,4vw+0.5rem,2.5rem); color:#fff; margin:0 0 1rem; font-weight:700;">Queued Experiments</h2>
         <p style="color:var(--td-text-secondary); font-size:1.05rem; margin:0 0 0.75rem;">Upcoming research projects currently in planning or pre-production phase.</p>
-        <div style="display:inline-block; padding:0.375rem 0.875rem; border-radius:9999px; background:rgba(251,191,36,0.1); border:1px solid var(--td-warning); color:var(--td-warning); font-size:0.85rem; font-weight:500;">*Experiment 8 is queued. Protocol v1.0 approved 2026-09-27; day 0 has not started.</div>
+        <div style="display:inline-block; padding:0.375rem 0.875rem; border-radius:9999px; background:rgba(251,191,36,0.1); border:1px solid var(--td-warning); color:var(--td-warning); font-size:0.85rem; font-weight:500;">*Experiment 8 is in progress. Protocol v1.0 approved and day 0 completed 2026-09-27.</div>
       </div>
-      <article id="queue1" data-search="queued experiment 8 cross-platform ecosystem reliability hardware longevity apple google samsung clipboard file transfer airdrop quick share notifications watch earbuds audio switching battery health 24 months" class="td-experiment" style="border-left:4px solid var(--td-pending); opacity:0.95; margin-bottom:2.5rem;">
+      <article id="queue1" data-search="in-progress active experiment 8 cross-platform ecosystem reliability hardware longevity apple google samsung clipboard file transfer airdrop quick share notifications watch earbuds audio switching battery health 24 months" class="td-experiment" style="border-left:4px solid var(--td-info); opacity:0.95; margin-bottom:2.5rem;">
         <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
-          ${queuedLabel()}
-          <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Queued Experiment 8: Cross-Platform Ecosystem Reliability &amp; Hardware Longevity Protocol</h3>
-          ${statusBadge("queued","Queued")}
+          <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-info-bg); color:var(--td-info); border:1px solid var(--td-info);">Active Testing</span>
+          <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Experiment 8: Cross-Platform Ecosystem Reliability &amp; Hardware Longevity Protocol</h3>
+          ${statusBadge("progress","In Progress")}
         </div>
         <div class="td-experiment-body">
           <h4 style="color:#fff; margin:1rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Question</h4>
@@ -1869,7 +1871,7 @@ function buildQueued() {
             <li style="margin-bottom:0.25rem;"><strong>Day 0 (baseline, once):</strong> record each device's acquisition date and OS, update to current stable OS and firmware, log battery health, take condition photos, re-pair every accessory, and run one full weekly session.</li>
             <li style="margin-bottom:0.25rem;"><strong>Weekly (about 15 min per ecosystem):</strong> timed trials of clipboard phone → laptop (5) and laptop → phone (5), a 50MB file transfer via AirDrop or Quick Share (3), phone-to-watch notification delivery (5) and automatic earbud audio switching (3).</li>
             <li style="margin-bottom:0.25rem;"><strong>Monthly (about 10 min):</strong> battery health and cycle count where the OS exposes them, plus any issues noticed.</li>
-            <li style="margin-bottom:0.25rem;"><strong>Months 6, 12, 18 and 24 (about 1 hour):</strong> full battery rundown on each phone and laptop, condition photos, re-pairing, plus the monthly and weekly measurements.</li>
+            <li style="margin-bottom:0.25rem;"><strong>Months 6, 12, 18 and 24 (about 1 hour hands-on, plus the battery rundowns):</strong> full battery rundown on each phone and laptop, condition photos, re-pairing, plus the monthly and weekly measurements.</li>
             <li style="margin-bottom:0.25rem;"><strong>Incidents:</strong> every sync failure, dropout, crash or forced re-pair is logged when it happens.</li>
           </ul>
           <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">Timing uses a stopwatch (about ±1 s resolution). OS and firmware versions are logged every session. Raw data lives in <code>data/exp-08/*.csv</code>.</p>
@@ -1882,7 +1884,7 @@ function buildQueued() {
             <li style="margin-bottom:0.25rem;">Single owner, single location.</li>
           </ul>
 
-          ${statusBox("var(--td-pending)","Queued. Protocol v1.0 approved 2026-09-27. Day 0 has not started, and no data has been collected yet.")}
+          ${statusBox("var(--td-info)","In progress. Protocol v1.0 approved 2026-09-27. Day 0 (device baseline) and the week-0 session were recorded on 2026-09-27; weekly sessions continue. No analysis yet.")}
         </div>
       </article>
       <article id="queue2" data-search="paused ios 26 27 year long survey iphone 16e before after standby battery drain app launch crash logs" class="td-experiment" style="border-left:4px solid var(--td-warning); opacity:0.95;">
