@@ -155,69 +155,68 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "How do Official Apple, Apple Authorized Service Providers (AASP), and Independent Third-Party repair channels compare across pricing, turnaround time, part authenticity, and warranty coverage?",
-    "objective": "Benchmark 3 identical iPhone 15 units with cracked screens repaired through 3 distinct repair channel tiers to identify trade-offs in cost, turnaround, part quality, and post-repair warranty.",
-    "methodology": "Three identical iPhone 15 units with cracked screens repaired through: Tier 1 (Official Apple Store), Tier 2 (Apple Authorized Service Provider / AASP), Tier 3 (Independent Third-Party Shop).",
-    "conditions": "Identical iPhone 15 hardware, identical cracked screen severity, same metropolitan geographic market.",
-    "protocol": "1. Baseline diagnostic verification on 3 units. 2. Submit to Tier 1, Tier 2, and Tier 3 simultaneously. 3. Log quotes, diagnostic fees, repair durations, and part serialized pairing screens. 4. Verify post-repair true tone, display serialization flags, and physical seal pressure tolerance.",
+    "researchQuestion": "With identical damage, how do official Apple, a third-party shop using genuine parts, and a cheap unauthorized shop compare on cost, turnaround, quality, waterproofing and warranty?",
+    "objective": "Compare three repair channels on three identical iPhone 15s with identical level 9 screen and back-glass damage.",
+    "methodology": "Three identical iPhone 15 models with identical level 9 damage (screen + back glass) were taken to three different repair channels: Official Apple, a third-party shop using genuine parts, and a cheap unauthorized shop using generic parts.",
+    "conditions": "Identical iPhone 15 hardware and identical damage across all three units; one unit per channel.",
+    "protocol": "Take each unit to its channel, record quote, turnaround, parts used, quality, waterproofing and warranty terms.",
     "measurements": {
-      "tier1": {
-        "channel": "Official Apple",
-        "cost": "$279",
-        "turnaround": "2 hours",
-        "parts": "OEM serialized",
-        "warranty": "90 days Apple"
+      "officialApple": {
+        "cost": "$399",
+        "turnaround": "3-day repair + 5-day scheduling wait (8 days total)",
+        "parts": "Genuine, authenticated",
+        "waterproofing": "Maintained",
+        "qualityChecks": "Full",
+        "result": "Pristine"
       },
-      "tier2": {
-        "channel": "AASP (Best Buy)",
-        "cost": "$279",
-        "turnaround": "Same day",
-        "parts": "OEM serialized",
-        "warranty": "90 days Apple"
+      "thirdPartyGenuineParts": {
+        "quote": "$450",
+        "qualityChecks": "None (stated upfront)",
+        "warranty": "None (stated upfront)",
+        "result": "Could not source genuine parts; repair cancelled by owner before any work was done"
       },
-      "tier3": {
-        "channel": "Third-Party Shop",
-        "cost": "$149",
-        "turnaround": "45 mins",
-        "parts": "Aftermarket OLED",
-        "warranty": "30 days shop"
+      "cheapUnauthorized": {
+        "cost": "$220",
+        "turnaround": "1 day (same day if parts in stock)",
+        "parts": "Generic",
+        "waterproofing": "Lost (back glass super-glued)",
+        "screen": "Noticeably thicker than Apple's",
+        "warranty": "None"
       }
     },
-    "results": "Tier 1 and Tier 2 provide identical genuine OEM parts and official calibration with 90-day Apple warranty at $279. Tier 3 saved 46% ($149) with 45-minute turnaround, but introduced non-genuine display warnings in iOS settings and lacked factory water-seal re-pressurization.",
+    "results": "Official Apple: $399, 8 days total, pristine, genuine authenticated parts, waterproofing maintained. The genuine-parts third party quoted $450 with no quality checks or warranty, then could not source parts and the repair was cancelled. The cheap unauthorized shop charged $220 with a 1-day turnaround but used generic parts, super-glued the back glass (losing waterproofing), fitted a noticeably thicker screen and gave no warranty.",
     "observations": [
-      "AASP equals Apple Store for common repairs when parts are in stock.",
-      "Third-party repair is viable for budget-conscious users but forfeits display serialization and water-resistance certification.",
-      "True Tone loss occurs in third-party repair unless the shop uses EEPROM programmer tools."
+      "The genuine-parts third party was the worst deal: more expensive than Apple, fewer guarantees, and it could not deliver.",
+      "Cheap repairs are fast but compromise waterproofing, build and warranty.",
+      "Background, not tested here: only Apple and authorized providers can authenticate parts in software."
     ],
-    "limitations": "Single geographic market, iPhone 15 platform only.",
-    "verdict": "For devices under warranty or AppleCare+, Tier 1 or Tier 2 is mandatory. For out-of-warranty older models, Tier 3 offers strong cost efficiency if aftermarket screen trade-offs are accepted.",
+    "limitations": "One unit per channel — anecdotal, not a statistical sample. The genuine-parts third-party repair was never performed.",
+    "verdict": "Winner: Official Apple ($399, 8 days total). The only option that preserved waterproofing, warranty and part authenticity.",
     "devices": [
       "apple-iphone-15"
     ],
     "sources": [
-      "WDIII Repair Channel Empirical Log",
-      "Apple Repair Pricing Matrix",
-      "Independent Shop Invoices"
+      "Owner's repair records"
     ],
     "tags": [
-      "iPhone 15",
-      "Screen Repair",
-      "AASP vs Third-Party"
+      "3 iPhone 15s",
+      "Level 9 screen + back glass damage",
+      "Identical damage across all devices"
     ],
-    "scope": "3 identical iPhone 15 units tested simultaneously",
-    "search": "exp-2 repair channel comparison aasp apple third-party",
+    "scope": "📋 1 unit per channel — anecdotal, not a statistical sample",
+    "search": "exp-2 repair channel tiers iphone 15 aasp",
     "toc": [
       {
-        "id": "exp2-tiers",
-        "label": "Channel Tiers"
+        "id": "exp2-channels",
+        "label": "Channel Comparison"
       },
       {
         "id": "exp2-findings",
-        "label": "Trade-off Matrix"
+        "label": "Key Findings"
       },
       {
         "id": "exp2-conclusion",
-        "label": "Recommendation"
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -231,76 +230,46 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "channelTier",
-        "label": "Repair Channel Tier",
-        "type": "string",
-        "required": true
-      },
-      {
-        "key": "repairCost",
-        "label": "Total Repair Cost",
+        "key": "repairCostUsd",
+        "label": "Repair cost",
         "type": "number",
+        "required": true,
         "unit": "USD",
-        "required": true,
         "min": 0,
-        "max": 2000
-      },
-      {
-        "key": "turnaroundHours",
-        "label": "Turnaround Time",
-        "type": "number",
-        "unit": "Hours",
-        "required": true,
-        "min": 0,
-        "max": 500
+        "max": 5000
       },
       {
         "key": "turnaroundDays",
-        "label": "Turnaround Days",
+        "label": "Turnaround",
         "type": "number",
-        "unit": "Days",
         "required": false,
+        "unit": "days",
         "min": 0,
-        "max": 60
+        "max": 120
       },
       {
-        "key": "qualityRating",
-        "label": "Repair Quality Rating",
-        "type": "number",
-        "unit": "/ 10",
-        "required": false,
-        "min": 1,
-        "max": 10
-      },
-      {
-        "key": "genuinePartVerified",
-        "label": "OEM Genuine Part Verified",
+        "key": "waterproofingPreserved",
+        "label": "Waterproofing preserved",
         "type": "boolean",
         "required": false
       },
       {
-        "key": "warrantyMonths",
-        "label": "Warranty Coverage",
-        "type": "number",
-        "unit": "Months",
-        "required": false,
-        "min": 0,
-        "max": 36
+        "key": "warrantyProvided",
+        "label": "Warranty provided",
+        "type": "boolean",
+        "required": false
       }
     ],
     "allowedMeasurementKeys": [
-      "channelTier",
-      "repairCost",
-      "turnaroundHours",
+      "repairCostUsd",
       "turnaroundDays",
-      "qualityRating",
-      "genuinePartVerified",
-      "warrantyMonths"
+      "waterproofingPreserved",
+      "warrantyProvided"
     ]
   },
   {
@@ -311,95 +280,56 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "Which major smartphone manufacturers provide accessible, free, and knowledgeable first-party customer support when an end user calls with a technical issue?",
-    "objective": "Evaluate the accessibility, hold times, technical competency, and barrier-to-entry of customer support channels across 8 smartphone manufacturers.",
-    "methodology": "Standardized troubleshooting scenario presented to telephone support representatives across Apple, Samsung, Google, Huawei, Xiaomi, OPPO, OnePlus, Vivo, and BlackBerry.",
-    "conditions": "Same script used for all calls: simulated network connectivity drops and battery drain diagnostic inquiries during standard business hours.",
-    "protocol": "1. Initiate telephone call to primary official customer care line. 2. Measure hold time until live agent answers. 3. Present standardized technical scenario. 4. Score agent knowledge, willingness to help, and follow-up resources. 5. Document any paywalls or barrier gates.",
+    "researchQuestion": "How well do 8 major smartphone brands' phone support lines handle the same simple problem?",
+    "objective": "Call each brand's customer support with the identical question and judge speed to the correct answer, troubleshooting quality, accuracy and helpfulness.",
+    "methodology": "The same question was asked by phone to customer support at 8 brands: \"My phone screen is going black.\" The correct answer is that the battery is draining and needs charging.",
+    "conditions": "Identical question for every brand; phone support only.",
+    "protocol": "Call each brand, ask the question, score speed to the correct answer, troubleshooting quality, accuracy and helpfulness out of 5.",
     "measurements": {
-      "apple": {
-        "rating": "4.0 / 5",
-        "wait": "3 mins",
-        "agent": "Knowledgeable",
-        "cost": "Free"
-      },
-      "huawei": {
-        "rating": "4.5 / 5",
-        "wait": "1 min",
-        "agent": "Exceptional",
-        "cost": "Free (Co-Winner)"
-      },
-      "xiaomi": {
-        "rating": "4.5 / 5",
-        "wait": "2 mins",
-        "agent": "Exceptional",
-        "cost": "Free (Co-Winner)"
-      },
-      "oppo": {
-        "rating": "3.5 / 5",
-        "wait": "5 mins",
-        "agent": "Helpful",
-        "cost": "Free"
-      },
-      "oneplus": {
-        "rating": "3.0 / 5",
-        "wait": "8 mins",
-        "agent": "Scripted",
-        "cost": "Free"
-      },
-      "vivo": {
-        "rating": "1.0 / 5",
-        "wait": "N/A",
-        "agent": "Email only",
-        "cost": "No live phone"
-      },
-      "blackberry": {
-        "rating": "0.0 / 5",
-        "wait": "Instant",
-        "agent": "Paywall gate",
-        "cost": "Paid support code required"
-      }
+      "Huawei": "4.5 / 5",
+      "Xiaomi": "4.5 / 5",
+      "OPPO": "3.5 / 5",
+      "OnePlus": "3 / 5",
+      "Apple": "2.5 / 5",
+      "Vivo": "1 / 5",
+      "Samsung": "0 / 5",
+      "BlackBerry": "0 / 5"
     },
-    "results": "Huawei and Xiaomi tied for top customer service quality (4.5★) with rapid live pickups and thorough technical troubleshooting. BlackBerry scored 0★ by demanding upfront payment to speak with an agent. Vivo provided no phone support option in the test region.",
+    "results": "Huawei and Xiaomi tied at 4.5/5 with fast, direct, friendly support. OPPO (3.5) was overcomplicated at first but correct; OnePlus (3) was correct but roundabout with background noise; Apple (2.5) had a long wait, a struggling automated system and required the device to be present; Vivo (1) answered quickly but would not help, offering email instead; Samsung (0) put the call into an automated loop and hung up; BlackBerry (0) required a fee to speak to a human.",
     "observations": [
-      "Huawei and Xiaomi proved that cost-effective brands can deliver first-rate phone support.",
-      "BlackBerry's paywalled consumer support model is completely hostile to users.",
-      "Apple delivered consistent, high-standard phone support but took longer to escalate complex issues."
+      "Apple and Samsung, two of the biggest brands, gave some of the weakest experiences: Samsung failed outright and Apple placed 5th of 8.",
+      "Speed is not helpfulness: Vivo answered fastest but would not help over the phone."
     ],
-    "limitations": "Sample based on North American and European support numbers during weekday hours.",
-    "verdict": "Winners: Huawei & Xiaomi. Both provide fast, free, and competent phone support without automated labyrinth loops or fees.",
-    "devices": [
-      "huawei-support-test-unit",
-      "xiaomi-support-test-unit",
-      "oppo-support-test-unit",
-      "oneplus-support-test-unit",
-      "vivo-support-test-unit",
-      "blackberry-support-test-unit"
-    ],
+    "limitations": "One call per brand — anecdotal, not a statistical sample.",
+    "verdict": "Winners: Huawei & Xiaomi (tied at 4.5/5). Avoid Samsung and BlackBerry support.",
+    "devices": [],
     "sources": [
-      "WDIII Support Audio Logs",
-      "Call Duration Metadata",
-      "Support Ticket Transcripts"
+      "Owner's call records"
     ],
     "tags": [
-      "Customer Service",
-      "Phone Support",
-      "8 Brands Tested"
+      "8 companies tested",
+      "Same-day testing",
+      "7–15 minutes per call",
+      "Calls recorded"
     ],
-    "scope": "8 manufacturers evaluated under identical script conditions",
-    "search": "exp-3 customer service support quality phone test",
+    "scope": "One call per brand — anecdotal, not a statistical sample.",
+    "search": "exp-3 customer service support test call phone",
     "toc": [
       {
-        "id": "exp3-leaderboard",
-        "label": "Leaderboard"
+        "id": "exp3-performers",
+        "label": "Top Performers"
+      },
+      {
+        "id": "exp3-rankings",
+        "label": "Full Rankings"
       },
       {
         "id": "exp3-findings",
-        "label": "Analysis"
+        "label": "Key Findings"
       },
       {
-        "id": "exp3-paywalls",
-        "label": "Paywall Audit"
+        "id": "exp3-conclusion",
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -409,72 +339,29 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "holdTimeMinutes",
-        "label": "Initial Hold Time",
+        "key": "supportRating",
+        "label": "Support rating",
         "type": "number",
-        "unit": "Minutes",
         "required": true,
+        "unit": "/ 5",
         "min": 0,
-        "max": 180
+        "max": 5
       },
       {
-        "key": "waitMinutes",
-        "label": "Wait Duration",
-        "type": "number",
-        "unit": "Minutes",
-        "required": false,
-        "min": 0,
-        "max": 240
-      },
-      {
-        "key": "resolutionDays",
-        "label": "Resolution Time",
-        "type": "number",
-        "unit": "Days",
-        "required": true,
-        "min": 0,
-        "max": 90
-      },
-      {
-        "key": "escalationsCount",
-        "label": "Escalation Count",
-        "type": "number",
-        "unit": "Tiers",
-        "required": false,
-        "min": 0,
-        "max": 20
-      },
-      {
-        "key": "resolutionRate",
-        "label": "Resolution Success Rate",
-        "type": "number",
-        "unit": "%",
-        "required": false,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "key": "satisfactionScore",
-        "label": "Support Satisfaction Score",
-        "type": "number",
-        "unit": "Score",
-        "required": false,
-        "min": 1,
-        "max": 10
+        "key": "correctAnswerGiven",
+        "label": "Correct answer given",
+        "type": "boolean",
+        "required": false
       }
     ],
     "allowedMeasurementKeys": [
-      "holdTimeMinutes",
-      "waitMinutes",
-      "resolutionDays",
-      "escalationsCount",
-      "resolutionRate",
-      "satisfactionScore"
+      "supportRating",
+      "correctAnswerGiven"
     ]
   },
   {
@@ -485,67 +372,62 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "Does upgrading an iPhone through successive major iOS revisions degrade real-world app launch times, Geekbench compute scores, or thermal throttling thresholds?",
-    "objective": "Track benchmark and real-world performance metrics across major iOS versions on the same hardware.",
-    "methodology": "iPhone 15 Pro tested across iOS 17.0 baseline, iOS 18.0, and historical comparative points. Geekbench 6 single/multi-core, Metal GPU compute, 3DMark Wild Life Stress, and standardized 10-app opening speed runs.",
-    "conditions": "Room temperature 22°C, 100% battery charge on AC power, identical background application state.",
-    "protocol": "1. Clean restore via DFU mode. 2. Complete initial indexing for 24 hours. 3. Execute 5 consecutive Geekbench 6 runs with 10-minute cool-down intervals. 4. Record thermal surface temperatures with FLIR camera. 5. Measure cold app launch latency using 240fps high-speed camera.",
+    "researchQuestion": "On the same iPhone 15 Pro, how does iOS 26 compare with iOS 18.6 for performance, battery, stability and day-to-day experience?",
+    "objective": "Compare iOS 18.6 and iOS 26.0.1 on identical hardware, following iOS 26 through to 26.4.2.",
+    "methodology": "Long-term comparison on the same iPhone 15 Pro: boot speed, storage transfer, a 16-app loading test, browser benchmarks (Speedometer 3.1, JetStream 2.2), 3DMark thermal stability, battery on the same workload, and day-to-day stability.",
+    "conditions": "Same iPhone 15 Pro hardware for all versions.",
+    "protocol": "Run the same tests on iOS 18.6 and iOS 26.0.1, then re-check through later iOS 26 releases up to 26.4.2.",
     "measurements": {
-      "geekbenchSingleCore": {
-        "iOS 17.0": 2915,
-        "iOS 18.0": 2940,
-        "iOS 18.6": 2955
+      "bootSpeed": "iOS 26 faster by 1.7–2.7%",
+      "storageTransfer": "iOS 26 faster; 26.4.2 faster still",
+      "appLoading16App": "iOS 26 faster by 8–13%",
+      "browserBenchmarks": "iOS 26 significantly better (Speedometer 3.1 / JetStream 2.2)",
+      "thermalStability3DMark": {
+        "iOS 18.6": "88.4%",
+        "iOS 26": "70.9%"
       },
-      "geekbenchMultiCore": {
-        "iOS 17.0": 7240,
-        "iOS 18.0": 7290,
-        "iOS 18.6": 7320
-      },
-      "appLaunchRunTime": {
-        "iOS 17.0": "18.4s",
-        "iOS 18.0": "18.2s",
-        "iOS 18.6": "18.1s"
-      },
-      "thermalPeak": {
-        "iOS 17.0": "41.2°C",
-        "iOS 18.0": "39.8°C",
-        "iOS 18.6": "39.4°C"
+      "batteryRemainingSameWorkload": {
+        "iOS 18.6": "74%",
+        "iOS 26.0.1": "66%",
+        "iOS 26.4.2": "71%"
       }
     },
-    "results": "No planned obsolescence degradation observed. Performance scores remained consistent (+0.5% to +1.2% variation within margin of error). iOS 18 showed improved thermal regulation during sustained compute workloads.",
+    "results": "iOS 26 was faster across every performance test but launched with lower thermal stability (70.9% vs 88.4% in 3DMark) and worse battery (66% vs 74% remaining on the same workload; 71% by 26.4.2). Before 26.3 the home screen was choppy (~30 FPS) and launch builds had high background CPU use; both were resolved by 26.4.2. Power-button failures and Apple Watch notification bugs persisted.",
     "observations": [
-      "Thermal dispatch improved after iOS 18.1, keeping peak chassis temperature ~1.8°C cooler.",
-      "Background indexing immediately post-update causes temporary battery/thermal hits for 24-48 hours, often mistaken by consumers for permanent slowdowns."
+      "Don't update at launch — wait for the .2 or .3 release before updating a daily driver.",
+      "Performance gains came at a battery cost of roughly 9% versus iOS 18.6."
     ],
-    "limitations": "Single iPhone generation hardware cycle (A17 Pro).",
-    "verdict": "Modern iOS updates on flagship Apple silicon do not degrade computational performance. Perception of slowdown is tied to temporary post-update file indexing and battery chemical aging.",
+    "limitations": "Single device (iPhone 15 Pro).",
+    "verdict": "iOS 26 is the better OS — but only after the dust settled several months post-launch.",
     "devices": [
       "apple-iphone-15-pro"
     ],
     "sources": [
-      "Geekbench 6 Database Export",
-      "FLIR Thermal Capture Logs",
-      "High-Speed Camera Timings"
+      "Owner's own testing"
     ],
     "tags": [
-      "iOS Performance",
-      "Geekbench",
-      "Thermal Analysis"
+      "iOS 18.6 vs iOS 26.0.1",
+      "iPhone 15 Pro",
+      "Comprehensive testing"
     ],
-    "scope": "iPhone 15 Pro tracked through 3 OS update milestones",
-    "search": "exp-4 ios performance comparison historical benchmarks",
+    "scope": "Single device (iPhone 15 Pro).",
+    "search": "exp-4 ios 18 26 performance comparison historical",
     "toc": [
       {
-        "id": "exp4-benchmarks",
-        "label": "Benchmarks"
+        "id": "exp4-performance",
+        "label": "Performance Metrics"
       },
       {
-        "id": "exp4-thermals",
-        "label": "Thermal Analysis"
+        "id": "exp4-battery",
+        "label": "Battery Life"
+      },
+      {
+        "id": "exp4-stability",
+        "label": "Stability"
       },
       {
         "id": "exp4-conclusion",
-        "label": "Conclusions"
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -559,62 +441,52 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "geekbenchSingleCore",
-        "label": "Geekbench Single-Core",
+        "key": "bootSpeedDeltaPercent",
+        "label": "Boot speed change",
         "type": "number",
-        "unit": "Points",
-        "required": true,
-        "min": 0,
-        "max": 10000
-      },
-      {
-        "key": "geekbenchMultiCore",
-        "label": "Geekbench Multi-Core",
-        "type": "number",
-        "unit": "Points",
-        "required": true,
-        "min": 0,
-        "max": 30000
-      },
-      {
-        "key": "appLaunchRunTime",
-        "label": "Cold App Launch Duration",
-        "type": "number",
-        "unit": "Seconds",
-        "required": true,
-        "min": 0,
-        "max": 30
-      },
-      {
-        "key": "thermalPeak",
-        "label": "Peak Temperature Under Load",
-        "type": "number",
-        "unit": "°C",
         "required": false,
-        "min": 15,
-        "max": 90
+        "unit": "%",
+        "min": -100,
+        "max": 100
       },
       {
-        "key": "primaryScore",
-        "label": "Benchmark Overall Score",
+        "key": "appLoadDeltaPercent",
+        "label": "App loading change",
         "type": "number",
-        "unit": "Score",
         "required": false,
+        "unit": "%",
+        "min": -100,
+        "max": 100
+      },
+      {
+        "key": "thermalStabilityPercent",
+        "label": "3DMark thermal stability",
+        "type": "number",
+        "required": false,
+        "unit": "%",
         "min": 0,
-        "max": 50000
+        "max": 100
+      },
+      {
+        "key": "batteryRemainingPercent",
+        "label": "Battery remaining (same workload)",
+        "type": "number",
+        "required": true,
+        "unit": "%",
+        "min": 0,
+        "max": 100
       }
     ],
     "allowedMeasurementKeys": [
-      "geekbenchSingleCore",
-      "geekbenchMultiCore",
-      "appLaunchRunTime",
-      "thermalPeak",
-      "primaryScore"
+      "bootSpeedDeltaPercent",
+      "appLoadDeltaPercent",
+      "thermalStabilityPercent",
+      "batteryRemainingPercent"
     ]
   },
   {
@@ -625,66 +497,24 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "Does Samsung hardware exhibit a systemic, multi-generation lithium-ion battery swelling pattern in long-term storage compared to other brands, and how does corporate warranty support respond?",
-    "objective": "Document battery swelling across Samsung Galaxy devices stored under controlled conditions, evaluate safety risks, and audit Samsung corporate liability responses including CPSC complaint filings.",
-    "methodology": "Long-term climate-controlled storage analysis of 7 Samsung devices alongside non-Samsung controls (iPhone 5c). Documentation of battery pouch delamination, casing separation, and corporate dispute resolution records.",
-    "conditions": "Storage temperature 20°C–23°C, 40%–50% relative humidity, battery state of charge 40%–60% at initial storage.",
-    "protocol": "1. Place devices in certified flame-retardant storage enclosure. 2. Periodic physical inspection for back cover lifting. 3. Caliper measurement of battery pouch thickness expansion. 4. Escalate failed units through Samsung corporate customer advocacy. 5. File formal documentation with Consumer Product Safety Commission (CPSC).",
+    "researchQuestion": "What happened when multiple stored Samsung devices from 2016–2020 developed battery swelling, and how did Samsung respond?",
+    "objective": "Document the battery swelling, Samsung's response, the escalation and the outcome.",
+    "methodology": "Not a planned experiment — it developed through consistent documentation: photos and video of all affected devices, receipts, Samsung's own 5-year battery-life claims, a control group of non-Samsung and newer Samsung devices in the same storage, and the full email trail.",
+    "conditions": "Affected and control devices kept in the same storage.",
+    "protocol": "Discovery and public post (April 30); device collection (early May); 50 days without substantive response; CPSC and BBB complaints and a consumer rights attorney; settlement (June 18).",
     "measurements": {
-      "swollenUnits": [
-        {
-          "model": "Galaxy S20 FE",
-          "timeline": "18 months",
-          "failure": "Severe expansion, back glass unglued"
-        },
-        {
-          "model": "Galaxy S8",
-          "timeline": "36 months",
-          "failure": "Pouch ballooning, frame split"
-        },
-        {
-          "model": "Galaxy S10",
-          "timeline": "28 months",
-          "failure": "Casing bowed"
-        },
-        {
-          "model": "Galaxy S10e",
-          "timeline": "30 months",
-          "failure": "Rear panel separated"
-        },
-        {
-          "model": "Galaxy Note 8 (Unit A)",
-          "timeline": "40 months",
-          "failure": "Battery puffed"
-        },
-        {
-          "model": "Galaxy Note 8 (Unit B)",
-          "timeline": "44 months",
-          "failure": "Critical pouch split"
-        },
-        {
-          "model": "Galaxy Z Fold 2",
-          "timeline": "24 months",
-          "failure": "Back glass pushed off"
-        }
-      ],
-      "controlUnits": [
-        {
-          "model": "iPhone 5c",
-          "timeline": "10+ years",
-          "failure": "Zero swelling, casing intact"
-        }
-      ],
-      "corporateResponse": "Refused out-of-warranty coverage; demanded inspection fee; denied systemic defect."
+      "devicesAffected": 7,
+      "settlementUsd": 1020,
+      "daysWithoutResponse": 50,
+      "s20feAgeAtFailure": "18 months (battery label claims a 5-year lifespan)"
     },
-    "results": "7 out of 7 stored pre-2021 Samsung units suffered severe battery swelling and casing rupture. The 2013 iPhone 5c control unit exhibited zero swelling under identical climate conditions. Samsung refused corporate accountability, classifying hazardous battery expansion as ordinary wear.",
+    "results": "Seven Samsung devices from 2016–2020 (Galaxy S8, S10, S10e, Note 8 ×2, Z Fold 2, S20 FE) swelled; Galaxy S21–S26, non-Samsung devices and an iPhone 5c in the same storage did not. After 50 days without a substantive answer and escalation to CPSC, BBB and an attorney, Samsung settled on June 18 with $1,020 cash across 7 devices and no NDA.",
     "observations": [
-      "Failure Pattern: Battery swelling is concentrated in Samsung SDI cell formulations manufactured between 2016 and 2020.",
-      "Post-2021 Control Check: Newer Galaxy models (S21 through S25) show improved electrolyte stability thus far.",
-      "Corporate Response Deficit: Samsung treats severe battery delamination as an out-of-warranty cosmetic defect rather than a safety hazard."
+      "The 18-month-old S20 FE, against Samsung's own 5-year battery claim, was the decisive evidence.",
+      "Documentation and willingness to escalate gave an individual consumer real leverage."
     ],
-    "limitations": "Focuses on storage behavior; active daily cycling may alter swelling trajectory.",
-    "verdict": "A documented, empirical safety failure pattern exists in pre-2021 Samsung Galaxy batteries stored in dormant conditions. Samsung's corporate refusal to replace hazardous cells violates consumer protection standards.",
+    "limitations": "Single consumer case; not a controlled experiment.",
+    "verdict": "Outcome: $1,020 cash settlement across 7 devices, no NDA.",
     "devices": [
       "samsung-galaxy-s20-fe",
       "samsung-galaxy-s8",
@@ -700,34 +530,37 @@ export const OFFICIAL_EXPERIMENTS = [
       "samsung-galaxy-s25"
     ],
     "sources": [
-      "WDIII Physical Inspection Logs",
-      "CPSC Official Report #2023-098",
-      "Samsung Service Tickets"
+      "Owner's photos, receipts and email trail",
+      "CPSC complaint acknowledgment"
     ],
     "tags": [
-      "Battery Swelling",
-      "Samsung SDI",
-      "CPSC Complaint",
-      "Safety Analysis"
+      "April 30 – June 18, 2026",
+      "7 Devices Affected",
+      "Resolved: $1,020 Cash Settlement",
+      "No NDA"
     ],
-    "scope": "7 Samsung units + control devices tracked over 4+ years",
-    "search": "case study samsung battery failures swelling cpsc corporate",
+    "scope": "Single consumer case; not a controlled experiment.",
+    "search": "case study samsung battery settlement swelling legal",
     "toc": [
       {
-        "id": "cs-timeline",
-        "label": "Failure Timeline"
+        "id": "casestudy-devices",
+        "label": "Affected Devices"
       },
       {
-        "id": "cs-evidence",
-        "label": "Physical Evidence"
+        "id": "casestudy-timeline",
+        "label": "Timeline"
       },
       {
-        "id": "cs-corporate",
-        "label": "Corporate Response"
+        "id": "casestudy-evidence",
+        "label": "Key Evidence"
       },
       {
-        "id": "cs-cpsc",
-        "label": "CPSC Findings"
+        "id": "casestudy-advice",
+        "label": "Consumer Advice"
+      },
+      {
+        "id": "casestudy-conclusion",
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -741,59 +574,41 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "swollenUnits",
-        "label": "Swollen Battery Count",
+        "key": "devicesAffected",
+        "label": "Devices affected",
         "type": "number",
-        "unit": "Units",
         "required": true,
         "min": 0,
         "max": 100
       },
       {
-        "key": "controlUnits",
-        "label": "Control Batch Size",
+        "key": "settlementUsd",
+        "label": "Settlement",
         "type": "number",
-        "unit": "Units",
-        "required": true,
-        "min": 1,
-        "max": 1000
-      },
-      {
-        "key": "peakTempC",
-        "label": "Peak Storage Temp",
-        "type": "number",
-        "unit": "°C",
         "required": false,
-        "min": -20,
-        "max": 100
+        "unit": "USD",
+        "min": 0,
+        "max": 100000
       },
       {
-        "key": "storageTemp",
-        "label": "Ambient Storage Temperature",
+        "key": "daysWithoutResponse",
+        "label": "Days without response",
         "type": "number",
-        "unit": "°C",
         "required": false,
-        "min": -10,
-        "max": 60
-      },
-      {
-        "key": "corporateResponseReceived",
-        "label": "Formal Manufacturer Response",
-        "type": "boolean",
-        "required": false
+        "unit": "days",
+        "min": 0,
+        "max": 3650
       }
     ],
     "allowedMeasurementKeys": [
-      "swollenUnits",
-      "controlUnits",
-      "peakTempC",
-      "storageTemp",
-      "corporateResponseReceived"
+      "devicesAffected",
+      "settlementUsd",
+      "daysWithoutResponse"
     ]
   },
   {
@@ -804,29 +619,28 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "How do 5 generations of Google Pixel Pro (Pixel 6 Pro through 10 Pro) compare against contemporary iPhone hardware in standardized, multi-workload battery endurance tests?",
-    "objective": "Execute a controlled, empirical battery drain test comparing Google Pixel Pro generations against iPhone flagships across video streaming, social browsing, gaming, and 5G cellular web tests.",
-    "methodology": "Automated test suite cycling YouTube 1080p, Instagram scrolling, Geekbench compute loops, and 5G web surfing. All displays calibrated to exactly 200 nits with a Klein K10-A colorimeter. Ambient temperature maintained at 21.5°C.",
-    "conditions": "Calibrated 200 nits display brightness, Wi-Fi 6 / 5G sub-6 connection, 100% battery health baseline, identical audio volume via Bluetooth headset.",
-    "protocol": "1. Charge all devices to 100% and float for 30 minutes. 2. Calibrate screen brightness with spectrophotometer. 3. Start synchronized workload loop. 4. Log battery percentage drop every 15 minutes. 5. Record shutdown time and calculate total Screen-on-Time (SoT).",
+    "researchQuestion": "How does real-world battery endurance compare across five Pixel Pro generations and three iPhones?",
+    "objective": "Compare screen-on time and daily endurance of the Pixel 6 Pro–10 Pro against the iPhone 13, 15 Pro and 16e.",
+    "methodology": "Real-world screen-on time and usage duration, not synthetic benchmarks. All devices ran on brand-new batteries and came from identical controlled storage conditions.",
+    "conditions": "Brand-new batteries in all 8 devices; identical storage conditions.",
+    "protocol": "Use each device in real-world conditions and record screen-on time and how long a charge lasts.",
     "measurements": {
-      "Pixel 6 Pro": "6 hrs 12 mins",
-      "Pixel 7 Pro": "6 hrs 45 mins",
-      "Pixel 8 Pro": "7 hrs 22 mins",
-      "Pixel 9 Pro": "8 hrs 40 mins",
-      "Pixel 10 Pro": "10 hrs 15 mins",
-      "iPhone 13 (Baseline)": "7 hrs 30 mins",
-      "iPhone 15 Pro": "8 hrs 10 mins",
-      "iPhone 16e": "8 hrs 50 mins"
+      "Pixel 6 Pro": "5–6 hrs SoT, ~1 day",
+      "Pixel 7 Pro": "5–7 hrs SoT, ~1 day",
+      "Pixel 8 Pro": "6.5–8.5 hrs SoT, 1–1.5 days",
+      "Pixel 9 Pro": "7–9 hrs SoT, 1–1.5 days",
+      "Pixel 10 Pro": "7.5–9+ hrs SoT, ~1.5 days",
+      "iPhone 13": "6–7 hrs SoT, 1 day",
+      "iPhone 15 Pro": "6–7 hrs SoT, 1 day",
+      "iPhone 16e": "8–10 hrs SoT, 1.5 days"
     },
-    "results": "Google Pixel 10 Pro (TSMC Tensor G5) achieved 10 hrs 15 mins SoT, dominating all earlier Tensor generations and outlasting iPhone 15 Pro by over 2 hours. Older Samsung Foundry Tensor chips (Tensor G1 & G2) lagged significantly behind contemporary iPhones in power efficiency.",
+    "results": "The Pixel 10 Pro and iPhone 16e tied at about 1.5 days. The Pixel 9 Pro (smallest battery at 4700 mAh) came 2nd among Pixels, beating the 5003 mAh Pixel 6 Pro by a wide margin. Head-to-head: iPhone 13 beat the Pixel 6 Pro; Pixel 7 Pro roughly tied the iPhone 13 and trailed the 15 Pro on cellular; Pixel 8 Pro beat the 15 Pro on mixed use and streaming but not gaming; Pixel 9 Pro and 16e were a near tie; Pixel 10 Pro vs 16e depends on usage.",
     "observations": [
-      "The TSMC switch on Tensor G5 provided a massive 18% efficiency leap over Tensor G4 and 65% over Tensor G1.",
-      "Pixel 6 Pro and 7 Pro suffered higher cellular standby drain due to early Samsung Exynos modems.",
-      "iPhone 16e demonstrated impressive endurance for a compact device with Apple's in-house modem."
+      "Chip efficiency beats raw battery capacity.",
+      "The iPhone 16e keeps up with the Pixel 10 Pro largely thanks to Apple's C1 modem."
     ],
-    "limitations": "Conducted under lab Wi-Fi/5G mixed conditions; extreme outdoor cold/heat may alter rankings.",
-    "verdict": "Winner: Google Pixel 10 Pro. The transition to TSMC silicon solved Pixel's historic battery disadvantage, crowning the Pixel 10 Pro as the endurance champion.",
+    "limitations": "One unit per model; real-world usage rather than a fixed synthetic workload.",
+    "verdict": "Winner: Pixel 10 Pro & iPhone 16e (tied, ~1.5 days).",
     "devices": [
       "google-pixel-6-pro",
       "google-pixel-7-pro",
@@ -838,30 +652,36 @@ export const OFFICIAL_EXPERIMENTS = [
       "apple-iphone-16e"
     ],
     "sources": [
-      "WDIII Automated Battery Benchmark Suite",
-      "Klein K10-A Calibration Logs",
-      "Hardware Telemetry Dumps"
+      "Owner's own testing"
     ],
     "tags": [
-      "Battery Life",
-      "Pixel vs iPhone",
-      "SoT Benchmark",
-      "TSMC vs Samsung Silicon"
+      "5 Pixel Pro models",
+      "3 iPhone models",
+      "All devices on brand-new batteries",
+      "Controlled storage environment"
     ],
-    "scope": "8 devices tested concurrently across 4 standardized workload phases",
-    "search": "exp-5 battery life google pixel pro iphone endurance drain",
+    "scope": "One unit per model; real-world usage rather than a fixed synthetic workload.",
+    "search": "exp-5 pixel iphone battery life comparison",
     "toc": [
       {
-        "id": "exp5-results",
-        "label": "Results Table"
+        "id": "exp5-pixel",
+        "label": "Pixel Pro Generation"
       },
       {
-        "id": "exp5-analysis",
-        "label": "Efficiency Curves"
+        "id": "exp5-cross",
+        "label": "Cross-Platform"
       },
       {
-        "id": "exp5-verdict",
-        "label": "Final Verdict"
+        "id": "exp5-headtohead",
+        "label": "Head-to-Head"
+      },
+      {
+        "id": "exp5-ranking",
+        "label": "Overall Ranking"
+      },
+      {
+        "id": "exp5-conclusion",
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -875,72 +695,32 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
         "key": "screenOnTimeHours",
-        "label": "Screen-On Time",
+        "label": "Screen-on time",
         "type": "number",
-        "unit": "Hours",
         "required": true,
+        "unit": "hours",
         "min": 0,
-        "max": 30
+        "max": 48
       },
       {
-        "key": "screenOnTimeMinutes",
-        "label": "Screen-On Time (Minutes)",
+        "key": "enduranceDays",
+        "label": "Endurance per charge",
         "type": "number",
-        "unit": "Minutes",
         "required": false,
+        "unit": "days",
         "min": 0,
-        "max": 1800
-      },
-      {
-        "key": "chargeTimeMinutes",
-        "label": "0-100% Charge Duration",
-        "type": "number",
-        "unit": "Minutes",
-        "required": false,
-        "min": 0,
-        "max": 300
-      },
-      {
-        "key": "peakTempC",
-        "label": "Peak Temperature During Fast Charging",
-        "type": "number",
-        "unit": "°C",
-        "required": false,
-        "min": 15,
-        "max": 80
-      },
-      {
-        "key": "standbyDrainPercent",
-        "label": "24h Standby Drain",
-        "type": "number",
-        "unit": "%",
-        "required": false,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "key": "batteryHealthPercent",
-        "label": "Maximum Battery Health",
-        "type": "number",
-        "unit": "%",
-        "required": false,
-        "min": 50,
-        "max": 100
+        "max": 7
       }
     ],
     "allowedMeasurementKeys": [
       "screenOnTimeHours",
-      "screenOnTimeMinutes",
-      "chargeTimeMinutes",
-      "peakTempC",
-      "standbyDrainPercent",
-      "batteryHealthPercent"
+      "enduranceDays"
     ]
   },
   {
@@ -951,54 +731,58 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "Does an Apple Authorized Service Provider (iFix / Best Buy AASP) maintain the same repair quality, calibration standards, and turnaround promises as a first-party Apple Store?",
-    "objective": "Audit the end-to-end customer experience, repair turnaround, diagnostic accuracy, and hardware calibration of an Apple Authorized Service Provider on a cracked iPhone 16 Pro Max.",
-    "methodology": "Real-world cracked display walk-in repair submitted to certified AASP franchise location. Contributor MTA documented booking, intake diagnostics, repair duration, and post-repair calibration validation.",
-    "conditions": "Cracked outer display glass on iPhone 16 Pro Max, genuine Apple repair tier, walk-in appointment.",
-    "protocol": "1. Schedule through Apple Support portal. 2. Record check-in intake inspection. 3. Monitor repair turnaround against estimate. 4. Verify Apple System Configuration serial calibration. 5. Inspect display bezel gaps and digitizer touch sample rate.",
+    "researchQuestion": "Does an Apple Authorized Service Provider deliver Official Apple repair quality?",
+    "objective": "Test the AASP repair channel — the missing fourth tier from Experiment 2 — using data contributed by MTA.",
+    "methodology": "An iPhone 16 Pro Max with level 9 screen and back-glass damage was repaired at iFix, an Apple Authorized Service Provider. Data contributed by colleague MTA and used with permission.",
+    "conditions": "Different device from Experiment 2 (iPhone 16 Pro Max vs iPhone 15), so costs are not directly comparable.",
+    "protocol": "Record cost, quality, warranty, waterproofing and parts authentication after the AASP repair.",
     "measurements": {
-      "intakeWait": "12 mins",
-      "repairDuration": "2 hours 15 mins",
-      "cost": "$379 (Official Apple Rate)",
-      "systemConfigStatus": "Passed (Genuine Display Detected)",
-      "seamUniformity": "0.1mm tolerance (Factory Spec)"
+      "device": "iPhone 16 Pro Max",
+      "channel": "iFix (AASP)",
+      "cost": "$599",
+      "quality": "Identical to Official Apple",
+      "defects": "None",
+      "warrantyExtension": "Yes — same as Official Apple",
+      "waterproofingAndPartsAuth": "Preserved"
     },
-    "results": "AASP completed repair within 2 hours and 15 minutes using genuine Apple parts and Apple System Configuration cloud pairing. Repair was indistinguishable from an Apple Store Genius Bar repair.",
+    "results": "The iFix repair cost $599 and matched Official Apple: same quality control, same warranty extension, no defects, waterproofing and parts authentication preserved.",
     "observations": [
-      "OEM calibration successfully cleared all 'Unknown Part' flags in iOS.",
-      "Turnaround was 30 minutes longer than original estimate due to Apple cloud calibration queue delays.",
-      "Customer service was professional and adhered strictly to Apple official repair checklists."
+      "MTA's view: 'authorized' often means outsourced to subcontractors, reducing accountability.",
+      "MTA cited a Business Insider report on CSAT Solutions (an Apple contractor in Houston) describing poor working conditions.",
+      "MTA's view: Apple's hard-to-open designs strain technicians; independent shops often do board-level repairs authorized centers call impossible."
     ],
-    "limitations": "Single AASP franchise location.",
-    "verdict": "Approved. AASPs provide a viable, official alternative to Apple Stores in regions lacking first-party retail presence.",
+    "limitations": "n=1, contributed data; different model from Experiment 2, so costs are not directly comparable.",
+    "verdict": "An AASP is a legitimate alternative to Official Apple when an Apple Store isn't accessible.",
     "devices": [
       "apple-iphone-16-pro-max"
     ],
     "sources": [
-      "WDIII Contributor MTA Field Report",
-      "Apple System Configuration Diagnostics Log",
-      "iFix Work Order #8821"
+      "Repair data contributed by MTA (with permission)"
     ],
     "tags": [
-      "AASP",
-      "iFix",
       "iPhone 16 Pro Max",
-      "Display Repair"
+      "Level 9 screen + back glass",
+      "Apple Authorized Service Provider",
+      "Contributor: MTA"
     ],
-    "scope": "Full walk-in repair audit on flagship hardware",
-    "search": "exp-6 aasp repair test ifix authorized service provider",
+    "scope": "n=1, contributed data; different model from Experiment 2, so costs are not directly comparable.",
+    "search": "exp-6 aasp repair test ifix authorized",
     "toc": [
       {
-        "id": "exp6-timeline",
-        "label": "Intake & Timeline"
+        "id": "exp6-results",
+        "label": "Repair Results"
       },
       {
-        "id": "exp6-quality",
-        "label": "Hardware Inspection"
+        "id": "exp6-comparison",
+        "label": "Channel Comparison"
       },
       {
-        "id": "exp6-verdict",
-        "label": "AASP Verdict"
+        "id": "exp6-perspective",
+        "label": "MTA's Perspective"
+      },
+      {
+        "id": "exp6-conclusion",
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -1012,69 +796,38 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "intakeWait",
-        "label": "Intake Wait Duration",
+        "key": "repairCostUsd",
+        "label": "Repair cost",
         "type": "number",
-        "unit": "Minutes",
         "required": true,
-        "min": 0,
-        "max": 240
-      },
-      {
-        "key": "repairDuration",
-        "label": "Repair Work Duration",
-        "type": "number",
-        "unit": "Hours",
-        "required": true,
-        "min": 0,
-        "max": 48
-      },
-      {
-        "key": "cost",
-        "label": "Total Cost",
-        "type": "number",
         "unit": "USD",
-        "required": true,
         "min": 0,
-        "max": 2000
+        "max": 5000
       },
       {
-        "key": "repairCost",
-        "label": "Total Cost (USD)",
+        "key": "defectsFound",
+        "label": "Defects found",
         "type": "number",
-        "unit": "USD",
         "required": false,
         "min": 0,
-        "max": 2000
+        "max": 100
       },
       {
-        "key": "systemConfigStatus",
-        "label": "Apple System Config Validation",
-        "type": "string",
-        "required": true
-      },
-      {
-        "key": "seamUniformity",
-        "label": "Chassis Seam Uniformity",
-        "type": "number",
-        "unit": "/ 10",
-        "required": false,
-        "min": 1,
-        "max": 10
+        "key": "warrantyExtended",
+        "label": "Warranty extended",
+        "type": "boolean",
+        "required": false
       }
     ],
     "allowedMeasurementKeys": [
-      "intakeWait",
-      "repairDuration",
-      "cost",
-      "repairCost",
-      "systemConfigStatus",
-      "seamUniformity"
+      "repairCostUsd",
+      "defectsFound",
+      "warrantyExtended"
     ]
   },
   {
@@ -1085,56 +838,35 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "How has Google's flagship hardware progressed from Pixel 6 Pro to Pixel 10 Pro across thermal dissipation, sustained compute, modem reliability, and camera zoom fidelity?",
-    "objective": "Conduct a comprehensive generational review of Google Pixel Pro smartphones (6 Pro, 7 Pro, 8 Pro, 9 Pro, and 10 Pro) to map the evolution of Google's custom Tensor silicon and industrial design.",
-    "methodology": "Side-by-side evaluation of 5 Pixel Pro generations across camera telephoto zoom at 10x/30x/100x, Geekbench compute stress loops, cellular signal reception in weak-coverage zones, and display outdoor peak brightness.",
-    "conditions": "All devices running current available OS versions, room temp 22°C, identical Wi-Fi 6 / 5G test carriers.",
-    "protocol": "1. Camera: Capture standardized outdoor urban scene at 1x, 5x, 10x, 30x, and 100x. 2. Thermals: Run 30-minute 3DMark Wild Life Extreme stress test with thermal imaging. 3. Cellular: Measure dBm signal strength and packet loss in RF-shielded chamber. 4. Display: Measure full-screen sustained lux outdoors.",
+    "researchQuestion": "How did the Pixel Pro line evolve from the 6 Pro to the 10 Pro in chips, cameras and real-world performance?",
+    "objective": "Compare five Pixel Pro generations (Tensor G1–G5) side by side in real-world use.",
+    "methodology": "One unit per generation (Pixel 6 Pro to 10 Pro), the same devices as Experiment 5, all on brand-new batteries from the same storage. Chip and camera specifications are Google's published specs; thermals, fluidity and performance are the owner's observations.",
+    "conditions": "Same devices, brand-new batteries, same storage environment.",
+    "protocol": "Use each generation for everyday tasks, photography, video recording and heavier workloads; compare thermals, UI fluidity and camera results.",
     "measurements": {
-      "Pixel 6 Pro": {
-        "chip": "Tensor G1",
-        "modem": "Exynos 5123",
-        "thermals": "Hot (44°C)",
-        "zoomMax": "20x",
-        "stability": "72%"
+      "thermals": {
+        "Pixel 6 Pro": "Poor",
+        "Pixel 7 Pro": "Improved",
+        "Pixel 8 Pro": "Moderate",
+        "Pixel 9 Pro": "Good",
+        "Pixel 10 Pro": "Excellent"
       },
-      "Pixel 7 Pro": {
-        "chip": "Tensor G2",
-        "modem": "Exynos 5300",
-        "thermals": "Warm (42°C)",
-        "zoomMax": "30x",
-        "stability": "78%"
-      },
-      "Pixel 8 Pro": {
-        "chip": "Tensor G3",
-        "modem": "Exynos 5300",
-        "thermals": "Warm (41°C)",
-        "zoomMax": "30x",
-        "stability": "82%"
-      },
-      "Pixel 9 Pro": {
-        "chip": "Tensor G4",
-        "modem": "Exynos 5400",
-        "thermals": "Cool (38°C)",
-        "zoomMax": "30x",
-        "stability": "89%"
-      },
-      "Pixel 10 Pro": {
-        "chip": "Tensor G5",
-        "modem": "TSMC Custom",
-        "thermals": "Cool (36°C)",
-        "zoomMax": "100x",
-        "stability": "96%"
+      "uiFluidity": {
+        "Pixel 6 Pro": "Inconsistent",
+        "Pixel 7 Pro": "Better",
+        "Pixel 8 Pro": "Fluid",
+        "Pixel 9 Pro": "Very fluid",
+        "Pixel 10 Pro": "Excellent"
       }
     },
-    "results": "Google's 5-generation trajectory shows dramatic silicon maturation. The jump from Pixel 6 Pro (Samsung Tensor G1) to Pixel 10 Pro (TSMC Tensor G5) resolved thermal throttling, doubled zoom reach, and eliminated dropped calls in weak reception areas.",
+    "results": "All generations handle social media, browsing and photos with ease. The 9 Pro and 10 Pro are noticeably more responsive. G1–G4 throttled under heavy use, with thermal and camera shutdowns on older generations; the TSMC-made G5 in the 10 Pro runs cooler, holds performance all day and did not throttle during long video recording. The 10 Pro's 100x Pro Res Zoom produces surprisingly usable distant shots.",
     "observations": [
-      "Pixel 6 Pro suffered severe modem disconnects in fringe areas; Pixel 9 Pro and 10 Pro exhibited zero dropped packets.",
-      "The 100x Pro Res Zoom on Pixel 10 Pro leverages generative super-resolution for readable text at extreme distances.",
-      "Vapor chamber cooling introduced in Pixel 9 Pro and refined in 10 Pro prevented thermal degradation during long 4K60 video recording."
+      "The TSMC switch is the biggest Pixel upgrade in five years.",
+      "Same camera megapixels since the 7 Pro; the biggest gains came from processing.",
+      "Best value: Pixel 8 Pro. Upgrade advice: 6 → 10 night and day, 7 → 10 significant, 8 → 10 optional, 9 → 10 skip."
     ],
-    "limitations": "Pixel 6 Pro battery capacity degraded slightly due to age relative to newer review units.",
-    "verdict": "Pixel 10 Pro represents the definitive maturity point of Google's flagship hardware vision, finally achieving thermal and computational parity with top industry competitors.",
+    "limitations": "One unit per generation — anecdotal, not a statistical sample.",
+    "verdict": "Buy the 10 Pro, keep the 8 Pro, skip the rest.",
     "devices": [
       "google-pixel-6-pro",
       "google-pixel-7-pro",
@@ -1143,34 +875,41 @@ export const OFFICIAL_EXPERIMENTS = [
       "google-pixel-10-pro"
     ],
     "sources": [
-      "WDIII Pixel Generational Benchmark Archive",
-      "RF Chamber Telemetry Logs",
-      "Camera Image RAW Analysis"
+      "Owner's own testing",
+      "Google published specifications (chips, cameras)"
     ],
     "tags": [
-      "Google Pixel",
-      "Tensor Silicon",
-      "Hardware Evolution",
-      "Telephoto Zoom"
+      "Pixel 6 Pro → 10 Pro",
+      "5 Generations",
+      "Chip · Camera · Performance",
+      "All devices on brand-new batteries"
     ],
-    "scope": "5 consecutive generations of flagship Google devices tested side-by-side",
-    "search": "exp-7 google pixel pro generation comparison tensor camera zoom",
+    "scope": "📋 1 unit per generation — anecdotal, not a statistical sample",
+    "search": "exp-7 pixel pro generation comparison tensor chip camera",
     "toc": [
       {
-        "id": "exp7-silicon",
-        "label": "Silicon Evolution"
+        "id": "exp7-chipset",
+        "label": "Chipset Evolution"
+      },
+      {
+        "id": "exp7-eras",
+        "label": "Generational Eras"
       },
       {
         "id": "exp7-camera",
-        "label": "Zoom & Imaging"
+        "label": "Camera Evolution"
       },
       {
-        "id": "exp7-connectivity",
-        "label": "Modem & RF"
+        "id": "exp7-performance",
+        "label": "Real-World Performance"
+      },
+      {
+        "id": "exp7-upgrade",
+        "label": "Upgrade Path"
       },
       {
         "id": "exp7-conclusion",
-        "label": "Generational Verdict"
+        "label": "Conclusion"
       }
     ],
     "relatedExperiments": [
@@ -1184,52 +923,26 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "displayPeakNits",
-        "label": "Display Peak Brightness",
-        "type": "number",
-        "unit": "Nits",
-        "required": true,
-        "min": 100,
-        "max": 4000
+        "key": "thermalRating",
+        "label": "Thermal rating",
+        "type": "string",
+        "required": false
       },
       {
-        "key": "tensorThermalThrottle",
-        "label": "Thermal Throttle Percent",
-        "type": "number",
-        "unit": "%",
-        "required": true,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "key": "modemSignalDbm",
-        "label": "Cellular Signal Strength",
-        "type": "number",
-        "unit": "dBm",
-        "required": false,
-        "min": -140,
-        "max": -40
-      },
-      {
-        "key": "primaryScore",
-        "label": "Overall Generational Score",
-        "type": "number",
-        "unit": "Score",
-        "required": false,
-        "min": 0,
-        "max": 100
+        "key": "uiFluidity",
+        "label": "UI fluidity",
+        "type": "string",
+        "required": false
       }
     ],
     "allowedMeasurementKeys": [
-      "displayPeakNits",
-      "tensorThermalThrottle",
-      "modemSignalDbm",
-      "primaryScore"
+      "thermalRating",
+      "uiFluidity"
     ]
   },
   {

@@ -891,14 +891,14 @@ function buildExp2() {
       <p style="color:var(--td-text-secondary); margin-bottom:2rem;">Three identical iPhone 15 models with identical level 9 damage (screen + back glass) sent to three different repair channels: Official Apple, third-party using genuine parts, and cheap unauthorized using generic parts.</p>
       <div id="exp2-channels" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; margin-bottom:2rem;">
         ${repairOption("apple","Official Apple",["Pristine quality — looks brand new","Genuine parts, fully authenticated","Waterproofing maintained","Extended warranty (if near end)","Full quality checks","3-day repair turnaround"],["$399 for screen + back glass","5-day scheduling buffer"])}
-        ${repairOption("thirdparty","Third-Party (Genuine Parts)",["Attempts to use genuine Apple parts"],["More expensive than Apple","No quality checks","Back glass glued → lost waterproofing","No warranty","Parts flagged as non-genuine in software","Resale value destroyed","Couldn't source parts — repair abandoned"])}
+        ${repairOption("thirdparty","Third-Party (Genuine Parts)",["Attempts to use genuine Apple parts"],["Quoted $450 for screen + back glass — more than Apple","No quality checks (stated upfront)","No warranty (stated upfront)","Couldn't source genuine parts — repair cancelled before any work was done"])}
         ${repairOption("cheap","Cheap Unauthorized",["$220 total — cheapest option","1-day turnaround","Same-day possible if parts in stock"],["Generic parts only","Back glass super-glued → lost waterproofing","Screen noticeably thicker than Apple's","No warranty"])}
       </div>
       <div id="exp2-findings">
-        ${keyFinding("Third-Party With Genuine Parts Is A Trap","Costs more than Apple, delivers worse results, can't authenticate parts in software, loses waterproofing, voids warranty, and destroys resale value. The worst of all options.")}
-        ${keyFinding("Why Genuine Parts Aren't Enough","Only Apple and authorized service providers have the software required to authenticate parts. Without it, even genuine parts are flagged as counterfeit by the device.")}
+        ${keyFinding("The Genuine-Parts Third Party Was The Worst Deal","It quoted $450 — more than Apple's $399 — with no quality checks and no warranty, then couldn't source the genuine parts it promised. The repair was cancelled before any work was done.")}
+        ${keyFinding("Background: Why Genuine Parts Aren't Enough","Context, not a result of this test (the genuine-parts repair never happened): only Apple and authorized service providers have the software required to authenticate parts. Without it, even genuine parts can be flagged as non-genuine by the device.")}
       </div>
-      ${conclusion("Winner: Official Apple ($399, 8 days total)","The only option that preserves waterproofing, warranty, resale value, and part authenticity. Third-party shops charge more for less. Cheap repairs are fast but fundamentally compromise the device.")}
+      ${conclusion("Winner: Official Apple ($399, 8 days total)","The only option that preserves waterproofing, warranty, resale value, and part authenticity. The genuine-parts third party quoted more than Apple with fewer guarantees and couldn't deliver. Cheap repairs are fast but fundamentally compromise the device.")}
       ${relatedExperiments([{id:"exp1",label:"🔧 Also see: Experiment 1 — Apple vs Samsung Repair"},{id:"exp6",label:"🏪 Also see: Experiment 6 — AASP Repair Test"}])}
     `
   });
@@ -907,11 +907,11 @@ function buildExp2() {
 function buildExp3() {
   return experimentShell({
     id:"exp3", category:"support", title:"Experiment 3: Customer Service Quality Test",
-    status:"done", statusLabel:"Done", tags:["7 companies tested","Same-day testing","7–15 minutes per call","Calls recorded"],
+    status:"done", statusLabel:"Done", tags:["8 companies tested","Same-day testing","7–15 minutes per call","Calls recorded"],
     search:"exp-3 customer service support test call phone",
     toc:[{id:"exp3-performers",label:"Top Performers"},{id:"exp3-rankings",label:"Full Rankings"},{id:"exp3-findings",label:"Key Findings"},{id:"exp3-conclusion",label:"Conclusion"}],
     body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">Identical question asked via phone call to customer support at 7 major smartphone brands: "My phone screen is going black." Testing speed to correct answer, troubleshooting quality, accuracy, and helpfulness. Correct answer: battery draining / needs charging.</p>
+      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">Identical question asked via phone call to customer support at 8 major smartphone brands: "My phone screen is going black." Testing speed to correct answer, troubleshooting quality, accuracy, and helpfulness. Correct answer: battery draining / needs charging.</p>
       <div id="exp3-performers" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-bottom:2rem;">
         <div style="background:var(--td-success-bg); border:1px solid var(--td-success); padding:1.5rem; border-radius:0.375rem;"><h3 style="margin:0 0 1.5rem; font-size:1.125rem; color:var(--td-success); font-weight:600;">Top Performers</h3>${perfRow("4.5★","success","Huawei","Fast, direct, no friction. Resolved immediately.")}${perfRow("4.5★","success","Xiaomi","Friendly, efficient, best overall experience.")}</div>
         <div style="background:var(--td-error-bg); border:1px solid var(--td-error); padding:1.5rem; border-radius:0.375rem;"><h3 style="margin:0 0 1.5rem; font-size:1.125rem; color:var(--td-error); font-weight:600;">Complete Failures</h3>${perfRow("0★","error","Samsung","Automated loop, then hung up on by system.")}${perfRow("0★","error","BlackBerry","Paywall to speak to human. No support without fee.")}</div>
@@ -923,13 +923,13 @@ function buildExp3() {
         ${rankingRow("warning","OPPO","3.5/5","warning","Over-complicated initially, but persistent and correct.")}
         ${rankingRow("warning","OnePlus","3/5","warning","Correct answer but roundabout. Audible background noise.")}
         ${rankingRow("","Apple","2.5/5","neutral","Long wait, automated system struggled, required physical device presence.")}
-        ${rankingRow("","Vivo","1/5","neutral","No phone support available. Email only, no guaranteed response time.")}
+        ${rankingRow("","Vivo","1/5","neutral","Answered the phone quickly but wouldn't help; offered email support instead.")}
         ${rankingRow("error","Samsung","0/5","error","Redirected into automated loop, system hung up.")}
         ${rankingRow("error","BlackBerry","0/5","error","Incident fee required to speak with a human. No out-of-warranty support.")}
       </div>
       <div id="exp3-findings">
-        ${keyFinding("Shocking Result — Big Brands Failed","Apple and Samsung both failed this test. Huawei and Xiaomi, often stereotyped as having poor support, delivered the best experiences. Brand recognition does not equal support quality.")}
-        ${keyFinding("Speed ≠ Helpfulness","Vivo answered quickly but refuses to help over the phone. The fastest answer means nothing if the channel is useless or the answer is wrong.")}
+        ${keyFinding("Big Brands Underperformed","Apple and Samsung, two of the biggest brands, gave some of the weakest experiences: Samsung failed outright and Apple placed 5th of 8. Huawei and Xiaomi, often stereotyped as having poor support, delivered the best experiences. Brand recognition does not equal support quality.")}
+        ${keyFinding("Speed ≠ Helpfulness","Vivo answered quickly but wouldn't help over the phone, offering email instead. The fastest answer means nothing if the channel is useless or the answer is wrong.")}
       </div>
       ${conclusion("Winners: Huawei & Xiaomi (Tied at 4.5/5)","Both delivered fast, direct, friendly support that actually solved the problem without friction. Avoid Samsung and BlackBerry entirely — their support infrastructure either doesn't function or is deliberately inaccessible.")}
       ${relatedExperiments([{to:"#/fodder",label:"🤖 Also see: Fodder Archive — AI Comparison"}])}
@@ -1008,11 +1008,11 @@ function buildCaseStudy() {
 function buildExp5() {
   return experimentShell({
     id:"exp5", category:"hardware", title:"Experiment 5: Battery Life — Google Pixel Pro vs iPhone",
-    status:"done", statusLabel:"Done", tags:["5 Pixel Pro models","3 iPhone models","All devices at 100% battery health","Controlled storage environment"],
+    status:"done", statusLabel:"Done", tags:["5 Pixel Pro models","3 iPhone models","All devices on brand-new batteries","Controlled storage environment"],
     search:"exp-5 pixel iphone battery life comparison",
     toc:[{id:"exp5-pixel",label:"Pixel Pro Generation"},{id:"exp5-cross",label:"Cross-Platform"},{id:"exp5-headtohead",label:"Head-to-Head"},{id:"exp5-ranking",label:"Overall Ranking"},{id:"exp5-conclusion",label:"Conclusion"}],
     body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">Comprehensive battery endurance test across five generations of Google Pixel Pro models and three iPhone models. All devices started from 100% battery health under identical controlled storage conditions. Testing focused on real-world screen-on time and usage duration rather than synthetic benchmarks.</p>
+      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">Comprehensive battery endurance test across five generations of Google Pixel Pro models and three iPhone models. All devices ran on brand-new batteries and came from identical controlled storage conditions. Testing focused on real-world screen-on time and usage duration rather than synthetic benchmarks.</p>
       ${sectionH3("exp5-pixel","Google Pixel Pro — Generation Comparison")}
       ${dataTable("Pixel Pro battery endurance by generation",[{label:"Device"},{label:"Battery",center:true},{label:"Screen-On Time",center:true},{label:"Endurance",center:true},{label:"Rank",center:true}],[
         [{primary:true,text:"Pixel 6 Pro",chip:"Tensor G1"},{center:true,text:"5003 mAh"},{center:true,text:"5–6 hrs"},{center:true,text:"~1 day"},{center:true,badge:"error",text:"5th"}],
@@ -1074,7 +1074,7 @@ function buildExp6() {
       ${dataTable("Repair channel comparison across all four tiers tested",[{label:"Channel"},{label:"Cost",center:true},{label:"Quality",center:true},{label:"Warranty",center:true},{label:"Waterproofing",center:true},{label:"Parts Auth",center:true}],[
         [{primary:true,text:"Official Apple"},{center:true,text:"$399",chip:"iPhone 15"},{center:true,badge:"success",text:"Pristine"},{center:true,badge:"success",text:"Yes"},{center:true,badge:"success",text:"Yes"},{center:true,badge:"success",text:"Yes"}],
         [{primary:true,text:"AASP — iFix",chip:"MTA"},{center:true,text:"$599",chip:"iPhone 16 Pro Max"},{center:true,badge:"success",text:"Pristine"},{center:true,badge:"success",text:"Yes"},{center:true,badge:"success",text:"Yes"},{center:true,badge:"success",text:"Yes"}],
-        [{primary:true,text:"Third-Party (Genuine Parts)"},{center:true,badge:"error",text:"$399+"},{center:true,badge:"warning",text:"Unverified"},{center:true,badge:"error",text:"No"},{center:true,badge:"error",text:"No"},{center:true,badge:"error",text:"No"}],
+        [{primary:true,text:"Third-Party (Genuine Parts)"},{center:true,badge:"error",text:"$450 quote",chip:"iPhone 15"},{center:true,badge:"warning",text:"Not repaired (cancelled)"},{center:true,badge:"error",text:"No"},{center:true,text:"—"},{center:true,text:"—"}],
         [{primary:true,text:"Cheap Unauthorized"},{center:true,badge:"success",text:"$220"},{center:true,badge:"warning",text:"Functional"},{center:true,badge:"error",text:"No"},{center:true,badge:"error",text:"No"},{center:true,badge:"error",text:"No"}]
       ],[0,1])}
       ${sectionH3("exp6-perspective","Contributor Perspective — MTA on the Authorized Repair Industry")}
@@ -1085,9 +1085,9 @@ function buildExp6() {
         ${rankingRow("warning","Intentional Design Makes Repair Harder","","","Apple products are engineered to be difficult to open, requiring specialized tools that can damage devices if misused and cause physical strain on technicians over time.")}
         ${rankingRow("success","Independent Shops Often Do More","","","Independent shops frequently perform board-level repairs that authorized centers deem impossible. MTA argues the \"trust authorized, avoid independents\" narrative is driven by brand prestige rather than quality reality.")}
       </div>
-      ${keyFinding("AASP Delivers Official Apple Quality — At A Slight Premium","MTA's iFix repair returned identical quality to Official Apple — same warranty extension, same quality control, zero defects. As a repair channel, AASP is a legitimate alternative to Apple's own stores.")}
+      ${keyFinding("AASP Delivers Official Apple Quality","MTA's iFix repair returned identical quality to Official Apple — same warranty extension, same quality control, zero defects. As a repair channel, AASP is a legitimate alternative to Apple's own stores. Costs are not directly comparable: $599 was for an iPhone 16 Pro Max, $399 for an iPhone 15.")}
       ${keyFinding("The Gap Between Brand And Reality","MTA's data confirms AASP quality matches Apple's — but his broader commentary raises valid questions about what \"authorized\" actually means at scale. The repair outcome was excellent. The systemic practices behind that outcome are a separate conversation worth having.")}
-      ${conclusion("Verdict: AASP Is A Legitimate Apple Alternative","When Official Apple isn't accessible, an AASP like iFix delivers the same repair quality, warranty extension, parts authentication, and waterproofing preservation — with potentially faster scheduling. MTA's critique of the industry is well-founded and worth consumer awareness, but it doesn't diminish the quality of the actual repair outcome documented here.")}
+      ${conclusion("Verdict: AASP Is A Legitimate Apple Alternative","When Official Apple isn't accessible, an AASP like iFix delivers the same repair quality, warranty extension, parts authentication, and waterproofing preservation. MTA's critique of the industry is well-founded and worth consumer awareness, but it doesn't diminish the quality of the actual repair outcome documented here.")}
       ${relatedExperiments([{id:"exp1",label:"🔧 Also see: Experiment 1 — Apple vs Samsung Repair"},{id:"exp2",label:"⚙️ Also see: Experiment 2 — Repair Channel Tiers"}])}
     `
   });
@@ -1107,12 +1107,12 @@ function buildExp7() {
   erasHtml += `</div>`;
   return experimentShell({
     id:"exp7", category:"hardware", title:"Experiment 7: Google Pixel Pro Generation Comparison",
-    status:"done", statusLabel:"Done", tags:["Pixel 6 Pro → 10 Pro","5 Generations","Chip · Camera · Performance","All devices at 100% battery health"],
+    status:"done", statusLabel:"Done", tags:["Pixel 6 Pro → 10 Pro","5 Generations","Chip · Camera · Performance","All devices on brand-new batteries"],
     scope:"📋 1 unit per generation — anecdotal, not a statistical sample",
     search:"exp-7 pixel pro generation comparison tensor chip camera",
     toc:[{id:"exp7-chipset",label:"Chipset Evolution"},{id:"exp7-eras",label:"Generational Eras"},{id:"exp7-camera",label:"Camera Evolution"},{id:"exp7-performance",label:"Real-World Performance"},{id:"exp7-upgrade",label:"Upgrade Path"},{id:"exp7-conclusion",label:"Conclusion"}],
     body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">A comprehensive generational comparison of Google's Pixel Pro lineup from the 6 Pro through the 10 Pro — tracking chip evolution, camera hardware, software intelligence, and real-world performance across five Tensor generations. All devices tested from the same controlled storage environment at 100% battery health.</p>
+      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">A comprehensive generational comparison of Google's Pixel Pro lineup from the 6 Pro through the 10 Pro — tracking chip evolution, camera hardware, software intelligence, and real-world performance across five Tensor generations. All devices tested from the same controlled storage environment on brand-new batteries.</p>
       ${sectionH3("exp7-chipset","Chipset Evolution — Tensor G1 to G5")}
       ${dataTable("Tensor chip architecture comparison across five generations",[{label:"Feature"},{label:"Pixel 6 Pro",center:true},{label:"Pixel 7 Pro",center:true},{label:"Pixel 8 Pro",center:true},{label:"Pixel 9 Pro",center:true},{label:"Pixel 10 Pro",center:true}],[
         [{primary:true,text:"Chipset"},{center:true,text:"Tensor G1"},{center:true,text:"Tensor G2"},{center:true,text:"Tensor G3"},{center:true,text:"Tensor G4"},{center:true,badge:"success",text:"Tensor G5"}],
@@ -1142,7 +1142,7 @@ function buildExp7() {
         ${rankingRow("warning","From Pixel 9 Pro → 10 Pro: Marginal","Skip","warning","The 9 Pro is already excellent. Main gains are TSMC efficiency and Pro Res Zoom. If thermals or battery aren't bothering you, staying on the 9 Pro is a reasonable choice.")}
       </div>
       ${keyFinding("The TSMC Switch Is The Biggest Pixel Upgrade In Five Years","Every Tensor chip from G1 through G4 was manufactured on Samsung processes. The thermal throttling, battery drain under load, and camera shutdowns were all symptoms of that fabrication constraint. The Pixel 10 Pro's move to TSMC 3nm resolves all of them in one generation.")}
-      ${keyFinding("Camera Hardware Is Nearly Identical Since The 7 Pro","The 50MP main and 48MP 5x telephoto hardware has remained essentially unchanged from the 7 Pro through the 10 Pro. What changed dramatically is the processing pipeline behind it. Google competes on software intelligence, not sensor size.")}
+      ${keyFinding("Same Camera Megapixels Since The 7 Pro","The 50MP main and 48MP 5x telephoto megapixel counts stayed the same from the 7 Pro through the 10 Pro, though Google changed sensors along the way. The biggest gains came from the processing pipeline. Google competes on software intelligence, not megapixel counts.")}
       ${keyFinding("Generative AI Made Zoom Usable","The 6 Pro's 4x physical zoom was the ceiling of what hardware could do. The 10 Pro's Pro Res Zoom reaches 100x using generative AI reconstruction — producing surprisingly usable distant shots that no physical lens on a smartphone could match.")}
       ${conclusion("Verdict: Buy The 10 Pro, Keep The 8 Pro, Skip The Rest","The Pixel 10 Pro is the first generation where Google's hardware fully delivers on its software ambitions — TSMC fabrication eliminated the thermal ceiling that held back four generations of otherwise capable devices. For anyone upgrading from a 6 Pro or 7 Pro, the 10 Pro is a compelling generational leap. Those on an 8 Pro have a solid device worth keeping. The 6 Pro and 7 Pro remain historically important as the foundation of Google's custom silicon era, but show their age in thermal performance and camera processing compared to the current standard.")}
       ${relatedExperiments([{id:"exp5",label:"🔋 Also see: Experiment 5 — Pixel vs iPhone Battery"},{to:"#/fodder",label:"🚫 Also see: Fodder Archive — Ecosystem Exit"}])}
