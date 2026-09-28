@@ -1844,7 +1844,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "Ecosystem Lock-In Study"
     ],
     "scope": "📋 n=1 — personal experience, not a controlled study",
-    "search": "fa-02 one month out of the apple ecosystem ecosystem study ecosystem exit friction log pixel samsung windows lock-in",
+    "search": "fa-02 one month out of the apple ecosystem friction log pixel 10 pro windows hp victus lock-in",
     "toc": [
       {
         "id": "fa02-setup",
