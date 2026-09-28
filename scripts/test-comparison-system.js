@@ -305,9 +305,13 @@ assert(exp1 && exp1.title.includes("Apple vs Samsung"), "Experiment 1 authoritat
 
 // --- Test 25: Existing Fodder Archive remains functional ---
 console.log("\n--- Requirement 25: Fodder Archive Functional ---");
-assert(indexHtmlSrc.includes('buildFa01'), "Fodder entry FA-01 intact in index.html");
-assert(indexHtmlSrc.includes('buildFa02'), "Fodder entry FA-02 intact in index.html");
-assert(indexHtmlSrc.includes('buildFa03'), "Fodder entry FA-03 intact in index.html");
+// FA entries are rendered from their `sections` in src/data/official-experiments.js
+const { OFFICIAL_EXPERIMENTS: __faSource } = await import("../src/data/official-experiments.js");
+assert(indexHtmlSrc.includes('renderFodderArchive()'), "Fodder page rendered from data in index.html");
+for (const faId of ["fa01", "fa02", "fa03"]) {
+  const fa = __faSource.find(e => e.id === faId);
+  assert(Boolean(fa && Array.isArray(fa.sections) && fa.sections.length > 0), `Fodder entry ${faId.toUpperCase().replace("FA", "FA-")} intact in the data file`);
+}
 
 console.log("\n================================================================================");
 console.log(` 25-POINT COMPARISON AUDIT COMPLETE: ${passed} PASSED, ${failed} FAILED         `);

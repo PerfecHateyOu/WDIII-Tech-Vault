@@ -26,6 +26,15 @@ Before drafting, read two or three existing entries in `src/data/official-experi
 - For long-running studies, `protocol` must be sustainable. Give a concrete cadence (weekly, monthly, checkpoints) with rough time cost, and define a day-0 baseline.
 - Put the raw data log path in `sources` or `methodology` when one exists (e.g. `data/exp-08/*.csv`).
 
+## Fodder Archive entries (FA-NN)
+
+FA entries are rendered on the site directly from their `sections` array in `src/data/official-experiments.js`; there is no hand-written HTML for them in `index.html`. To draft or change an FA entry, edit its `sections` and its summary fields together, in the same entry.
+
+- Block types: `heading` (id, text), `paragraph` (html, variant: lead | note | small), `notice`, `meta` (items of label/value), `table` (caption, headers, rows), `ranking`, `insight`, `keyFinding`, `conclusion`, `timeline`, `related`, `group` (layout: stack | cards, children), `code`, `callout`, `checklist`, `footnote`. Copy the shape from an existing FA entry.
+- Every `toc` id must match a `heading` (or `checklist`) id in `sections`.
+- The summary fields (`results`, `verdict`, `measurements`, …) must say the same thing as the sections. They are one entry now, so check both before reporting.
+- `node scripts/test-fodder-single-source.js` validates the structure.
+
 ## Procedure
 
 1. Restate in 3–5 bullets what Bill asked for and which facts you have. Ask about anything essential that is missing, in a single message, before writing.

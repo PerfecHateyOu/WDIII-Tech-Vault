@@ -128,7 +128,7 @@ assert(indexContent.includes('id="page-profile"'), "Profile view registered in H
 assert(indexContent.includes('route === "/profile"'), "Client router safely handles #/profile route");
 assert(indexContent.includes('buildExp1()'), "Original curated experiment 1 intact");
 assert(indexContent.includes('buildExp9()'), "Original curated experiment 9 intact");
-assert(indexContent.includes('buildFa01()'), "Original fodder archive intact");
+assert(indexContent.includes('renderFodderArchive()'), "Fodder archive intact (rendered from data)");
 
 // 4. Server Public Config Security
 console.log("\nSection 4: Server Endpoint Security");

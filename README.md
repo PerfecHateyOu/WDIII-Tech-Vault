@@ -4,7 +4,7 @@ A real-world archive of hands-on consumer tech research: device repairs, custome
 
 ## 📑 What's in the archive
 
-The site is a single-page app (`index.html`). The Fodder Archive lives inside it at `#/fodder`.
+The site is a single-page app (`index.html`). The Fodder Archive lives inside it at `#/fodder`. Fodder Archive entries are rendered from their `sections` in `src/data/official-experiments.js`, so each entry has a single source.
 
 **Main experiments**
 - **Done:** EXP 1–7, the Samsung battery case study, and EXP 9 (Apple Ecosystem Security Audit)
