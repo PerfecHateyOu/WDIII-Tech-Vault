@@ -14,7 +14,7 @@ The site is a single-page app (`index.html`). The Fodder Archive lives inside it
 **Fodder Archive**
 - **FA-01:** Which AI builds our website best? (blind evaluation of 5 LLMs)
 - **FA-02:** One month out of the Apple ecosystem
-- **FA-03:** Seven years of laptop evolution (2017 MacBook Air vs 2024 M3 MacBook Air vs Acer Aspire 14)
+- **FA-03:** Two months, two laptops (MacBook Pro 16" M2 Pro vs Acer Aspire 14 AI)
 
 ## ✨ Platform features
 

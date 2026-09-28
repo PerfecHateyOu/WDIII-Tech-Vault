@@ -1632,110 +1632,87 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "How do contemporary frontier AI coding models perform when tasked with generating a production-grade, responsive consumer technology research website with complex data tables and interactive charts?",
-    "objective": "Benchmark frontier AI coding models on prompt adherence, code cleanliness, responsive design, architectural elegance, and bug density when building the WDIII Tech Vault web platform.",
-    "methodology": "Identical prompt specification fed into Claude 3.5 Sonnet, GPT-4o, and Gemini 1.5 Pro. Code output evaluated for HTML semantic validity, CSS responsiveness, JavaScript error rate, and component modularity.",
-    "conditions": "Single-prompt zero-shot generation followed by a single iterative refinement prompt across all three models.",
-    "protocol": "1. Submit standardized prompt specification with data requirements. 2. Capture raw generated code. 3. Validate code in headless Chromium browser for rendering errors. 4. Score typography, responsive breakpoints, data presentation, and dark mode contrast.",
+    "researchQuestion": "Given the same bare prompt and no guidance, which AI assistant builds the best consumer tech documentation website?",
+    "objective": "Compare five AI assistants on a single cold prompt to build a consumer tech documentation site, judged on design execution, code quality, structure and functionality.",
+    "methodology": "DeepSeek, Gemini, Grok, ChatGPT and Claude each received the same blind prompt: \"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software.\" No examples, no reference to this site, no follow-up guidance. The site owner ranked the outputs; Claude produced a separate independent assessment before seeing the owner's rankings.",
+    "conditions": "One cold prompt per model, no iteration. Each model invented its own placeholder content.",
+    "protocol": "1. Give each model the identical prompt. 2. Save the raw HTML output. 3. Owner scores design, code quality, structure and functionality. 4. Claude assesses independently. 5. Compare the two rankings.",
     "measurements": {
-      "Claude 3.5 Sonnet": {
-        "score": "9.2 / 10",
-        "errors": 0,
-        "layout": "Superb typography and responsive layout"
+      "Owner ranking": {
+        "Grok": "9.0 / 10",
+        "ChatGPT": "7.0 / 10",
+        "DeepSeek": "7.0 / 10",
+        "Gemini": "6.5 / 10",
+        "Claude": "4.5 / 10"
       },
-      "GPT-4o": {
-        "score": "8.4 / 10",
-        "errors": 1,
-        "layout": "Clean UI but generic component styling"
-      },
-      "Gemini 1.5 Pro": {
-        "score": "8.1 / 10",
-        "errors": 2,
-        "layout": "Functional but required syntax corrections"
+      "Claude's independent ranking": {
+        "1st": "Claude",
+        "2nd": "Gemini",
+        "3rd": "DeepSeek",
+        "4th": "Grok",
+        "5th": "ChatGPT"
       }
     },
-    "results": "Claude 3.5 Sonnet generated the most visually sophisticated and error-free single-page research layout with complete data tables and responsive navigation. All models successfully understood the research vault domain.",
+    "results": "Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA routing, persisted theme, detail pages). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude.",
     "observations": [
-      "Frontier models are fully capable of generating intricate, non-trivial documentation portals.",
-      "Clear prompt framing regarding typography and layout hierarchy prevents generic AI design clichés."
+      "Architecture beat aesthetics: working routing and structure separated the top entry, not colour or typography.",
+      "The owner prioritised working functionality; Claude prioritised design systems and self-contained code.",
+      "The owner's assessment has no conflict of interest; Claude's does, and both are shown for transparency."
     ],
-    "limitations": "Single project benchmark prompt; multi-turn agentic coding workflows not tested in this phase.",
-    "verdict": "Winner: Claude 3.5 Sonnet. Delivered the highest code quality, cleanest component architecture, and most refined aesthetic.",
+    "limitations": "n=1 per model, single cold prompt, subjective scoring. An anecdotal comparison, not a statistical sample.",
+    "verdict": "Owner's winner: Grok (9.0/10). Claude placed last in the owner's ranking (4.5/10).",
     "devices": [],
     "sources": [
-      "WDIII AI Evaluation Benchmark Log",
-      "Model Response Transcripts",
-      "Chromium Render Traces"
+      "Owner assessment",
+      "Claude's independent assessment",
+      "Raw model outputs (archived)"
     ],
     "tags": [
-      "AI Coding",
-      "Model Benchmark",
-      "Web Development"
+      "5 Models Tested",
+      "Cold Prompt Only"
     ],
-    "scope": "3 frontier AI models evaluated on identical web application specifications",
-    "search": "fa-01 which ai builds website best coding models",
+    "scope": "n=1 per model — anecdotal comparison, not a statistical sample",
+    "search": "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude",
     "toc": [
       {
-        "id": "fa01-comparison",
-        "label": "Model Comparison"
+        "id": "fa01-setup",
+        "label": "Experiment Setup"
       },
       {
-        "id": "fa01-code",
-        "label": "Code Quality Audit"
+        "id": "fa01-owner-rankings",
+        "label": "Owner Rankings"
       },
       {
-        "id": "fa01-verdict",
-        "label": "Benchmark Leaderboard"
+        "id": "fa01-claude-assessment",
+        "label": "Claude's Assessment"
+      },
+      {
+        "id": "fa01-divergence",
+        "label": "Where They Diverge"
+      },
+      {
+        "id": "fa01-findings",
+        "label": "Key Findings"
       }
     ],
     "relatedExperiments": [],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "codeGenerationSeconds",
-        "label": "Generation Latency",
-        "type": "number",
-        "unit": "Seconds",
-        "required": true,
-        "min": 1,
-        "max": 300
-      },
-      {
-        "key": "syntaxCorrectnessScore",
-        "label": "Syntax Correctness",
+        "key": "ownerScore",
+        "label": "Owner score",
         "type": "number",
         "unit": "/ 10",
         "required": true,
-        "min": 1,
+        "min": 0,
         "max": 10
-      },
-      {
-        "key": "promptIterations",
-        "label": "Refinement Prompts Needed",
-        "type": "number",
-        "unit": "Prompts",
-        "required": false,
-        "min": 0,
-        "max": 20
-      },
-      {
-        "key": "primaryScore",
-        "label": "Overall Evaluation Score",
-        "type": "number",
-        "unit": "Score",
-        "required": false,
-        "min": 0,
-        "max": 100
       }
     ],
     "allowedMeasurementKeys": [
-      "codeGenerationSeconds",
-      "syntaxCorrectnessScore",
-      "promptIterations",
-      "primaryScore"
+      "ownerScore"
     ]
   },
   {
@@ -1746,257 +1723,173 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "Can an Apple ecosystem power user transition entirely to Android (Pixel 10 Pro) and Windows (HP Victus) for 30 days without critical productivity or communication friction?",
-    "objective": "Document the empirical friction, workarounds, workflow shifts, and benefits of migrating 100% of daily digital tasks from Apple hardware to Android and Windows for 30 consecutive days.",
-    "methodology": "Lead researcher archived all Apple hardware (iPhone 16e, MacBook Pro, Apple Watch, AirPods Max) and transitioned to Google Pixel 10 Pro, HP Victus laptop (Windows 11), Pixel Watch, and Sony WH-1000XM5.",
-    "conditions": "30 consecutive days, full professional workload including coding, document drafting, photo editing, and messaging.",
-    "protocol": "1. Migrate iCloud data to Google Workspace and OneDrive. 2. Set up RCS messaging on carrier network. 3. Log daily friction points in 5 categories: Handoff, Messaging, Hardware Quality, Battery Life, and App Parity. 4. Score overall transition viability.",
+    "researchQuestion": "What happens when an Apple user moves phone, desktop, cloud, accessories and account authentication off Apple for 30 days?",
+    "objective": "Log the real friction of a complete 30-day exit from the Apple ecosystem to a Pixel 10 Pro and a Windows laptop.",
+    "methodology": "Personal 30-day friction log. Primary phone: Pixel 10 Pro. Desktop: HP Victus 15-fa2013dx (Windows). Watch: Pixel Watch. Earphones: Sony WF (Google's buds were tried and found okay). Baseline before the switch: iPhone 16e and a Mac laptop.",
+    "conditions": "30 consecutive days, everyday personal use, single user.",
+    "protocol": "Week 1 setup and migration; weeks 2–3 daily use with friction logged as it happened; week 4 return to Apple and reflection.",
     "measurements": {
-      "messagingFriction": "Low (RCS enabled seamless high-res media with iOS contacts)",
-      "laptopBatteryDelta": "-3.5 hrs (Windows laptop battery life lagged MacBook)",
-      "fileTransferFriction": "Medium (Quick Share on Windows required manual pairing)",
-      "customizationGain": "High (Android notification triage & split-screen multi-tasking superior)"
+      "Duration": "30 days",
+      "Accounts migrated": 14,
+      "First Windows login": "about 30 minutes"
     },
-    "results": "Transition was 85% seamless. Android's notification handling, Pixel camera performance, and RCS cross-platform messaging made phone departure effortless. The primary downgrade was Windows laptop battery life and trackpad ergonomics compared to MacBook hardware.",
+    "results": "Every task needed a workaround, a subscription or a compromise that iOS and macOS handled transparently. Account migration lost older account history. Windows setup took about 30 minutes just to log in, and pairing the Pixel with Windows repeatedly failed. Pixel Watch health metrics were far off compared with Apple Watch. Two-factor authentication tied to the iPhone made a full exit impractical. Returning to iPhone and Mac was far easier than leaving.",
     "observations": [
-      "iMessage Lock-in is Largely Broken: With RCS support on iOS 18+, cross-platform group chats, read receipts, and typing indicators functioned smoothly.",
-      "Hardware Disparity: The Pixel 10 Pro matched or exceeded iPhone build quality, but finding a Windows laptop with MacBook Air silent thermal efficiency remains difficult."
+      "Apple's lock-in is real, but it comes from design coherence rather than malice.",
+      "The Pixel 10 Pro is a genuinely good phone; the rest of the non-Apple setup is where the friction was.",
+      "Windows was the true deal-breaker: bloat, subscription gates and manual workarounds.",
+      "Pixel has about 3 notable accessory brands versus about 100 for iPhone."
     ],
-    "limitations": "Single researcher workflow; relies heavily on web-based SaaS tools.",
-    "verdict": "Viable and liberating. The Apple ecosystem is no longer an unbreakable walled garden. Phone transition is effortless; laptop migration requires careful hardware selection.",
+    "limitations": "n=1 personal experience over 30 days; not a controlled study.",
+    "verdict": "The Pixel 10 Pro stays in daily rotation. Everything else was tolerable but constantly annoying. Never doing a full ecosystem exit again.",
     "devices": [
       "google-pixel-10-pro",
       "hp-victus-15-fa2013dx",
       "apple-iphone-16e"
     ],
     "sources": [
-      "WDIII 30-Day Transition Diary",
-      "Workflow Telemetry Log",
-      "Cross-Platform Messaging Audit"
+      "Owner's 30-day friction log"
     ],
     "tags": [
-      "Ecosystem Exit",
-      "Android Migration",
-      "Windows vs Mac",
-      "Pixel 10 Pro"
+      "30 Days",
+      "Friction Log",
+      "Ecosystem Lock-In Study"
     ],
-    "scope": "30-day continuous field experiment replacing all personal and work devices",
-    "search": "fa-02 one month out of apple ecosystem android pixel windows",
+    "scope": "n=1 — personal experience, not a controlled study",
+    "search": "fa-02 one month out of the apple ecosystem friction log pixel 10 pro windows hp victus lock-in",
     "toc": [
       {
         "id": "fa02-setup",
-        "label": "Hardware Setup"
+        "label": "Setup & Baseline"
       },
       {
-        "id": "fa02-messaging",
-        "label": "Messaging & Handoff"
+        "id": "fa02-timeline",
+        "label": "30-Day Journey"
       },
       {
-        "id": "fa02-hardware",
-        "label": "Hardware Comparison"
+        "id": "fa02-friction",
+        "label": "Friction Log"
+      },
+      {
+        "id": "fa02-implications",
+        "label": "Ecosystem Lock-In"
       },
       {
         "id": "fa02-verdict",
-        "label": "Final Assessment"
+        "label": "Final Verdict"
       }
     ],
     "relatedExperiments": [
-      {
-        "id": "exp5",
-        "label": "🔋 Experiment 5 — Battery Life: Pixel Pro vs iPhone"
-      },
-      {
-        "id": "exp7",
-        "label": "📱 Experiment 7 — Pixel Generation Comparison"
-      },
-      {
-        "id": "fa03",
-        "label": "💻 FA-03 — 7 Years of Laptop Evolution"
-      }
+      "queued-exp8"
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "messagingFriction",
-        "label": "SMS/RCS Messaging Friction",
+        "key": "durationDays",
+        "label": "Duration",
         "type": "number",
-        "unit": "/ 10",
+        "unit": "days",
         "required": true,
         "min": 1,
-        "max": 10
+        "max": 365
       },
       {
-        "key": "laptopBatteryDelta",
-        "label": "Battery Endurance Delta",
+        "key": "accountsMigrated",
+        "label": "Accounts migrated",
         "type": "number",
-        "unit": "Hours",
-        "required": true,
-        "min": -10,
-        "max": 10
-      },
-      {
-        "key": "fileTransferFriction",
-        "label": "Cross-Device Transfer Friction",
-        "type": "number",
-        "unit": "/ 10",
-        "required": true,
-        "min": 1,
-        "max": 10
-      },
-      {
-        "key": "frictionSeconds",
-        "label": "Workflow Delay Duration",
-        "type": "number",
-        "unit": "Seconds",
         "required": false,
         "min": 0,
-        "max": 1000
+        "max": 500
+      },
+      {
+        "key": "firstWindowsLoginMinutes",
+        "label": "First Windows login",
+        "type": "number",
+        "unit": "minutes",
+        "required": false,
+        "min": 0,
+        "max": 600
       }
     ],
     "allowedMeasurementKeys": [
-      "messagingFriction",
-      "laptopBatteryDelta",
-      "fileTransferFriction",
-      "frictionSeconds"
+      "durationDays",
+      "accountsMigrated",
+      "firstWindowsLoginMinutes"
     ]
   },
   {
     "id": "fa03",
     "experimentNumber": "FA-03",
-    "title": "FA-03 — Seven Years of Laptop Evolution: 2017 MacBook Air vs. 2024 M3 MacBook Air vs. Acer Aspire 14",
+    "title": "FA-03 — Two Months, Two Laptops: MacBook Pro 16\" (M2 Pro) vs. Acer Aspire 14 AI",
     "category": "hardware",
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "How has consumer laptop compute efficiency, battery longevity under load, display color accuracy, and thermal noise evolved over 7 years across Apple Silicon and contemporary Intel x86 architectures?",
-    "objective": "Benchmark 7 years of laptop evolution comparing a vintage 2017 Intel MacBook Air, a 2024 M3 MacBook Air, and a 2024 Intel Core Ultra Acer Aspire 14 across synthetic compute, real-world compiling, and thermal performance.",
-    "methodology": "Standardized suite: Geekbench 6 CPU/GPU, Cinebench R24 multi-core 10-minute throttle test, Chromium source compilation time, 150-nit YouTube 4K playback battery rundown, and sound level meter measurement at 30cm.",
-    "conditions": "Calibrated 150 nits display brightness, room temperature 21.5°C, AC power connected for compute runs, battery power for rundown.",
-    "protocol": "1. Display calibration with Datacolor SpyderX. 2. Run Geekbench 6 x3. 3. Execute 10-min Cinebench R24 loop; record thermal delta. 4. Measure decibel peak with Class 2 SPL meter. 5. Measure battery rundown to 0% shutdown.",
-    "measurements": {
-      "2017 MacBook Air (Intel i5)": {
-        "cinebenchR24Multi": 112,
-        "batteryHours": "4 hrs 40 mins",
-        "noiseLevel": "46 dBA (loud fan whistle)",
-        "displayDeltaE": "4.8 (poor TN panel)"
-      },
-      "2024 MacBook Air (Apple M3)": {
-        "cinebenchR24Multi": 560,
-        "batteryHours": "15 hrs 20 mins",
-        "noiseLevel": "0 dBA (completely fanless)",
-        "displayDeltaE": "0.9 (reference Liquid Retina)"
-      },
-      "2024 Acer Aspire 14 (Intel Core Ultra 7)": {
-        "cinebenchR24Multi": 685,
-        "batteryHours": "8 hrs 45 mins",
-        "noiseLevel": "39 dBA (audible fan whir)",
-        "displayDeltaE": "1.4 (good sRGB IPS)"
-      }
-    },
-    "results": "Apple M3 delivered a 5x compute jump over 2017 Intel while operating in dead silence (0 dBA fanless) with more than triple the battery life (15.3 hrs vs 4.7 hrs). Intel's 2024 Core Ultra in the Acer Aspire delivered higher sustained peak multi-core power (685 pts) but required active cooling fans and surrendered nearly half its battery endurance.",
+    "researchQuestion": "In everyday use, how does a MacBook Pro 16\" (M2 Pro) compare with an Acer Aspire 14 AI (Core Ultra 7 256V)?",
+    "objective": "Record personal impressions from about two months of alternating daily use of both laptops for the same work.",
+    "methodology": "Alternated daily for about two months: one day on the MacBook Pro 16\", the next on the Acer Aspire 14 AI. Workloads on both: Canvas, streaming, CSS/web work and Adobe apps. The Aspire was also used a lot for gaming. Impressions only; nothing was benchmarked or measured.",
+    "conditions": "Single owner, everyday workloads, about two months.",
+    "protocol": "Alternate laptops day by day with the same kinds of work, then compare impressions.",
+    "measurements": null,
+    "results": "Browsing felt about equal on both. For productive work the MacBook Pro worked very well and looked and felt smoother, with noticeably better build quality. The Aspire handled the same work, but not as fast or as smoothly, and was a strong gaming machine.",
     "observations": [
-      "Fanless Revolution: M3's ability to maintain high sustained compute with zero mechanical noise represents the biggest ergonomic leap in laptop history.",
-      "Display Evolution: The jump from 2017 TN panels (1440x900) to 2024 Liquid Retina (2560x1664) represents an enormous leap in ocular comfort and color accuracy.",
-      "Intel Architecture Progress: Intel Core Ultra 7 has significantly narrowed the efficiency gap compared to older 14nm chips, but x86 still requires fans under sustained multi-thread loads."
+      "For someone already in Apple's ecosystem, the MacBook Pro works seamlessly with everything else.",
+      "The Aspire's gaming ability plus its capable (if slower) productivity makes it a good laptop in its own right."
     ],
-    "limitations": "Acer Aspire had 14-inch chassis vs 13.6-inch MacBook Air; differences in thermal dissipation volumes.",
-    "verdict": "Winner: 2024 M3 MacBook Air. It represents the pinnacle of everyday consumer portable computing, pairing desktop-class responsiveness with fanless silence and all-day battery life.",
+    "limitations": "n=1 personal impressions over about two months. No benchmarks, battery, thermal or repair measurements were taken.",
+    "verdict": "MacBook Pro 16\": the smoother, better-built productivity machine for an Apple ecosystem user. Acer Aspire 14 AI: a good all-rounder that adds gaming.",
     "devices": [
-      "apple-macbook-air-2017",
-      "apple-macbook-air-m3-2024",
-      "acer-aspire-14-2024"
+      "apple-macbook-pro-16-m2-pro-16gb",
+      "acer-aspire-14-ai-ultra7-256v"
     ],
     "sources": [
-      "WDIII Laptop Testing Archive 2017–2024",
-      "Cinebench R24 Telemetry",
-      "SpyderX Display Calibration Profiles"
+      "Owner's firsthand daily use"
     ],
     "tags": [
-      "Laptop Evolution",
-      "Apple M3",
-      "Intel Core Ultra",
-      "Fanless Computing"
+      "~2 Months",
+      "Alternating Daily Use",
+      "Personal Impressions"
     ],
-    "scope": "3 laptops evaluated across 7 years of microarchitecture evolution",
-    "search": "fa-03 seven years laptop evolution 2017 macbook air m3 acer aspire",
+    "scope": "n=1 — personal impressions from daily use, no benchmarks",
+    "search": "fa-03 two laptops macbook pro 16 m2 pro acer aspire 14 ai core ultra 7 256v arc 140v daily use productivity gaming ecosystem",
     "toc": [
       {
-        "id": "fa03-specs",
-        "label": "Hardware Specifications"
+        "id": "fa03-setup",
+        "label": "Setup"
       },
       {
-        "id": "fa03-benchmarks",
-        "label": "Compute & Compilation"
-      },
-      {
-        "id": "fa03-thermals",
-        "label": "Thermals & Acoustics"
-      },
-      {
-        "id": "fa03-battery",
-        "label": "Battery Endurance"
+        "id": "fa03-impressions",
+        "label": "Impressions"
       },
       {
         "id": "fa03-verdict",
-        "label": "Generational Verdict"
+        "label": "Verdict"
       }
     ],
     "relatedExperiments": [
-      {
-        "id": "fa02",
-        "label": "🔄 FA-02 — One Month Out of Apple"
-      }
+      "fa02",
+      "queued-exp8"
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-28T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "measurementSchema": [
       {
-        "key": "cinebenchMultiScore",
-        "label": "Cinebench Compute Score",
+        "key": "usageWeeks",
+        "label": "Alternating use period",
         "type": "number",
-        "unit": "Points",
-        "required": true,
-        "min": 100,
-        "max": 30000
-      },
-      {
-        "key": "batteryLifeHours",
-        "label": "Video Streaming Battery Life",
-        "type": "number",
-        "unit": "Hours",
+        "unit": "weeks",
         "required": true,
         "min": 1,
-        "max": 30
-      },
-      {
-        "key": "weightGrams",
-        "label": "Measured Chassis Weight",
-        "type": "number",
-        "unit": "Grams",
-        "required": false,
-        "min": 500,
-        "max": 4000
-      },
-      {
-        "key": "primaryScore",
-        "label": "Benchmark Overall Score",
-        "type": "number",
-        "unit": "Score",
-        "required": false,
-        "min": 0,
-        "max": 100
+        "max": 104
       }
     ],
     "allowedMeasurementKeys": [
-      "cinebenchMultiScore",
-      "batteryLifeHours",
-      "weightGrams",
-      "primaryScore"
+      "usageWeeks"
     ]
   },
   {

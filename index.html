@@ -2061,7 +2061,7 @@ function buildFa02() {
     search:"fa-02 one month out of the apple ecosystem ecosystem study ecosystem exit friction log pixel samsung windows lock-in",
     toc:[{id:"fa02-setup",label:"Setup & Baseline"},{id:"fa02-timeline",label:"30-Day Journey"},{id:"fa02-friction",label:"Friction Log"},{id:"fa02-implications",label:"Ecosystem Lock-In"},{id:"fa02-verdict",label:"Final Verdict"}],
     body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">A real-world consumer advocacy case documenting Samsung battery swelling across multiple device generations, corporate non-responsiveness, regulatory escalation, and eventual cash settlement. Not a planned experiment — it developed organically through consistent documentation habits.</p>
+      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">A 30-day attempt to leave the Apple ecosystem completely: phone, desktop, cloud, accessories and account authentication all moved to a Pixel 10 Pro and a Windows laptop. This is a personal friction log, not a controlled study.</p>
       ${insightCard("warning","Executive Summary","One month away from Apple revealed a painful truth: the ecosystem works so well when all parts align that you don't realize how much it's doing for you until it's gone. The friction wasn't insurmountable, but it was relentless. Every single task involved a workaround, a subscription, or a compromise that iOS/Mac handled transparently.")}
       ${sectionH3("fa02-setup","Setup & Baseline")}
       ${metaCard([{label:"Duration",value:"30 days"},{label:"Primary Device",value:"Pixel 10 Pro"},{label:"Desktop",value:"HP Victus 15-fa2013dx"},{label:"Baseline (Before)",value:"iPhone 16e + MacBook Air"},{label:"Scope",value:"Complete ecosystem exit: phone, desktop, cloud, accessories, auth"}])}
@@ -2087,7 +2087,7 @@ windows_first_login_time: "30m" // just to reach desktop</code></pre>
         ${insightCard("warning","Peripheral Hardware (Watch, Earphones)","Earphones were an easy swap to Sony WF. Google Buds were \"okay\" but Sony met requirements. Google Watch paired well but health metrics were wildly inaccurate — heartbeat, step count, calorie burn all significantly off compared to Apple Watch.")}
         ${insightCard("info","Pixel 10 Pro: The Phone Itself","<strong style='color:#fff'>The good:</strong> Stock Android offers features and customization iOS doesn't have. Rear camera is exceptional. <strong style='color:#fff'>The bad:</strong> Front-facing camera is poor — not comparable to iPhone's selfie quality. Gaming heats up quickly despite the new chipset.")}
         ${insightCard("error","Authentication Hell: The Final Straw","Most accounts require two-factor authentication via iPhone. To use Pixel as the only phone requires: logging into accounts on iPhone, re-authenticating to Pixel, then re-authenticating everything else to work only on Pixel. Even after all this, \"it barely works.\" This created a dependency loop where you can't fully leave the iPhone behind.")}
-        ${insightCard("info","Returning Was Easier Than Leaving","After 30 days, transferring everything back to iPhone and Mac took far less friction than the initial departure. This alone tells you something about which direction the ecosystem was designed to flow.")}
+
       </div>
       ${sectionH3("fa02-implications","What This Reveals About Ecosystem Lock-In")}
       <div style="display:grid; gap:0.5rem; margin-bottom:2rem;">
@@ -2108,345 +2108,66 @@ windows_first_login_time: "30m" // just to reach desktop</code></pre>
 }
 
 function buildFa03() {
+  function metaCard(items) {
+    let h = `<div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.5rem; margin-bottom:2rem; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">`;
+    items.forEach(m => { h += `<div style="display:flex; flex-direction:column; gap:0.125rem;"><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600;">${m.label}</span><span style="font-size:0.92rem; color:var(--td-text-primary);">${m.value}</span></div>`; });
+    h += `</div>`;
+    return h;
+  }
   return experimentShell({
     id: "fa03",
     category: "hardware",
-    title: "FA-03 — Seven Years of Laptop Evolution: 2017 MacBook Air vs. 2024 M3 MacBook Air vs. Acer Aspire 14",
+    title: "FA-03 — Two Months, Two Laptops: MacBook Pro 16\" (M2 Pro) vs. Acer Aspire 14 AI",
     status: "done",
     statusLabel: "Done",
-    tags: ["Complete — Firsthand Tested", "7-Year Span", "M3 Air vs Acer Aspire 14", "Real-World Benchmarks"],
-    scope: "✅ Firsthand hands-on assessment across all 3 units — real-world battery, thermal, build & ecosystem testing",
-    search: "fa-03 laptop evolution comparison macbook air acer aspire intel core ultra 7 m3 pro hardware performance battery ecosystem durability repair",
+    tags: ["~2 Months", "Alternating Daily Use", "Personal Impressions"],
+    scope: "📋 n=1 — personal impressions from daily use, no benchmarks",
+    search: "fa-03 two laptops macbook pro 16 m2 pro acer aspire 14 ai core ultra 7 256v arc 140v daily use productivity gaming ecosystem",
     toc: [
-      { id: "fa03-overview", label: "Comparison Overview" },
-      { id: "fa03-performance", label: "Performance Metrics" },
-      { id: "fa03-build", label: "Build Quality & Durability" },
-      { id: "fa03-repair", label: "Repair & Upgrade Potential" },
-      { id: "fa03-ecosystem", label: "Ecosystem & Workflow Friction" },
-      { id: "fa03-realworld", label: "Real-World Usage" },
-      { id: "fa03-cost", label: "Cost & Value Proposition" },
-      { id: "fa03-conclusion", label: "Conclusion & Recommendations" }
+      { id: "fa03-setup", label: "Setup" },
+      { id: "fa03-impressions", label: "Impressions" },
+      { id: "fa03-verdict", label: "Verdict" }
     ],
     body: `
-      <p style="color:var(--td-text-secondary); margin-bottom:1.5rem; line-height:1.7;">A comparative analysis of three laptops spanning 7 years of consumer hardware evolution: baseline 2017 MacBook Air, current-generation 2024 M3 MacBook Air, and 2024 Windows alternative (Acer Aspire 14). Tests performance, build quality, repairability, ecosystem friction, real-world usability, and value proposition.</p>
+      <p style="color:var(--td-text-secondary); margin-bottom:2rem;">About two months of alternating daily use between two laptops: one day on the MacBook Pro 16", the next on the Acer Aspire 14 AI. The same everyday work on both, plus gaming on the Aspire. These are personal impressions from real use, not measured benchmarks.</p>
 
-      <div style="background:var(--td-bg-surface-elevated); border-left:3px solid var(--td-info); padding:1rem 1.25rem; border-radius:0.375rem; margin-bottom:2rem; font-size:0.92rem; color:var(--td-text-secondary); line-height:1.6;">
-        <strong style="color:var(--td-info);">Methodology Note:</strong> This comparison combines firsthand hands-on assessment (performance testing, build evaluation, ecosystem testing on all three devices) with documented specifications and market research. Each section is labeled with its data source. Real-world battery and thermal testing was conducted under consistent light-use workloads (web browsing, document editing, video playback) and sustained load scenarios (video encoding, compilation). The 2017 MacBook Air represents a mature, aged device; newer 2017 units may perform better. All findings reflect these specific units as tested.
-      </div>
+      ${sectionH3("fa03-setup", "Setup")}
+      ${metaCard([
+        {label:"Duration", value:"About 2 months"},
+        {label:"Method", value:"Alternating daily: one day per laptop"},
+        {label:"Workloads (both)", value:"Canvas, streaming, CSS / web work, Adobe apps"},
+        {label:"Extra (Aspire)", value:"Gaming, used a lot"}
+      ])}
+      ${dataTable("Configurations as used", [{label:"Spec"},{label:"MacBook Pro 16\""},{label:"Acer Aspire 14 AI"}], [
+        [{primary:true,text:"Chip"},{text:"Apple M2 Pro"},{text:"Intel Core Ultra 7 256V"}],
+        [{primary:true,text:"Graphics"},{text:"—"},{text:"Intel Arc 140V"}],
+        [{primary:true,text:"Memory"},{text:"16GB"},{text:"16GB"}],
+        [{primary:true,text:"Storage"},{text:"512GB SSD"},{text:"1TB"}],
+        [{primary:true,text:"Display size"},{text:"16\""},{text:"14\""}],
+        [{primary:true,text:"Notes"},{text:"Gray"},{text:"Refurbished"}]
+      ])}
 
-      ${sectionH3("fa03-overview", "Comparison Overview")}
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.25rem; margin-bottom:2rem;">
-        <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
-          <h4 style="margin:0 0 0.75rem; color:var(--td-info); font-size:1.05rem; font-weight:600;">📅 2017 MacBook Air (Baseline)</h4>
-          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.88rem;">
-            <div><span style="color:var(--td-text-muted); font-weight:600;">CPU:</span> <span style="color:var(--td-text-primary);">Intel Core i5 (Kaby Lake)</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">RAM:</span> <span style="color:var(--td-text-primary);">8GB DDR3</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Storage:</span> <span style="color:var(--td-text-primary);">256GB SSD</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Display:</span> <span style="color:var(--td-text-primary);">13.3" 1440×900 IPS</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Weight:</span> <span style="color:var(--td-text-primary);">1.35kg</span></div>
-          </div>
-        </div>
+      ${sectionH3("fa03-impressions", "Impressions")}
+      ${dataTable("Side-by-side impressions from daily use", [{label:"Area"},{label:"MacBook Pro 16\""},{label:"Acer Aspire 14 AI"}], [
+        [{primary:true,text:"Browsing"},{text:"About equal"},{text:"About equal"}],
+        [{primary:true,text:"Productive work (Canvas, CSS, Adobe)"},{badge:"success",text:"Worked very well; looked and felt smoother"},{badge:"warning",text:"Capable, but not as fast or smooth"}],
+        [{primary:true,text:"Build quality"},{badge:"success",text:"Felt noticeably better"},{text:"—"}],
+        [{primary:true,text:"Gaming"},{text:"—"},{badge:"success",text:"A real strength; used a lot"}],
+        [{primary:true,text:"Ecosystem"},{badge:"success",text:"Seamless for someone already in Apple's ecosystem"},{text:"—"}]
+      ])}
+      ${keyFinding("Key Finding", "For everyday browsing the two were about equal. The difference showed in productive work: the MacBook Pro looked and felt smoother, helped by its build quality, while the Aspire handled the same work, just not as fast or as smoothly.")}
 
-        <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
-          <h4 style="margin:0 0 0.75rem; color:#fff; font-size:1.05rem; font-weight:600;">🍎 2024 MacBook Air 15" (M3)</h4>
-          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.88rem;">
-            <div><span style="color:var(--td-text-muted); font-weight:600;">CPU:</span> <span style="color:var(--td-text-primary);">Apple M3 Pro (10-core CPU / 10-core GPU)</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">RAM:</span> <span style="color:var(--td-text-primary);">16GB Unified Memory</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Storage:</span> <span style="color:var(--td-text-primary);">1TB SSD</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Display:</span> <span style="color:var(--td-text-primary);">15" 2880×1800 Retina IPS</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Weight:</span> <span style="color:var(--td-text-primary);">1.51kg</span></div>
-          </div>
-        </div>
-
-        <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
-          <h4 style="margin:0 0 0.75rem; color:var(--td-success); font-size:1.05rem; font-weight:600;">🪟 2024 Acer Aspire 14 (Core Ultra 7)</h4>
-          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.88rem;">
-            <div><span style="color:var(--td-text-muted); font-weight:600;">CPU:</span> <span style="color:var(--td-text-primary);">Intel Core Ultra 7 (10-core CPU / 10-core GPU)</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">RAM:</span> <span style="color:var(--td-text-primary);">16GB LPDDR5X</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Storage:</span> <span style="color:var(--td-text-primary);">1TB NVMe SSD</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Display:</span> <span style="color:var(--td-text-primary);">14" 2560×1600 OLED 120Hz</span></div>
-            <div><span style="color:var(--td-text-muted); font-weight:600;">Weight:</span> <span style="color:var(--td-text-primary);">1.48kg</span></div>
-          </div>
-        </div>
-      </div>
-
-      ${sectionH3("fa03-performance", "Performance Metrics")}
-      <div style="background:var(--td-bg-card); border-radius:0.375rem; overflow-x:auto; margin-bottom:1.5rem; border:1px solid var(--td-border-subtle);" class="td-scrollbar">
-        <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.92rem;">
-          <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
-            <tr>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:22%;">Metric</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2017 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2024 M3 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2024 Acer Aspire 14</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">App Launches</td>
-              <td style="padding:0.75rem 1rem;">Slow/stuttery on modern web apps, visible delay on native apps</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Instantaneous across native Apple Silicon apps</td>
-              <td style="padding:0.75rem 1rem;">Very snappy on Windows 11 native and web apps</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Battery (Light Use)</td>
-              <td style="padding:0.75rem 1rem;">6–8 hours web browsing</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success); font-weight:600;">15–18+ hours real-world light usage</td>
-              <td style="padding:0.75rem 1rem;">8–11 hours (varies with 120Hz display settings)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Thermals</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Active fan; runs hot (85–95°C), fans audible under load</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Fanless design, completely silent; throttles slightly at peak (90–100°C internal)</td>
-              <td style="padding:0.75rem 1rem;">Active fan cooling; stays warm under heavy tasks; audible fan noise under sustained load</td>
-            </tr>
-            <tr>
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Sustained Load (Encoding, Compilation)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Fans spin continuously; thermal throttling evident after 10+ minutes</td>
-              <td style="padding:0.75rem 1rem;">No fan noise; slight throttle after 30+ minutes of max load</td>
-              <td style="padding:0.75rem 1rem;">Fan engagement immediate; maintains boost clock for 20+ minutes before throttle</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      ${keyFinding("Key Finding — Performance & Efficiency", "The M3 MacBook Air delivers a generational leap in efficiency. App launch times are 4–5× faster than the 2017 model. Battery life improvement (6–8h → 15–18h) is the most dramatic shift, with the fanless design enabling silent, stress-free operation. The Acer Aspire 14 matches M3 for app snappiness on Windows workloads but cannot match battery endurance; the 120Hz OLED display consumes power aggressively, reducing battery life to 8–11 hours depending on refresh rate.")}
-
-      ${sectionH3("fa03-build", "Build Quality & Durability")}
-      <div style="background:var(--td-bg-card); border-radius:0.375rem; overflow-x:auto; margin-bottom:1.5rem; border:1px solid var(--td-border-subtle);" class="td-scrollbar">
-        <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.92rem;">
-          <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
-            <tr>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:22%;">Element</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2017 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2024 M3 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2024 Acer Aspire 14</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Chassis</td>
-              <td style="padding:0.75rem 1rem;">Aluminum unibody</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-text-primary);">Ultra-thin aluminum unibody</td>
-              <td style="padding:0.75rem 1rem;">Plastic/aluminum hybrid chassis</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Hinge</td>
-              <td style="padding:0.75rem 1rem;">Smooth, one-finger lift (shows no play after 7 years)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Solid, smooth tension, precise</td>
-              <td style="padding:0.75rem 1rem;">Sturdy, opens to 180°, solid feel</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Keyboard</td>
-              <td style="padding:0.75rem 1rem;">Classic scissor switch; deep travel (~1.5mm); highly reliable</td>
-              <td style="padding:0.75rem 1rem;">Magic Keyboard; shallow travel (~0.5mm); reliable, quiet</td>
-              <td style="padding:0.75rem 1rem;">Standard chicklet; slight flex in center; responsive</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Trackpad</td>
-              <td style="padding:0.75rem 1rem;">Physical click mechanism; durable despite heavy use over 7 years</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Force Touch haptic feedback; no moving parts; no wear</td>
-              <td style="padding:0.75rem 1rem;">Smooth precision touchpad; mechanical lower clicks remain responsive</td>
-            </tr>
-            <tr>
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Display Durability</td>
-              <td style="padding:0.75rem 1rem;">No dead pixels or damage after 7 years of light use</td>
-              <td style="padding:0.75rem 1rem;">Bright, crisp Retina panel; no observed degradation over months of testing</td>
-              <td style="padding:0.75rem 1rem;">OLED brightness and color retention excellent; no burn-in over testing period</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      ${keyFinding("Key Finding — Build & Materials", "The 2017 MacBook Air's aluminum unibody construction proves exceptionally durable—hinge tolerance and keyboard reliability remain excellent after 7 years of daily use. The 2024 M3 MacBook Air refines this approach with even more rigid construction and the Force Touch trackpad eliminates moving-part wear. The Acer Aspire 14's plastic/aluminum hybrid feels less premium but adequate; hinge and trackpad appear robust. Keyboard flex on the Acer suggests potential long-term durability concerns on the center keys under sustained typing, though this is common in this price tier.")}
-
-      ${sectionH3("fa03-repair", "Repair & Upgrade Potential")}
-      <div style="background:var(--td-bg-card); border-radius:0.375rem; overflow-x:auto; margin-bottom:1.5rem; border:1px solid var(--td-border-subtle);" class="td-scrollbar">
-        <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.92rem;">
-          <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
-            <tr>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:22%;">Component</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2017 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2024 M3 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2024 Acer Aspire 14</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">RAM</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Soldered (non-upgradeable)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Unified memory, soldered (non-upgradeable)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Soldered LPDDR5X (non-upgradeable)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">SSD</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-warning);">Proprietary removable SSD (upgradeable via adapter)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Soldered to logic board (non-upgradeable; Apple only)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success); font-weight:600;">Standard M.2 NVMe slot (user-upgradeable, 5-min swap)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Battery</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Screwed in (easy DIY replacement, ~$40 part)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Glued with pull-tabs (requires Apple/AASP pro tools)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success); font-weight:600;">Screwed in (user-replaceable with standard screwdriver, ~$60 part)</td>
-            </tr>
-            <tr>
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Keyboard/Trackpad</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Easily removable with bottom case open</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Integrated into top case; full top case replacement required</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Integrated into palmrest; requires full top case replacement</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      ${keyFinding("Key Finding — Serviceability & Lifespan", "Repairability has contracted across all three units as design has become more integrated. The 2017 MacBook Air still allows user-level battery replacement and SSD upgrades (via adapter). The 2024 M3 MacBook Air is the least user-serviceable: storage and battery require professional service, raising long-term ownership costs. The Acer Aspire 14 wins here—its standard M.2 slot allows user SSD upgrades, and battery replacement is a straightforward screw swap. For consumers expecting device longevity, the Acer's repairability advantage becomes significant after 3–5 years of ownership.")}
-
-      ${sectionH3("fa03-ecosystem", "Ecosystem & Workflow Friction")}
-      <div style="background:var(--td-bg-card); border-radius:0.375rem; overflow-x:auto; margin-bottom:1.5rem; border:1px solid var(--td-border-subtle);" class="td-scrollbar">
-        <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.92rem;">
-          <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
-            <tr>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:20%;">Dimension</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:26%;">2017 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:27%;">2024 M3 MacBook Air</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:27%;">2024 Acer Aspire 14</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">OS &amp; Updates</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Stuck on macOS Sonoma; Sequoia unsupported natively. Apple ended security updates.</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Current macOS (Sequoia). Full security patch support. Expected 7–8 year window.</td>
-              <td style="padding:0.75rem 1rem;">Windows 11. Full support for current build. Update frequency follows Microsoft cycle.</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Apple Ecosystem (AirDrop, Continuity)</td>
-              <td style="padding:0.75rem 1rem;">Supported but requires older protocol; friction with newer Macs/iPhones</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success); font-weight:600;">Zero friction. Seamless with iPhone, iPad, Apple Watch. Handoff works flawlessly.</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">No native Apple ecosystem integration. Third-party workarounds are clumsy.</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">x86/ARM Translation</td>
-              <td style="padding:0.75rem 1rem;">N/A (native Intel)</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Rosetta 2 translation for x86 Mac apps is transparent and fast (~5–10% overhead).</td>
-              <td style="padding:0.75rem 1rem;">N/A (native x86). Full Windows app ecosystem natively supported.</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Development Workflow</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">Sluggish for modern WebGL, heavy video editing, or compiles (3–5× slower than M3).</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Exceptional. Native ARM dev seamless. Xcode/VS Code compile in seconds.</td>
-              <td style="padding:0.75rem 1rem;">Very capable. Windows + x86 runs all dev tools natively. Fast on multi-threaded tasks.</td>
-            </tr>
-            <tr>
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">Cross-Device Friction</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-error);">High friction with modern iOS devices (file sharing and iCloud sync often lag).</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success); font-weight:600;">Zero friction. iCloud sync is instant and transparent. Deep cohesion.</td>
-              <td style="padding:0.75rem 1rem;">Moderate. Android integration seamless (Snapdrop, Phone Link). Windows-to-iPhone friction exists.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      ${keyFinding("Key Finding — Ecosystem Coherence", "The 2024 M3 MacBook Air represents a fully mature ecosystem where friction within Apple's platform is nearly zero. The 2017 MacBook Air feels increasingly isolated as newer iPhones/iPads outpace its capabilities. The Acer Aspire 14 excels in pure Windows productivity and native x86 app support but cannot match Apple's ecosystem cohesion. For users heavily invested in Apple devices (iPhone, iPad, Watch), the M3 MacBook Air's ecosystem advantage justifies its premium. For Windows/Android users or those requiring maximum app flexibility, the Acer wins.")}
-
-      ${sectionH3("fa03-realworld", "Real-World Usage Assessment")}
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:2rem;">
-        <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
-          <h4 style="color:#fff; margin:0 0 0.75rem; font-size:1rem; font-weight:600; display:flex; align-items:center; gap:0.5rem;">⚡ Daily Snappiness</h4>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:0.75rem;"><strong style="color:var(--td-text-primary);">2017 Air:</strong> Sluggish for modern multitasking. Opening 8+ browser tabs causes noticeable slowdown. Video conferencing (Zoom, Google Meet) is jerky with lower framerates.</p>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:0.75rem;"><strong style="color:var(--td-success);">M3 Air:</strong> Exceptionally snappy. 20+ tabs, Slack, Mail, and Xcode run simultaneously with zero hitching. Silent fanless operation keeps work stress-free.</p>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin:0;"><strong style="color:var(--td-info);">Acer Aspire 14:</strong> Snappy for office and creative work. The 120Hz OLED makes scrolling and UI interactions feel buttery smooth. Fan engages during heavy load.</p>
-        </div>
-
-        <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
-          <h4 style="color:#fff; margin:0 0 0.75rem; font-size:1rem; font-weight:600; display:flex; align-items:center; gap:0.5rem;">🔋 Battery Longevity</h4>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:0.75rem;"><strong style="color:var(--td-text-primary);">2017 Air:</strong> Degraded 7-year capacity yields 5–6 hours real runtime (was 8 hours new). Battery replacement is cheap (~$40) but needed periodically.</p>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:0.75rem;"><strong style="color:var(--td-success);">M3 Air:</strong> Astonishing 15–18+ hours on light workloads. Even sustained dev tasks run 10–12 hours unplugged. Replacement requires Apple service ($129).</p>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin:0;"><strong style="color:var(--td-info);">Acer Aspire 14:</strong> Display settings heavily dictate runtime: 8–11 hours at 120Hz, 11–13 hours at 60Hz. Replacement is simple DIY ($60).</p>
-        </div>
-
-        <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
-          <h4 style="color:#fff; margin:0 0 0.75rem; font-size:1rem; font-weight:600; display:flex; align-items:center; gap:0.5rem;">🔇 Thermals &amp; Acoustics</h4>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:0.75rem;"><strong style="color:var(--td-error);">2017 Air:</strong> Fans engage frequently. Noise reaches 50+ dB under heavy compilation or export—distracting in quiet rooms or libraries.</p>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:0.75rem;"><strong style="color:var(--td-success);">M3 Air:</strong> Completely silent under normal and heavy loads. Zero moving parts. Heat dissipates smoothly through the aluminum chassis.</p>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; line-height:1.6; margin:0;"><strong style="color:var(--td-info);">Acer Aspire 14:</strong> Quiet in baseline use, but fans spin up immediately under load (~45 dB peak). Audible but less grating than the 2017 Air.</p>
-        </div>
-      </div>
-
-      ${sectionH3("fa03-cost", "Cost & Value Proposition")}
-      <div style="background:var(--td-bg-card); border-radius:0.375rem; overflow-x:auto; margin-bottom:1.5rem; border:1px solid var(--td-border-subtle);" class="td-scrollbar">
-        <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.92rem;">
-          <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
-            <tr>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:22%;">Laptop</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:20%;">Current Market Price</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:28%;">Best-Case Use</th>
-              <th style="text-align:left; padding:0.75rem 1rem; color:#fff; font-weight:600; width:30%;">Value Assessment</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">📅 2017 MacBook Air</td>
-              <td style="padding:0.75rem 1rem;">$100–$200 (used)</td>
-              <td style="padding:0.75rem 1rem;">Emergency backup machine, simple browser-only use, light document editing</td>
-              <td style="padding:0.75rem 1rem;">Adequate for low-risk tasks only. End-of-life support. Not recommended for primary workload.</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--td-border);">
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">🍎 2024 M3 MacBook Air</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-text-primary);">$1,299–$1,699 MSRP</td>
-              <td style="padding:0.75rem 1rem;">Professionals needing silence, all-day battery, Apple ecosystem integration, creative work</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Premium price justified by class-leading battery, thermal design, ecosystem cohesion, and 6–8 year expected lifespan.</td>
-            </tr>
-            <tr>
-              <td style="padding:0.75rem 1rem; font-weight:600; color:var(--td-text-primary);">🪟 2024 Acer Aspire 14</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success); font-weight:600;">$750–$950 MSRP</td>
-              <td style="padding:0.75rem 1rem;">Students, professionals needing Windows, users wanting OLED at mid-range price, repair-conscious buyers</td>
-              <td style="padding:0.75rem 1rem; color:var(--td-success);">Superior hardware-to-price ratio. 120Hz OLED screen at this price tier is compelling. User-upgradable SSD and battery.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      ${keyFinding("Key Finding — Cost-to-Utility Ratio", "Price-to-performance, the Acer Aspire 14 is superior. It offers nearly equivalent processing power, better display refresh rate, and user-serviceable components at 55% the cost of the M3 MacBook Air. However, the M3 MacBook Air's value proposition lies elsewhere: ecosystem lock-in (if you own iPhone/iPad), acoustic/thermal design (fanless = peace), and battery longevity (15+ hours vs. 8–11). For Apple ecosystem users or those requiring silent operation, the premium is justifiable. For Windows users or those prioritizing upgrade flexibility, the Acer is the rational choice.")}
-
-      ${sectionH3("fa03-conclusion", "Conclusion & Strategic Takeaways")}
-      <p style="color:var(--td-text-secondary); margin-bottom:1rem; line-height:1.7;">Seven years of laptop evolution have produced a stunning divergence across these three machines:</p>
-      <ul style="margin:0 0 1.5rem 1.25rem; color:var(--td-text-secondary); line-height:1.7;">
-        <li><strong style="color:#fff;">The 2017 MacBook Air</strong> is now a budget legacy device. While mechanically sound, its Intel Core i5 processor and 8GB RAM make it unsuitable for modern workflows. It serves only as an emergency backup machine.</li>
-        <li><strong style="color:#fff;">The 2024 M3 MacBook Air</strong> represents a quantum leap in efficiency and design. Silent operation, 15+ hour battery life, and zero ecosystem friction (within Apple) create a compelling ownership experience for users already in the Apple ecosystem. Its main weakness is repairability and vendor lock-in—expect $129+ service fees for battery replacement and SSD upgrades are impossible without Apple intervention.</li>
-        <li><strong style="color:#fff;">The 2024 Acer Aspire 14</strong> delivers remarkable value for Windows users. The 120Hz OLED display, Core Ultra 7 performance, and user-serviceable components (SSD, battery) make it the rational choice for budget-conscious buyers. Its weakness is ecosystem fragmentation (no Continuity equivalent) and slightly worse battery endurance than the M3.</li>
-      </ul>
-
-      <div style="margin:2rem 0; padding:1.5rem 2rem; background:var(--td-bg-surface-elevated); border-radius:0.375rem; border:1px solid var(--td-border);">
-        <h4 style="color:#fff; margin:0 0 1rem; font-size:1.1rem; font-weight:600;">Bottom Line — Purchasing Recommendations</h4>
-        <ul style="list-style:none; padding:0; margin:0;">
-          <li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:0.75rem;">
-            <span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span>
-            <span>If you own an iPhone/iPad: <strong style="color:#fff;">M3 MacBook Air</strong> (ecosystem cohesion justifies the premium)</span>
-          </li>
-          <li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:0.75rem;">
-            <span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span>
-            <span>If you use Windows/Android: <strong style="color:#fff;">Acer Aspire 14</strong> (superior hardware-to-price, user repairs, no vendor lock-in)</span>
-          </li>
-          <li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:0.75rem;">
-            <span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span>
-            <span>If you need absolute silence + all-day battery: <strong style="color:#fff;">M3 MacBook Air</strong> (fanless design = stress-free)</span>
-          </li>
-          <li style="padding:0.5rem 0; border-bottom:1px solid var(--td-border); color:var(--td-text-secondary); display:flex; align-items:center; gap:0.75rem;">
-            <span style="font-weight:700; font-size:1.125rem; color:var(--td-success);">✓</span>
-            <span>If you value repairability &amp; upgradeability: <strong style="color:#fff;">Acer Aspire 14</strong> (standard M.2 slot and screw-in battery)</span>
-          </li>
-          <li style="padding:0.5rem 0; color:var(--td-text-secondary); display:flex; align-items:center; gap:0.75rem;">
-            <span style="font-weight:700; font-size:1.125rem; color:var(--td-warning);">⚠️</span>
-            <span>The <strong style="color:#fff;">2017 MacBook Air</strong> should be retired unless you have no other option. At 7 years old with limited OS support, it is approaching end-of-life.</span>
-          </li>
-        </ul>
-      </div>
+      ${sectionH3("fa03-verdict", "Verdict")}
+      ${conclusion("Both are good laptops — for different people", "For someone already in Apple's ecosystem, the MacBook Pro 16\" is the smoother, better-built productivity machine and works seamlessly with everything else. The Acer Aspire 14 AI proves itself too: it does the same productive work, only slower, and adds gaming that the Mac setup was not used for.")}
 
       <div style="font-size:0.82rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); padding-top:1rem; margin-top:2rem;">
-        <strong>FA-03: Laptop Evolution Comparison</strong> | Status: Complete — Firsthand Tested<br>
-        Last Updated: September 4, 2026 | Data Sources: Direct hardware testing, thermal measurements, battery runtime logging, ecosystem integration hands-on testing, iFixit repair guides (specifications), market pricing
+        <strong>FA-03</strong> | Status: Done — personal impressions<br>
+        Source: owner's firsthand daily use over about two months. No benchmarks, thermal, battery or repair measurements were taken; none are claimed.
       </div>
 
       ${relatedExperiments([
-        {id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem (ecosystem coherence context)"},
-        {id:"fa01",label:"🤖 Also see: FA-01 — Which AI Builds Our Website Best?"}
+        {id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"},
+        {to:"#/experiments/queued-exp8",label:"🔄 Also see: Experiment 8 — Cross-Platform Ecosystem Reliability"}
       ])}
     `
   });
