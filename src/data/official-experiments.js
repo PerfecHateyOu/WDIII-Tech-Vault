@@ -1801,7 +1801,11 @@ export const OFFICIAL_EXPERIMENTS = [
           }
         ]
       }
-    ]
+    ],
+    "nav": {
+      "icon": "🤖",
+      "label": "AI Comparison"
+    }
   },
   {
     "id": "fa02",
@@ -2110,7 +2114,11 @@ export const OFFICIAL_EXPERIMENTS = [
           }
         ]
       }
-    ]
+    ],
+    "nav": {
+      "icon": "🚫",
+      "label": "Ecosystem Exit"
+    }
   },
   {
     "id": "fa03",
@@ -2423,7 +2431,11 @@ export const OFFICIAL_EXPERIMENTS = [
           }
         ]
       }
-    ]
+    ],
+    "nav": {
+      "icon": "💻",
+      "label": "Two Laptops"
+    }
   },
   {
     "id": "exp12",

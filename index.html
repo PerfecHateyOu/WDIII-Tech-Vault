@@ -52,6 +52,9 @@
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
   <link rel="stylesheet" href="/css/style.css?v=5.9.0" />
   <link rel="stylesheet" href="/css/preflight.css?v=5.9.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Recursive:wght,CASL@400..700,0..1&display=swap" />
 </head>
 <body>
 
@@ -195,10 +198,9 @@
 
 <!-- ===================== FODDER PAGE ===================== -->
 <div class="page" id="page-fodder">
-  <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
-    <div style="font-size:1.875rem; margin-bottom:0.5rem;">🗂️</div>
-    <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Fodder Archive</h1>
-    <p style="color:var(--td-text-secondary); font-size:1.125rem; margin:0;">Side experiments, informal observations, and content that doesn't fit the structured documentation format</p>
+  <header class="fa-notebook-header">
+    <h1>Fodder Archive</h1>
+    <p>Side experiments and informal notes that don't fit the main documentation. Open any entry to read it here.</p>
   </header>
 
   <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
@@ -233,7 +235,7 @@
       <span style="color:var(--td-text-primary); padding:0.25rem 0.5rem;">🗂️ Fodder Archive</span>
     </nav>
     <div id="fodderContent"></div>
-    <div style="text-align:center; padding:2rem; color:var(--td-text-muted); font-size:0.9rem; border:1px dashed var(--td-border); border-radius:0.375rem;">🚧 More entries coming as experiments are completed. This archive grows alongside the main documentation.</div>
+    <p class="fa-notebook-endnote">New entries are added here as side experiments finish.</p>
   </div>
 
   <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
@@ -685,12 +687,16 @@ const HOME_TABS = [
   { id: "queued", icon: "⏳", label: "Queued", sub: "Upcoming Research", search: "queued pending upcoming experiments security ios survey exp 8 experiment 8 in progress" },
   { to: "#/fodder", icon: "🗂️", label: "Fodder", sub: "Side Experiments ↗", search: "fodder archive side experiments ai comparison ecosystem exit" },
 ];
+// FA entries come from the data file (single source); see renderFodderArchive()
+function FODDER_ENTRIES() {
+  return OFFICIAL_EXPERIMENTS
+    .filter(e => /^FA-\d+$/.test(e.experimentNumber) && Array.isArray(e.sections))
+    .sort((x, y) => x.experimentNumber.localeCompare(y.experimentNumber, undefined, { numeric: true }));
+}
 const FODDER_TABS = [
   { to: "#/devices", icon: "📱", label: "Devices", sub: "Hardware Registry ↗", search: "devices hardware registry" },
   { to: "#/compare", icon: "⚖️", label: "Compare", sub: "Device Shootout ↗", search: "compare device comparison specs shootout benchmark" },
-  { id: "fa01", icon: "🤖", label: "FA-01", sub: "AI Comparison", search: "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude" },
-  { id: "fa02", icon: "🚫", label: "FA-02", sub: "Ecosystem Exit", search: "fa-02 one month out of the apple ecosystem ecosystem exit friction log pixel samsung windows" },
-  { id: "fa03", icon: "💻", label: "FA-03", sub: "Laptop Comparison", search: "fa-03 laptop comparison macbook air acer aspire intel core ultra 7 m3 pro hardware performance battery ecosystem" },
+  ...FODDER_ENTRIES().map(e => ({ id: e.id, icon: (e.nav && e.nav.icon) || "🗒️", label: e.experimentNumber, sub: (e.nav && e.nav.label) || "", search: e.search })),
   { to: "#/", icon: "📄", label: "← Main", sub: "Documentation", search: "main documentation consumer tech" },
 ];
 
@@ -933,7 +939,7 @@ function buildExp3() {
         ${keyFinding("Speed ≠ Helpfulness","Vivo answered quickly but wouldn't help over the phone, offering email instead. The fastest answer means nothing if the channel is useless or the answer is wrong.")}
       </div>
       ${conclusion("Winners: Huawei & Xiaomi (Tied at 4.5/5)","Both delivered fast, direct, friendly support that actually solved the problem without friction. Avoid Samsung and BlackBerry entirely — their support infrastructure either doesn't function or is deliberately inaccessible.")}
-      ${relatedExperiments([{to:"#/fodder",label:"🤖 Also see: Fodder Archive — AI Comparison"}])}
+      ${relatedExperiments([{id:"fa01",label:"🤖 Also see: FA-01 — Which AI Builds Our Website Best?"}])}
     `
   });
 }
@@ -1001,7 +1007,7 @@ function buildCaseStudy() {
         ${rankingRow("success","6. Use Social Media Strategically","","","A public post triggered Samsung's response within hours. Corporations monitor social media for PR exposure far more than customer service inboxes.")}
       </div>
       ${conclusion("Outcome: $1,020 Cash Settlement — No NDA","A social media post became a federal regulatory complaint that resulted in full corporate compensation from one of the world's largest smartphone manufacturers. The key lesson: meticulous documentation and willingness to escalate gives individual consumers real leverage against major corporations.")}
-      ${relatedExperiments([{to:"#/fodder",label:"🚫 Also see: Fodder Archive — Ecosystem Exit"}])}
+      ${relatedExperiments([{id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"}])}
     `
   });
 }
@@ -1055,7 +1061,7 @@ function buildExp5() {
       ${keyFinding("Apple's C1 Modem Is A Game Changer","The iPhone 16e matches the Pixel 10 Pro despite a 60Hz display and smaller form factor — largely due to Apple's in-house C1 modem. The biggest reason the 16e punches above its price point.")}
       ${keyFinding("iPhone to Pixel Migration Guide","Pixel 6 Pro = battery downgrade. Pixel 7 Pro = familiar. Pixel 8 Pro = meaningful upgrade. Pixel 9 Pro, 10 Pro, or iPhone 16e = major endurance jump with charge remaining at bedtime.")}
       ${conclusion("Winner: Pixel 10 Pro & iPhone 16e (Tied)","Both deliver ~1.5 days of real-world endurance through fundamentally different approaches. The real story: chip efficiency has improved dramatically across both ecosystems over 4–5 generations — raw battery capacity is increasingly irrelevant.")}
-      ${relatedExperiments([{id:"exp7",label:"📷 Also see: Experiment 7 — Pixel Pro Generations"},{to:"#/fodder",label:"🚫 Also see: Fodder Archive — Ecosystem Exit"}])}
+      ${relatedExperiments([{id:"exp7",label:"📷 Also see: Experiment 7 — Pixel Pro Generations"},{id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"}])}
     `
   });
 }
@@ -1146,7 +1152,7 @@ function buildExp7() {
       ${keyFinding("Same Camera Megapixels Since The 7 Pro","The 50MP main and 48MP 5x telephoto megapixel counts stayed the same from the 7 Pro through the 10 Pro, though Google changed sensors along the way. The biggest gains came from the processing pipeline. Google competes on software intelligence, not megapixel counts.")}
       ${keyFinding("Generative AI Made Zoom Usable","The 6 Pro's 4x physical zoom was the ceiling of what hardware could do. The 10 Pro's Pro Res Zoom reaches 100x using generative AI reconstruction — producing surprisingly usable distant shots that no physical lens on a smartphone could match.")}
       ${conclusion("Verdict: Buy The 10 Pro, Keep The 8 Pro, Skip The Rest","The Pixel 10 Pro is the first generation where Google's hardware fully delivers on its software ambitions — TSMC fabrication eliminated the thermal ceiling that held back four generations of otherwise capable devices. For anyone upgrading from a 6 Pro or 7 Pro, the 10 Pro is a compelling generational leap. Those on an 8 Pro have a solid device worth keeping. The 6 Pro and 7 Pro remain historically important as the foundation of Google's custom silicon era, but show their age in thermal performance and camera processing compared to the current standard.")}
-      ${relatedExperiments([{id:"exp5",label:"🔋 Also see: Experiment 5 — Pixel vs iPhone Battery"},{to:"#/fodder",label:"🚫 Also see: Fodder Archive — Ecosystem Exit"}])}
+      ${relatedExperiments([{id:"exp5",label:"🔋 Also see: Experiment 5 — Pixel vs iPhone Battery"},{id:"fa02",label:"🚫 Also see: FA-02 — One Month Out of the Apple Ecosystem"}])}
     `
   });
 }
@@ -2027,19 +2033,35 @@ function renderSections(blocks) {
     }
   }).join("");
 }
-function buildFromEntry(e) {
-  return experimentShell({
-    id: e.id, category: e.category, title: e.title, status: e.status, statusLabel: e.statusLabel,
-    tags: e.tags, scope: e.scope, search: e.search, toc: e.toc,
-    body: renderSections(e.sections)
-  });
+function faDisplayTitle(e) {
+  return String(e.title || "").replace(/^FA-\d+\s*[—-]\s*/, "");
 }
 function renderFodderArchive() {
-  return OFFICIAL_EXPERIMENTS
-    .filter(e => /^FA-\d+$/.test(e.experimentNumber) && Array.isArray(e.sections))
-    .sort((x, y) => x.experimentNumber.localeCompare(y.experimentNumber, undefined, { numeric: true }))
-    .map(buildFromEntry)
-    .join("");
+  const rows = FODDER_ENTRIES().map(e => {
+    const tags = (e.tags || []).join(", ");
+    return `<details class="fa-entry" data-search="${esc(e.search || "").replace(/"/g, "&quot;")}">
+      <summary class="fa-row">
+        <span class="fa-num">${esc(e.experimentNumber)}</span>
+        <span class="fa-main">
+          <span class="fa-title">${esc(faDisplayTitle(e))}</span>
+          ${e.verdict ? `<span class="fa-verdict"><mark>${esc(e.verdict)}</mark></span>` : ""}
+          <span class="fa-meta">${esc(tags)}</span>
+        </span>
+        <span class="fa-side">
+          <span class="fa-status">${esc(e.statusLabel || e.status)}</span>
+          <span class="fa-toggle" aria-hidden="true"></span>
+        </span>
+      </summary>
+      <article id="${e.id}" data-category="${e.category}" class="td-experiment fa-article">
+        <div class="td-experiment-body">${renderSections(e.sections)}</div>
+        <div class="fa-entry-links">
+          <a href="#/experiments/${e.id}">Open as a full page</a>
+          <a href="#/experiments/${e.id}#comments">Discuss this entry</a>
+        </div>
+      </article>
+    </details>`;
+  }).join("");
+  return `<div class="fa-notebook">${rows}</div>`;
 }
 
 // ===== Render content =====
@@ -2200,7 +2222,7 @@ function setupSearch(inputId, clearId, noMatchId, pageId) {
   function filter() {
     const q = input.value.trim().toLowerCase();
     clear.style.display = q ? "block" : "none";
-    const exps = document.querySelectorAll("#"+pageId+" article.td-experiment[data-search]");
+    const exps = document.querySelectorAll("#"+pageId+" article.td-experiment[data-search], #"+pageId+" .fa-entry[data-search]");
     exps.forEach(el => {
       const match = !q || (el.getAttribute("data-search")||"").toLowerCase().includes(q);
       el.style.display = match ? "" : "none";
@@ -2254,6 +2276,8 @@ document.addEventListener("click", (e) => {
       const target = document.getElementById(id);
       if (target) {
         e.preventDefault();
+        const faEntry = target.closest("details.fa-entry");
+        if (faEntry) faEntry.open = true;
         const page = target.closest(".page");
         if (page && !page.classList.contains("active")) {
           const route = page.id === "page-fodder" ? "#/fodder" : page.id === "page-home" ? "#/" : "#/"+page.id.replace("page-","");
