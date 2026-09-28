@@ -83,11 +83,11 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Objective**: Assess 45W vs 25W vs 15W Qi charging cycles, thermals, and projected health degradation.
 
 ### Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e
-- **Category**: Software / AI | **Status**: In Progress
-- **Target Hardware**: iPhone 16e (Model iPhone17,5)
-- **OS Baseline**: iOS 27.0 (tracking 27.1, 27.2+)
-- **Objective**: Validate Apple's iOS 27 performance claims (responsiveness, battery life, system stability, claimed "up to 60%" improvements) on iPhone 16e. Test isolated integration of Gemini, Claude, and ChatGPT with Siri AI. Verify headline features announced during iOS 27 presentation through firsthand testing.
-- **Procedures**: Responsiveness testing, battery life testing, system stability, Siri AI chatbot isolated latency/accuracy comparisons, hardware feature validation.
+- **Category**: Software / AI | **Status**: In Progress (testing underway on iOS 27.0; no results yet)
+- **Target Hardware**: iPhone 16e (Model iPhone17,5), one device, in a temperature-controlled room (about 21°C); the same phone is used for Experiment 10, which keeps a separate log
+- **OS Baseline**: iOS 27.0; later iOS 27 updates tracked as they are released
+- **Objective**: Test Apple's iOS 27 claims on iPhone 16e, including the claimed "up to 60%" improvement in app responsiveness. Once Gemini, Claude and ChatGPT get third-party Siri support, compare all three through Siri with identical prompts.
+- **Procedures**: (A) Cold and warm app launch times timed with a stopwatch, overnight standby drain, and counts of new crash logs in Analytics Data, using the same battery and stability methods as Experiment 10. (B) AI chatbots via Siri: not started, waiting for third-party support; the plan compares latency, handoff reliability and multi-turn context. (C) Headline features to verify: TBD.
 - **Standalone Document**: `/experiment-12.html`
 
 ## Programmatic Fetching APIs (CORS Enabled)

@@ -80,10 +80,10 @@ const SCHEMAS = {
     { key: "usageWeeks", label: "Alternating use period", type: "number", unit: "weeks", required: true, min: 1, max: 104 }
   ],
   exp12: [
-    { key: "appLaunchTimeDeltaPct", label: "App Launch Responsiveness Improvement", type: "number", unit: "%", required: true, min: -50, max: 100 },
-    { key: "siriAiHandoffLatencyMs", label: "Siri AI Handoff Latency", type: "number", unit: "ms", required: true, min: 100, max: 10000 },
-    { key: "standbyBatteryDrainPerHour", label: "Standby Battery Drain Rate", type: "number", unit: "%/hr", required: false, min: 0, max: 10 },
-    { key: "headlineFeaturesVerified", label: "Headline Features Functionally Verified", type: "number", unit: "Features", required: false, min: 0, max: 30 }
+    { key: "coldLaunchSeconds", label: "Cold launch time", type: "number", unit: "seconds", required: false, min: 0, max: 60 },
+    { key: "warmLaunchSeconds", label: "Warm launch time", type: "number", unit: "seconds", required: false, min: 0, max: 60 },
+    { key: "standbyDrainPercent", label: "Overnight standby drain", type: "number", unit: "%", required: false, min: 0, max: 100 },
+    { key: "newCrashLogs", label: "New crash logs", type: "number", required: false, min: 0, max: 1000 }
   ]
 };
 
