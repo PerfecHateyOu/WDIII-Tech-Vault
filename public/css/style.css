@@ -628,3 +628,220 @@ details > summary::-webkit-details-marker {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =====================================================================
+   Fodder Archive — engineering-pad notebook
+   Scoped to #page-fodder. Rows are rendered from data by renderFodderArchive().
+   ===================================================================== */
+#page-fodder {
+  --fa-paper: #141a17;
+  --fa-grid: rgba(143, 190, 150, 0.08);
+  --fa-ink: #e4e8e1;
+  --fa-pencil: #8d9a90;
+  --fa-rule: #3d5a45;
+  --fa-line: rgba(143, 190, 150, 0.16);
+  --fa-highlight: rgba(233, 223, 74, 0.30);
+  --fa-highlight-ink: #f3efc6;
+  --fa-hand: "Recursive", ui-rounded, "Segoe Print", system-ui, sans-serif;
+  --fa-margin: 5.5rem;
+  background-color: var(--fa-paper);
+  background-image:
+    linear-gradient(var(--fa-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fa-grid) 1px, transparent 1px);
+  background-size: 1.25rem 1.25rem;
+  color: var(--fa-ink);
+}
+.light-theme #page-fodder {
+  --fa-paper: #eef3e8;
+  --fa-grid: #d9e5d1;
+  --fa-ink: #1f2a22;
+  --fa-pencil: #5e6b62;
+  --fa-rule: #9fbf9f;
+  --fa-line: #c9d8c0;
+  --fa-highlight: rgba(236, 226, 60, 0.75);
+  --fa-highlight-ink: #1f2a22;
+}
+
+/* Header: hand-lettered title on the pad, left aligned to the margin rule */
+#page-fodder .fa-notebook-header {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 1.5rem calc(1.5rem + var(--fa-margin));
+  position: relative;
+}
+#page-fodder .fa-notebook-header h1 {
+  font-family: var(--fa-hand);
+  font-variation-settings: "CASL" 1;
+  font-weight: 700;
+  font-size: clamp(2rem, 3.2vw + 1rem, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--fa-ink);
+  margin: 0 0 0.75rem;
+}
+#page-fodder .fa-notebook-header p {
+  font-family: var(--fa-hand);
+  font-variation-settings: "CASL" 0.5;
+  color: var(--fa-pencil);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 38rem;
+  margin: 0;
+}
+
+/* The list: one ruled row per entry, FA number in the left margin */
+#page-fodder .fa-notebook {
+  border-top: 1px solid var(--fa-line);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+#page-fodder .fa-entry {
+  border-bottom: 1px solid var(--fa-line);
+  position: relative;
+}
+#page-fodder .fa-row {
+  display: grid;
+  grid-template-columns: var(--fa-margin) minmax(0, 1fr) auto;
+  gap: 0 1.25rem;
+  align-items: start;
+  padding: 1.25rem 0.75rem 1.25rem 0;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+}
+#page-fodder .fa-row::-webkit-details-marker { display: none; }
+/* the margin rule runs through every row */
+#page-fodder .fa-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--fa-margin) - 0.625rem);
+  border-left: 2px solid var(--fa-rule);
+}
+#page-fodder .fa-row:hover .fa-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+#page-fodder .fa-row:focus-visible {
+  outline: 2px solid var(--fa-ink);
+  outline-offset: -2px;
+}
+#page-fodder .fa-num {
+  font-family: var(--fa-hand);
+  font-variation-settings: "CASL" 1;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--fa-pencil);
+  text-align: right;
+  padding-right: 1.25rem;
+  padding-top: 0.15rem;
+  white-space: nowrap;
+}
+#page-fodder .fa-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+#page-fodder .fa-title {
+  font-family: var(--fa-hand);
+  font-variation-settings: "CASL" 0.6;
+  font-weight: 650;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: var(--fa-ink);
+  max-width: 44rem;
+}
+/* the one bold element: the verdict, highlighted like a marker pass */
+#page-fodder .fa-verdict {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  max-width: 44rem;
+}
+#page-fodder .fa-verdict mark {
+  background: linear-gradient(transparent 12%, var(--fa-highlight) 12%, var(--fa-highlight) 88%, transparent 88%);
+  color: var(--fa-highlight-ink);
+  padding: 0 0.2em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+#page-fodder .fa-meta {
+  font-size: 0.85rem;
+  color: var(--fa-pencil);
+}
+#page-fodder .fa-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.2rem;
+}
+#page-fodder .fa-status {
+  font-family: var(--fa-hand);
+  font-variation-settings: "CASL" 1;
+  font-size: 0.85rem;
+  color: var(--fa-pencil);
+}
+#page-fodder .fa-toggle::before {
+  content: "Open";
+  font-family: var(--fa-hand);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fa-ink);
+  border-bottom: 1px solid var(--fa-rule);
+}
+#page-fodder .fa-entry[open] .fa-toggle::before { content: "Close"; }
+
+/* Opened entry: the full write-up continues on the pad, right of the margin */
+#page-fodder .fa-entry[open] > .fa-row { border-bottom: 1px dashed var(--fa-line); }
+#page-fodder .fa-article {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 1.5rem 0.75rem 2rem calc(var(--fa-margin) + 0.625rem);
+  position: relative;
+}
+#page-fodder .fa-article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--fa-margin) - 0.625rem);
+  border-left: 2px solid var(--fa-rule);
+}
+#page-fodder .fa-article .td-experiment-body { padding: 0; max-width: 52rem; }
+#page-fodder .fa-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2rem;
+  font-family: var(--fa-hand);
+  font-size: 0.95rem;
+}
+#page-fodder .fa-entry-links a {
+  color: var(--fa-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--fa-rule);
+  text-underline-offset: 0.25em;
+}
+#page-fodder .fa-notebook-endnote {
+  font-family: var(--fa-hand);
+  font-variation-settings: "CASL" 1;
+  color: var(--fa-pencil);
+  padding-left: calc(var(--fa-margin) + 0.625rem);
+  margin: 0 0 2rem;
+}
+
+/* Small screens: narrower margin, status tucks under the title */
+@media (max-width: 640px) {
+  #page-fodder { --fa-margin: 3.5rem; }
+  #page-fodder .fa-notebook-header { padding: 2rem 1rem 1.25rem calc(0.5rem + var(--fa-margin)); }
+  #page-fodder .fa-row { grid-template-columns: var(--fa-margin) minmax(0, 1fr); padding-right: 0.5rem; }
+  #page-fodder .fa-num { font-size: 0.8rem; padding-right: 0.75rem; }
+  #page-fodder .fa-side { grid-column: 2; flex-direction: row; align-items: center; justify-content: space-between; padding-top: 0.6rem; }
+  #page-fodder .fa-title { font-size: 1.12rem; }
+  #page-fodder .fa-article { padding: 1.25rem 0.5rem 1.5rem calc(var(--fa-margin) + 0.25rem); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #page-fodder .fa-entry[open] > .fa-article { animation: fa-open 160ms ease-out; }
+  @keyframes fa-open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+}
