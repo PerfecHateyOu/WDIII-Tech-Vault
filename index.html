@@ -2033,13 +2033,6 @@ function renderSections(blocks) {
     }
   }).join("");
 }
-function buildFromEntry(e) {
-  return experimentShell({
-    id: e.id, category: e.category, title: e.title, status: e.status, statusLabel: e.statusLabel,
-    tags: e.tags, scope: e.scope, search: e.search, toc: e.toc,
-    body: renderSections(e.sections)
-  });
-}
 function faDisplayTitle(e) {
   return String(e.title || "").replace(/^FA-\d+\s*[—-]\s*/, "");
 }
@@ -2068,7 +2061,7 @@ function renderFodderArchive() {
       </article>
     </details>`;
   }).join("");
-  return `<div class="fa-notebook" role="list">${rows}</div>`;
+  return `<div class="fa-notebook">${rows}</div>`;
 }
 
 // ===== Render content =====
