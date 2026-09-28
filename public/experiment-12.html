@@ -361,7 +361,7 @@
       </div>
       <div class="metadata-item">
         <span class="metadata-label">Tracking</span>
-        <span class="metadata-value">27.1, 27.2+</span>
+        <span class="metadata-value">Later iOS 27 updates as released</span>
       </div>
     </div>
   </div>
@@ -369,127 +369,87 @@
   <div class="content">
     <section>
       <h2>Research Objective</h2>
-      <p>Validate Apple's iOS 27 performance claims (responsiveness, battery life, system stability, claimed "up to 60%" improvements) on iPhone 16e. Test isolated integration of Gemini, Claude, and ChatGPT with Siri AI. Verify headline features announced during iOS 27 presentation through firsthand testing.</p>
+      <p>Test Apple's iOS 27 claims on iPhone 16e — including the claimed "up to 60%" improvement in app responsiveness — through app launch timing, standby battery drain and crash counts. Once Gemini, Claude and ChatGPT gain third-party Siri support, compare all three through Siri with identical prompts.</p>
     </section>
 
     <section>
       <h2>Scope &amp; Methodology</h2>
-      
+
       <div class="subsection">
         <h3>Testing Parameters</h3>
         <p><strong>Device:</strong> iPhone 16e (Model iPhone17,5)</p>
-        <p><strong>OS Versions:</strong> iOS 27.0 (final), with tracking through 27.1 and 27.2</p>
-        <p><strong>Test Window:</strong> Ongoing from iOS 27 release</p>
-        <p><strong>Testing Type:</strong> Controlled side-by-side comparisons (not real-world usage)</p>
-        <p style="margin-bottom: 0;">All testing is scoped to single-device performance on the 16e. Results reflect what was observed on this specific device under controlled conditions and are not extrapolated as universal across the iPhone 16 lineup.</p>
+        <p><strong>OS Versions:</strong> iOS 27.0; later iOS 27 updates tracked as they are released</p>
+        <p><strong>Environment:</strong> Temperature-controlled room (about 21°C)</p>
+        <p style="margin-bottom: 0;">Results describe this one iPhone 16e and are not generalised to other iPhone models. The same phone is used for Experiment 10, which keeps a separate log.</p>
       </div>
-
-      <h3>Methodology Framework</h3>
-      <p>Testing follows WDIII archive documentation standards. Performance claims are validated directly against Apple's stated improvements. AI chatbot integration is tested in isolation using controlled side-by-side comparisons with identical prompts across all three services. Headline features are verified for functional completeness on 16e.</p>
     </section>
 
     <section>
       <h2>Test Procedures</h2>
 
-      <h3>A. Performance Claims Validation</h3>
-      <p>Apple's key claims for iOS 27:</p>
-      <ul>
-        <li>Up to 60% improvement in app responsiveness</li>
-        <li>Enhanced battery efficiency</li>
-        <li>Improved system stability and thermal management</li>
-      </ul>
+      <h3>A. iOS 27 Claims</h3>
+      <p>Apple's claims being tested include an "up to 60%" improvement in app responsiveness.</p>
 
       <div class="test-procedure">
-        <h4>1. Responsiveness Testing</h4>
+        <h4>1. Responsiveness</h4>
         <ul>
-          <li>App launch times (cold and warm across system and third-party apps)</li>
-          <li>UI responsiveness under sustained load</li>
-          <li>Multitasking fluidity and app switching latency</li>
-          <li>Frame consistency across common workflows (Quartz Debugger frametime analysis)</li>
+          <li>Cold and warm app launch times, timed with a stopwatch</li>
         </ul>
       </div>
 
       <div class="test-procedure">
-        <h4>2. Battery Life Testing</h4>
+        <h4>2. Battery</h4>
         <ul>
-          <li>Drain rates under standardized synthetic and media workloads</li>
-          <li>Standby behavior over fixed 8-hour sleep intervals</li>
-          <li>Real-world daily cycle patterns and drain per active screen hour</li>
-          <li>Charge cycle efficiency and thermal dissipation curve</li>
+          <li>Overnight standby drain: start %, end % and hours — same method as Experiment 10</li>
         </ul>
       </div>
 
       <div class="test-procedure">
-        <h4>3. System Stability</h4>
+        <h4>3. Stability</h4>
         <ul>
-          <li>Crash and hang frequency across daily background workflows</li>
-          <li>Thermal behavior under sustained CPU/GPU compute load</li>
-          <li>Memory pressure management and background task suspension reliability</li>
+          <li>Count of new crash logs in Settings → Privacy &amp; Security → Analytics &amp; Improvements → Analytics Data — same method as Experiment 10</li>
         </ul>
       </div>
 
       <div class="divider"></div>
 
-      <h3>B. AI Chatbot Integration</h3>
-      <p>Testing isolated integration of third-party AI assistants with Siri AI on iOS 27:</p>
+      <h3>B. AI Chatbots via Siri — Not Started</h3>
+      <p>This part starts once Gemini, Claude and ChatGPT get third-party Siri support, which is expected within the next couple of months.</p>
       <ul>
-        <li>Direct integration channels: Gemini, Claude, and ChatGPT</li>
-        <li>Identical prompt suites executed under uniform network and system states</li>
-        <li>Measuring latency, token streaming consistency, and context handoff</li>
+        <li>Identical prompts sent to all three through Siri</li>
+        <li>Compared on latency, handoff reliability and multi-turn context</li>
       </ul>
-
-      <div class="test-procedure">
-        <h4>1. Siri AI Handoff &amp; Routing</h4>
-        <ul>
-          <li>Voice prompt intent recognition and delegation to target AI service</li>
-          <li>Handoff latency between Siri voice trigger and chatbot stream onset</li>
-          <li>Permission prompt frequency and authorization session persistence</li>
-        </ul>
-      </div>
-
-      <div class="test-procedure">
-        <h4>2. Side-by-Side Prompt Execution</h4>
-        <ul>
-          <li>Structured multi-domain prompts (reasoning, coding, creative, factual lookup)</li>
-          <li>Response completeness, hallucination incidence, and formatting fidelity</li>
-          <li>Multi-turn conversation context retention across Siri session handoffs</li>
-        </ul>
-      </div>
 
       <div class="divider"></div>
 
-      <h3>C. Headline Features Verification</h3>
-      <p>Verification of major features announced during the Apple iOS 27 presentation on iPhone 16e hardware:</p>
-      <ul>
-        <li>Apple Intelligence functional availability and on-device model performance</li>
-        <li>Cellular modem performance (Apple in-house C1 modem integration)</li>
-        <li>Camera processing pipeline responsiveness and thermal throttling thresholds</li>
-      </ul>
+      <h3>C. Headline Features — TBD</h3>
+      <p>Which iOS 27 headline features to verify is still to be decided.</p>
     </section>
 
     <section>
       <h2>Data Collection &amp; Current Status</h2>
       <div class="empty-state">
-        <p style="font-weight: 600; color: var(--accent-orange); margin-bottom: 0.5rem;">⚡ Testing Actively Underway</p>
-        <p style="margin: 0; font-size: 0.95rem;">Baseline measurements for iOS 27.0 on iPhone 16e (iPhone17,5) are currently being captured. Automated telemetry logs, battery drain recordings, and AI chatbot handoff benchmarks will populate in this archive as testing batches complete.</p>
+        <p style="font-weight: 600; color: var(--accent-orange); margin-bottom: 0.5rem;">⚡ Testing underway — no results yet</p>
+        <p style="margin: 0; font-size: 0.95rem;">iOS 27.0 testing on iPhone 16e has started. Results will be added here when there is data to report. The AI chatbot tests have not started.</p>
       </div>
     </section>
 
     <section>
-      <h2>Limitations &amp; Scope Constraints</h2>
+      <h2>Limitations</h2>
       <div class="limitation-box">
         <h4>Documented Limitations</h4>
         <ul>
-          <li><strong>Single-Device Sample (n=1):</strong> Scoped exclusively to iPhone 16e (Model iPhone17,5). Findings reflect this single test unit and must not be generalized across other iPhone 16 models (Pro, Pro Max) or other generations.</li>
-          <li><strong>Controlled Testing Parameters:</strong> Side-by-side scripted benchmarks provide reproducibility but do not encompass all real-world carrier variability or edge-case consumer software stacks.</li>
-          <li><strong>Early Lifecycle Firmware:</strong> Initial data reflects iOS 27.0 release build. Point updates (27.1, 27.2+) will be tracked sequentially to record performance drift or optimizations.</li>
+          <li><strong>Single device (n=1):</strong> findings describe this iPhone 16e only.</li>
+          <li><strong>Stopwatch timing:</strong> can only catch large differences in launch times.</li>
+          <li><strong>AI chatbot timing:</strong> depends on when third-party Siri support ships.</li>
+          <li><strong>Shared device:</strong> the same phone is used for Experiment 10, which keeps a separate log.</li>
         </ul>
       </div>
     </section>
 
     <div class="footer">
-      <div class="footer-version">WDIII Tech Vault Archive · Experiment 12 · Rev 1.0</div>
-      <p>Independent research documentation. All tests conducted following WDIII laboratory standards. Not affiliated with Apple Inc.</p>
+      <div class="footer-version">WDIII Tech Vault Archive · Experiment 12 · Rev 1.1</div>
+      <p>Independent research documentation. Not affiliated with Apple Inc.</p>
     </div>
   </div>
 </body>
