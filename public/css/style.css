@@ -904,6 +904,18 @@ details > summary::-webkit-details-marker {
 }
 #page-fodder .fa-entry[open] .fa-toggle::before { content: "Close"; }
 
+#page-fodder .fa-submission-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  font-variation-settings: "CASL" 1;
+  font-weight: 600;
+  color: var(--fa-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--fa-rule);
+  text-underline-offset: 0.2em;
+}
+
 /* ---- Opened entry ----------------------------------------------------- */
 #page-fodder .fa-entry[open] > .fa-row { border-bottom: 1px dashed var(--fa-line); }
 #page-fodder .fa-article {

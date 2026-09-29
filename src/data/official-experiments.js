@@ -1363,7 +1363,7 @@ export const OFFICIAL_EXPERIMENTS = [
         "5th": "ChatGPT"
       }
     },
-    "results": "Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA routing, persisted theme, detail pages). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude.",
+    "results": "Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA routing, persisted theme, detail pages). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude. Round 2 with current models is in progress.",
     "observations": [
       "Architecture beat aesthetics: working routing and structure separated the top entry, not colour or typography.",
       "The owner prioritised working functionality; Claude prioritised design systems and self-contained code.",
@@ -1390,11 +1390,11 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "id": "fa01-owner-rankings",
-        "label": "Owner Rankings"
+        "label": "Round 1: Owner Rankings"
       },
       {
         "id": "fa01-claude-assessment",
-        "label": "Claude's Assessment"
+        "label": "Round 1: Claude's Assessment"
       },
       {
         "id": "fa01-divergence",
@@ -1411,7 +1411,7 @@ export const OFFICIAL_EXPERIMENTS = [
     ],
     "relatedExperiments": [],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-28T00:00:00.000Z",
+    "updatedAt": "2026-09-29T00:00:00.000Z",
     "protocolVersion": "1.0.0",
     "version": "2.0.0",
     "measurementSchema": [
@@ -1437,7 +1437,14 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "type": "notice",
-        "html": "⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Click \"view submitted file\" to judge the raw output yourself."
+        "html": "⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Links to each model's raw submission will be added once the original files are published."
+      },
+      {
+        "type": "callout",
+        "title": "Round 2 in progress",
+        "paragraphs": [
+          "Round 2 reruns this test with the current version of each model, using the same prompt and blind scoring. Everything below is Round 1 and stays here as history."
+        ]
       },
       {
         "type": "heading",
@@ -1473,7 +1480,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "heading",
         "id": "fa01-owner-rankings",
-        "text": "Full Rankings — Owner Assessment"
+        "text": "Round 1: Owner Rankings"
       },
       {
         "type": "group",
@@ -1524,7 +1531,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "heading",
         "id": "fa01-claude-assessment",
-        "text": "Claude's Independent Assessment"
+        "text": "Round 1: Claude's Independent Assessment"
       },
       {
         "type": "paragraph",
