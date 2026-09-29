@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTrial · real‑world experiments</title>
+    <!-- Font Awesome 6 (free) for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f6f8fc;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #1a2a3a;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+        }
+
+        .page {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .hero {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #0b1e2b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 i {
+            color: #2d7a9b;
+            font-size: 2.4rem;
+        }
+
+        .hero .subhead {
+            font-size: 1.2rem;
+            color: #3e5a6b;
+            margin-top: 0.75rem;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            border-bottom: 2px dashed #cbd8e6;
+            padding-bottom: 1.2rem;
+        }
+
+        .experiment-badge {
+            display: inline-block;
+            background: #d9e7f2;
+            color: #1c4e6e;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+            margin-top: 0.5rem;
+        }
+
+        /* section titles */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.9rem;
+            font-weight: 650;
+            color: #113547;
+            margin: 2.5rem 0 1.5rem 0;
+            letter-spacing: -0.01em;
+        }
+
+        .section-title i {
+            background: #ffffff;
+            padding: 0.6rem;
+            border-radius: 16px;
+            box-shadow: 0 6px 12px rgba(0, 20, 30, 0.06);
+            color: #1d6f8f;
+            font-size: 1.6rem;
+            width: 3.2rem;
+            text-align: center;
+        }
+
+        /* card grids */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 1.8rem 1.6rem 1.6rem;
+            box-shadow: 0 12px 28px -8px rgba(0, 20, 30, 0.1);
+            border: 1px solid #e3eef7;
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 32px -12px rgba(16, 60, 80, 0.2);
+            border-color: #c2d9e9;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .card-header i {
+            font-size: 2rem;
+            background: #e7f0f8;
+            width: 3.2rem;
+            height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            color: #1d6f8f;
+        }
+
+        .card-header h3 {
+            font-size: 1.3rem;
+            font-weight: 650;
+            color: #0f2e3f;
+            line-height: 1.2;
+        }
+
+        .card-header .tag {
+            font-size: 0.7rem;
+            background: #eef4fa;
+            padding: 0.2rem 0.6rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #345f78;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            margin-left: auto;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #e7f0f8;
+            font-size: 0.96rem;
+        }
+
+        .result-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #2c4e62;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .result-label i {
+            font-size: 0.8rem;
+            color: #5e8ca3;
+            width: 1rem;
+        }
+
+        .result-value {
+            font-weight: 650;
+            color: #0e2e3e;
+            background: #f0f7fe;
+            padding: 0.15rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            background: #e3f0e9;
+            color: #1c6b4f;
+            margin-top: 0.5rem;
+            align-self: flex-start;
+        }
+
+        .badge.warn {
+            background: #fff3e0;
+            color: #a8641e;
+        }
+
+        .badge.neutral {
+            background: #eaeef3;
+            color: #3f5768;
+        }
+
+        .metric-highlight {
+            font-weight: 700;
+            color: #105a7a;
+        }
+
+        .footnote {
+            font-size: 0.85rem;
+            color: #5f7d91;
+            margin-top: 0.8rem;
+            border-top: 1px dashed #cfdde9;
+            padding-top: 0.8rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .footnote i {
+            font-size: 0.8rem;
+        }
+
+        /* bottom summary */
+        .verdict-box {
+            background: linear-gradient(135deg, #f1f9ff 0%, #e4f0f9 100%);
+            border-radius: 30px;
+            padding: 2rem 2rem 1.5rem;
+            margin-top: 3rem;
+            border: 1px solid #c2d9ea;
+            box-shadow: 0 12px 24px -12px rgba(28, 78, 110, 0.2);
+        }
+
+        .verdict-box h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0a2a3b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .verdict-box h4 i {
+            color: #1d6f8f;
+        }
+
+        .verdict-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .verdict-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .verdict-item .icon {
+            background: #fff;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #1d6f8f;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.02);
+        }
+
+        .verdict-item p {
+            font-weight: 500;
+            color: #1d4357;
+        }
+
+        .verdict-item strong {
+            color: #0d3145;
+            font-weight: 700;
+        }
+
+        /* footer */
+        .footer-note {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #6d8b9e;
+            border-top: 1px solid #d0e0ec;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-note i {
+            color: #6b93aa;
+            margin-right: 0.3rem;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1.2rem 1rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .card {
+                padding: 1.4rem;
+            }
+            .verdict-box {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <!-- HEADER -->
+    <div class="hero">
+        <h1>
+            <i class="fas fa-flask"></i> TechTrial
+            <span style="font-weight:400; font-size:1.7rem; color:#2d5b73;">/ documentation</span>
+        </h1>
+        <div class="subhead">
+            Real‑world experiments · side‑by‑side comparisons · no sponsored results
+        </div>
+        <div class="experiment-badge">
+            <i class="fas fa-vial"></i> updated September 2025
+        </div>
+    </div>
+
+    <!-- SMARTPHONES SECTION -->
+    <div class="section-title">
+        <i class="fas fa-mobile-alt"></i> Smartphone experiments
+    </div>
+    <div class="grid-3">
+        <!-- iPhone 16 Pro vs Pixel 9 Pro battery -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-battery-full"></i>
+                <h3>Battery endurance</h3>
+                <span class="tag">drain test v2</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-apple-alt"></i> iPhone 16 Pro</span>
+                <span class="result-value">8h 42m</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fab fa-android"></i> Pixel 9 Pro</span>
+                <span class="result-value">9h 18m</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-clock"></i> screen‑on heavy</span>
+                <span class="result-value">5h 02m vs 5h 44m</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-microchip"></i> 120Hz, 200 nits, same script. Pixel lasted 36 min longer.
+            </div>
+            <span class="badge">Pixel wins +7%</span>
+        </div>
+
+        <!-- Camera low-light comparison -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-camera-retro"></i>
+                <h3>Low‑light camera</h3>
+                <span class="tag">blind test · 20 shots</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-star"></i> iPhone 16 Pro</span>
+                <span class="result-value">7.8 / 10</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-star"></i> Pixel 9 Pro</span>
+                <span class="result-value">8.5 / 10</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-star"></i> Galaxy S24 Ultra</span>
+                <span class="result-value">8.2 / 10</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-users"></i> 4 independent reviewers, 40% preferred Pixel colour science.
+            </div>
+            <span class="badge">Pixel best overall</span>
+        </div>
+
+        <!-- Durability drop test -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>Drop durability (1.5m)</h3>
+                <span class="tag">6 drops · concrete</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-mobile"></i> iPhone 16 Pro</span>
+                <span class="result-value">minor scuffs, no crack</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-mobile"></i> Galaxy S24 Ultra</span>
+                <span class="result-value">cracked corner (2nd drop)</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-mobile"></i> Pixel 9 Pro</span>
+                <span class="result-value">scratches, display intact</span>
+            </div>
+            <span class="badge neutral">iPhone survives</span>
+        </div>
+    </div>
+
+    <!-- REPAIR SERVICES SECTION -->
+    <div class="section-title">
+        <i class="fas fa-tools"></i> Repair service experiments
+    </div>
+    <div class="grid-3">
+        <!-- Screen replacement cost & time -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-mobile-screen"></i>
+                <h3>Screen repair (iPhone 14)</h3>
+                <span class="tag">cost & turnaround</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-store"></i> Apple Store</span>
+                <span class="result-value">$279 · 2h</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-store"></i> uBreakiFix</span>
+                <span class="result-value">$199 · 1h 20m</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-store"></i> Local independent</span>
+                <span class="result-value">$149 · 35m (OEM?)</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-check-circle"></i> Local shop used genuine pull; True Tone retained.
+            </div>
+            <span class="badge warn">OEM warning local</span>
+        </div>
+
+        <!-- Battery replacement -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-battery-quarter"></i>
+                <h3>Battery replacement (S22)</h3>
+                <span class="tag">health after 6 mo.</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-building"></i> Samsung service</span>
+                <span class="result-value">97% health</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-tools"></i> Third‑party (mall)</span>
+                <span class="result-value">89% health</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-tools"></i> DIY kit (iFixit)</span>
+                <span class="result-value">94% health</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-temperature-low"></i> Third‑party battery degraded faster under load.
+            </div>
+            <span class="badge">Samsung best longevity</span>
+        </div>
+
+        <!-- Water damage repair success -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-droplet"></i>
+                <h3>Water damage revival</h3>
+                <span class="tag">success rate</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-umbrella"></i> Rice + wait (DIY)</span>
+                <span class="result-value">40% success</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-umbrella"></i> Ultrasonic clean (pro)</span>
+                <span class="result-value">82% success</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-umbrella"></i> No treatment</span>
+                <span class="result-value">11% success</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-flask"></i> Tested on 30 donated units. Ultrasonic wins.
+            </div>
+        </div>
+    </div>
+
+    <!-- SOFTWARE SECTION -->
+    <div class="section-title">
+        <i class="fas fa-code"></i> Software experiments
+    </div>
+    <div class="grid-3">
+        <!-- Photo editing performance -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-image"></i>
+                <h3>Photo export speed</h3>
+                <span class="tag">50 RAW → JPEG</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fab fa-adobe"></i> Lightroom Classic</span>
+                <span class="result-value">4m 12s</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-paint-brush"></i> Affinity Photo</span>
+                <span class="result-value">3m 48s</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-camera"></i> Darktable</span>
+                <span class="result-value">5m 30s</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-laptop"></i> M2 MacBook Air, 16GB. Affinity fastest by 24s.
+            </div>
+        </div>
+
+        <!-- Note taking app latency -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-pen-fancy"></i>
+                <h3>Note‑taking latency</h3>
+                <span class="tag">ms · lower better</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-sticky-note"></i> Apple Notes</span>
+                <span class="result-value">23 ms</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-sticky-note"></i> Obsidian</span>
+                <span class="result-value">42 ms</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fas fa-sticky-note"></i> Notion (web)</span>
+                <span class="result-value">89 ms</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-gauge-high"></i> High‑speed camera at 240fps. Apple Notes almost instant.
+            </div>
+            <span class="badge">Apple Notes fastest</span>
+        </div>
+
+        <!-- Browser battery drain -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-globe"></i>
+                <h3>Browser battery drain</h3>
+                <span class="tag">30 min YouTube 4K</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fab fa-safari"></i> Safari</span>
+                <span class="result-value">9%</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fab fa-chrome"></i> Chrome</span>
+                <span class="result-value">14%</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label"><i class="fab fa-firefox"></i> Firefox</span>
+                <span class="result-value">12%</span>
+            </div>
+            <div class="footnote">
+                <i class="fas fa-magic"></i> Safari on M1 MacBook Air, 50% brightness.
+            </div>
+            <span class="badge">Safari most efficient</span>
+        </div>
+    </div>
+
+    <!-- VERDICT / SUMMARY -->
+    <div class="verdict-box">
+        <h4><i class="fas fa-clipboard-check"></i> Key findings from our experiments</h4>
+        <div class="verdict-grid">
+            <div class="verdict-item">
+                <div class="icon"><i class="fas fa-mobile-screen-button"></i></div>
+                <p><strong>Smartphones:</strong> Pixel 9 Pro leads in battery & low‑light, iPhone 16 Pro most durable.</p>
+            </div>
+            <div class="verdict-item">
+                <div class="icon"><i class="fas fa-screwdriver-wrench"></i></div>
+                <p><strong>Repairs:</strong> OEM service costs more but retains value; pro ultrasonic saves water‑damaged phones.</p>
+            </div>
+            <div class="verdict-item">
+                <div class="icon"><i class="fas fa-laptop-code"></i></div>
+                <p><strong>Software:</strong> Apple Notes & Safari set efficiency benchmarks; Affinity fastest RAW export.</p>
+            </div>
+        </div>
+        <div style="margin-top: 1.6rem; font-size: 0.9rem; color: #275b74; display: flex; gap: 0.5rem; align-items: center;">
+            <i class="fas fa-circle-info"></i>
+            <span>All tests repeated 3× under identical conditions. No brand sponsorship. Full methodology in our lab log.</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-note">
+        <span><i class="fas fa-flask"></i> TechTrial documentation · independent consumer experiments</span>
+        <span><i class="fas fa-calendar"></i> September 2025</span>
+        <span><i class="fas fa-code-branch"></i> v2.1.0</span>
+    </div>
+</div>
+</body>
+</html>
