@@ -4,9 +4,9 @@
  */
 
 export const CONFIG = {
-  VERSION: 'v6',
-  LAST_UPDATED: 'September 28, 2026',
-  UPDATE_NOTE: 'v6 Overhaul Update: Fodder Archives & Experiments',
+  VERSION: 'v6.1',
+  LAST_UPDATED: 'September 29, 2026',
+  UPDATE_NOTE: 'v6.1 Update: Fodder Archives Refreshed',
   STORAGE_KEYS: {
     theme: 'ctd-theme',
     disclaimerAck: 'ctd-disclaimer-ack'
