@@ -630,356 +630,53 @@ details > summary::-webkit-details-marker {
 }
 
 /* =====================================================================
-   Fodder Archive — engineering-pad notebook
-   Everything on #page-fodder follows the pad: the site colour variables are
-   remapped here, so the toolbar, section menu, search, account widget and
-   the blocks inside each entry all pick up the notebook palette.
+   Fodder Archive: expandable entries
+   Built from the main experiment card (.td-experiment); only the open/close
+   behaviour and the small controls below are Fodder-specific.
    ===================================================================== */
-#page-fodder {
-  /* The Fodder Archive is always on light "paper", whatever the site theme is. */
-  color-scheme: light;
-
-  /* notebook palette */
-  --fa-paper: #eef3e8;
-  --fa-grid: #dbe6d3;
-  --fa-ink: #1f2a22;
-  --fa-pencil: #56645a;
-  --fa-rule: #93b593;
-  --fa-line: #c6d6bc;
-  --fa-marker: #f0e24a;
-  --fa-marker-ink: #1f2a22;
-  --fa-hand: "Recursive", ui-rounded, "Segoe UI", system-ui, sans-serif;
-  --fa-margin: 5.5rem;
-
-  /* site variables remapped for this page only (surfaces and text) */
-  --td-bg-base: var(--fa-paper);
-  --td-bg-surface: #e6eddf;
-  --td-bg-surface-elevated: #dfe8d7;
-  --td-bg-card: #f5f8f1;
-  --td-border: #c6d6bc;
-  --td-border-subtle: #b3c9a8;
-  --td-text-primary: var(--fa-ink);
-  --td-text-secondary: #37443b;
-  --td-text-muted: var(--fa-pencil);
-
-  /* status colours: the site's light-theme values, readable on paper */
-  --td-info: #2563eb;
-  --td-info-bg: #e3f0ff;
-  --td-success: #15803d;
-  --td-success-bg: #e8f5e9;
-  --td-error: #dc2626;
-  --td-error-bg: #ffebee;
-  --td-ai: #7c3aed;
-  --td-ai-bg: #ede9fe;
-  --td-ecosystem: #d97706;
-  --td-ecosystem-bg: #fffbeb;
-  --td-warning: #b45309;
-  --td-warning-bg: #fffbeb;
-  --td-pending: #ea580c;
-  --td-pending-bg: #fff3e0;
-
-  font-family: var(--fa-hand);
-  font-variation-settings: "CASL" 0;
-  background-color: var(--fa-paper);
-  background-image:
-    linear-gradient(var(--fa-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--fa-grid) 1px, transparent 1px);
-  background-size: 1.25rem 1.25rem;
-  color: var(--fa-ink);
-  min-height: 100vh;
-}
-/* entry content written with hard-coded white text stays readable on paper */
-#page-fodder [style*="color:#fff"],
-#page-fodder [style*="color: #fff"] { color: var(--fa-ink) !important; }
-/* the theme switch has no effect on this page, so it is hidden here */
-#page-fodder #themeToggleFodder { display: none; }
-
-/* ---- Header -------------------------------------------------------- */
-#page-fodder .fa-notebook-header {
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: 3rem 1.5rem 1.75rem calc(1.5rem + var(--fa-margin));
-}
-#page-fodder .fa-notebook-header h1 {
-  font-variation-settings: "CASL" 1;
-  font-weight: 700;
-  font-size: clamp(2rem, 3.2vw + 1rem, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--fa-ink);
-  margin: 0 0 0.75rem;
-}
-#page-fodder .fa-notebook-header p {
-  font-variation-settings: "CASL" 0.5;
-  color: var(--fa-pencil);
-  font-size: 1.05rem;
-  line-height: 1.55;
-  max-width: 38rem;
-  margin: 0;
-}
-
-/* ---- Toolbar (logo, account, theme) --------------------------------- */
-#page-fodder .fa-toolbar {
-  display: flex;
-  justify-content: space-between;
+.fa-entry { margin-bottom: 1.25rem; }
+.fa-entry > summary { list-style: none; cursor: pointer; display: block; }
+.fa-entry > summary::-webkit-details-marker { display: none; }
+.fa-entry > summary:hover { background: var(--td-bg-surface); }
+.fa-entry > summary:hover .fa-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.fa-entry > summary:focus-visible { outline: 2px solid var(--accent-color); outline-offset: -2px; }
+.fa-title { line-height: 1.25; }
+.fa-toggle,
+.fa-pill {
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  padding: 0.5rem 1.5rem;
-  border-top: 1px solid var(--fa-line);
-  border-bottom: 1px solid var(--fa-line);
-}
-#page-fodder .fa-toolbar-group { display: flex; align-items: center; gap: 0.75rem; }
-#page-fodder .fa-toolbar-note { font-size: 0.85rem; color: var(--fa-pencil); font-variation-settings: "CASL" 0.6; }
-#page-fodder .fa-button,
-#page-fodder .wdiii-auth-container button {
-  font-family: var(--fa-hand) !important;
-  background: transparent !important;
-  border: 1px solid var(--fa-line) !important;
-  border-radius: 0.25rem !important;
-  color: var(--fa-ink) !important;
-  box-shadow: none !important;
-}
-#page-fodder .fa-button { padding: 0.35rem 0.8rem; font-size: 0.85rem; cursor: pointer; }
-#page-fodder .fa-button:hover,
-#page-fodder .wdiii-auth-container button:hover { border-color: var(--fa-rule) !important; }
-
-/* ---- Sticky nav: section menu + search -------------------------------- */
-#page-fodder .fa-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: color-mix(in srgb, var(--fa-paper) 92%, transparent);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--fa-line);
-}
-#page-fodder .fa-sections-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.55rem 1.5rem;
-  background: transparent;
-  border: 0;
-  color: var(--fa-ink);
-  font-family: var(--fa-hand);
-  font-variation-settings: "CASL" 1;
+  gap: 0.375rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--td-bg-card);
+  border: 1px solid var(--td-border-subtle);
+  color: var(--td-info);
+  font-size: 0.78rem;
   font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-#page-fodder .fa-sections-toggle span { font-size: 0.9rem; color: var(--fa-pencil); }
-/* section menu tabs: plain index tabs, no emoji, no blue */
-#page-fodder .td-section-tab {
-  background: transparent !important;
-  border: 1px solid var(--fa-line) !important;
-  border-radius: 0.25rem !important;
-  box-shadow: none !important;
-  font-family: var(--fa-hand);
-  color: var(--fa-ink) !important;
-}
-#page-fodder .td-section-tab:hover { border-color: var(--fa-rule) !important; }
-#page-fodder .td-section-tab.active {
-  border-color: var(--fa-ink) !important;
-  border-bottom-width: 2px !important;
-}
-#page-fodder .td-tab-icon { display: none !important; }
-#page-fodder .td-tab-label { font-variation-settings: "CASL" 1; font-weight: 600; color: var(--fa-ink) !important; }
-#page-fodder .td-tab-sub,
-#page-fodder .td-section-tab.active .td-tab-sub { color: var(--fa-pencil) !important; }
-
-#page-fodder .fa-search { padding: 0.25rem 1.5rem 0.75rem; }
-#page-fodder .fa-search-field {
-  position: relative;
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  max-width: 30rem;
-  margin: 0 auto;
-  border-bottom: 1px solid var(--fa-rule);
-}
-#page-fodder .fa-search-label { font-size: 0.85rem; font-variation-settings: "CASL" 1; font-weight: 600; color: var(--fa-pencil); }
-#page-fodder #searchFodder {
-  flex: 1;
-  min-width: 0;
-  padding: 0.45rem 2rem 0.45rem 0;
-  background: transparent;
-  border: 0;
-  outline: none;
-  color: var(--fa-ink);
-  font-family: var(--fa-hand);
-  font-size: 0.95rem;
-  -webkit-appearance: none;
-  appearance: none;
-}
-#page-fodder #searchFodder::placeholder { color: var(--fa-pencil); opacity: 0.8; }
-#page-fodder #searchFodder::-webkit-search-cancel-button { display: none; }
-#page-fodder .fa-search-field:focus-within { border-bottom-color: var(--fa-ink); }
-#page-fodder .fa-search-clear {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: 0;
-  color: var(--fa-pencil);
-  cursor: pointer;
-}
-
-/* ---- Breadcrumb ------------------------------------------------------- */
-#page-fodder .fa-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  font-size: 0.85rem;
-  color: var(--fa-pencil);
-  margin: 0 0 1.5rem calc(var(--fa-margin) + 0.625rem);
-}
-#page-fodder .fa-breadcrumb a { color: var(--fa-ink); text-decoration: underline; text-decoration-color: var(--fa-rule); text-underline-offset: 0.2em; }
-
-/* ---- The list: one ruled row per entry, FA number in the margin ------ */
-#page-fodder .fa-notebook { border-top: 1px solid var(--fa-line); margin-bottom: 1.5rem; }
-#page-fodder .fa-entry { border-bottom: 1px solid var(--fa-line); }
-#page-fodder .fa-row {
-  display: grid;
-  grid-template-columns: var(--fa-margin) minmax(0, 1fr) auto;
-  gap: 0 1.25rem;
-  align-items: start;
-  padding: 1.25rem 0.75rem 1.25rem 0;
-  cursor: pointer;
-  list-style: none;
-  position: relative;
-}
-#page-fodder .fa-row::-webkit-details-marker { display: none; }
-#page-fodder .fa-row::before,
-#page-fodder .fa-article::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--fa-margin) - 0.625rem);
-  border-left: 2px solid var(--fa-rule);
-}
-#page-fodder .fa-row:hover .fa-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
-#page-fodder .fa-row:focus-visible { outline: 2px solid var(--fa-ink); outline-offset: -2px; }
-#page-fodder .fa-num {
-  font-variation-settings: "CASL" 1;
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--fa-pencil);
-  text-align: right;
-  padding: 0.2rem 1.25rem 0 0;
+  text-decoration: none;
   white-space: nowrap;
 }
-#page-fodder .fa-main { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
-#page-fodder .fa-title {
-  font-variation-settings: "CASL" 0.6;
-  font-weight: 650;
-  font-size: 1.3rem;
-  line-height: 1.3;
-  color: var(--fa-ink);
-  max-width: 44rem;
+.fa-toggle::before { content: "Read entry \25BE"; }
+.fa-entry[open] .fa-toggle::before { content: "Close \25B4"; }
+.fa-pill:hover { border-color: var(--td-info); }
+.fa-entry-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--td-border-subtle);
+  background: var(--td-bg-surface-elevated);
 }
-/* the one bold element: each verdict, marked with a highlighter pass */
-#page-fodder .fa-verdict { font-size: 0.98rem; line-height: 1.75; max-width: 44rem; }
-#page-fodder .fa-verdict mark {
-  background: var(--fa-marker);
-  color: var(--fa-marker-ink);
-  padding: 0.1em 0.25em;
-  border-radius: 0.1em;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-#page-fodder .fa-meta { font-size: 0.85rem; color: var(--fa-pencil); }
-#page-fodder .fa-side { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; padding-top: 0.25rem; }
-#page-fodder .fa-status { font-variation-settings: "CASL" 1; font-size: 0.85rem; color: var(--fa-pencil); }
-#page-fodder .fa-toggle::before {
-  content: "Open";
-  font-variation-settings: "CASL" 1;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--fa-ink);
-  border-bottom: 1px solid var(--fa-rule);
-}
-#page-fodder .fa-entry[open] .fa-toggle::before { content: "Close"; }
-
-#page-fodder .fa-submission-link {
+.fa-submission-link {
   display: inline-block;
   margin-top: 0.35rem;
   font-size: 0.85rem;
-  font-variation-settings: "CASL" 1;
   font-weight: 600;
-  color: var(--fa-ink);
-  text-decoration: underline;
-  text-decoration-color: var(--fa-rule);
-  text-underline-offset: 0.2em;
+  color: var(--td-info);
 }
-
-/* ---- Opened entry ----------------------------------------------------- */
-#page-fodder .fa-entry[open] > .fa-row { border-bottom: 1px dashed var(--fa-line); }
-#page-fodder .fa-article {
-  background: none;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  margin: 0;
-  padding: 1.5rem 0.75rem 2rem calc(var(--fa-margin) + 0.625rem);
-  position: relative;
-}
-#page-fodder .fa-article .td-experiment-body { padding: 0; max-width: 52rem; }
-#page-fodder .fa-article h3 { font-variation-settings: "CASL" 0.6; }
-#page-fodder .fa-entry-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  margin-top: 2rem;
-  font-size: 0.95rem;
-  font-variation-settings: "CASL" 1;
-}
-#page-fodder .fa-entry-links a,
-#page-fodder .fa-footer a {
-  color: var(--fa-ink);
-  text-decoration: underline;
-  text-decoration-color: var(--fa-rule);
-  text-underline-offset: 0.25em;
-}
-#page-fodder .fa-notebook-endnote {
-  font-variation-settings: "CASL" 1;
-  color: var(--fa-pencil);
-  padding-left: calc(var(--fa-margin) + 0.625rem);
-  margin: 0 0 2rem;
-}
-
-/* ---- Footer ------------------------------------------------------------- */
-#page-fodder .fa-footer {
-  border-top: 1px solid var(--fa-line);
-  margin-top: 3rem;
-  padding: 2rem 1.5rem;
-  color: var(--fa-pencil);
-  font-size: 0.9rem;
-  text-align: center;
-}
-#page-fodder .fa-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.25rem; margin-bottom: 0.75rem; }
-#page-fodder .fa-footer a[aria-current="page"] { text-decoration-color: var(--fa-ink); }
-#page-fodder .fa-footer p { margin: 0; }
-
-/* ---- Small screens ------------------------------------------------------ */
-@media (max-width: 640px) {
-  #page-fodder { --fa-margin: 3.5rem; }
-  #page-fodder .fa-notebook-header { padding: 2rem 1rem 1.25rem calc(0.5rem + var(--fa-margin)); }
-  #page-fodder .fa-toolbar { padding: 0.5rem 1rem; }
-  #page-fodder .fa-toolbar-note { display: none; }
-  #page-fodder .fa-sections-toggle,
-  #page-fodder .fa-search { padding-left: 1rem; padding-right: 1rem; }
-  #page-fodder .fa-breadcrumb { margin-left: calc(var(--fa-margin) + 0.25rem); }
-  #page-fodder .fa-row { grid-template-columns: var(--fa-margin) minmax(0, 1fr); padding-right: 0.5rem; }
-  #page-fodder .fa-num { font-size: 0.8rem; padding-right: 0.75rem; }
-  #page-fodder .fa-side { grid-column: 2; flex-direction: row; align-items: center; justify-content: space-between; padding-top: 0.6rem; }
-  #page-fodder .fa-title { font-size: 1.12rem; }
-  #page-fodder .fa-article { padding: 1.25rem 0.5rem 1.5rem calc(var(--fa-margin) + 0.25rem); }
-}
-@media (prefers-reduced-motion: no-preference) {
-  #page-fodder .fa-entry[open] > .fa-article { animation: fa-open 160ms ease-out; }
-  @keyframes fa-open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-}
+.fa-submission-link:hover { text-decoration: underline; }
+/* The site's light theme has no rule for text that hard-codes white, so inside Fodder it switches to the theme's text colour. */
+.light-theme #page-fodder [style*="color:#fff"],
+.light-theme #page-fodder [style*="color: #fff"] { color: var(--td-text-primary) !important; }

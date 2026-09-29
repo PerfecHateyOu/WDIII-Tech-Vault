@@ -52,9 +52,6 @@
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
   <link rel="stylesheet" href="/css/style.css?v=6.0.0" />
   <link rel="stylesheet" href="/css/preflight.css?v=6.0.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Recursive:wght,CASL@400..700,0..1&display=swap" />
 </head>
 <body>
 
@@ -199,57 +196,58 @@
 
 <!-- ===================== FODDER PAGE ===================== -->
 <div class="page" id="page-fodder">
-  <header class="fa-notebook-header">
-    <h1>Fodder Archive</h1>
-    <p>Side experiments and informal notes that don't fit the main documentation. Overhauled in v6 with streamlined evaluation records. Open any entry to read it here.</p>
+  <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
+    <div style="font-size:1.875rem; margin-bottom:0.5rem;">🗂️</div>
+    <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Fodder Archive</h1>
+    <p style="color:var(--td-text-secondary); font-size:1.125rem; margin:0;">Side experiments and informal notes that don't fit the main documentation. Overhauled in v6 with streamlined evaluation records. Open any entry to read it here.</p>
   </header>
 
-  <div class="fa-toolbar">
-    <div class="fa-toolbar-group">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
       <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation — By WDIII" style="text-decoration:none;">
         <img src="/logo.svg" alt="WDIII" loading="lazy" style="height:14px; width:auto; display:block;" />
       </a>
-      <span class="fa-toolbar-note">v6 Overhaul Update — Side experiments and observations</span>
+      <span style="font-size:0.8rem; color:var(--td-text-muted);">v6 Overhaul Update — Side experiments and observations</span>
     </div>
-    <div class="fa-toolbar-group">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
       <div id="authHeaderContainerFodder"></div>
-      <button id="themeToggleFodder" class="themeToggleBtn fa-button">🌙 Dark</button>
+      <button id="themeToggleFodder" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
     </div>
   </div>
 
-  <div id="navFodder" class="fa-nav">
-    <button id="sectionsToggleFodder" class="fa-sections-toggle">Sections <span id="sectionsArrowFodder" aria-hidden="true">▲</span></button>
+  <div id="navFodder" style="position:sticky; top:0; z-index:100; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); backdrop-filter:blur(8px);">
+    <button id="sectionsToggleFodder" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:0.5rem 1.5rem; background:transparent; border:none; color:var(--td-text-secondary); cursor:pointer; font-size:0.9rem;">📑 Sections <span id="sectionsArrowFodder" style="font-size:1.25rem;">▲</span></button>
     <nav id="sectionsNavFodder" class="td-sections-nav" aria-label="Fodder Section Navigation"></nav>
-    <div class="fa-search">
-      <div class="fa-search-field">
-        <label for="searchFodder" class="fa-search-label">Search</label>
-        <input id="searchFodder" type="search" placeholder="Titles, devices, topics…" />
-        <button id="searchClearFodder" type="button" class="fa-search-clear" style="display:none;" aria-label="Clear search">✕</button>
+    <div style="padding:0 1.5rem 0.5rem;">
+      <div style="position:relative; max-width:420px; margin:0 auto;">
+        <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
+        <input id="searchFodder" type="text" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem; outline:none;" />
+        <button id="searchClearFodder" style="display:none; position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--td-text-muted); cursor:pointer;">✕</button>
       </div>
     </div>
   </div>
 
   <div class="td-page-container">
-    <nav class="fa-breadcrumb" aria-label="Breadcrumb">
-      <a href="#/">Main documentation</a>
-      <span aria-hidden="true">/</span>
-      <span aria-current="page">Fodder Archive</span>
+    <nav style="display:flex; align-items:center; flex-wrap:wrap; gap:0.375rem; font-size:0.85rem; color:var(--td-text-muted); margin-bottom:1.5rem;">
+      <a href="#/" style="color:var(--td-text-secondary); padding:0.25rem 0.5rem; border-radius:0.25rem;">📄 Main Documentation</a>
+      <span style="opacity:0.6;">/</span>
+      <span style="color:var(--td-text-primary); padding:0.25rem 0.5rem;">🗂️ Fodder Archive</span>
     </nav>
     <div id="fodderContent"></div>
-    <p class="fa-notebook-endnote">New entries are added here as side experiments finish.</p>
+    <div style="text-align:center; padding:2rem; color:var(--td-text-muted); font-size:0.9rem; border:1px dashed var(--td-border); border-radius:0.375rem;">🚧 More entries coming as experiments are completed. This archive grows alongside the main documentation.</div>
   </div>
 
-  <footer class="fa-footer">
-    <nav aria-label="Site">
-      <a href="#/">Home</a>
-      <a href="#/devices">Hardware Registry</a>
-      <a href="#/compare">Compare</a>
-      <a href="#/about">About</a>
-      <a href="#/contact">Contact</a>
-      <a href="#/methodology">Methodology</a>
-      <a href="#/fodder" aria-current="page">Fodder Archive</a>
+  <footer style="text-align:center; padding:2rem; color:var(--td-text-muted); border-top:1px solid var(--td-border); margin-top:3rem; font-size:0.9rem;">
+    <nav style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem; margin-bottom:0.75rem;">
+      <a href="#/" style="color:var(--td-text-muted);">Home</a>
+      <a href="#/devices" style="color:var(--td-text-muted);">Hardware Registry</a>
+      <a href="#/compare" style="color:var(--td-text-muted);">Compare</a>
+      <a href="#/about" style="color:var(--td-text-muted);">About</a>
+      <a href="#/contact" style="color:var(--td-text-muted);">Contact</a>
+      <a href="#/methodology" style="color:var(--td-text-muted);">Methodology</a>
+      <a href="#/fodder" style="color:var(--td-text-muted);">Fodder Archive</a>
     </nav>
-    <p>Fodder Archive: side experiments and informal notes. © WDIII</p>
+    <p style="margin:0;">Fodder Archive — Side experiments and informal observations | © WDIII</p>
   </footer>
 </div>
 
@@ -2037,35 +2035,35 @@ function renderSections(blocks) {
     }
   }).join("");
 }
-function faDisplayTitle(e) {
-  return String(e.title || "").replace(/^FA-\d+\s*[—-]\s*/, "");
-}
 function renderFodderArchive() {
-  const rows = FODDER_ENTRIES().map(e => {
-    const tags = (e.tags || []).join(", ");
-    return `<details class="fa-entry" data-search="${esc(e.search || "").replace(/"/g, "&quot;")}">
-      <summary class="fa-row">
-        <span class="fa-num">${esc(e.experimentNumber)}</span>
-        <span class="fa-main">
-          <span class="fa-title">${esc(faDisplayTitle(e))}</span>
-          ${e.verdict ? `<span class="fa-verdict"><mark>${esc(e.verdict)}</mark></span>` : ""}
-          <span class="fa-meta">${esc(tags)}</span>
-        </span>
-        <span class="fa-side">
-          <span class="fa-status">${esc(e.statusLabel || e.status)}</span>
+  // Each entry reuses the main experiment card: same header (category, title, status, tags,
+  // category-coloured rule), collapsed to a summary that opens in place.
+  return FODDER_ENTRIES().map(e => {
+    const catBorder = CATEGORY_BORDER[e.category] || CATEGORY_BORDER.repair;
+    const searchAttr = esc(e.search || "").replace(/"/g, "&quot;");
+    return `<details class="td-experiment fa-entry" data-category="${e.category}" data-search="${searchAttr}">
+      <summary class="td-experiment-header fa-summary" style="border-bottom:2px solid ${catBorder};">
+        <span style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+          <span style="display:block; flex:1 1 20rem; min-width:0;">
+            ${categoryLabel(e.category)}
+            <h2 class="fa-title" style="font-size:clamp(1.25rem,2.5vw+0.4rem,1.8rem); color:#fff; margin:0 0 0.5rem; font-weight:700;">${esc(e.title)}</h2>
+            ${e.verdict ? `<span class="fa-verdict" style="display:block; color:var(--td-text-secondary); font-size:0.95rem;"><strong style="color:var(--td-text-primary);">Verdict:</strong> ${esc(e.verdict)}</span>` : ""}
+          </span>
           <span class="fa-toggle" aria-hidden="true"></span>
         </span>
+        <span style="display:flex; flex-wrap:wrap; gap:0.375rem; align-items:center; margin-top:0.5rem;">
+          ${statusBadge(e.status, e.statusLabel)}${(e.tags || []).map(tag).join("")}
+        </span>
       </summary>
-      <article id="${e.id}" data-category="${e.category}" class="td-experiment fa-article">
+      <article id="${e.id}" class="fa-article">
         <div class="td-experiment-body">${renderSections(e.sections)}</div>
-        <div class="fa-entry-links">
-          <a href="#/experiments/${e.id}">Open as a full page</a>
-          <a href="#/experiments/${e.id}#comments">Discuss this entry</a>
+        <div class="fa-entry-footer">
+          <a href="#/experiments/${e.id}" class="fa-pill">Open as a full page</a>
+          <a href="#/experiments/${e.id}#comments" class="fa-pill">Discuss this entry</a>
         </div>
       </article>
     </details>`;
   }).join("");
-  return `<div class="fa-notebook">${rows}</div>`;
 }
 
 // ===== Render content =====
