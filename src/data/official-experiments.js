@@ -1363,14 +1363,14 @@ export const OFFICIAL_EXPERIMENTS = [
         "5th": "ChatGPT"
       }
     },
-    "results": "Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA routing, persisted theme, detail pages). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude. Round 2 with current models is in progress.",
+    "results": "Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA view routing, category filters and per-experiment detail views). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude. Round 2 with current models is in progress. Round 1's attribution for Claude, DeepSeek and ChatGPT can't be verified from the surviving files.",
     "observations": [
       "Architecture beat aesthetics: working routing and structure separated the top entry, not colour or typography.",
       "The owner prioritised working functionality; Claude prioritised design systems and self-contained code.",
       "The owner's assessment has no conflict of interest; Claude's does, and both are shown for transparency."
     ],
     "limitations": "n=1 per model, single cold prompt, subjective scoring. An anecdotal comparison, not a statistical sample.",
-    "verdict": "Owner's winner: Grok (9.0/10). Claude placed last in the owner's ranking (4.5/10).",
+    "verdict": "Round 1: Grok won the owner's ranking (9.0/10). Some Round 1 attributions can't be verified; Round 2 is in progress.",
     "devices": [],
     "sources": [
       "Owner assessment",
@@ -1437,13 +1437,22 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "type": "notice",
-        "html": "⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Links to each model's raw submission will be added once the original files are published."
+        "html": "⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Raw submissions are linked where the original file could be verified."
       },
       {
         "type": "callout",
         "title": "Round 2 in progress",
         "paragraphs": [
           "Round 2 reruns this test with the current version of each model, using the same prompt and blind scoring. Everything below is Round 1 and stays here as history."
+        ]
+      },
+      {
+        "type": "callout",
+        "title": "About Round 1's records",
+        "paragraphs": [
+          "The original Round 1 files were not kept reliably. The surviving files confirm the Gemini and Grok entries, and those two are linked below. For Claude, DeepSeek and ChatGPT, the attribution can't be verified.",
+          "The file saved as Claude's matches this page's description of DeepSeek's entry. DeepSeek's surviving file contains the owner's real experiments, so it was not a cold-prompt output. ChatGPT's file is missing.",
+          "Two claims were corrected after checking the files: Grok's theme button only shows an alert (the site is dark-only, with no saved light/dark mode and no timeline component), and Claude's assessment credited Gemini with features its file doesn't have. Round 2 supersedes Round 1's model-by-model results."
         ]
       },
       {
@@ -1492,7 +1501,8 @@ export const OFFICIAL_EXPERIMENTS = [
             "title": "🥇 Grok — 9.0/10",
             "value": "9.0",
             "valueColor": "success",
-            "body": "Full SPA with working JS view-routing, a real light/dark toggle with persisted state, hero stats, timeline component, and per-experiment detail pages. The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized."
+            "body": "Full SPA with working JS view-routing, hero stats, category filters, and per-experiment detail views. (Corrected: the original write-up also credited a saved light/dark toggle and a timeline component; the file's theme button only shows an alert, and there is no timeline.) The only entry that built genuine site architecture instead of a static scroll page — and the only one whose structure actually mirrors how this real site is organized.",
+            "link": "/fa01/round-1/grok.html"
           },
           {
             "type": "ranking",
@@ -1516,7 +1526,8 @@ export const OFFICIAL_EXPERIMENTS = [
             "title": "4th — Gemini — 6.5/10",
             "value": "6.5",
             "valueColor": "error",
-            "body": "Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections."
+            "body": "Clean Docusaurus-style dark sidebar with proper callouts and working anchor nav. Off-topic content (router flashing tutorial) and no interactivity beyond native anchors. Page feels unfinished at just two sections.",
+            "link": "/fa01/round-1/gemini.html"
           },
           {
             "type": "ranking",
@@ -1556,7 +1567,7 @@ export const OFFICIAL_EXPERIMENTS = [
             "title": "🥈 Gemini — Functional Dashboard",
             "value": "2nd",
             "valueColor": "success",
-            "body": "Fixed sidebar, live search filtering nav items, [data-theme] attribute toggle with localStorage, copy-to-clipboard on code blocks, JS tab routing with fadeIn animations, status dots, and a .callout component system with modifiers. Structurally well-built. Fatal flaw: content went completely off-brief (OpenWrt router flashing, VLAN containment) — nothing to do with smartphones or repair."
+            "body": "Fixed sidebar with grouped navigation, a .callout component system with modifiers, coloured status labels and an equipment table. Content went completely off-brief (OpenWrt router flashing) — nothing to do with smartphones or repair. (Corrected: this assessment originally also credited live search, a saved theme toggle, copy-to-clipboard and JS tab routing; the surviving file contains no JavaScript at all.)"
           },
           {
             "type": "ranking",
@@ -1720,7 +1731,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "paragraph",
         "variant": "small",
-        "html": "The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing, persisted state, and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does."
+        "html": "The biggest disagreement: Grok and functionality vs. architecture. The owner prioritized working JS routing and SPA structure. Claude prioritized design token systems, semantic code, and self-contained CSS. Neither is objectively correct — they reflect different values in what makes a good website. The owner's assessment has no conflict of interest. Claude's does."
       },
       {
         "type": "heading",
@@ -1747,7 +1758,7 @@ export const OFFICIAL_EXPERIMENTS = [
             "type": "insight",
             "tone": "info",
             "title": "Interactivity Was Rare",
-            "body": "Only Grok (view routing + persisted theme) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only."
+            "body": "Only Grok (view routing, filters and detail views) and ChatGPT (live search) shipped any real JavaScript functionality. DeepSeek, Gemini, and Claude were static HTML/CSS with decorative hover states only."
           },
           {
             "type": "insight",
@@ -1760,7 +1771,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "conclusion",
         "title": "Owner's Winner: Grok · Claude's Winner: Claude · Honest Winner: Probably Grok",
-        "body": "The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation and persistent state. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running."
+        "body": "The owner's verdict stands on firmer ground — no conflict of interest, judged by the person who actually built and uses the real site. Grok built the closest thing to a real documentation product with working navigation. Claude's own entry, kept here for transparency, finished last on substance in the owner's assessment despite Claude rating it first. The meta-lesson: an AI judging its own output is not a reliable benchmark. That's exactly why this experiment was worth running."
       },
       {
         "type": "checklist",
