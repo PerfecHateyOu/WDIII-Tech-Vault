@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechDocs | Consumer Tech Experiments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        .nav-item.active {
+            background-color: #dcfce7;
+            color: #16a34a;
+            font-weight: 600;
+            border-right: 3px solid #16a34a;
+        }
+        
+        /* Smooth transition for sidebar on mobile */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography overrides for doc content */
+        .doc-content h1 { @apply text-3xl md:text-4xl font-bold tracking-tight mb-6 text-slate-900; }
+        .doc-content h2 { @apply text-2xl font-semibold mt-10 mb-4 border-b pb-2 text-slate-800; }
+        .doc-content h3 { @apply text-xl font-medium mt-8 mb-3 text-slate-800; }
+        .doc-content p { @apply leading-relaxed mb-4 text-slate-600; }
+        .doc-content blockquote { @apply border-l-4 border-brand-500 bg-brand-50 p-4 rounded-r-lg my-6 text-slate-700 italic; }
+        
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="antialiased h-screen overflow-hidden flex flex-col">
+
+    <header class="h-16 bg-white border-b border-slate-200 fixed w-full z-30 flex items-center justify-between px-4 lg:px-8 shadow-sm">
+        <div class="flex items-center gap-4">
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            
+            <!-- Site Title -->
+            <a href="#" class="flex items-center gap-2" onclick="switchSection('home', event)">
+                <div class="bg-brand-600 text-white p-1 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-900">TechDocs<span class="text-brand-600">.</span></span>
+            </a>
+        </div>
+
+        <!-- Mock Search Bar -->
+        <div class="hidden md:flex flex-1 max-w-md mx-8">
+            <div class="relative w-full">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <input type="text" class="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-md leading-5 bg-slate-50 placeholder-slate-500 focus:outline-none focus:placeholder-slate-400 focus:ring-1 focus:ring-brand-500 focus:border-brand-500 sm:text-sm transition-colors" placeholder="Search experiments, devices, repairs...">
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <span class="text-slate-400 text-xs font-mono border border-slate-200 rounded px-1.5 py-0.5">⌘K</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="text-sm text-slate-500 hidden sm:block">v2026.09</span>
+            <a href="#" class="text-slate-400 hover:text-slate-600">
+                <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <div class="flex flex-1 pt-16 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-white border-r border-slate-200 absolute inset-y-0 left-0 pt-16 lg:pt-0 lg:static z-20 overflow-y-auto -translate-x-full lg:translate-x-0">
+            <nav class="px-3 py-6 space-y-1">
+                <div class="mb-6 px-3">
+                    <h4 class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3">Overview</h4>
+                    <a href="#" class="nav-item active flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-slate-700 hover:bg-slate-50 transition-colors" data-target="home">
+                        <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Introduction
+                    </a>
+                </div>
+
+                <div class="mb-6 px-3">
+                    <h4 class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3">Hardware Labs</h4>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-slate-700 hover:bg-slate-50 transition-colors" data-target="smartphones">
+                        <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        Smartphone Shootout
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-slate-700 hover:bg-slate-50 transition-colors" data-target="repairs">
+                        <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                        </svg>
+                        Repair Services
+                    </a>
+                </div>
+
+                <div class="mb-6 px-3">
+                    <h4 class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3">Software Analysis</h4>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-slate-700 hover:bg-slate-50 transition-colors" data-target="software">
+                        <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        OS Battery Drain Test
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-10 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+        <main class="flex-1 overflow-y-auto bg-white p-6 md:p-10 lg:p-12 relative">
+            <div class="max-w-4xl mx-auto doc-content">
+                
+                <!-- Section: Home -->
+                <article id="home" class="content-section active">
+                    <div class="inline-flex items-center rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-sm font-medium text-brand-800 mb-6">
+                        <span class="flex h-2 w-2 rounded-full bg-brand-500 mr-2"></span>
+                        Updated Sept 2026
+                    </div>
+                    <h1>Consumer Tech, Documented.</h1>
+                    <p class="text-xl text-slate-500 mb-8 font-light">Welcome to TechDocs. We run rigorous, independent, and strictly empirical tests on the tech you rely on every day. No marketing fluff. Just data.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mt-12">
+                        <div class="border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow cursor-pointer group" onclick="switchSection('smartphones', event)">
+                            <div class="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            </div>
+                            <h3 class="!mt-0 text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">Smartphone Experiments</h3>
+                            <p class="text-sm text-slate-500">Dive deep into camera shootouts, thermal throttling, and sustained performance under load.</p>
+                        </div>
+
+                        <div class="border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow cursor-pointer group" onclick="switchSection('repairs', event)">
+                            <div class="h-10 w-10 rounded-lg bg-orange-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            </div>
+                            <h3 class="!mt-0 text-lg font-semibold text-slate-900 group-hover:text-orange-600 transition-colors">Repairability Services</h3>
+                            <p class="text-sm text-slate-500">Real-world comparisons of Official OEM vs. Third-Party repairs for screens, batteries, and logic boards.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="mt-12">Methodology Standard</h2>
+                    <p>Every test documented here follows our strict <a href="#" class="text-brand-600 font-medium hover:underline">Lab Protocol v2.4</a>. Environmental variables (temperature, background light, RF interference) are controlled. All tests are run on a minimum sample size of three identical retail units to account for silicon lottery variance.</p>
+                    <blockquote>
+                        "In consumer technology, the spec sheet is a promise. The real-world test is the reality." 
+                        <span class="block mt-2 text-sm text-slate-500 font-medium">— TechDocs Editorial Board</span>
+                    </blockquote>
+                </article>
+
+                <!-- Section: Smartphones -->
+                <article id="smartphones" class="content-section">
+                    <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 font-medium uppercase tracking-wide">
+                        <span>Hardware Labs</span>
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        <span class="text-brand-600">Smartphones</span>
+                    </div>
+                    <h1>Flagship Camera Shootout 2026</h1>
+                    <p class="text-lg">We took the three leading flagships of late 2026 to Iceland for rigorous real-world testing. Our focus: challenging dynamic range scenarios, sub-zero thermals, and extreme low-light performance.</p>
+                    
+                    <h2>Controlled Environment Results</h2>
+                    <p>Before the field test, we ran baseline ISO and noise-floor comparisons in our light-controlled studio. Below are the composite scores (higher is better, max 100).</p>
+
+                    <div class="overflow-x-auto mt-6 rounded-xl border border-slate-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Device</th>
+                                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Dynamic Range (Stops)</th>
+                                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Low-Light Score</th>
+                                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Shutter Lag (ms)</th>
+                                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Verdict</th>
+                                </tr>
+                            </thead>
+                            <divide-y class="divide-slate-200 bg-white">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-slate-900 flex items-center gap-3">
+                                        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">A</div>
+                                        Titanium Pro Max
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600">14.2</td>
+                                    <td class="px-6 py-4 text-slate-600">92</td>
+                                    <td class="px-6 py-4 text-slate-600">12ms</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Best Video</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-slate-900 flex items-center gap-3">
+                                        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">S</div>
+                                        Galaxy Ultra S26
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600">13.8</td>
+                                    <td class="px-6 py-4 text-slate-600">89</td>
+                                    <td class="px-6 py-4 text-slate-600">28ms</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">Best Zoom</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-slate-900 flex items-center gap-3">
+                                        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">G</div>
+                                        Pixel Alpha
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600">14.5</td>
+                                    <td class="px-6 py-4 text-slate-600">96</td>
+                                    <td class="px-6 py-4 text-slate-600">18ms</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">Best Stills</span>
+                                    </td>
+                                </tr>
+                            </divide-y>
+                        </table>
+                    </div>
+
+                    <h2>Field Notes</h2>
+                    <p>While the <strong>Titanium Pro Max</strong> maintains its lead in ProRes video capture with zero thermal throttling at 4K/60fps, the <strong>Pixel Alpha</strong> dominated still photography. Its new stacked sensor managed to resolve details in the shadows of an ice cave that both competitors crushed to pure black.</p>
+                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mt-6">
+                        <div class="flex items-center gap-2 text-sm text-slate-600 font-mono mb-2">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                            Raw Data Download
+                        </div>
+                        <p class="text-sm mb-0">Download the full suite of DNG RAW files from this test (4.2GB ZIP).</p>
+                        <button class="mt-3 bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-brand-500 focus:outline-none">Download .ZIP</button>
+                    </div>
+                </article>
+
+                <!-- Section: Repairs -->
+                <article id="repairs" class="content-section">
+                    <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 font-medium uppercase tracking-wide">
+                        <span>Hardware Labs</span>
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        <span class="text-brand-600">Repair Services</span>
+                    </div>
+                    <h1>Official vs Third-Party Screen Repair</h1>
+                    <p class="text-lg mb-8">When you shatter a $1,200 smartphone screen, the repair options are vast and confusing. We sent deliberately broken devices (display shattered, logic board intact) to both Official OEM mail-in repair centers and highly-rated local third-party shops. Here is what we found.</p>
+
+                    <div class="grid md:grid-cols-2 gap-8 mt-8">
+                        <!-- Official Repair Card -->
+                        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">Baseline</span>
+                            </div>
+                            <h3 class="!mt-0 text-xl font-bold flex items-center gap-2">
+                                <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                Official OEM Repair
+                            </h3>
+                            <p class="text-sm text-slate-500 mb-6">Mailed to central manufacturer repair hubs via pre-paid boxes.</p>
+                            
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-slate-900 text-sm uppercase tracking-wide">Pros</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-green-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        <span class="text-sm text-slate-600">Guaranteed genuine parts (perfect color calibration).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-green-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        <span class="text-sm text-slate-600">Maintains factory water resistance (IP68) seal.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-green-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        <span class="text-sm text-slate-600">Warranty remains fully intact.</span>
+                                    </li>
+                                </ul>
+
+                                <h4 class="font-semibold text-slate-900 text-sm uppercase tracking-wide pt-4 border-t border-slate-100">Cons</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-red-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span class="text-sm text-slate-600">Expensive ($329+ out of warranty).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-red-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span class="text-sm text-slate-600">Slow turnaround (averaged 6-8 business days).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-red-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span class="text-sm text-slate-600">Requires a full device data wipe due to "privacy policy".</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Third Party Repair Card -->
+                        <div class="rounded-2xl border border-brand-200 bg-brand-50/30 p-6 shadow-sm relative overflow-hidden">
+                            <h3 class="!mt-0 text-xl font-bold flex items-center gap-2">
+                                <svg class="h-6 w-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                Local Third-Party Shop
+                            </h3>
+                            <p class="text-sm text-slate-500 mb-6">Walk-in repairs at top-rated local independent stores.</p>
+                            
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-slate-900 text-sm uppercase tracking-wide">Pros</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-green-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        <span class="text-sm text-slate-600">Significantly cheaper ($149 - $199 average).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-green-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        <span class="text-sm text-slate-600">Fast (usually same-day, often under 2 hours).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-green-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        <span class="text-sm text-slate-600">No data wipe required. Your photos stay safe.</span>
+                                    </li>
+                                </ul>
+
+                                <h4 class="font-semibold text-slate-900 text-sm uppercase tracking-wide pt-4 border-t border-slate-200">Cons</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-red-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span class="text-sm text-slate-600">Variable part quality (some screens had cooler color temps).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-red-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span class="text-sm text-slate-600">May trigger software "Non-Genuine Part" warnings.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="h-5 w-5 text-red-500 mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span class="text-sm text-slate-600">Water resistance is usually compromised post-repair.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Section: Software -->
+                <article id="software" class="content-section">
+                    <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 font-medium uppercase tracking-wide">
+                        <span>Software Analysis</span>
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        <span class="text-brand-600">OS Performance</span>
+                    </div>
+                    <h1>OS Battery Drain Test (Automated Script)</h1>
+                    <p class="text-lg">To eliminate human error in screen-on time measurements, we built a robotic rig that loops web browsing, 3D rendering, video playback, and standby modes until devices hit 0%. All devices were set to 200 nits uniform brightness.</p>
+
+                    <h2>Battery Endurance (Hours:Minutes)</h2>
+                    
+                    <!-- CSS Data Chart -->
+                    <div class="mt-8 mb-12 space-y-6">
+                        
+                        <!-- Chart Item 1 -->
+                        <div class="relative">
+                            <div class="flex justify-between text-sm font-medium text-slate-700 mb-1">
+                                <span>iOS 19.1 (iPhone 18 Pro)</span>
+                                <span>14h 22m</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner relative">
+                                <!-- Tooltip wrapper for visual interest -->
+                                <div class="bg-indigo-500 h-4 rounded-full" style="width: 85%"></div>
+                                <!-- Markers for specific tasks -->
+                                <div class="absolute top-0 bottom-0 left-[20%] border-l-2 border-white/40"></div>
+                                <div class="absolute top-0 bottom-0 left-[60%] border-l-2 border-white/40"></div>
+                            </div>
+                        </div>
+
+                        <!-- Chart Item 2 -->
+                        <div class="relative">
+                            <div class="flex justify-between text-sm font-medium text-slate-700 mb-1">
+                                <span>Android 16 (Pixel 10 Pro)</span>
+                                <span>12h 45m</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner relative">
+                                <div class="bg-emerald-500 h-4 rounded-full" style="width: 75%"></div>
+                                <div class="absolute top-0 bottom-0 left-[20%] border-l-2 border-white/40"></div>
+                                <div class="absolute top-0 bottom-0 left-[60%] border-l-2 border-white/40"></div>
+                            </div>
+                        </div>
+
+                        <!-- Chart Item 3 -->
+                        <div class="relative">
+                            <div class="flex justify-between text-sm font-medium text-slate-700 mb-1">
+                                <span>HarmonyOS 6 (Mate 80)</span>
+                                <span>15h 10m</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner relative">
+                                <div class="bg-rose-500 h-4 rounded-full" style="width: 92%"></div>
+                                <div class="absolute top-0 bottom-0 left-[20%] border-l-2 border-white/40"></div>
+                                <div class="absolute top-0 bottom-0 left-[60%] border-l-2 border-white/40"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-slate-400 mt-2 font-mono">
+                            <span>0h</span>
+                            <span>4h</span>
+                            <span>8h</span>
+                            <span>12h</span>
+                            <span>16h</span>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="flex gap-4 mt-6 text-xs text-slate-500 border-t pt-4">
+                            <div class="flex items-center gap-1">
+                                <div class="w-3 h-3 bg-slate-300 rounded-sm"></div>
+                                <span>0-20% Browsing</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-3 h-3 bg-slate-300 rounded-sm"></div>
+                                <span>20-60% Video</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-3 h-3 bg-slate-300 rounded-sm"></div>
+                                <span>60%+ 3D Game Loop</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2>Conclusion</h2>
+                    <p>While Android 16 brought significant improvements to background task handling, its aggressive CPU ramping during the 3D gaming loop caused it to fall behind. HarmonyOS 6's extremely aggressive background app killing (often breaking push notifications for third-party apps) yields the longest raw screen-on time, but at a severe cost to user experience. iOS remains the most balanced, though it struggled slightly during the 4K video playback segment compared to last year.</p>
+                </article>
+
+                <!-- Footer -->
+                <footer class="mt-16 pt-8 border-t border-slate-200 text-sm text-slate-500 pb-12">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <p>&copy; 2026 TechDocs Editorial. Independent consumer research.</p>
+                        <div class="flex gap-4">
+                            <a href="#" class="hover:text-brand-600 transition-colors">Methodology</a>
+                            <a href="#" class="hover:text-brand-600 transition-colors">Ethics Policy</a>
+                            <a href="#" class="hover:text-brand-600 transition-colors">Contact</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // DOM Elements
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        // Function to switch between content sections
+        window.switchSection = function(targetId, event) {
+            if(event) {
+                event.preventDefault();
+            }
+
+            // Update Active Nav Item Styling
+            navItems.forEach(item => {
+                if (item.dataset.target === targetId) {
+                    item.classList.add('active');
+                    item.classList.remove('text-slate-700');
+                } else {
+                    item.classList.remove('active');
+                    item.classList.add('text-slate-700');
+                }
+            });
+
+            // Show Target Section, Hide Others
+            contentSections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            // Close mobile menu if open
+            closeMobileMenu();
+
+            // Scroll to top of main content area
+            document.querySelector('main').scrollTo(0,0);
+        };
+
+        // Attach event listeners to navigation links (for ones not using onclick attribute)
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if(item.dataset.target) {
+                    switchSection(item.dataset.target, e);
+                }
+            });
+        });
+
+        // Mobile Menu Toggle Logic
+        function openMobileMenu() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+            // Small delay to allow display block to apply before opacity transition
+            setTimeout(() => {
+                sidebarOverlay.classList.remove('opacity-0');
+            }, 10);
+            document.body.classList.add('overflow-hidden'); // prevent background scrolling
+        }
+
+        function closeMobileMenu() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('opacity-0');
+            setTimeout(() => {
+                sidebarOverlay.classList.add('hidden');
+            }, 300); // match css transition duration
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        mobileMenuBtn.addEventListener('click', () => {
+            if (sidebar.classList.contains('-translate-x-full')) {
+                openMobileMenu();
+            } else {
+                closeMobileMenu();
+            }
+        });
+
+        sidebarOverlay.addEventListener('click', closeMobileMenu);
+
+        // Simple mock search functionality (visual only)
+        const searchInput = document.querySelector('input[type="text"]');
+        if(searchInput) {
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    // Create a visual feedback but no alert
+                    const originalPlaceholder = searchInput.placeholder;
+                    searchInput.value = '';
+                    searchInput.placeholder = 'Searching...';
+                    setTimeout(() => {
+                        searchInput.placeholder = 'No results found for that query.';
+                        setTimeout(() => {
+                            searchInput.placeholder = originalPlaceholder;
+                        }, 2000);
+                    }, 500);
+                }
+            });
+        }
+        
+        // Keyboard shortcut for search
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                if(searchInput) searchInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

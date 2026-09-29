@@ -1344,18 +1344,32 @@ export const OFFICIAL_EXPERIMENTS = [
     "origin": "official_wdiii",
     "researchQuestion": "Given the same bare prompt and no guidance, which AI assistant builds the best consumer tech documentation website?",
     "objective": "Compare five AI assistants on a single cold prompt to build a consumer tech documentation site, judged on design execution, code quality, structure and functionality.",
-    "methodology": "DeepSeek, Gemini, Grok, ChatGPT and Claude each received the same blind prompt: \"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software.\" No examples, no reference to this site, no follow-up guidance. The site owner ranked the outputs; Claude produced a separate independent assessment before seeing the owner's rankings.",
+    "methodology": "Round 2 (September 28, 2026): Gemini 3.1 Pro, DeepSeek V4, Claude Opus 5.5, Grok 4.6 and Luna 5.6 (ChatGPT) each received the identical prompt in a fresh chat with memory off, with no follow-ups; outputs were saved unedited, shuffled into files A–E and scored blind by the owner and by Claude in a separate fresh chat, with the key sealed until both assessments were recorded. Round 1: DeepSeek, Gemini, Grok, ChatGPT and Claude each received the same blind prompt: \"Build me a consumer tech documentation website in HTML to showcase real-world experiments comparing smartphones, repair services, and software.\" No examples, no reference to this site, no follow-up guidance. The site owner ranked the outputs; Claude produced a separate independent assessment before seeing the owner's rankings.",
     "conditions": "One cold prompt per model, no iteration. Each model invented its own placeholder content.",
     "protocol": "1. Give each model the identical prompt. 2. Save the raw HTML output. 3. Owner scores design, code quality, structure and functionality. 4. Claude assesses independently. 5. Compare the two rankings.",
     "measurements": {
-      "Owner ranking": {
+      "Round 2 owner (overall)": {
+        "Grok 4.6": "9.0 / 10",
+        "Claude Opus 5.5": "8.5 / 10",
+        "Luna 5.6": "7.5 / 10",
+        "Gemini 3.1 Pro": "7.0 / 10",
+        "DeepSeek V4": "6.5 / 10"
+      },
+      "Round 2 Claude, blind (overall)": {
+        "Grok 4.6": "8.5 / 10",
+        "Claude Opus 5.5": "8 / 10",
+        "Luna 5.6": "6.5 / 10",
+        "Gemini 3.1 Pro": "5.5 / 10",
+        "DeepSeek V4": "5 / 10"
+      },
+      "Round 1 owner ranking": {
         "Grok": "9.0 / 10",
         "ChatGPT": "7.0 / 10",
         "DeepSeek": "7.0 / 10",
         "Gemini": "6.5 / 10",
         "Claude": "4.5 / 10"
       },
-      "Claude's independent ranking": {
+      "Round 1 claude's independent ranking": {
         "1st": "Claude",
         "2nd": "Gemini",
         "3rd": "DeepSeek",
@@ -1363,30 +1377,54 @@ export const OFFICIAL_EXPERIMENTS = [
         "5th": "ChatGPT"
       }
     },
-    "results": "Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA view routing, category filters and per-experiment detail views). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude. Round 2 with current models is in progress. Round 1's attribution for Claude, DeepSeek and ChatGPT can't be verified from the surviving files.",
+    "results": "Round 2 (September 28, 2026, scored blind; owner / Claude): Grok 4.6 9.0 / 8.5, Claude Opus 5.5 8.5 / 8.0, Luna 5.6 7.5 / 6.5, Gemini 3.1 Pro 7.0 / 5.5, DeepSeek V4 6.5 / 5.0 — the same order in both assessments. Round 1: Owner ranking: Grok 9.0, ChatGPT 7.0, DeepSeek 7.0, Gemini 6.5, Claude 4.5. Grok was the only entry that built real site architecture (working SPA view routing, category filters and per-experiment detail views). Claude's independent assessment ranked itself first and ChatGPT last; the two rankings disagree most on Grok and Claude. Round 1's attribution for Claude, DeepSeek and ChatGPT can't be verified from the surviving files.",
     "observations": [
+      "Round 2: both assessments ranked the five models in the same order.",
+      "Round 2: Claude's blind assessment placed its own model second, behind Grok.",
+      "Round 2: only Luna 5.6 labelled its invented numbers as illustrative.",
       "Architecture beat aesthetics: working routing and structure separated the top entry, not colour or typography.",
       "The owner prioritised working functionality; Claude prioritised design systems and self-contained code.",
       "The owner's assessment has no conflict of interest; Claude's does, and both are shown for transparency."
     ],
-    "limitations": "n=1 per model, single cold prompt, subjective scoring. An anecdotal comparison, not a statistical sample.",
-    "verdict": "Round 1: Grok won the owner's ranking (9.0/10). Some Round 1 attributions can't be verified; Round 2 is in progress.",
+    "limitations": "One run per model per round, subjective scoring. The Claude assessor shares a model family with one contestant and may recognise its style even blind. Round 1's records are incomplete (see the Round 1 note).",
+    "verdict": "Round 2: Grok 4.6 won (owner 9.0, Claude 8.5); Claude Opus 5.5 second. Both assessments ranked all five in the same order.",
     "devices": [],
     "sources": [
-      "Owner assessment",
-      "Claude's independent assessment",
-      "Raw model outputs (archived)"
+      "Owner assessment (Round 1 and Round 2)",
+      "Claude's assessments (Round 1 independent; Round 2 blind)",
+      "Raw model outputs (Round 2 all five; Round 1 Gemini and Grok)"
     ],
     "tags": [
-      "5 Models Tested",
-      "Cold Prompt Only"
+      "5 Models, 2 Rounds",
+      "Cold Prompt Only",
+      "Blind Scoring in Round 2"
     ],
     "scope": "📋 n=1 per model — anecdotal comparison, not a statistical sample",
-    "search": "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude",
+    "search": "fa-01 which ai builds our website best ai comparison deepseek gemini grok chatgpt claude round 2 grok 4.6 claude opus 5.5 luna 5.6 gemini 3.1 pro deepseek v4 blind",
     "toc": [
       {
+        "id": "fa01-r2-results",
+        "label": "Round 2: Results"
+      },
+      {
+        "id": "fa01-r2-owner",
+        "label": "Round 2: Owner Rankings"
+      },
+      {
+        "id": "fa01-r2-claude",
+        "label": "Round 2: Claude (Blind)"
+      },
+      {
+        "id": "fa01-r2-findings",
+        "label": "Round 2: Key Findings"
+      },
+      {
+        "id": "fa01-round-1",
+        "label": "Round 1"
+      },
+      {
         "id": "fa01-setup",
-        "label": "Experiment Setup"
+        "label": "Round 1: Setup"
       },
       {
         "id": "fa01-owner-rankings",
@@ -1398,15 +1436,15 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "id": "fa01-divergence",
-        "label": "Where They Diverge"
+        "label": "Round 1: Divergence"
       },
       {
         "id": "fa01-findings",
-        "label": "Key Findings"
+        "label": "Round 1: Key Findings"
       },
       {
         "id": "fa01-recommendation",
-        "label": "Recommendation"
+        "label": "Round 1: Recommendation"
       }
     ],
     "relatedExperiments": [],
@@ -1437,14 +1475,334 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "type": "notice",
-        "html": "⚠️ Disclaimer: rankings and verdicts below reflect two independent assessments — one by the site owner, one by Claude. Claude's own submission is included for transparency. Raw submissions are linked where the original file could be verified."
+        "html": "⚠️ Disclaimer: each round has two assessments — one by the site owner, one by Claude. Claude's own model is one of the five contestants. Raw submissions are linked where the original file could be verified."
       },
       {
-        "type": "callout",
-        "title": "Round 2 in progress",
-        "paragraphs": [
-          "Round 2 reruns this test with the current version of each model, using the same prompt and blind scoring. Everything below is Round 1 and stays here as history."
+        "type": "heading",
+        "id": "fa01-r2-results",
+        "text": "Round 2: Results (September 28, 2026)"
+      },
+      {
+        "type": "paragraph",
+        "variant": "lead",
+        "html": "Round 2 reran the test with the current version of each model: the same prompt, one reply each, every chat fresh with memory off. The five pages were shuffled at random into files A–E, and both assessments below were recorded before the key was opened."
+      },
+      {
+        "type": "meta",
+        "items": [
+          {
+            "label": "Date Run",
+            "value": "September 28, 2026"
+          },
+          {
+            "label": "Prompt",
+            "value": "Identical to Round 1, word for word"
+          },
+          {
+            "label": "Conditions",
+            "value": "Fresh chat, memory off, no follow-ups"
+          },
+          {
+            "label": "Scoring",
+            "value": "Blind: files A–E, key sealed until both assessments were recorded"
+          },
+          {
+            "label": "Assessors",
+            "value": "Site owner, and Claude in a separate fresh chat that saw only files A–E"
+          }
         ]
+      },
+      {
+        "type": "table",
+        "caption": "Round 2 — model versions and overall scores (out of 10)",
+        "headers": [
+          {
+            "label": "Rank",
+            "center": true
+          },
+          {
+            "label": "Model"
+          },
+          {
+            "label": "Version"
+          },
+          {
+            "label": "Owner",
+            "center": true
+          },
+          {
+            "label": "Claude (blind)",
+            "center": true
+          }
+        ],
+        "rows": [
+          [
+            {
+              "center": true,
+              "text": "1"
+            },
+            {
+              "primary": true,
+              "text": "Grok"
+            },
+            {
+              "text": "Grok 4.6"
+            },
+            {
+              "center": true,
+              "text": "9.0"
+            },
+            {
+              "center": true,
+              "text": "8.5"
+            }
+          ],
+          [
+            {
+              "center": true,
+              "text": "2"
+            },
+            {
+              "primary": true,
+              "text": "Claude"
+            },
+            {
+              "text": "Claude Opus 5.5"
+            },
+            {
+              "center": true,
+              "text": "8.5"
+            },
+            {
+              "center": true,
+              "text": "8"
+            }
+          ],
+          [
+            {
+              "center": true,
+              "text": "3"
+            },
+            {
+              "primary": true,
+              "text": "ChatGPT"
+            },
+            {
+              "text": "Luna 5.6"
+            },
+            {
+              "center": true,
+              "text": "7.5"
+            },
+            {
+              "center": true,
+              "text": "6.5"
+            }
+          ],
+          [
+            {
+              "center": true,
+              "text": "4"
+            },
+            {
+              "primary": true,
+              "text": "Gemini"
+            },
+            {
+              "text": "Gemini 3.1 Pro"
+            },
+            {
+              "center": true,
+              "text": "7.0"
+            },
+            {
+              "center": true,
+              "text": "5.5"
+            }
+          ],
+          [
+            {
+              "center": true,
+              "text": "5"
+            },
+            {
+              "primary": true,
+              "text": "DeepSeek"
+            },
+            {
+              "text": "DeepSeek V4"
+            },
+            {
+              "center": true,
+              "text": "6.5"
+            },
+            {
+              "center": true,
+              "text": "5"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "keyFinding",
+        "title": "Both Assessments Agree on the Order",
+        "body": "The owner and Claude's blind assessment ranked the five identically: Grok 4.6, Claude Opus 5.5, Luna 5.6, Gemini 3.1 Pro, DeepSeek V4. Claude scored 0.5 to 1.5 points lower across the board, but not one position differs. In Round 1 the two assessments disagreed sharply."
+      },
+      {
+        "type": "heading",
+        "id": "fa01-r2-owner",
+        "text": "Round 2: Owner Rankings"
+      },
+      {
+        "type": "group",
+        "layout": "stack",
+        "children": [
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥇 Grok 4.6 — 9.0/10",
+            "value": "9.0",
+            "valueColor": "success",
+            "body": "Design 9.0 · Code quality 9.0 · Structure &amp; functionality 9.5. Single-file lab volume: hash router (#/, #/notes, #/compare, #/methods, #/shelf), JSON payload of structured notes (question, setup, protocol, metrics, findings, caveats), metric-switchable bar charts and tables, desktop sticky nav + mobile menu, / search overlay, localStorage “shelf,” reading progress bar, skip link. Visual system (brass on ink, Newsreader + IBM Plex) matches the “lab notes” brief. Heaviest file, but the features named above are implemented in the script, not mocked. Most complete answer to “documentation website.”",
+            "link": "/fa01/round-2/grok.html"
+          },
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥈 Claude Opus 5.5 — 8.5/10",
+            "value": "8.5",
+            "valueColor": "success",
+            "body": "Design 8.5 · Code quality 8.5 · Structure &amp; functionality 9.0. Data-driven log: seven experiments in a JS array, category tabs (aria-pressed), live search over titles/products, accordion bodies with method lists, caveats, sample size, and animated bar charts (best row highlighted). Featured hero panel, extra cost table on screen repair, light/dark toggle with localStorage plus prefers-color-scheme, focus rings and safe-area padding. Product names are fictional (Aster 9, Keyward), which matches the footer disclaimer. Closest thing here to a working experiment catalog short of a full router.",
+            "link": "/fa01/round-2/claude.html"
+          },
+          {
+            "type": "ranking",
+            "tone": "info",
+            "title": "🥉 Luna 5.6 — 7.5/10",
+            "value": "7.5",
+            "valueColor": "info",
+            "body": "Design 8.0 · Code quality 8.0 · Structure &amp; functionality 6.5. Editorial cream/paper look with sticky header, large display headline, CSS-drawn phone, stat tiles, and a comparison table. Category pills actually hide/show cards via data-category and a .hidden class. Gaps: experiments are teasers only (links jump to #featured / #method, not individual reports); no search, theme, or result charts; method is three short cards. Cohesive demo site, thin as a documentation product.",
+            "link": "/fa01/round-2/chatgpt.html"
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "4th — Gemini 3.1 Pro — 7.0/10",
+            "value": "7.0",
+            "valueColor": "warning",
+            "body": "Design 7.5 · Code quality 6.5 · Structure &amp; functionality 7.5. Docs-app chrome: fixed header, Tailwind sidebar, hamburger + overlay, section switching (home / smartphones / repairs / software), CSS bar chart, OEM vs third-party pro/con cards. Search is visual only (Enter swaps the placeholder; ⌘K focuses the box). Relies on the Tailwind CDN; @apply in a page stylesheet is fragile; markup in the shootout table is messy (divide-y used as if it were a tag). Feels like a polished template more than a complete experiment archive.",
+            "link": "/fa01/round-2/gemini.html"
+          },
+          {
+            "type": "ranking",
+            "tone": "error",
+            "title": "5th — DeepSeek V4 — 6.5/10",
+            "value": "6.5",
+            "valueColor": "error",
+            "body": "Design 7.0 · Code quality 7.5 · Structure &amp; functionality 5.5. Clear results dashboard: three sections, nine cards with labeled metrics, badges, footnotes, and a summary “key findings” block. Hover lift and a responsive auto-fit grid work; Font Awesome is the only extra. Zero JS: no filter, search, expand, or routing—just one long scroll. Strong as a static lab poster, weak as a website you can browse or query.",
+            "link": "/fa01/round-2/deepseek.html"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa01-r2-claude",
+        "text": "Round 2: Claude's Blind Assessment"
+      },
+      {
+        "type": "paragraph",
+        "variant": "note",
+        "html": "Run in a separate fresh Claude chat with memory off that saw only files A–E, before the key was opened. Claude's method statement: it read all five files in full and ran the scripts for A, B, D and E in a headless DOM (C has no JavaScript). Claude may still recognise its own model's style, even blind."
+      },
+      {
+        "type": "group",
+        "layout": "stack",
+        "children": [
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥇 Grok 4.6 — 8.5/10",
+            "value": "8.5",
+            "valueColor": "success",
+            "body": "Design 8.5 · Code 8 · Structure 9.5 · Function 9. This is the most complete site: a hash-routed app with index, notes, desk filters, compare, methods and a saved-notes \"Shelf\" page, all generated from a JSON payload. The ten notes are internally consistent; I checked every \"within 8%\" claim against its data. Every route works:<br>• a search dialog opens with the / key;<br>• a metric switcher recomputes each note's summary line;<br>• older/newer and related links, and a reading progress bar;<br>• all output is HTML-escaped.<br>It loses points because the bar scaling gives the worst \"lower is better\" result a zero-length bar. Saving to the shelf isn't protected if localStorage is unavailable. Most importantly, it attributes invented figures to real phones and apps, and its footer claims they were measured."
+          },
+          {
+            "type": "ranking",
+            "tone": "success",
+            "title": "🥈 Claude Opus 5.5 — 8/10",
+            "value": "8",
+            "valueColor": "success",
+            "body": "Design 8.5 · Code 8.5 · Structure 8 · Function 8.5. It has the strongest visual identity among the light designs: Bricolage/Instrument type, a graph-paper background, and yellow highlights on the winning bar in each test. Dark mode follows the system setting, and a manual toggle is saved in localStorage. The content is driven by a data array, and all of it works:<br>• category tabs combine correctly with live search;<br>• the accordion entries carry aria-expanded;<br>• the animated bars respect reduced-motion settings;<br>• a featured panel links into the log.<br>The flaws are small: a non-standard open-state attribute, and the search term is written into the \"no results\" message unescaped. Its footer honestly marks the fictional products as sample data."
+          },
+          {
+            "type": "ranking",
+            "tone": "info",
+            "title": "🥉 Luna 5.6 — 6.5/10",
+            "value": "6.5",
+            "valueColor": "info",
+            "body": "Design 7.5 · Code 7.5 · Structure 6.5 · Function 5. It has a tidy editorial look (warm paper palette, a phone drawn in CSS, a 4-stat strip) and clean, small, semantic CSS. It honestly labels its figures as illustrative. Its only interactivity is a category filter, which works. The six experiment cards just jump to other sections rather than to any report. The nav is hidden below 850px with no menu to replace it, and the comparison table has no overflow wrapper for phones."
+          },
+          {
+            "type": "ranking",
+            "tone": "warning",
+            "title": "4th — Gemini 3.1 Pro — 5.5/10",
+            "value": "5.5",
+            "valueColor": "warning",
+            "body": "Design 6 · Code 5 · Structure 7 · Function 5.5. The Tailwind docs layout is well planned: sidebar sections, breadcrumbs, a mobile drawer with overlay, and ⌘K to focus search. The execution has real bugs, though:<br>• All the .doc-content heading and paragraph styles use @apply inside a normal &lt;style&gt; tag, which the Tailwind CDN script doesn't process. After Tailwind's reset, the page h1s render at body size.<br>• The camera table wraps its rows in a made-up &lt;divide-y&gt; element instead of &lt;tbody&gt;.<br>• The search always replies \"No results found\", and the \"Download .ZIP\" button does nothing.<br>• The battery bars don't match their 0–16h axis (14h22m is drawn at 85%, not about 90%). The legend's three swatches are all the same grey.<br>"
+          },
+          {
+            "type": "ranking",
+            "tone": "error",
+            "title": "5th — DeepSeek V4 — 5/10",
+            "value": "5",
+            "valueColor": "error",
+            "body": "Design 6.5 · Code 5.5 · Structure 5 · Function 3. It's a clean, consistent card grid with Font Awesome icons and a summary box. It's a single static page with no JavaScript, no navigation, and no &lt;main&gt;, &lt;nav&gt; or &lt;h2&gt; section structure (the section titles are divs). It pins a pre-release Font Awesome (6.0.0-beta3), and I couldn't confirm that some of its newer icon names load from that version. It also presents invented results for named real products and shops (e.g. uBreakiFix at $199) as tested, with no disclaimer. Its repair card says the local shop used a genuine part, yet shows an \"OEM warning\" badge."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "variant": "small",
+        "html": "Checked before publishing: every concrete feature claim in both Round 2 assessments was tested against the submitted code. None was disproven."
+      },
+      {
+        "type": "heading",
+        "id": "fa01-r2-findings",
+        "text": "Round 2: Key Findings"
+      },
+      {
+        "type": "group",
+        "layout": "cards",
+        "children": [
+          {
+            "type": "insight",
+            "tone": "success",
+            "title": "Grok Won Both Rounds",
+            "body": "Grok topped the owner's ranking in Round 1 (9.0) and again in Round 2 (9.0), and in Round 2 Claude's blind assessment put it first too."
+          },
+          {
+            "type": "insight",
+            "tone": "info",
+            "title": "Claude Ranked Its Own Model Second",
+            "body": "In Round 1, Claude's assessment ranked its own submission first. Scoring blind in Round 2, it placed its own model second, behind Grok, matching the owner."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "Every Page Invented Its Results",
+            "body": "All five pages made up their experiment data. Only Luna 5.6 labelled its numbers as illustrative, and Claude Opus 5.5's footer marks its products as sample data. Gemini 3.1 Pro, Grok 4.6 and DeepSeek V4 present invented results with no disclaimer; Grok's and DeepSeek's attach them to real products and shops, and Grok's footer says the figures were measured."
+          }
+        ]
+      },
+      {
+        "type": "conclusion",
+        "title": "Round 2 Winner: Grok 4.6",
+        "body": "Both assessments ranked Grok 4.6 first and Claude Opus 5.5 second. In the owner's words, Grok's page is the “most complete answer to ‘documentation website.’”"
+      },
+      {
+        "type": "heading",
+        "id": "fa01-round-1",
+        "text": "Round 1 (Earlier Models)"
       },
       {
         "type": "callout",
@@ -1458,7 +1816,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "heading",
         "id": "fa01-setup",
-        "text": "Experiment Setup"
+        "text": "Round 1: Setup"
       },
       {
         "type": "meta",
@@ -1598,7 +1956,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "heading",
         "id": "fa01-divergence",
-        "text": "Where The Two Assessments Diverge"
+        "text": "Round 1: Where the Assessments Diverge"
       },
       {
         "type": "table",
@@ -1736,7 +2094,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "heading",
         "id": "fa01-findings",
-        "text": "Key Findings"
+        "text": "Round 1: Key Findings"
       },
       {
         "type": "group",
@@ -1776,7 +2134,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "checklist",
         "id": "fa01-recommendation",
-        "title": "Which AI Should You Use for Web Development?",
+        "title": "Round 1: Which AI Should You Use for Web Development?",
         "items": [
           {
             "tone": "success",

@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Raw AI submissions for FA-01 must stay byte-identical to what each model
+# returned: no line-ending normalization, no diffs, no merges.
+public/fa01/**/*.html binary

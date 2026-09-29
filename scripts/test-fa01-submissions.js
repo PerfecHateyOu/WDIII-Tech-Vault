@@ -67,5 +67,17 @@ E.forEach((e) => walk(e.sections));
 const bad = links.filter((l) => !PATTERN.test(l) || !fs.existsSync(path.join('public', l)));
 check(`every submission link points to a published file (${links.length} links)`, bad.length === 0, bad.join(', '));
 
+// Every published submission must match its recorded checksum, and every file must be recorded
+const sumsText = fs.existsSync(path.join('public', 'fa01', 'checksums.md')) ? fs.readFileSync(path.join('public', 'fa01', 'checksums.md'), 'utf8') : '';
+const recorded = new Map([...sumsText.matchAll(/^([0-9a-f]{64})\s+(fa01\/round-\d{1,2}\/[a-z0-9-]+\.html)$/gm)].map((m) => [m[2], m[1]]));
+const published = fs.readdirSync(path.join('public', 'fa01'), { withFileTypes: true })
+  .filter((d) => d.isDirectory() && /^round-\d{1,2}$/.test(d.name))
+  .flatMap((d) => fs.readdirSync(path.join('public', 'fa01', d.name)).filter((f) => f.endsWith('.html')).map((f) => `fa01/${d.name}/${f}`));
+const { createHash } = await import('crypto');
+const mismatched = published.filter((rel) => recorded.get(rel) !== createHash('sha256').update(fs.readFileSync(path.join('public', rel))).digest('hex'));
+check(`every submission matches its recorded checksum (${published.length} files)`, published.length > 0 && mismatched.length === 0, mismatched.join(', '));
+const gitattributes = fs.existsSync('.gitattributes') ? fs.readFileSync('.gitattributes', 'utf8') : '';
+check('.gitattributes marks submissions binary (no normalization)', /^public\/fa01\/\*\*\/\*\.html\s+binary\s*$/m.test(gitattributes));
+
 console.log(`\n   FA-01 SUBMISSION AUDIT: ${passed} PASSED, ${failed} FAILED\n`);
 process.exit(failed ? 1 : 0);

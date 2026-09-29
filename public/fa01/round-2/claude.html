@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bench Notes — tested consumer tech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F4; --paper:#FFFFFF; --ink:#1B2A41; --muted:#5B6B7F; --line:#D5DCE4;
+  --mark:#F2C94C; --mark-ink:#1B2A41; --win:#1F7A6D; --bar:#9FB0C3; --grid:rgba(27,42,65,.06);
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A26; --paper:#1A2433; --ink:#E6ECF3; --muted:#9AA8B8; --line:#2C3A4D;
+    --mark:#E8BD3A; --mark-ink:#121A26; --win:#4FB8A6; --bar:#4A5D75; --grid:rgba(230,236,243,.05);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A26; --paper:#1A2433; --ink:#E6ECF3; --muted:#9AA8B8; --line:#2C3A4D;
+  --mark:#E8BD3A; --mark-ink:#121A26; --win:#4FB8A6; --bar:#4A5D75; --grid:rgba(230,236,243,.05);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{
+  margin:0; background:var(--bg); color:var(--ink); font-family:var(--body);
+  font-size:17px; line-height:1.55;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--mark);outline-offset:2px;border-radius:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{font-family:var(--display);font-weight:800;font-size:1.25rem;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo svg{flex:none}
+nav.main{display:flex;gap:22px;font-size:.95rem}
+nav.main a{text-decoration:none;color:var(--muted)}
+nav.main a:hover{color:var(--ink)}
+@media (max-width:620px){nav.main{gap:14px;font-size:.88rem} nav.main a.hide-sm{display:none}}
+
+/* hero */
+.hero{padding:64px 0 40px;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.3rem,5.6vw,4rem);line-height:1.02;letter-spacing:-.025em;margin:0 0 20px}
+.hero p{color:var(--muted);max-width:34ch;margin:0 0 24px;font-size:1.1rem}
+.btn{display:inline-block;font:600 1rem var(--body);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:6px;text-decoration:none;border:0;cursor:pointer}
+.hero-panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px 24px 20px}
+.hero-panel h2{font-family:var(--display);font-size:1.15rem;margin:0 0 4px;font-weight:700}
+.hero-panel .q{color:var(--muted);font-size:.93rem;margin:0 0 18px}
+.hero-panel .foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:.88rem;color:var(--muted);gap:12px;flex-wrap:wrap}
+.hero-panel .foot a{color:var(--ink);font-weight:600}
+@media (max-width:820px){.hero{grid-template-columns:1fr;gap:32px;padding-top:40px}}
+
+/* bars */
+.bars{display:grid;gap:12px}
+.bar-row{display:grid;grid-template-columns:minmax(96px,150px) 1fr auto;align-items:center;gap:12px;font-size:.95rem}
+.bar-row .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{height:22px;background:var(--bg);border-radius:4px;overflow:hidden}
+.fill{height:100%;background:var(--bar);border-radius:4px;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar-row.best .fill{background:var(--mark)}
+.bar-row.best .name{font-weight:600}
+.val{font-variant-numeric:tabular-nums;min-width:62px;text-align:right;font-weight:500}
+.bar-row.best .val{font-weight:700}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+
+/* section heads */
+section{padding:48px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.sec-head h2{font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.2rem);letter-spacing:-.015em;margin:0}
+.sec-head p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+
+/* filters */
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.tabs{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:4px;gap:2px;flex-wrap:wrap}
+.tabs button{font:500 .93rem var(--body);color:var(--muted);background:none;border:0;padding:8px 14px;border-radius:5px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.search{flex:1;min-width:200px}
+.search input{width:100%;font:1rem var(--body);padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.count{font-size:.9rem;color:var(--muted);margin:0 0 10px}
+
+/* experiment log */
+.log{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.exp + .exp{border-top:1px solid var(--line)}
+.exp-btn{all:unset;box-sizing:border-box;display:grid;grid-template-columns:110px 1fr auto;gap:18px;align-items:center;width:100%;padding:18px 22px;cursor:pointer}
+.exp-btn:hover{background:var(--bg)}
+.exp-btn:focus-visible{outline:3px solid var(--mark);outline-offset:-3px}
+.cat{font-size:.85rem;font-weight:600;color:var(--muted)}
+.cat i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:1px}
+.exp-title{font-family:var(--display);font-weight:700;font-size:1.12rem;line-height:1.25}
+.exp-sub{color:var(--muted);font-size:.93rem;margin-top:2px}
+.chev{transition:transform .2s;color:var(--muted)}
+.exp[open-state="true"] .chev{transform:rotate(180deg)}
+.exp-body{display:none;padding:4px 22px 28px 150px}
+.exp[open-state="true"] .exp-body{display:block}
+.exp-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:36px}
+.exp-body h4{font-family:var(--display);font-size:1rem;margin:0 0 10px;font-weight:700}
+.exp-body ol{margin:0;padding-left:1.2em;color:var(--ink)}
+.exp-body ol li{margin-bottom:6px}
+.meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.88rem;color:var(--muted);margin:18px 0 0}
+.meta b{color:var(--ink);font-weight:600}
+.verdict{margin-top:22px;border-left:4px solid var(--win);padding:4px 0 4px 14px}
+.verdict p{margin:0}
+.caveat{margin-top:12px;font-size:.93rem;color:var(--muted)}
+.unit{font-size:.85rem;color:var(--muted);margin:-4px 0 12px}
+table.extra{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:16px}
+table.extra th,table.extra td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+table.extra th{color:var(--muted);font-weight:500}
+.tbl{overflow-x:auto}
+@media (max-width:760px){
+  .exp-btn{grid-template-columns:1fr auto;padding:16px}
+  .exp-btn .cat{grid-column:1/-1;margin-bottom:-10px}
+  .exp-body{padding:0 16px 24px}
+  .exp-grid{grid-template-columns:1fr;gap:26px}
+}
+.empty{padding:40px 22px;text-align:center;color:var(--muted)}
+
+/* method */
+.method{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.method div{padding:22px}
+.method div + div{border-left:1px solid var(--line)}
+.method .n{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--win);line-height:1}
+.method h3{font-family:var(--display);font-size:1.05rem;margin:10px 0 6px}
+.method p{margin:0;color:var(--muted);font-size:.95rem}
+@media (max-width:820px){.method{grid-template-columns:1fr 1fr}.method div:nth-child(3){border-left:0}.method div:nth-child(n+3){border-top:1px solid var(--line)}}
+@media (max-width:480px){.method{grid-template-columns:1fr}.method div + div{border-left:0;border-top:1px solid var(--line)}}
+
+.principles{display:grid;grid-template-columns:1fr 1fr;gap:28px 48px;margin-top:36px}
+.principles h3{font-family:var(--display);font-size:1.05rem;margin:0 0 4px}
+.principles p{margin:0;color:var(--muted)}
+@media (max-width:640px){.principles{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:.9rem;margin-top:24px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.theme-toggle{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 10px;cursor:pointer;font:500 .85rem var(--body)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Bench Notes home">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="6" y="14" width="3.5" height="6" fill="currentColor"/><rect x="11.25" y="9" width="3.5" height="11" fill="var(--mark)"/><rect x="16.5" y="12" width="3.5" height="8" fill="currentColor"/></svg>
+      Bench Notes
+    </a>
+    <nav class="main" aria-label="Main">
+      <a href="#experiments">Experiments</a>
+      <a href="#method">How we test</a>
+      <a href="#about" class="hide-sm">About</a>
+      <button class="theme-toggle" id="themeBtn" aria-label="Toggle colour theme">Theme</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Phones, repairs and apps, measured instead of reviewed.</h1>
+      <p>Every entry here is a repeatable experiment with a written method, raw numbers and the ways it could be wrong.</p>
+      <a class="btn" href="#experiments">Browse experiments</a>
+    </div>
+    <div class="hero-panel" id="featured" aria-live="polite"></div>
+  </div>
+
+  <section id="experiments">
+    <div class="sec-head">
+      <div>
+        <h2>Experiment log</h2>
+        <p>Open any entry to see the method, the full results and our caveats. Highlighted bars mark the best result in each test.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="tabs" role="group" aria-label="Filter by category" id="tabs"></div>
+      <label class="search"><span class="sr" style="position:absolute;left:-9999px">Search experiments</span>
+        <input id="q" type="search" placeholder="Search by product, service or test">
+      </label>
+    </div>
+    <p class="count" id="count"></p>
+    <div class="log" id="log"></div>
+  </section>
+
+  <section id="method">
+    <div class="sec-head">
+      <div>
+        <h2>How we test</h2>
+        <p>Each experiment follows the same four stages, so results from different months can sit side by side.</p>
+      </div>
+    </div>
+    <div class="method">
+      <div><div class="n">1</div><h3>Write the question</h3><p>One measurable question per experiment, fixed before any device or service is touched.</p></div>
+      <div><div class="n">2</div><h3>Buy it ourselves</h3><p>Retail units and paid services, bought anonymously. No review samples, no press appointments.</p></div>
+      <div><div class="n">3</div><h3>Run it three times</h3><p>Scripted or timed runs, repeated at least three times. We publish the median.</p></div>
+      <div><div class="n">4</div><h3>Publish the doubts</h3><p>Every result ships with the conditions that could change it and the sample size behind it.</p></div>
+    </div>
+    <div class="principles" id="about">
+      <div><h3>No scores out of ten</h3><p>We report the unit that was measured: hours, minutes, pounds, percent. You decide what matters.</p></div>
+      <div><h3>Winners are per test</h3><p>A phone can win battery life and lose charging speed. We never roll results into one ranking.</p></div>
+      <div><h3>Old results stay up</h3><p>When software updates change a result, we rerun the test and keep both dates on the page.</p></div>
+      <div><h3>Corrections are dated</h3><p>If we got something wrong, the fix and the date appear on the experiment itself.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Bench Notes. Products, services and figures shown are sample data for layout; replace them with your own results.</span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+const CATS = {
+  phones:{label:"Smartphones", color:"#3D6FB6"},
+  repair:{label:"Repair services", color:"#C0663A"},
+  software:{label:"Software", color:"#1F7A6D"}
+};
+
+const EXPERIMENTS = [
+  {id:"battery-loop", cat:"phones", title:"How long does a full charge last on a mixed-use day?",
+   sub:"Three flagship phones on an identical scripted day", unit:"Hours until 1% battery", lower:false, fmt:v=>v.toFixed(1)+" h",
+   results:[["Aster 9",14.2],["Kestrel Pro",12.8],["Nimbus X2",11.1]],
+   method:["Factory reset, same apps installed, brightness locked at 200 nits.","Script loops web browsing, 20 min video, navigation and a 10 min call each hour.","Wi-Fi only, same router, same room at 21 °C.","Three full runs per phone; median reported."],
+   verdict:"Aster 9 lasted about three hours longer than Nimbus X2. Kestrel Pro sits in between but drains fastest during navigation.",
+   caveat:"Heavy 5G use or gaming will shorten all three. Results are from launch firmware.", date:"Aug 2026", n:"9 runs"},
+  {id:"charge-50", cat:"phones", title:"How fast does each phone reach 50% from empty?",
+   sub:"Using each maker's own charger and cable", unit:"Minutes from 0% to 50%", lower:true, fmt:v=>v+" min",
+   results:[["Kestrel Pro",19],["Nimbus X2",24],["Aster 9",31]],
+   method:["Drain to shutdown, rest 30 minutes to cool.","Charge with the manufacturer's own brick and cable, screen off.","Log percentage every minute from the phone's own reading.","Repeat three times per phone."],
+   verdict:"Kestrel Pro reaches half charge in under 20 minutes. Aster 9 is the slowest but runs coolest, peaking at 36 °C.",
+   caveat:"Third-party chargers slowed Kestrel Pro by 40% in a quick side check.", date:"Aug 2026", n:"9 runs"},
+  {id:"low-light", cat:"phones", title:"Which camera handles a dim room best?",
+   sub:"Blind comparison by 40 viewers", unit:"Share of first-place votes", lower:false, fmt:v=>v+"%",
+   results:[["Nimbus X2",48],["Aster 9",33],["Kestrel Pro",19]],
+   method:["Same tripod position, 5 lux room lit by one lamp.","Default camera app, auto mode, no edits.","Images shown side by side, randomised order, names hidden.","Viewers pick the photo they'd rather keep."],
+   verdict:"Nimbus X2 won nearly half of all votes; viewers preferred its natural colour over the brighter but noisier alternatives.",
+   caveat:"Preference, not accuracy. A different panel or scene could shift the order.", date:"Jul 2026", n:"40 viewers, 6 scenes"},
+  {id:"screen-repair", cat:"repair", title:"Screen replacement: independent shop, mail-in or maker's store?",
+   sub:"Same cracked Aster 9 screen, three routes", unit:"Hours from drop-off to phone back in hand", lower:true, fmt:v=>v+" h",
+   results:[["Main Street Fix",3],["Maker's store",26],["Mail-in service",96]],
+   extra:{head:["Service","Cost","Part","Face unlock after"],rows:[["Main Street Fix","£129","Aftermarket","Working"],["Maker's store","£219","Original","Working"],["Mail-in service","£165","Original","Working"]]},
+   method:["Crack three identical screens with the same drop jig.","Book each service anonymously as a normal customer.","Time from hand-over to collection or delivery.","Inspect brightness, touch response and sensors afterwards."],
+   verdict:"The independent shop was fastest and cheapest. Its aftermarket screen measured 14% dimmer at full brightness.",
+   caveat:"One shop in one town; independent quality varies widely.", date:"Jun 2026", n:"3 repairs"},
+  {id:"battery-swap", cat:"repair", title:"Do replacement batteries keep their capacity?",
+   sub:"Six months after a battery swap", unit:"Capacity retained after 180 cycles", lower:false, fmt:v=>v+"%",
+   results:[["Maker's store",96],["Main Street Fix",93],["Mail-in service",91],["DIY kit",84]],
+   method:["Four identical phones get new batteries through four routes.","Charge-cycle rig runs one full cycle per day.","Capacity measured with a USB meter at day 0 and day 180."],
+   verdict:"All professional swaps stayed above 90%. The DIY kit battery lost capacity noticeably faster.",
+   caveat:"One battery per route. We plan a larger rerun early next year.", date:"May 2026", n:"4 batteries"},
+  {id:"backup-restore", cat:"software", title:"How long does restoring a phone from cloud backup take?",
+   sub:"20 GB backup onto a freshly reset phone", unit:"Minutes until all apps and photos are usable", lower:true, fmt:v=>v+" min",
+   results:[["Built-in backup",38],["Driftbox",54],["Ferrous Cloud",71]],
+   method:["Create an identical 20 GB profile: photos, messages, 60 apps.","Back up fully to each service, then factory reset.","Restore over the same 300 Mbps connection.","Stop the clock when the last photo loads at full resolution."],
+   verdict:"The phone's built-in backup was quickest. Driftbox restored messages first, so the phone felt usable sooner.",
+   caveat:"Restore speed depends heavily on your connection and the service's server load.", date:"Sep 2026", n:"9 restores"},
+  {id:"autofill", cat:"software", title:"Which password manager fills logins correctly?",
+   sub:"50 popular sites, desktop and mobile", unit:"Logins filled without manual help", lower:false, fmt:v=>v+"%",
+   results:[["Keyward",94],["Vaultline",88],["Lockstep",79]],
+   method:["Store credentials for the same 50 sites in each app.","Visit each login page on a laptop browser and a phone.","Count a success only if the login completes without copy-paste."],
+   verdict:"Keyward handled almost every site, including two-step login pages. Lockstep struggled on banking sites.",
+   caveat:"Sites change their login pages often; this snapshot will age.", date:"Sep 2026", n:"300 attempts"}
+];
+
+const $ = s => document.querySelector(s);
+let active = "all", openId = null;
+
+function barsHTML(e){
+  const vals = e.results.map(r=>r[1]);
+  const max = Math.max(...vals);
+  const best = e.lower ? Math.min(...vals) : max;
+  return `<div class="bars">${e.results.map(([name,v])=>`
+    <div class="bar-row ${v===best?'best':''}">
+      <span class="name">${name}</span>
+      <span class="track"><span class="fill" data-w="${(v/max*100).toFixed(1)}"></span></span>
+      <span class="val">${e.fmt(v)}</span>
+    </div>`).join("")}</div>`;
+}
+function grow(root){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    root.querySelectorAll(".fill").forEach(f=>f.style.width=f.dataset.w+"%");
+  }));
+}
+
+function renderFeatured(){
+  const e = EXPERIMENTS[0];
+  const el = $("#featured");
+  el.innerHTML = `<h2>${e.title}</h2><p class="q">${e.unit}${e.lower?", lower is better":""}</p>${barsHTML(e)}
+    <div class="foot"><span>${e.date}, ${e.n}</span><a href="#exp-${e.id}" data-open="${e.id}">Read the method</a></div>`;
+  grow(el);
+  el.querySelector("[data-open]").addEventListener("click",()=>{ active="all"; $("#q").value=""; openId=e.id; render(); });
+}
+
+function renderTabs(){
+  const opts = [["all","All"],...Object.entries(CATS).map(([k,v])=>[k,v.label])];
+  $("#tabs").innerHTML = opts.map(([k,l])=>`<button data-k="${k}" aria-pressed="${k===active}">${l}</button>`).join("");
+  $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{active=b.dataset.k; render();});
+}
+
+function render(){
+  renderTabs();
+  const q = $("#q").value.trim().toLowerCase();
+  const list = EXPERIMENTS.filter(e=>(active==="all"||e.cat===active) &&
+    (!q || (e.title+e.sub+e.results.map(r=>r[0]).join(" ")+CATS[e.cat].label).toLowerCase().includes(q)));
+  $("#count").textContent = `${list.length} experiment${list.length===1?"":"s"}`;
+  if(!list.length){ $("#log").innerHTML = `<div class="empty">No experiments match “${q}”. Try a product name or a category like “battery”.</div>`; return; }
+  $("#log").innerHTML = list.map(e=>{
+    const c = CATS[e.cat], open = e.id===openId;
+    return `<article class="exp" id="exp-${e.id}" open-state="${open}">
+      <button class="exp-btn" aria-expanded="${open}" aria-controls="body-${e.id}" data-id="${e.id}">
+        <span class="cat"><i style="background:${c.color}"></i>${c.label}</span>
+        <span><span class="exp-title">${e.title}</span><span class="exp-sub" style="display:block">${e.sub}</span></span>
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div class="exp-body" id="body-${e.id}">
+        <div class="exp-grid">
+          <div>
+            <h4>Results</h4>
+            <p class="unit">${e.unit}${e.lower?", lower is better":", higher is better"}</p>
+            ${barsHTML(e)}
+            ${e.extra?`<div class="tbl"><table class="extra"><thead><tr>${e.extra.head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${e.extra.rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:""}
+            <div class="verdict"><p>${e.verdict}</p></div>
+            <p class="caveat">Caveat: ${e.caveat}</p>
+          </div>
+          <div>
+            <h4>Method</h4>
+            <ol>${e.method.map(m=>`<li>${m}</li>`).join("")}</ol>
+            <div class="meta"><span>Tested <b>${e.date}</b></span><span>Sample <b>${e.n}</b></span></div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+  $("#log").querySelectorAll(".exp-btn").forEach(b=>b.onclick=()=>{
+    openId = openId===b.dataset.id ? null : b.dataset.id; render();
+    const t = document.getElementById("exp-"+b.dataset.id); t.querySelector(".exp-btn").focus({preventScroll:true});
+  });
+  if(openId){ const o=document.getElementById("exp-"+openId); if(o) grow(o); }
+}
+
+$("#q").addEventListener("input",render);
+
+// theme
+const root = document.documentElement;
+try{ const t = localStorage.getItem("bn-theme"); if(t) root.dataset.theme=t; }catch(e){}
+$("#themeBtn").onclick=()=>{
+  const dark = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try{ localStorage.setItem("bn-theme", root.dataset.theme); }catch(e){}
+};
+
+renderFeatured();
+render();
+</script>
+</body>
+</html>

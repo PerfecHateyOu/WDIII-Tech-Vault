@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
-
+        
         :root {
             --primary: 234 179 8;
         }
-
+        
         body {
             font-family: 'Inter', system_ui, sans-serif;
         }
-
+        
         .heading-font {
             font-family: 'Space Grotesk', sans-serif;
         }
@@ -24,7 +24,7 @@
         .experiment-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+        
         .experiment-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
@@ -33,7 +33,7 @@
         .nav-link {
             position: relative;
         }
-
+        
         .nav-link:after {
             content: '';
             position: absolute;
@@ -44,7 +44,7 @@
             background-color: rgb(234 179 8);
             transition: all 0.3s ease;
         }
-
+        
         .nav-link:hover:after {
             width: 100%;
         }
@@ -67,7 +67,7 @@
                 </div>
                 <p class="text-zinc-500 text-sm mt-1">Consumer Tech Experiments</p>
             </div>
-
+            
             <div class="p-4">
                 <nav class="space-y-1">
                     <a href="#home" onclick="navigateTo('home')" class="nav-link flex items-center gap-x-3 px-4 py-3 text-zinc-300 hover:bg-zinc-800 rounded-2xl active">
@@ -101,7 +101,7 @@
                     </div>
                     <div class="text-zinc-400">June 26, 2026</div>
                     <div class="h-px bg-zinc-800 my-4"></div>
-                    <button onclick="addNewExperiment()"
+                    <button onclick="addNewExperiment()" 
                             class="w-full bg-yellow-500 hover:bg-yellow-400 transition-colors text-zinc-950 font-semibold py-3 px-4 rounded-2xl flex items-center justify-center gap-x-2">
                         <i class="fa-solid fa-plus"></i>
                         <span>New Experiment</span>
@@ -118,14 +118,14 @@
                     <div class="flex items-center gap-x-8">
                         <h1 id="page-title" class="heading-font text-3xl font-semibold tracking-tighter">Consumer Tech Experiments</h1>
                     </div>
-
+                    
                     <div class="flex items-center gap-x-4">
                         <div class="bg-zinc-800 text-xs px-3 py-1.5 rounded-3xl flex items-center gap-x-2">
                             <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                             <span class="text-emerald-300">24 experiments documented</span>
                         </div>
-
-                        <button onclick="toggleDarkMode()"
+                        
+                        <button onclick="toggleDarkMode()" 
                                 class="w-10 h-10 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 rounded-2xl transition-colors">
                             <i class="fa-solid fa-moon"></i>
                         </button>
@@ -151,12 +151,12 @@
                                     A living archive of consumer tech experiments, mods, benchmarks, and unexpected discoveries.
                                 </p>
                                 <div class="flex items-center gap-x-4">
-                                    <button onclick="navigateTo('experiments')"
+                                    <button onclick="navigateTo('experiments')" 
                                             class="bg-yellow-500 hover:bg-yellow-400 transition-all text-zinc-950 font-semibold px-8 py-4 rounded-3xl flex items-center gap-x-3">
                                         Browse Experiments
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </button>
-                                    <button onclick="window.open('https://github.com', '_blank')"
+                                    <button onclick="window.open('https://github.com', '_blank')" 
                                             class="border border-zinc-700 hover:border-zinc-500 transition-all font-medium px-8 py-4 rounded-3xl flex items-center gap-x-3">
                                         <i class="fa-brands fa-github"></i>
                                         View on GitHub
@@ -191,7 +191,7 @@
                             See all <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
-
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="featured-grid">
                         <!-- Populated by JS -->
                     </div>
@@ -201,7 +201,7 @@
             <!-- EXPERIMENTS SECTION -->
             <section id="experiments-section" class="max-w-screen-2xl mx-auto px-8 py-12 hidden">
                 <h2 class="heading-font text-4xl font-semibold tracking-tight mb-10">All Experiments</h2>
-
+                
                 <div class="flex gap-3 mb-8 border-b border-zinc-800 pb-4 overflow-x-auto">
                     <button onclick="filterCategory('all')" class="category-btn active px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">All</button>
                     <button onclick="filterCategory('hardware')" class="category-btn px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">Hardware Mods</button>
@@ -218,7 +218,7 @@
             <!-- TOOLS SECTION -->
             <section id="tools-section" class="max-w-screen-2xl mx-auto px-8 py-12 hidden">
                 <h2 class="heading-font text-4xl font-semibold tracking-tight mb-8">Tools &amp; Gear</h2>
-
+                
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <div class="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
                         <div class="text-4xl mb-4">🔧</div>
@@ -291,7 +291,7 @@
     </div>
 
     <!-- Floating Action Button -->
-    <button onclick="addNewExperiment()"
+    <button onclick="addNewExperiment()" 
             class="fixed bottom-8 right-8 w-16 h-16 bg-yellow-500 hover:bg-yellow-400 rounded-full flex items-center justify-center shadow-2xl shadow-yellow-500/30 text-3xl text-zinc-950 z-50 transition-all active:scale-95">
         <i class="fa-solid fa-plus"></i>
     </button>
@@ -299,7 +299,7 @@
     <script>
         function navigateTo(section) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-
+            
             if (section === 'home') {
                 document.getElementById('home-section').classList.remove('hidden');
                 document.getElementById('page-title').textContent = 'Consumer Tech Experiments';
@@ -316,7 +316,7 @@
                 document.getElementById('resources-section').classList.remove('hidden');
                 document.getElementById('page-title').textContent = 'Resources';
             }
-
+            
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active', 'bg-zinc-800');
                 if (link.getAttribute('href') === `#${section}`) {
@@ -324,7 +324,7 @@
                 }
             });
         }
-
+        
         const experiments = [
             { id: 1, title: "Raspberry Pi 5 Smart Mirror", category: "smart", difficulty: "Intermediate", time: "12 hours", status: "Completed", description: "Built a magic mirror with facial recognition, weather, calendar, and voice control.", image: "🪞", tags: ["Raspberry Pi", "Home Assistant"] },
             { id: 2, title: "Custom 75% Mechanical Keyboard", category: "hardware", difficulty: "Advanced", time: "18 hours", status: "Completed", description: "Hand-wired with Kailh Choc switches and a custom 3D-printed case.", image: "⌨️", tags: ["Keyboard", "DIY"] },
@@ -332,12 +332,12 @@
             { id: 4, title: "Mac Mini M2 Pro to Hackintosh", category: "software", difficulty: "Advanced", time: "8 hours", status: "Completed", description: "Successfully running macOS Sonoma on non-Apple hardware with full GPU acceleration.", image: "💻", tags: ["Hackintosh", "macOS"] },
             { id: 5, title: "Portable Retro Game Console", category: "hardware", difficulty: "Intermediate", time: "15 hours", status: "Completed", description: "Using a Raspberry Pi Zero 2W and a 4\" IPS display in a 3D printed case.", image: "🎮", tags: ["Retro", "Gaming"] }
         ];
-
+        
         function renderExperiments(containerId, data = experiments) {
             const container = document.getElementById(containerId);
             if (!container) return;
             container.innerHTML = '';
-
+            
             data.forEach(exp => {
                 const card = document.createElement('div');
                 card.className = `experiment-card bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden cursor-pointer`;
@@ -361,7 +361,7 @@
                 container.appendChild(card);
             });
         }
-
+        
         function showExperimentDetail(exp) {
             const detailHTML = `
                 <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-6" onclick="if(event.target === this) this.remove()">
@@ -402,26 +402,26 @@
             modal.innerHTML = detailHTML;
             document.body.appendChild(modal);
         }
-
+        
         function filterCategory(category) {
             document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active', 'bg-yellow-500', 'text-zinc-950'));
-
+            
             const filtered = category === 'all' ? experiments : experiments.filter(exp => exp.category === category);
             renderExperiments('experiments-grid', filtered);
-
+            
             event.currentTarget.classList.add('active', 'bg-yellow-500', 'text-zinc-950');
         }
-
+        
         function addNewExperiment() {
             const title = prompt("Experiment title:");
             if (!title) return;
             alert(`New experiment "${title}" created!\\n\\nOpen index.html in a text editor to add more details.`);
         }
-
+        
         function toggleDarkMode() {
             alert("🌙 This documentation site is permanently in dark mode — perfect for late-night tinkering sessions.");
         }
-
+        
         window.onload = function() {
             renderExperiments('featured-grid', experiments.slice(0, 3));
             renderExperiments('experiments-grid');

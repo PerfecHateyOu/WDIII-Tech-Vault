@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fieldbench — Lab notes</title>
+  <meta name="description" content="Fieldbench Volume 04, a self-contained HTML edition of the bench notes on phones, repairs, and software." />
+  <meta name="theme-color" content="#141210" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23141210' width='32' height='32'/%3E%3Crect x='8' y='5' width='16' height='22' fill='none' stroke='%23e0a04a' stroke-width='2'/%3E%3Cpath stroke='%23e0a04a' stroke-width='1.5' d='M12 11h8M12 16h8M12 21h5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" />
+  <style>
+    :root {
+      --bg: #141210;
+      --surface: #1c1916;
+      --raised: #26221c;
+      --fg: #f3eee6;
+      --muted: #b7aea2;
+      --faint: #9a9186;
+      --line: #3d372f;
+      --brass: #e0a04a;
+      --ink: #1a1208;
+      --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+      --serif: Newsreader, Georgia, "Iowan Old Style", serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    h1, h2, h3 { text-wrap: balance; font-weight: 500; }
+    p { text-wrap: pretty; }
+    a { color: inherit; text-decoration: none; }
+    button, [role="button"] { cursor: pointer; font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+    ::selection { background: var(--brass); color: var(--ink); }
+    .skip {
+      position: absolute; left: 0.75rem; top: 0.75rem;
+      transform: translateY(-200%);
+      background: var(--brass); color: var(--ink); padding: 0.5rem 0.75rem;
+    }
+    .skip:focus { transform: none; z-index: 50; }
+    .top {
+      position: sticky; top: 0; z-index: 30;
+      display: flex; align-items: center; gap: 0.75rem;
+      height: 3.5rem; padding: 0 1rem;
+      border-bottom: 1px solid var(--line); background: var(--bg);
+    }
+    .mark {
+      display: grid; place-items: center; width: 2rem; height: 2rem;
+      border: 1px solid var(--brass); color: var(--brass); font-family: var(--serif);
+    }
+    .word { display: flex; flex-direction: column; line-height: 1.15; }
+    .word strong { font-family: var(--serif); font-size: 1.125rem; font-weight: 500; }
+    .word span, .kicker, .label {
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .kicker { color: var(--brass); }
+    .label { color: var(--faint); }
+    .grow { margin-left: auto; display: flex; gap: 0.5rem; }
+    .btn, .chip, .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      min-height: 2.75rem; padding: 0 1rem;
+      border: 1px solid var(--line); border-radius: 0.5rem; background: transparent;
+    }
+    .icon-btn { width: 2.75rem; padding: 0; }
+    .btn-brass { background: var(--brass); color: var(--ink); border-color: var(--brass); font-weight: 500; }
+    .chip.on, .nav a.on { background: var(--brass); color: var(--ink); border-color: var(--brass); }
+    .press { transition: scale 150ms ease-out, background-color 180ms ease-out, border-color 180ms ease-out; }
+    .press:active { scale: 0.96; }
+    .layout { display: flex; }
+    .side {
+      display: none; position: sticky; top: 3.5rem; align-self: flex-start;
+      width: 16rem; height: calc(100dvh - 3.5rem); overflow: auto;
+      border-right: 1px solid var(--line); padding: 1.5rem 1rem;
+    }
+    .main { min-width: 0; flex: 1; }
+    .wrap { width: min(72rem, 100%); margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    .nav { display: flex; flex-direction: column; gap: 0.25rem; margin: 0.5rem 0 1.5rem; padding: 0; list-style: none; }
+    .nav a {
+      display: flex; align-items: center; min-height: 2.75rem;
+      padding: 0 0.75rem; border-radius: 0.5rem;
+    }
+    .nav a.on, .nav a:hover { background: var(--raised); }
+    .nav a.on { color: var(--brass); }
+    .menu, .search {
+      display: none; position: fixed; inset: 3.5rem 0 0 0; z-index: 40;
+      background: var(--bg); border-top: 1px solid var(--line); padding: 1rem;
+      overflow: auto;
+    }
+    .menu.open, .search.open { display: block; }
+    .search { bottom: auto; border-bottom: 1px solid var(--line); }
+    .field, input[type="search"] {
+      width: 100%; min-height: 2.75rem; margin-top: 0.25rem;
+      border: 1px solid var(--line); border-radius: 0.5rem;
+      background: var(--surface); color: var(--fg); padding: 0 0.75rem; font: inherit;
+    }
+    h1 { font-family: var(--serif); font-size: 2.25rem; line-height: 1.15; margin: 0.75rem 0 0; }
+    h2.serif, .contents a .title { font-family: var(--serif); font-size: 1.5rem; }
+    .lede { max-width: 40rem; color: var(--muted); font-size: 1.125rem; }
+    .muted { color: var(--muted); }
+    .faint { color: var(--faint); }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+    .verdict { max-width: 40rem; border-left: 2px solid var(--brass); padding-left: 1rem; margin-top: 2rem; }
+    .grid3 { display: grid; gap: 1rem; margin-top: 1rem; }
+    .card { border: 1px solid var(--line); border-radius: 0.5rem; background: var(--surface); padding: 1rem; }
+    .contents, .stack { list-style: none; margin: 0.5rem 0 0; padding: 0; border-top: 1px solid var(--line); }
+    .contents li, .stack li { border-bottom: 1px solid var(--line); }
+    .contents a, .hit {
+      display: flex; flex-direction: column; gap: 0.25rem;
+      min-height: 4rem; padding: 1rem 0;
+    }
+    .contents a:hover .title, .hit:hover { color: var(--brass); }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; }
+    .split { display: grid; gap: 1rem; margin-top: 1.5rem; padding: 1rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .steps, .bullets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; max-width: 40rem; }
+    .steps li, .bullets li { display: flex; gap: 1rem; }
+    .num { color: var(--brass); font-variant-numeric: tabular-nums; }
+    .bullets li { border-left: 1px solid var(--line); padding-left: 1rem; }
+    .section { margin-top: 3rem; scroll-margin-top: 5rem; }
+    .callout { margin-top: 1rem; max-width: 40rem; }
+    .chart { margin-top: 1rem; border: 1px solid var(--line); border-radius: 0.5rem; background: var(--surface); padding: 0.75rem 1rem; }
+    .bar-row { margin: 0.85rem 0; }
+    .bar-top { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.875rem; }
+    .track { display: block; height: 0.375rem; margin-top: 0.35rem; background: var(--raised); border-radius: 2px; }
+    .fill { display: block; height: 0.375rem; background: var(--brass); border-radius: 2px; }
+    .table-wrap { overflow-x: auto; margin-top: 1rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+    th, td { padding: 0.7rem 0.6rem 0.7rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-weight: 500; }
+    .nums { font-variant-numeric: tabular-nums; }
+    .lead { color: var(--brass); }
+    .jumps { display: flex; gap: 0.5rem; overflow-x: auto; margin-top: 1.5rem; }
+    .progress { position: fixed; left: 0; right: 0; top: 0; height: 2px; background: var(--line); z-index: 40; pointer-events: none; }
+    .progress span { display: block; height: 2px; background: var(--brass); transform-origin: left; }
+    .pair { display: grid; gap: 1rem; margin-top: 3rem; }
+    footer {
+      border-top: 1px solid var(--line); padding: 2rem 1.25rem 3rem;
+      color: var(--muted); font-size: 0.875rem;
+    }
+    footer .inner { width: min(72rem, 100%); margin: 0 auto; }
+    footer .name { font-family: var(--serif); color: var(--fg); font-size: 1rem; }
+    .hide-sm { display: none; }
+    @media (min-width: 640px) {
+      h1 { font-size: 3rem; }
+      .hide-sm { display: inline; }
+      .split { grid-template-columns: repeat(3, 1fr); }
+      .pair { grid-template-columns: 1fr 1fr; }
+      .top { padding: 0 1.5rem; }
+    }
+    @media (min-width: 900px) {
+      .grid3 { grid-template-columns: repeat(3, 1fr); }
+      .show-mobile { display: none; }
+      .side { display: block; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .press { transition: none; }
+      .press:active { scale: 1; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="progress" id="progress" hidden><span id="progress-bar"></span></div>
+  <header class="top">
+    <button class="btn press show-mobile" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    <a href="#/" class="word" style="flex-direction:row;align-items:center;gap:0.75rem;min-height:2.75rem">
+      <span class="mark">Fb</span>
+      <span class="word"><strong>Fieldbench</strong><span>Lab notes</span></span>
+    </a>
+    <div class="grow">
+      <a class="btn press hide-sm" href="#/shelf" id="shelf-link">Shelf</a>
+      <button class="btn press" id="search-btn" type="button">Search</button>
+    </div>
+  </header>
+  <nav class="menu" id="menu"></nav>
+  <div class="search" id="search" role="dialog" aria-modal="true" aria-labelledby="search-title" hidden>
+    <div style="width:min(40rem,100%);margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 id="search-title" class="kicker" style="margin:0">Search the volume</h2>
+        <button class="icon-btn press" id="search-close" type="button">Close</button>
+      </div>
+      <input id="search-input" type="search" placeholder="Battery, True Tone, Immich…" />
+      <div id="search-results"></div>
+    </div>
+  </div>
+  <div class="layout">
+    <aside class="side" id="side"></aside>
+    <main class="main" id="content"><div class="wrap" id="app"></div></main>
+  </div>
+  <footer>
+    <div class="inner">
+      <p class="name">Volume 04 · The carry set</p>
+      <p>Single-file HTML edition. Figures come from scripts run on units this desk owns. Not a manufacturer claim, and not a sponsored placement. Open this file in any browser. Nothing else is required.</p>
+    </div>
+  </footer>
+  <script type="application/json" id="payload">{"desks":[{"id":"phones","label":"Smartphones","summary":"Battery, night photos, and heat on the 2024–2025 carry set this desk still uses."},{"id":"repairs","label":"Repair services","summary":"The same fault, taken to a maker counter, a walk-in bench, and a mail-in depot."},{"id":"software","label":"Software","summary":"Notes, passwords, photo libraries, and browsers, timed on hardware we own."}],"experiments":[{"code":"FB-PH-01","slug":"mixed-day-battery","title":"Fourteen mixed days, one charge","dek":"The same weekday script on three phones, scored by what was left at 10pm.","category":"phones","published":"2026-03-12","duration":"14 weekdays","sample":"One person, three phones, brightness locked near 200 nits","question":"After a scripted day of maps, camera, scroll, and a podcast, which carry-set phone still has a reserve at 10pm?","verdict":"The iPhone 16 finished with the most reserve, 31% on average. The Galaxy S25 at 27% is outside our 8% band, but both completed the day. The Pixel 9 at 18% did not: it needed a top-up on 4 of 14 days.","setup":["iPhone 16, Pixel 9, and Galaxy S25, bought by the desk, cases off, current stable OS as of the first Monday.","Brightness set as close to 200 nits as each OS allows, checked with a contact lux reading on a white screen at the start of each week.","Overnight charge on the charger that shipped with the phone. We did not use optimized-charge toggles; charging started when we went to bed."],"protocol":["Each weekday followed one script: 40 minutes of walking navigation, 15 minutes of camera (mixed stills and a short clip), 50 minutes of timeline scrolling, ordinary messaging, a 30-minute podcast with the screen off, and the rest as pocket standby.","Start at 100% by 8am. Log the percent remaining at 10pm. No midday charge unless the phone hit 5%, which we counted as a failed day.","Two days with unscripted travel were discarded and not replaced. Fourteen days remain."],"primaryMetricId":"reserve","metrics":[{"id":"reserve","label":"Reserve at 10pm","unit":"% left","higherIsBetter":true,"ranked":true,"blurb":"Mean percent remaining after the script. Higher means more left in the tank.","sample":"14 weekdays","rows":[{"subject":"iPhone 16","value":31,"display":"31%","note":"Spread ±4 points"},{"subject":"Galaxy S25","value":27,"display":"27%","note":"Spread ±5 points"},{"subject":"Pixel 9","value":18,"display":"18%","note":"Spread ±6 points"}]},{"id":"topups","label":"Days that needed a top-up","unit":"days","higherIsBetter":false,"ranked":true,"blurb":"A day counts when the phone would have died before 10pm without a charge.","sample":"14 weekdays","rows":[{"subject":"iPhone 16","value":0,"display":"0 days"},{"subject":"Galaxy S25","value":1,"display":"1 day"},{"subject":"Pixel 9","value":4,"display":"4 days"}]}],"findings":["The gap that changed behavior is Pixel versus the other two, not iPhone versus Galaxy. Thirty-one and twenty-seven percent both got us home. Eighteen percent did not, four times.","Navigation was the expensive block. On the two days we swapped the 40-minute walk for a train commute, every phone finished above 40%, and the order did not change.","We are not publishing a 'hours of screen' crown. The script is a day, and the day is the unit."],"caveats":["One person, one city, mild weather. A hotter pocket or a weaker cell changes the reserve more than the brand gap between iPhone and Galaxy.","These are 2024–2025 carry-set units, not a claim about whatever shipped this autumn.","OS builds were frozen for the fortnight. A later radio firmware could move these numbers."],"wouldRepeat":"Run the same script on the next carry set, and add one transit-only arm so the GPS block is not doing all the work.","related":["heat-under-nav","battery-swap-hold","three-browsers"]},{"code":"FB-PH-02","slug":"night-block","title":"The same block after dark","dek":"Eight handheld scenes, three reviewers, default camera apps, no forced night mode.","category":"phones","published":"2026-04-02","duration":"One night, scored over two days","sample":"8 scenes, 3 phones, 3 reviewers scoring blind","question":"On a real block at night, which default camera would we actually send, once detail, color, and motion are scored separately?","verdict":"The composite sits inside the band: iPhone 16 at 7.77, Galaxy S25 at 7.37. The split that matters is underneath. Pixel 9 leads shadow detail. iPhone 16 leads color and keeps more of a walking subject sharp.","setup":["Same three carry-set phones as FB-PH-01. Lenses cleaned. Default camera app, auto night processing left on, no manual exposure, no third-party camera.","A fixed eight-scene loop: storefront, alley, face under a sodium lamp, moving cyclist, menu in a dark restaurant, wet asphalt, backlit doorway, and a black dog.","Reviewers saw matched crops with filenames stripped. Scores are 1 to 10 on detail, color, and motion blur."],"protocol":["One walker, phones rotated in the hand so no phone always shot first. Each scene was framed to the same corners, then shot within twenty seconds.","We did not reject frames for being 'the bad one.' The frame we kept is the first frame that was in focus enough to hand to a person.","Composite is the unweighted mean of the three scores. We publish the parts because the mean hides the only useful disagreement."],"primaryMetricId":"composite","metrics":[{"id":"composite","label":"Reviewer composite","unit":"1–10","higherIsBetter":true,"ranked":true,"blurb":"Equal-weight mean of detail, color, and motion. Inside the band, so read the parts.","sample":"3 reviewers × 8 scenes","rows":[{"subject":"iPhone 16","value":7.77,"display":"7.77"},{"subject":"Galaxy S25","value":7.37,"display":"7.37"},{"subject":"Pixel 9","value":7.23,"display":"7.23"}]},{"id":"detail","label":"Shadow detail","unit":"1–10","higherIsBetter":true,"ranked":true,"blurb":"Can you read the alley and the dog. Higher is more recoverable detail.","sample":"3 reviewers × 8 scenes","rows":[{"subject":"Pixel 9","value":8.4,"display":"8.4"},{"subject":"Galaxy S25","value":7.9,"display":"7.9"},{"subject":"iPhone 16","value":7.6,"display":"7.6"}]},{"id":"color","label":"Color under lamps","unit":"1–10","higherIsBetter":true,"ranked":true,"blurb":"Skin and storefront color under mixed street lamps, not a gray card.","sample":"3 reviewers × 8 scenes","rows":[{"subject":"iPhone 16","value":8.3,"display":"8.3"},{"subject":"Galaxy S25","value":7.4,"display":"7.4"},{"subject":"Pixel 9","value":7.1,"display":"7.1"}]},{"id":"motion","label":"Motion hold","unit":"1–10","higherIsBetter":true,"ranked":true,"blurb":"Walking subjects and the cyclist. Higher means less smear.","sample":"3 reviewers × 8 scenes","rows":[{"subject":"iPhone 16","value":7.4,"display":"7.4"},{"subject":"Galaxy S25","value":6.8,"display":"6.8"},{"subject":"Pixel 9","value":6.2,"display":"6.2"}]}],"findings":["If the question is 'which photo would I send to family,' reviewers picked the iPhone frame on 5 of 8 scenes, mostly for color and for the cyclist.","If the question is 'what is in the shadow,' the Pixel frame won 6 of 8. It also smeared the cyclist badly enough that two reviewers scored motion under 5.","The Galaxy rarely lost and rarely won a scene outright. That is a result, not a shrug: it is the phone you hand someone who will not retake."],"caveats":["Handheld on purpose. A tripod would have flattered the Pixel's night stack and hidden the motion cost.","Three reviewers from this desk, not a public panel. They were blind to the phone, not to their own taste.","Auto night mode was allowed to fire. Forcing it off would be a different note."],"wouldRepeat":"Add one indoor mixed-light scene with a child who will not hold still, and keep the parts separate from the mean.","related":["mixed-day-battery","twelve-thousand-photos"]},{"code":"FB-PH-03","slug":"heat-under-nav","title":"Navigation, a call, and heat","dek":"Thirty minutes of maps plus a video call, cases off, in a 28°C room.","category":"phones","published":"2026-05-19","duration":"30 minutes × 3 runs","sample":"Three runs per phone from a cold start, thermocouple on the glass","question":"When navigation and a video call run together, which phone stays fast, and which one is merely less warm in the hand?","verdict":"Skin temperature is inside the band. Sustained performance is not. The iPhone 16 held 86% of its opening single-core peak, the Galaxy S25 78%, the Pixel 9 71%.","setup":["Room held at 28°C. Phones started from a 30-minute rest on the desk, screen off, battery between 70% and 85%.","A contact thermocouple on the glass, mid-screen, not on the frame. We log the glass because that is what the hand touches.","Maps in walking navigation, and a 720p video call to a laptop on the same desk. Wi-Fi, not cellular, so the radio is not the variable."],"protocol":["Start both workloads together. At 20 minutes, run a short single-core burst and record it as a percent of the same burst taken at minute 1.","At 30 minutes, log glass temperature. Three runs per phone on separate evenings. We publish the mean.","Cases stayed off. A case is a different experiment; we did not want foam thickness to masquerade as a chip."],"primaryMetricId":"sustain","metrics":[{"id":"sustain","label":"Sustained single-core","unit":"% of opening peak","higherIsBetter":true,"ranked":true,"blurb":"Burst at minute 20 divided by the burst at minute 1. Higher holds its speed.","sample":"3 runs, mean","rows":[{"subject":"iPhone 16","value":86,"display":"86%"},{"subject":"Galaxy S25","value":78,"display":"78%"},{"subject":"Pixel 9","value":71,"display":"71%"}]},{"id":"skin","label":"Glass temperature","unit":"°C at 30 min","higherIsBetter":false,"ranked":true,"blurb":"Mid-glass at minute 30. Lower is cooler in the hand. This one is inside the band.","sample":"3 runs, mean","rows":[{"subject":"iPhone 16","value":41.2,"display":"41.2°C"},{"subject":"Galaxy S25","value":43.1,"display":"43.1°C"},{"subject":"Pixel 9","value":44.8,"display":"44.8°C"}]}],"findings":["A hand cannot reliably tell 41°C from 43°C on glass. The benchmark can tell 86% from 71%. We almost published the wrong crown by leading with the thermometer.","The Pixel's call stayed up, but the map redrew late in the last five minutes of two runs. That matches the 71% figure better than the temperature does.","Wi-Fi was a choice. A weak cell signal would heat every phone and might shrink the gap. We did not measure that arm."],"caveats":["Single-core burst is a proxy, not a game frame-time. We used it because it is repeatable on three different OS schedulers.","28°C is a warm room, not a car dashboard in July. Dashboard heat is harsher than this note.","Three runs is enough to see a 15-point gap. It is not enough to rank a 2°C gap, which is why skin temperature is marked tight."],"wouldRepeat":"Add a closed-car arm at a measured cabin temperature, still with the thermocouple on the glass.","related":["mixed-day-battery","cracked-screen-paths"]},{"code":"FB-RP-01","slug":"cracked-screen-paths","title":"Three ways to replace a cracked screen","dek":"Three iPhone 16 units, one controlled crack each, three paths: counter, walk-in, mail-in.","category":"repairs","published":"2026-02-08","duration":"About a week of calendar","sample":"3 iPhone 16 units, cracked the same way, assigned by coin toss","question":"For the same crack, what do you keep, what do you pay, and how many days is the phone gone?","verdict":"The maker counter kept True Tone on 3 of 3 units. The walk-in bench was cheaper and as fast, and lost True Tone on all 3. Mail-in was the cheapest and took most of a week.","setup":["Three iPhone 16 units from the same batch. Each was dropped once, face down, from 1 meter onto concrete with a plywood backer. We kept the unit if the glass was cracked and the phone still booted.","Paths were assigned by coin toss after the drops, so the ugliest crack was not steered toward a shop.","Paths: the maker's own counter, one walk-in bench we have used before, and one mail-in depot. Shops are not named. This note is about the path."],"protocol":["Book the counter for the next available slot. Walk into the bench with no appointment. Ship the mail-in unit the morning of day zero with their prepaid label.","Before and after, photograph a gray ramp and a known face under the same lamp. True Tone counts as kept only if the OS toggle is present and the ramp does not shift warm against the untouched control phone.","Log price paid, calendar days until the phone was back in a pocket, and whether anyone asked for the passcode."],"primaryMetricId":"truetone","metrics":[{"id":"truetone","label":"True Tone kept","unit":"units of 3","higherIsBetter":true,"ranked":true,"blurb":"Calibration still present and the gray ramp not shifted warm. This is the primary figure.","sample":"3 units, one per path","rows":[{"subject":"Maker counter","value":3,"display":"3 of 3"},{"subject":"Walk-in bench","value":0,"display":"0 of 3","note":"Panel looked slightly warm"},{"subject":"Mail-in depot","value":0,"display":"0 of 3","note":"Aftermarket panel, warmer white"}]},{"id":"price","label":"Price paid","unit":"USD","higherIsBetter":false,"ranked":true,"blurb":"What left the account, including shipping. Lower is cheaper.","sample":"3 paid invoices","rows":[{"subject":"Mail-in depot","value":149,"display":"$149"},{"subject":"Walk-in bench","value":189,"display":"$189"},{"subject":"Maker counter","value":329,"display":"$329"}]},{"id":"days","label":"Calendar days gone","unit":"days","higherIsBetter":false,"ranked":true,"blurb":"From handoff to pocket, including the one counter visit that waited on a part.","sample":"3 repairs","rows":[{"subject":"Walk-in bench","value":1,"display":"1.0 day","note":"26 minutes on site"},{"subject":"Maker counter","value":1.3,"display":"1.3 days","note":"Two same-day, one next week"},{"subject":"Mail-in depot","value":6.2,"display":"6.2 days"}]}],"findings":["Price and calibration point at different doors. If you want the cheapest glass, mail-in wins and you live with a warmer white. If you want the phone to look like it did, the counter is the only path that kept True Tone.","The walk-in bench is the practical middle: back the next day, $140 less than the counter, calibration gone. The frame gap was visible if you looked for it and invisible in a pocket.","The mail-in depot asked for the passcode. The counter and the bench did not. We treat that as part of the result, not a footnote."],"caveats":["Three units, one city, one of each path. A different bench could pair a panel and keep True Tone. We did not find that bench.","The counter's mean of 1.3 days is pulled by a single parts delay. On the two visits with stock, it was same-day, 78 minutes in the store.","We cracked the phones ourselves. A spidered glass with a dead touch layer can change both the quote and the part."],"wouldRepeat":"Send a second walk-in bench the same crack before calling the calibration loss universal.","related":["coffee-quotes","battery-swap-hold"]},{"code":"FB-RP-02","slug":"battery-swap-hold","title":"What a new battery still holds","dek":"Three tired Pixel 9 units, three cells, then a controlled drain against a fresh control.","category":"repairs","published":"2026-06-03","duration":"Swap day, then 30 days","sample":"3 used Pixel 9 units, health under 84% before the swap","question":"Thirty days after a battery swap, how close is the drain to a fresh unit, and did the cell stay flat?","verdict":"A stated-new cell at the walk-in bench landed inside the band of the maker cell: 96% versus 98% of a fresh drain. The pulled cell did not, and it swelled on day 22.","setup":["Three used Pixel 9 units, each reporting battery health under 84% before the work. One fresh Pixel 9 from the carry set is the drain reference, not a repair.","Paths: maker mail-in battery service, a walk-in bench that stated the cell was new, and a second bench that disclosed a pulled cell at a lower price.","We paid the posted price. No one was told this was for a published note until the invoice was done."],"protocol":["After the swap, wait 48 hours, then run the FB-PH-01 weekday script once and record percent of the fresh phone's drain time. Repeat at day 30.","The day-30 figure is the one we rank. Day-2 figures were all higher and are not the result.","Any swelling, warning, or shutdown ends that unit's test. We do not keep cycling a cell that has deformed."],"primaryMetricId":"drain","metrics":[{"id":"drain","label":"Drain versus a fresh unit","unit":"% of fresh drain time","higherIsBetter":true,"ranked":true,"blurb":"Day-30 script length divided by the fresh Pixel's script length. Higher is closer to new.","sample":"Day 30, or the day we stopped","rows":[{"subject":"Maker cell","value":98,"display":"98%"},{"subject":"New cell","value":96,"display":"96%","note":"Walk-in, stated new"},{"subject":"Pulled cell","value":91,"display":"91%","note":"Swelled on day 22. Test stopped."}]},{"id":"price","label":"Price paid","unit":"USD","higherIsBetter":false,"ranked":true,"blurb":"Invoice total. The pulled cell was cheaper and is the one we had to stop.","sample":"3 invoices","rows":[{"subject":"Pulled cell","value":79,"display":"$79"},{"subject":"New cell","value":89,"display":"$89"},{"subject":"Maker cell","value":99,"display":"$99"}]}],"findings":["Between the maker cell and the stated-new walk-in cell, we would not spend the extra ten dollars again for two points of drain. That gap is inside the band.","The pulled cell is the actual finding. It was eight dollars under the new cell and it deformed. Health percent in the OS still looked acceptable the morning it swelled.","Ask the bench whether the cell is new, and write the answer on the invoice. 'Replacement battery' was not an answer we could use."],"caveats":["One cell per path. A swell on a single pulled cell is a stop, not a rate. We will not invent a failure percentage from n=1.","The fresh reference is our carry-set Pixel, not a laboratory cycler. Script drift of a few percent is why 98 and 96 are tied.","Used phones differ in boards and age. We matched on reported health, not on cycle count, which two of the units would not show."],"wouldRepeat":"Buy three stated-new cells from three benches and only then talk about a rate. One swell is a reason to refuse pulled cells, not a statistic.","related":["mixed-day-battery","cracked-screen-paths"]},{"code":"FB-RP-03","slug":"coffee-quotes","title":"Coffee in the port, three quotes","dek":"One symptom card, three shops, and only one of them received the phone.","category":"repairs","published":"2026-01-21","duration":"One morning of quotes, one repair","sample":"3 quote visits, 1 completed repair, 1 iPhone 16","question":"Shown the same coffee spill, what do shops quote before they open the phone, and what does the phone actually need?","verdict":"Two shops quoted a board repair from photos. The shop that opened the phone cleaned the port and handed it back the same afternoon. This is one spill. It is recorded, not ranked.","setup":["One iPhone 16. Forty milliliters of sweetened coffee, poured at the port, phone powered off inside two minutes. No rice, no charger, no hair dryer.","We wrote a symptom card with those facts and four photos. Three shops got the card the same morning.","Only Shop C received the phone. Shop A and Shop B gave quotes from the card. Comparing three 'repairs' would have been fiction: there was only one wet phone."],"protocol":["Ask each shop for a price before they open anything, and ask whether a passcode is required to proceed.","At the shop we chose, authorize only a diagnostic, then decide. We had already decided we would not approve a board swap on the first quote.","Log the quote, the diagnostic fee, and, for the completed path, the hours until the phone charged and booted normally."],"primaryMetricId":"quote","metrics":[{"id":"quote","label":"Price named before opening","unit":"USD","higherIsBetter":false,"ranked":false,"blurb":"What they would charge from the card and photos. Not ranked: two of these were never jobs.","sample":"3 conversations","rows":[{"subject":"Shop A","value":380,"display":"$380","note":"Board-level, from photos"},{"subject":"Shop B","value":290,"display":"$290","note":"Board-level, from photos"},{"subject":"Shop C","value":49,"display":"$49","note":"Diagnostic only, until they looked"}]},{"id":"hours","label":"Hours to a working phone","unit":"hours","higherIsBetter":false,"ranked":false,"blurb":"Only Shop C received the phone. The other two figures are blank on purpose.","sample":"1 repair","rows":[{"subject":"Shop C","value":3,"display":"3 hours","note":"Port cleaned, no parts"}]}],"findings":["The spread in the quote is the result. From the same card, the range was a $49 look versus a $290–$380 board. The phone needed the look.","Shop C's final bill was the diagnostic and nothing else. They did not ask for the passcode. Shop A required one before they would 'inspect.'","We do not conclude that board quotes are always wrong. We conclude that a quote from photos, on a port spill powered off quickly, is not yet a diagnosis."],"caveats":["One spill, and a lucky one. Liquid that sits overnight, or a phone that stayed on, is a different failure.","Shop A and Shop B might have opened the phone and changed the quote. We did not give them the phone, so we do not know.","Unranked on purpose. Turning one successful port clean into a winner over two unrun jobs would be a stunt."],"wouldRepeat":"Keep the symptom-card method. Next time, budget a second phone so two shops can actually open one.","related":["cracked-screen-paths","battery-swap-hold"]},{"code":"FB-SW-01","slug":"capture-to-find","title":"From pocket to the right note","dek":"Forty captures a day for five days, then twenty searches a week later.","category":"software","published":"2026-04-28","duration":"5 capture days, searched on day 12","sample":"Apple Notes, Obsidian, Notion, Keep, on one iPhone 16","question":"When the capture habit is sloppy, which notes app still finds the right note a week later?","verdict":"With the captures we actually made, titles often skipped, Apple Notes found the right note most often: 16 of 20. Obsidian wins only when the title was written. Keep was fastest to capture and worst to search.","setup":["Apple Notes, Obsidian, Notion, and Google Keep, all signed in, all allowed to use the camera and microphone. Obsidian used a fresh vault synced with the vendor's mobile sync, not a desktop-only vault.","The capture mix each day: typed lines, a photo of a receipt or a whiteboard, and one voice memo transcribed by the app if it offered that. If it did not, we typed the sentence.","We did not clean up titles afterward. The sloppy habit is the condition under test."],"protocol":["Forty captures a day, ten into each app, rotating which app went first so fatigue is shared. Time-to-capture starts at the tap that opens the app and ends when the capture is saved.","On day 12, twenty search prompts written by someone who did not make the captures ('the dentist receipt,' 'the blue door code'). Success means the right note is in the top three.","We scored a second time after adding titles to the untitled captures, and we publish that as its own metric so the ideal habit is not smuggled into the real one."],"primaryMetricId":"ascaptured","metrics":[{"id":"ascaptured","label":"Found, as captured","unit":"of 20 searches","higherIsBetter":true,"ranked":true,"blurb":"Right note in the top three, titles left as they were on the day. This is the primary figure.","sample":"20 searches on day 12","rows":[{"subject":"Apple Notes","value":16,"display":"16/20"},{"subject":"Notion","value":13,"display":"13/20"},{"subject":"Obsidian","value":12,"display":"12/20","note":"Untitled notes sank"},{"subject":"Keep","value":11,"display":"11/20"}]},{"id":"titled","label":"Found, after titles","unit":"of 20 searches","higherIsBetter":true,"ranked":true,"blurb":"Same prompts, after we went back and titled everything. A different habit.","sample":"20 searches, titles added","rows":[{"subject":"Obsidian","value":18,"display":"18/20"},{"subject":"Apple Notes","value":16,"display":"16/20"},{"subject":"Notion","value":14,"display":"14/20"},{"subject":"Keep","value":11,"display":"11/20"}]},{"id":"capture","label":"Median time to capture","unit":"seconds","higherIsBetter":false,"ranked":true,"blurb":"Open to saved. Lower is faster in the pocket.","sample":"200 captures, median","rows":[{"subject":"Keep","value":4.2,"display":"4.2 s"},{"subject":"Apple Notes","value":5.1,"display":"5.1 s"},{"subject":"Obsidian","value":8.4,"display":"8.4 s"},{"subject":"Notion","value":11.6,"display":"11.6 s"}]}],"findings":["Keep wins the pocket and loses the week. If the note only has to exist until tonight, it is the right tool. If you will search for it, it was the worst of the four.","Obsidian's reputation is real and conditional. Eighteen of twenty after titles, twelve of twenty on the captures we actually made. The app did not fail. The untitled habit did.","Apple Notes did not move when we added titles. Its search was already using the body. That is why it leads the primary metric."],"caveats":["All four ran on an iPhone. Notion and Obsidian on a desktop, with a keyboard, are a different capture time. This note is the phone.","Twenty searches is enough to see Keep fall behind. It is not enough to separate 16 from 13 as a law.","Voice transcription quality was not scored, only whether the words were in the note before we searched."],"wouldRepeat":"Split 'receipt photo' from 'sentence I will search by verb.' They are not the same capture.","related":["unlock-and-exit","twelve-thousand-photos"]},{"code":"FB-SW-02","slug":"unlock-and-exit","title":"Unlock, fill, and the exit door","dek":"Twenty sites on one iPhone. Autofill in the hand, then the time to leave with a CSV.","category":"software","published":"2026-07-09","duration":"Two afternoons","sample":"1Password, Bitwarden, Apple Passwords, 20 sites, iPhone 16","question":"Which password manager fills the form on this phone, and which one lets you leave without a scavenger hunt?","verdict":"Autofill is inside the band for Apple Passwords (17 of 20) and 1Password (16 of 20). Bitwarden was the quickest to export a CSV. Apple was the slowest to leave, at 11 minutes and a Mac.","setup":["A fresh set of twenty logins created for this note, stored in all three managers. No real accounts. Sites were a mix of simple forms and two-step login screens.","iPhone 16, Safari, system autofill set to the manager under test, the others disabled so they could not steal the prompt.","Export was 'a CSV another manager can import,' timed from the decision to leave until the file was on disk."],"protocol":["Unlock the manager, open the site, count a success only if the right username and password landed without a second tap into the manager. A prompt we had to hunt for is a miss.","Median seconds from the unlock gesture to the filled form, successes only.","Export once per manager, the way their current docs describe. Apple's path left the phone: Passwords on a Mac, then a CSV. We timed that path because it is the path."],"primaryMetricId":"autofill","metrics":[{"id":"autofill","label":"Autofill without a second tap","unit":"of 20 sites","higherIsBetter":true,"ranked":true,"blurb":"Right fields filled from the system prompt. Leader and runner-up are inside the band.","sample":"20 sites","rows":[{"subject":"Apple Passwords","value":17,"display":"17/20"},{"subject":"1Password","value":16,"display":"16/20"},{"subject":"Bitwarden","value":13,"display":"13/20","note":"Prompt covered the field twice"}]},{"id":"speed","label":"Unlock to filled form","unit":"seconds","higherIsBetter":false,"ranked":true,"blurb":"Median on the successes. Lower is faster in the hand.","sample":"Successes only","rows":[{"subject":"Apple Passwords","value":1.8,"display":"1.8 s"},{"subject":"1Password","value":2.4,"display":"2.4 s"},{"subject":"Bitwarden","value":3.1,"display":"3.1 s"}]},{"id":"export","label":"Time to a portable CSV","unit":"minutes","higherIsBetter":false,"ranked":true,"blurb":"Decision to leave until a CSV is on disk. Lower is an easier exit.","sample":"One timed export each","rows":[{"subject":"Bitwarden","value":2,"display":"2 min"},{"subject":"1Password","value":4,"display":"4 min"},{"subject":"Apple Passwords","value":11,"display":"11 min","note":"Required a Mac"}]}],"findings":["On this iPhone, Apple Passwords and 1Password are the same autofill result for practical purposes. Seventeen and sixteen are inside the band. The seconds are not: 1.8 versus 2.4 is a gap you can feel, and it favors Apple.","Bitwarden lost fills to its own prompt sitting on top of the field. When the prompt landed beside the field, the fill was correct. The data was fine. The overlay was not.","The exit door reverses the podium. If 'can I leave' is the question, Bitwarden leads and Apple is last, because the phone itself would not hand us the file."],"caveats":["Safari only. Chrome on this iPhone is a different prompt host even though the engine is WebKit. We did not rerun the twenty.","Twenty lab logins, not a decade of messy duplicates. Duplicates would punish every manager, possibly not equally.","Export time is one timed pass by someone who had read the docs. A first-time exit could be longer for all three."],"wouldRepeat":"Repeat the twenty in Chrome's iOS shell, and add a duplicate-login arm before calling autofill settled.","related":["capture-to-find","three-browsers"]},{"code":"FB-SW-03","slug":"twelve-thousand-photos","title":"Twelve thousand photos, three libraries","dek":"One trip archive imported into Apple Photos, Google Photos, and Immich.","category":"software","published":"2026-08-14","duration":"Import day, scored over the next week","sample":"12,000 photos from one archive, 8 search prompts","question":"Given the same 12,000 photos, which library finds a described frame, how soon, and what does it cost the phone?","verdict":"Google Photos put a relevant frame in the top 5 on 7 of 8 prompts and added the least storage on the phone. Apple Photos was searchable in 40 minutes. Immich was the only library that answered with the vendor account signed out.","setup":["One archive: 12,000 stills from a two-week trip, mixed phones, already exported to a drive. No videos in this note.","Apple Photos on the iPhone 16 with iCloud Photos. Google Photos on the same phone. Immich on a small home server on the same network, the official mobile app, originals allowed to cache.","Search prompts were written from memory before import ('red bike in rain,' 'hotel stair with the green rail'), eight of them, by someone who was on the trip."],"protocol":["Import over the home network. 'Search will answer' means a prompt returns some photos, not that face detection has finished.","A hit counts when a relevant frame is in the top five. We did not score how pretty the ranking felt beyond that.","Storage added is the phone's reported growth for that app after the library offered its optimize or thumbnail mode and the count settled overnight.","Signed-out test: sign out or cut the account, airplane mode on, ask one prompt whose photos we knew were recent."],"primaryMetricId":"hits","metrics":[{"id":"hits","label":"Prompts with a hit in the top 5","unit":"of 8","higherIsBetter":true,"ranked":true,"blurb":"A relevant frame appears in the first five results. Higher finds the described photo.","sample":"8 prompts","rows":[{"subject":"Google Photos","value":7,"display":"7/8"},{"subject":"Apple Photos","value":6,"display":"6/8"},{"subject":"Immich","value":5,"display":"5/8"}]},{"id":"storage","label":"Storage added on the phone","unit":"GB","higherIsBetter":false,"ranked":true,"blurb":"After optimize or thumbnail mode settled. Lower leaves more room.","sample":"Overnight settle","rows":[{"subject":"Google Photos","value":0.6,"display":"0.6 GB"},{"subject":"Apple Photos","value":1.8,"display":"1.8 GB"},{"subject":"Immich","value":2.4,"display":"2.4 GB","note":"Originals cached"}]},{"id":"ready","label":"Minutes until search answers","unit":"minutes","higherIsBetter":false,"ranked":true,"blurb":"From import start until a prompt returns photos. Lower is sooner.","sample":"One import each","rows":[{"subject":"Apple Photos","value":40,"display":"40 min"},{"subject":"Immich","value":170,"display":"170 min","note":"Import, then face scan"},{"subject":"Google Photos","value":180,"display":"180 min","note":"Cloud index lagged upload"}]},{"id":"signout","label":"Answered with the account signed out","unit":"yes = 1","higherIsBetter":true,"ranked":true,"blurb":"Airplane mode, vendor account signed out, one known prompt. 1 means the library still answered.","sample":"One prompt","rows":[{"subject":"Immich","value":1,"display":"Yes","note":"Home server on the LAN"},{"subject":"Apple Photos","value":0,"display":"No","note":"On-device set was only recent originals"},{"subject":"Google Photos","value":0,"display":"No","note":"Thumbnails, no full search"}]}],"findings":["Google won the prompt that mattered ('red bike in rain') and six others, and it barely touched the phone. It also could not answer until the cloud index caught up, three hours after the upload looked done.","Apple was the library you could search the same afternoon. It missed two prompts Google hit, both of them described by color rather than by place.","Immich is not the relevance winner. It is the only one that still searched when we signed the vendor out, because the server is ours and was on. That is a different question, and it is why the metric exists."],"caveats":["Eight prompts, one archive, one home network. A face-heavy archive would flatter whoever finished people-scan first. We stopped the clock at 'search returns photos,' not at finished faces.","Immich's storage figure includes a cache we allowed. Forbidding originals on the phone would shrink it and change offline behavior.","Apple's signed-out miss is about the full 12,000, not about the last few days, which did open offline."],"wouldRepeat":"Add a video arm separately. Mixing clips into this import would have muddied both the clock and the storage figure.","related":["night-block","capture-to-find"]},{"code":"FB-SW-04","slug":"three-browsers","title":"Ninety minutes, three browsers","dek":"Safari, Firefox, and Chrome on one iPhone, same tabs, same video, brightness locked.","category":"software","published":"2026-09-02","duration":"90 minutes × 2 runs","sample":"One iPhone 16, 12 tabs, one 30-minute video","question":"On this iPhone, which browser spends less battery and throws away fewer background tabs?","verdict":"Safari dropped 14% in the 90-minute script, Firefox 17%, Chrome 21%. All three are WebKit on this phone. The gap is process behavior, not a different engine.","setup":["iPhone 16, brightness locked, Low Power Mode off, the other browsers force-quit and logged out of background refresh where the OS allowed.","The same twelve reading tabs, plus a 30-minute video in the second half. Tabs were local copies of articles so the network payload matches.","We state the engine up front: on this US iPhone, Chrome and Firefox are WebKit shells. This note does not compare Blink, Gecko, and WebKit."],"protocol":["Start at a logged percent. Read through the tabs in order for 60 minutes, then play the 30-minute video full screen. Log the percent at 90 minutes.","Count how many of the twelve tabs reload when revisited at the end. A reload is a discarded tab, whatever the browser calls it.","Two runs on separate days, mean of the battery drop. Tab reloads were identical across the two runs, so we publish that count once."],"primaryMetricId":"drop","metrics":[{"id":"drop","label":"Battery dropped","unit":"% in 90 min","higherIsBetter":false,"ranked":true,"blurb":"Mean drop across two runs. Lower spends less.","sample":"2 runs, 90 minutes","rows":[{"subject":"Safari","value":14,"display":"14%"},{"subject":"Firefox","value":17,"display":"17%"},{"subject":"Chrome","value":21,"display":"21%"}]},{"id":"reloads","label":"Background tabs reloaded","unit":"of 12","higherIsBetter":false,"ranked":true,"blurb":"Tabs that reloaded when revisited at minute 90. Lower keeps your place.","sample":"12 tabs, both runs agreed","rows":[{"subject":"Safari","value":0,"display":"0"},{"subject":"Firefox","value":2,"display":"2"},{"subject":"Chrome","value":4,"display":"4"}]}],"findings":["Safari led both figures on this phone. The battery gap versus Firefox is outside the band. The gap versus Chrome is large enough that we stopped looking for a measurement excuse.","Chrome's four reloads were the background articles, not the video tab. The video never dropped. The cost showed up when we went back to read.","Because the engines match, the result is about helpers: prefetch, tab discarding, and whatever each shell keeps awake. It is not a reason to prefer Safari's engine over a browser you run on a laptop."],"caveats":["One phone, Apple's OS, WebKit underneath. An Android note would be a different experiment and might reverse this.","Two runs. The tab-reload counts matched; the battery figures moved by a point between days, which does not close a seven-point gap.","Local article copies remove one network variable and also remove ad scripts. A commercial homepage would spend more on every browser."],"wouldRepeat":"Run the identical tab set on the Pixel 9, where the engines actually differ, and publish it as its own note.","related":["mixed-day-battery","unlock-and-exit"]}],"methodSections":[{"id":"what-a-note-is","title":"What a note is","paragraphs":["A Fieldbench note is a question, a script, and the number the script produced. The prose is not allowed to outrun the table. If a sentence names a winner, the primary metric has to name the same one.","Volume 04 is the carry set: phones this desk bought in 2024 and 2025 and still uses, the repair paths we actually walked, and the software on top of that hardware. Run dates stay on the notes. This volume page was revised in September 2026."]},{"id":"the-band","title":"The 8% band","paragraphs":["When the leader and the runner-up differ by less than 8% of the leader's figure, we call the result tight. Both numbers stay in the table. We do not print a winner for that metric.","The band is about the top two, not the whole field. A third device can sit well outside it, as the pulled battery cell does, while the first two are tied. Tight is not 'everything is the same.'"],"bullets":["Higher-is-better and lower-is-better both use the same rule, measured on the raw figure.","Unranked metrics skip the band. A quote from photos is not a race against a repair that actually happened.","We do not collapse a note into a single score, and we do not collapse a desk into one."]},{"id":"desks","title":"The three desks","paragraphs":["Smartphones are the units in a pocket. Repair services are paths — counter, bench, mail-in — not a leaderboard of shop names. Software is timed on hardware we own, usually the same iPhone the phone notes already describe."],"bullets":["Shops are labeled by path. We will not hang a swell or a scare-quote on a business name in public.","Software notes say which phone they ran on. A password manager on a laptop is a different note.","Where every iPhone browser is WebKit, we say so in the first screen of the note."]},{"id":"refuse","title":"What we will not publish","paragraphs":["We do not take seeded units, and we do not let a vendor see the script before the number is written down. A note that needed their lab is not this desk's note."],"bullets":["No composite score across unlike units. Dollars, days, and True Tone do not average.","No water-damage ranking from a single spill. FB-RP-03 is a diary of quotes for that reason.","No failure rate from one swollen cell. One swell is a reason to stop, and the note says stop.","No 'hours of battery life' crown when the script was a day. The day is the unit."]},{"id":"reading","title":"How to read the chart","paragraphs":["The bar chart is the primary metric unless you switch it. The callout under the switcher recomputes for the metric you are looking at, which can disagree with the verdict at the top. That disagreement is the point of publishing more than one column.","The table is the record. If the chart fails to draw, use the table. Numbers are also written in the verdict so a chart is never the only copy."]},{"id":"gear","title":"Gear on this volume","paragraphs":["Nothing here is a certification bench. It is a desk, a thermometer, and a script we could repeat next month."],"bullets":["iPhone 16, Pixel 9, Galaxy S25, purchased, cases off unless a note says otherwise.","A contact thermocouple on the glass for FB-PH-03, room checked at 28°C.","A lux check on a white screen when we claim 200 nits. We do not own a spectroradiometer, and we do not pretend to.","The lab book is a spreadsheet. This site is the publication, not a second set of numbers."]}]}</script>
+  <script>
+    const DATA = JSON.parse(document.getElementById("payload").textContent);
+    const SHELF = "fieldbench-html-shelf";
+    const metricPick = {};
+    let notesQuery = "";
+    let menuOpen = false;
+    let searchOpen = false;
+    let searchQuery = "";
+    let lastPath = "";
+
+    const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
+      "&": "&" + "amp;",
+      "<": "&" + "lt;",
+      ">": "&" + "gt;",
+      '"': "&" + "quot;",
+      "'": "&" + "#39;"
+    }[ch]));
+
+    const desk = (id) => DATA.desks.find((item) => item.id === id);
+    const byDate = () => [...DATA.experiments].sort((a, b) => (a.published < b.published ? 1 : -1));
+    const noteBy = (slug) => DATA.experiments.find((item) => item.slug === slug) || null;
+    const primary = (note) => note.metrics.find((metric) => metric.id === note.primaryMetricId) || note.metrics[0];
+    const formatDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", {
+      month: "short", day: "numeric", year: "numeric", timeZone: "UTC"
+    });
+
+    function loadShelf() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(SHELF) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch { return []; }
+    }
+    function saveShelf(slugs) { localStorage.setItem(SHELF, JSON.stringify(slugs)); }
+
+    function rank(metric) {
+      if (!metric.ranked) return { leader: null, runner: null, tight: false };
+      const ordered = [...metric.rows].sort((a, b) => metric.higherIsBetter ? b.value - a.value : a.value - b.value);
+      const leader = ordered[0] || null;
+      const runner = ordered[1] || null;
+      let tight = false;
+      if (leader && runner) {
+        if (leader.value === runner.value) tight = true;
+        else if (leader.value !== 0) tight = Math.abs(leader.value - runner.value) / Math.abs(leader.value) < 0.08;
+      }
+      return { leader, runner, tight };
+    }
+    function fill(metric, value) {
+      const values = metric.rows.map((row) => row.value);
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      if (max === min) return 1;
+      if (metric.higherIsBetter) return max <= 0 ? 0 : Math.max(0, value) / max;
+      return (max - value) / (max - min);
+    }
+    function callout(metric) {
+      const ranked = rank(metric);
+      if (!metric.ranked) return "Recorded, not ranked. " + metric.blurb;
+      if (ranked.tight && ranked.leader && ranked.runner) {
+        return ranked.leader.subject + " and " + ranked.runner.subject + " are inside 8% on " + metric.label.toLowerCase() + ". Both figures stand.";
+      }
+      if (ranked.leader) return ranked.leader.subject + " leads " + metric.label.toLowerCase() + " at " + ranked.leader.display + ".";
+      return metric.blurb;
+    }
+    function matches(note, query) {
+      const parts = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      if (!parts.length) return true;
+      const hay = [note.title, note.dek, note.code, note.verdict, note.question, desk(note.category).label]
+        .concat(note.metrics.flatMap((metric) => metric.rows.map((row) => row.subject)))
+        .join(" ").toLowerCase();
+      return parts.every((part) => hay.includes(part));
+    }
+    function parseRoute() {
+      const raw = (location.hash || "#/").slice(1) || "/";
+      const url = new URL(raw, "http://fieldbench.local");
+      return { path: url.pathname, params: url.searchParams };
+    }
+    function meta(note) {
+      return '<p class="meta"><span class="kicker">' + esc(note.code) + '</span><a href="#/notes?desk=' + esc(note.category) + '">' + esc(desk(note.category).label) + '</a><span class="nums faint">' + esc(formatDate(note.published)) + '</span></p>';
+    }
+    function bars(metric) {
+      const ranked = rank(metric);
+      return metric.rows.map((row) => {
+        const lead = ranked.leader && ranked.leader.subject === row.subject && !ranked.tight;
+        const width = Math.round(fill(metric, row.value) * 100);
+        return '<div class="bar-row"><div class="bar-top"><span class="' + (lead ? "lead" : "") + '">' + esc(row.subject) + '</span><span class="nums muted">' + esc(row.display) + '</span></div><span class="track"><span class="fill" style="width:' + width + '%"></span></span></div>';
+      }).join("");
+    }
+    function table(metric) {
+      const ranked = rank(metric);
+      const rows = metric.rows.map((row) => {
+        const lead = ranked.leader && ranked.leader.subject === row.subject && !ranked.tight;
+        const width = Math.round(fill(metric, row.value) * 100);
+        return "<tr><th class='" + (lead ? "lead" : "") + "'>" + esc(row.subject) + "</th><td class='nums'>" + esc(row.display) + "</td><td><span class='track'><span class='fill' style='width:" + width + "%'></span></span></td><td class='muted'>" + esc(row.note || "—") + "</td></tr>";
+      }).join("");
+      return '<div class="table-wrap"><table><caption class="skip">' + esc(metric.label) + '</caption><thead><tr><th>Subject</th><th>Figure</th><th>Share of the scale</th><th>Note</th></tr></thead><tbody>' + rows + "</tbody></table></div>";
+    }
+    function nav(path, params, shelf) {
+      const deskParam = params.get("desk") || "";
+      const items = [
+        ["#/", "Index", path === "/"],
+        ["#/notes", "All notes", path === "/notes" && !deskParam],
+        ["#/compare", "Compare", path === "/compare"],
+        ["#/methods", "Methods", path === "/methods"],
+        ["#/shelf", "Shelf" + (shelf.length ? " (" + shelf.length + ")" : ""), path === "/shelf"]
+      ];
+      const top = items.map(([href, label, on]) => '<a class="' + (on ? "on" : "") + '" href="' + href + '">' + esc(label) + "</a>").join("");
+      const desks = DATA.desks.map((item) => {
+        const on = path === "/notes" && deskParam === item.id;
+        return '<a class="' + (on ? "on" : "") + '" href="#/notes?desk=' + item.id + '">' + esc(item.label) + "</a>";
+      }).join("");
+      return '<p class="label" style="padding:0 0.75rem">Volume 04</p><div class="nav">' + top + '</div><p class="label" style="padding:0 0.75rem">Desks</p><div class="nav">' + desks + '</div><p class="faint" style="padding:0 0.75rem;font-size:0.875rem">Press / to search. This file is the download.</p>';
+    }
+
+    function home() {
+      const cover = noteBy("cracked-screen-paths");
+      const cards = DATA.desks.map((item) => {
+        const notes = byDate().filter((note) => note.category === item.id);
+        return '<li class="card"><p class="kicker nums">' + notes.length + ' notes</p><h3 class="serif" style="font-family:var(--serif);font-size:1.5rem;margin:0.5rem 0 0"><a href="#/notes?desk=' + item.id + '">' + esc(item.label) + '</a></h3><p class="muted">' + esc(item.summary) + '</p><p>' + esc(notes[0].title) + "</p></li>";
+      }).join("");
+      const list = byDate().map((note) => '<li><a href="#/notes/' + note.slug + '"><span><span class="label" style="margin-right:0.75rem">' + esc(note.code) + '</span><span class="title">' + esc(note.title) + '</span></span><span class="muted">' + esc(desk(note.category).label) + "</span></a></li>").join("");
+      return '<p class="kicker">Volume 04 · The carry set · HTML edition</p><h1>What we actually measured.</h1><p class="lede">A documentation desk for phones, the people who repair them, and the software in between. Ten notes in one file. No score that mashes a day, a dollar, and a calibration into one number.</p><div class="row"><a class="btn btn-brass press" href="#/notes/' + cover.slug + '">Read the cover note</a><a class="btn press" href="#/methods">How a note is built</a></div><section class="section" style="margin-top:3rem;border-top:1px solid var(--line);padding-top:2rem"><p class="kicker">Cover</p><h2 class="serif"><a href="#/notes/' + cover.slug + '">' + esc(cover.title) + "</a></h2>" + meta(cover) + '<p class="muted">' + esc(cover.dek) + '</p><p class="verdict">' + esc(cover.verdict) + '</p></section><section class="section"><h2 class="label">Desks</h2><ul class="grid3">' + cards + '</ul></section><section class="section"><div style="display:flex;justify-content:space-between;gap:1rem"><h2 class="label">Contents</h2><a href="#/compare" style="color:var(--brass)">Compare a desk</a></div><ol class="contents">' + list + "</ol></section>";
+    }
+
+    function notesPage(params) {
+      const chosen = params.get("desk");
+      const activeDesk = DATA.desks.some((item) => item.id === chosen) ? chosen : "";
+      const heading = activeDesk ? desk(activeDesk).label : "All notes";
+      const intro = activeDesk ? desk(activeDesk).summary : "Every published note in Volume 04, newest run date first.";
+      const chips = [['', 'All']].concat(DATA.desks.map((item) => [item.id, item.label])).map(([id, label]) => {
+        const on = (id || "") === activeDesk;
+        const href = id ? "#/notes?desk=" + id : "#/notes";
+        return '<a class="chip press ' + (on ? "on" : "") + '" href="' + href + '">' + esc(label) + "</a>";
+      }).join("");
+      return '<p class="kicker">Volume 04</p><h1>' + esc(heading) + '</h1><p class="lede">' + esc(intro) + '</p><div class="row">' + chips + '</div><label class="muted" style="display:block;max-width:28rem;margin-top:1rem">Filter this list<input id="notes-filter" type="search" value="' + esc(notesQuery) + '" placeholder="True Tone, Safari, spill…" /></label><p id="notes-count" class="faint nums" style="margin-top:1.5rem"></p><div id="notes-list"></div>';
+    }
+    function notesList(params) {
+      const chosen = params.get("desk");
+      const activeDesk = DATA.desks.some((item) => item.id === chosen) ? chosen : "";
+      const notes = byDate().filter((note) => (!activeDesk || note.category === activeDesk) && matches(note, notesQuery));
+      const count = notes.length + (notes.length === 1 ? " note" : " notes");
+      if (!notes.length) {
+        return { count, html: '<div class="card" style="margin-top:1rem"><p class="serif" style="font-family:var(--serif);font-size:1.5rem;margin:0">No note matches that.</p><button class="btn press" id="clear-filter" type="button" style="margin-top:1rem">Clear the filter</button></div>' };
+      }
+      const html = '<ol class="stack">' + notes.map((note) => '<li style="padding:1.25rem 0">' + meta(note) + '<a href="#/notes/' + note.slug + '"><h2 class="serif" style="margin:0.5rem 0 0">' + esc(note.title) + '</h2><p class="muted">' + esc(note.dek) + "</p></a></li>").join("") + "</ol>";
+      return { count, html };
+    }
+
+    function notePage(slug) {
+      const note = noteBy(slug);
+      if (!note) {
+        return '<h1>This note is not in the volume.</h1><p class="muted">The code may have moved. The contents list is intact.</p><p><a class="btn btn-brass press" href="#/notes">Back to all notes</a></p>';
+      }
+      const metric = note.metrics.find((item) => item.id === metricPick[slug]) || primary(note);
+      const shelf = loadShelf();
+      const saved = shelf.includes(slug);
+      const ordered = [...DATA.experiments].sort((a, b) => a.published.localeCompare(b.published));
+      const index = ordered.findIndex((item) => item.slug === slug);
+      const older = index > 0 ? ordered[index - 1] : null;
+      const newer = index >= 0 && index < ordered.length - 1 ? ordered[index + 1] : null;
+      const jumps = ["question", "setup", "protocol", "results", "findings", "caveats"].map((id) => '<a class="chip" href="#/notes/' + slug + "#" + id + '" data-jump="' + id + '">' + id[0].toUpperCase() + id.slice(1) + "</a>").join("");
+      const switches = note.metrics.map((item) => '<button class="chip press ' + (item.id === metric.id ? "on" : "") + '" type="button" data-metric="' + esc(item.id) + '" data-slug="' + esc(slug) + '" aria-pressed="' + (item.id === metric.id) + '">' + esc(item.label) + "</button>").join("");
+      const steps = note.protocol.map((step, i) => '<li><span class="num">' + String(i + 1).padStart(2, "0") + "</span><span>" + esc(step) + "</span></li>").join("");
+      const bullets = (items) => '<ul class="bullets">' + items.map((item) => "<li>" + esc(item) + "</li>").join("") + "</ul>";
+      const neighbors = '<nav class="pair">' +
+        (older ? '<a class="card" href="#/notes/' + older.slug + '"><span class="label">Older</span><span class="serif" style="display:block;font-family:var(--serif);font-size:1.25rem;margin-top:0.5rem">' + esc(older.title) + "</span></a>" : "<span></span>") +
+        (newer ? '<a class="card" href="#/notes/' + newer.slug + '" style="text-align:right"><span class="label">Newer</span><span class="serif" style="display:block;font-family:var(--serif);font-size:1.25rem;margin-top:0.5rem">' + esc(newer.title) + "</span></a>" : "") +
+        "</nav>";
+      const related = note.related.map((relatedSlug) => {
+        const item = noteBy(relatedSlug);
+        return item ? '<li><a href="#/notes/' + item.slug + '" style="display:flex;gap:0.75rem;min-height:2.75rem;align-items:baseline"><span class="label">' + esc(item.code) + "</span><span>" + esc(item.title) + "</span></a></li>" : "";
+      }).join("");
+      return meta(note) + '<h1>' + esc(note.title) + '</h1><p class="lede">' + esc(note.dek) + '</p><dl class="split"><div><dt class="label">Duration</dt><dd>' + esc(note.duration) + '</dd></div><div><dt class="label">Sample</dt><dd>' + esc(note.sample) + '</dd></div><div><dt class="label">Primary figure</dt><dd>' + esc(primary(note).label) + '</dd></div></dl><button class="btn press" id="shelf-toggle" type="button" data-slug="' + esc(slug) + '" style="margin-top:1rem">' + (saved ? "On your shelf" : "Shelf this note") + '</button><nav class="jumps">' + jumps + '</nav><p class="verdict">' + esc(note.verdict) + '</p><section class="section" id="question"><h2 class="kicker">Question</h2><p>' + esc(note.question) + '</p></section><section class="section" id="setup"><h2 class="kicker">Setup</h2>' + bullets(note.setup) + '</section><section class="section" id="protocol"><h2 class="kicker">Protocol</h2><ol class="steps">' + steps + '</ol></section><section class="section" id="results"><h2 class="kicker">Results</h2><div class="row" style="margin-top:1rem">' + switches + '</div><p class="callout">' + esc(callout(metric)) + '</p><p class="faint">' + esc(metric.sample) + " · " + (metric.higherIsBetter ? "Higher is better" : "Lower is better") + (metric.ranked ? "" : " · Not a ranking") + '</p><div class="chart" role="img" aria-label="' + esc(metric.label) + '">' + bars(metric) + "</div>" + table(metric) + '</section><section class="section" id="findings"><h2 class="kicker">Findings</h2>' + note.findings.map((paragraph) => "<p>" + esc(paragraph) + "</p>").join("") + '</section><section class="section" id="caveats"><h2 class="kicker">Caveats</h2>' + bullets(note.caveats) + '<p class="muted"><span style="color:var(--fg)">What we would repeat. </span>' + esc(note.wouldRepeat) + "</p></section>" + neighbors + '<section class="section"><h2 class="kicker">Related</h2><ul class="nav">' + related + "</ul></section>";
+    }
+
+    function comparePage(params) {
+      const chosen = params.get("desk");
+      const active = DATA.desks.some((item) => item.id === chosen) ? chosen : "phones";
+      const chips = DATA.desks.map((item) => '<a class="chip press ' + (item.id === active ? "on" : "") + '" href="#/compare?desk=' + item.id + '">' + esc(item.label) + "</a>").join("");
+      const notes = byDate().filter((note) => note.category === active);
+      const cards = notes.map((note) => {
+        const metric = primary(note);
+        const ranked = rank(metric);
+        return '<article class="card"><div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><h2 class="serif" style="margin:0"><a href="#/notes/' + note.slug + '">' + esc(note.title) + '</a></h2><span class="label">' + esc(note.code) + '</span></div><p class="muted">' + esc(metric.label) + (metric.ranked ? "" : " · recorded, not ranked") + (ranked.tight ? " · inside the 8% band" : "") + '</p>' + bars(metric) + "</article>";
+      }).join("");
+      return '<p class="kicker">Compare</p><h1>One desk at a time.</h1><p class="lede">Each block is a note’s primary figure. Tight calls stay unlabeled. We do not average these into a score for the desk.</p><div class="row">' + chips + '</div><p class="muted">' + esc(desk(active).summary) + '</p><div class="grid3" style="margin-top:2rem">' + cards + "</div>";
+    }
+
+    function methodsPage() {
+      const jumps = DATA.methodSections.map((section) => '<a class="chip" href="#/methods#' + section.id + '" data-jump="' + section.id + '">' + esc(section.title) + "</a>").join("");
+      const body = DATA.methodSections.map((section) => {
+        const bullets = section.bullets ? '<ul class="bullets" style="margin-top:1rem">' + section.bullets.map((item) => '<li style="border-color:var(--brass)">' + esc(item) + "</li>").join("") + "</ul>" : "";
+        return '<section class="section" id="' + section.id + '"><h2 class="serif">' + esc(section.title) + "</h2>" + section.paragraphs.map((paragraph) => "<p>" + esc(paragraph) + "</p>").join("") + bullets + "</section>";
+      }).join("");
+      return '<p class="kicker">Methods</p><h1>A protocol with a number attached.</h1><p class="lede">Read this before arguing with a verdict. The band, the desks, and the things this volume refuses to rank are all in one place.</p><nav class="jumps">' + jumps + "</nav>" + body;
+    }
+
+    function shelfPage() {
+      const notes = loadShelf().map(noteBy).filter(Boolean);
+      if (!notes.length) {
+        return '<p class="kicker">Shelf</p><h1>Notes you kept.</h1><p class="lede">Saved in this browser only. Clearing site data clears the shelf.</p><div class="card" style="margin-top:2rem"><p class="serif" style="font-family:var(--serif);font-size:1.5rem;margin:0">Nothing shelved yet.</p><p class="muted">Open a note and shelf it. The cover note is a reasonable place to start.</p><a class="btn btn-brass press" href="#/notes/cracked-screen-paths">Read the cover note</a></div>';
+      }
+      const list = notes.map((note) => '<li style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center;padding:1.25rem 0"><div>' + meta(note) + '<h2 class="serif" style="margin:0.5rem 0 0"><a href="#/notes/' + note.slug + '">' + esc(note.title) + '</a></h2></div><button class="btn press" type="button" data-remove="' + esc(note.slug) + '">Remove</button></li>').join("");
+      return '<p class="kicker">Shelf</p><h1>Notes you kept.</h1><p class="lede">Saved in this browser only. Clearing site data clears the shelf. It is not an account.</p><ul class="stack">' + list + "</ul>";
+    }
+
+    function view(path, params) {
+      if (path === "/") return home();
+      if (path === "/notes") return notesPage(params);
+      if (path.startsWith("/notes/")) return notePage(decodeURIComponent(path.slice("/notes/".length)));
+      if (path === "/compare") return comparePage(params);
+      if (path === "/methods") return methodsPage();
+      if (path === "/shelf") return shelfPage();
+      return '<h1>That page is not in the volume.</h1><p><a href="#/">Back to the index</a></p>';
+    }
+
+    function paint(scroll) {
+      const route = parseRoute();
+      const shelf = loadShelf();
+      document.getElementById("side").innerHTML = nav(route.path, route.params, shelf);
+      document.getElementById("menu").innerHTML = nav(route.path, route.params, shelf);
+      document.getElementById("menu").classList.toggle("open", menuOpen);
+      document.getElementById("menu-btn").setAttribute("aria-expanded", String(menuOpen));
+      document.getElementById("search").classList.toggle("open", searchOpen);
+      document.getElementById("search").hidden = !searchOpen;
+      document.getElementById("shelf-link").textContent = "Shelf" + (shelf.length ? " (" + shelf.length + ")" : "");
+      document.title = route.path.startsWith("/notes/") ? (noteBy(decodeURIComponent(route.path.slice(7)))?.title || "Fieldbench") + " — Fieldbench" : "Fieldbench — Lab notes";
+      const app = document.getElementById("app");
+      app.innerHTML = view(route.path, route.params);
+      if (route.path === "/notes") {
+        const listed = notesList(route.params);
+        document.getElementById("notes-count").textContent = listed.count;
+        document.getElementById("notes-list").innerHTML = listed.html;
+      }
+      const progress = document.getElementById("progress");
+      progress.hidden = !route.path.startsWith("/notes/");
+      if (scroll && route.path !== lastPath) window.scrollTo(0, 0);
+      lastPath = route.path;
+      const jump = location.hash.split("#")[2];
+      if (jump) {
+        const target = document.getElementById(jump);
+        if (target) target.scrollIntoView();
+      }
+    }
+
+    document.body.addEventListener("click", (event) => {
+      const target = event.target.closest("button, a");
+      if (!target) return;
+      if (target.id === "menu-btn") {
+        menuOpen = !menuOpen;
+        searchOpen = false;
+        paint(false);
+      } else if (target.id === "search-btn") {
+        searchOpen = true;
+        menuOpen = false;
+        paint(false);
+        document.getElementById("search-input").focus();
+      } else if (target.id === "search-close") {
+        searchOpen = false;
+        paint(false);
+      } else if (target.id === "clear-filter") {
+        notesQuery = "";
+        paint(false);
+      } else if (target.dataset.metric) {
+        metricPick[target.dataset.slug] = target.dataset.metric;
+        paint(false);
+      } else if (target.id === "shelf-toggle" || target.dataset.remove) {
+        const slug = target.dataset.slug || target.dataset.remove;
+        const next = loadShelf();
+        saveShelf(next.includes(slug) ? next.filter((item) => item !== slug) : [slug, ...next]);
+        paint(false);
+      } else if (target.dataset.jump) {
+        event.preventDefault();
+        const el = document.getElementById(target.dataset.jump);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      } else if (target.closest("#menu a, #side a, #search a")) {
+        menuOpen = false;
+        searchOpen = false;
+      }
+    });
+
+    document.body.addEventListener("input", (event) => {
+      if (event.target.id === "notes-filter") {
+        notesQuery = event.target.value;
+        const listed = notesList(parseRoute().params);
+        document.getElementById("notes-count").textContent = listed.count;
+        document.getElementById("notes-list").innerHTML = listed.html;
+      }
+      if (event.target.id === "search-input") {
+        searchQuery = event.target.value;
+        const results = byDate().filter((note) => matches(note, searchQuery)).slice(0, 8);
+        document.getElementById("search-results").innerHTML = results.length
+          ? results.map((note) => '<a class="hit" href="#/notes/' + note.slug + '"><span class="label">' + esc(note.code) + "</span><span>" + esc(note.title) + "</span></a>").join("")
+          : '<p class="muted">No note matches that.</p>';
+      }
+    });
+
+    window.addEventListener("hashchange", () => paint(true));
+    window.addEventListener("keydown", (event) => {
+      const tag = document.activeElement && document.activeElement.tagName;
+      if (event.key === "/" && tag !== "INPUT" && tag !== "TEXTAREA") {
+        event.preventDefault();
+        searchOpen = true;
+        menuOpen = false;
+        paint(false);
+        document.getElementById("search-input").focus();
+      }
+      if (event.key === "Escape") {
+        searchOpen = false;
+        menuOpen = false;
+        paint(false);
+      }
+    });
+    window.addEventListener("scroll", () => {
+      const root = document.documentElement;
+      const max = root.scrollHeight - root.clientHeight;
+      const bar = document.getElementById("progress-bar");
+      if (bar) bar.style.transform = "scaleX(" + (max > 0 ? root.scrollTop / max : 0) + ")";
+    }, { passive: true });
+    if (!location.hash) location.hash = "#/";
+    else paint(false);
+  </script>
+</body>
+</html>
