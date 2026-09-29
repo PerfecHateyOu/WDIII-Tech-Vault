@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Tech Labs // Documentation</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #7dd3fc;
+            --border: #334155;
+            --code-bg: #020617;
+            --success: #34d399;
+            --warning: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vi;
+            line-height: 1.6;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            display: block;
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Main Content Area */
+        main {
+            margin-left: 280px;
+            flex-1: 1;
+            padding: 3rem 4rem;
+            max-width: 1000px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        /* Callouts / Alerts */
+        .callout {
+            background-color: var(--bg-secondary);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .callout.warning {
+            border-left-color: var(--warning);
+        }
+
+        .callout.success {
+            border-left-color: var(--success);
+        }
+
+        .callout-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9rem;
+        }
+
+        :not(pre) > code {
+            background-color: var(--bg-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        /* Unordered lists */
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            aside {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            main {
+                margin-left: 0;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="logo">
+            <span>🛠️</span> TechLabs_Docs
+        </div>
+
+        <nav>
+            <div class="nav-group">
+                <div class="nav-group-title">Getting Started</div>
+                <ul class="nav-links">
+                    <li><a href="#overview">Lab Overview</a></li>
+                    <li><a href="#safety">Safety Protocols</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Active Experiments</div>
+                <ul class="nav-links">
+                    <li><a href="#exp-001">EXP-001: Router Firmware</a></li>
+                    <li><a href="#exp-002">EXP-002: Smart Mirror</a></li>
+                    <li><a href="#exp-003">EXP-003: e-Ink Dashboard</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Resources</div>
+                <ul class="nav-links">
+                    <li><a href="#hardware">Equipment Inventory</a></li>
+                    <li><a href="#flashing-tools">Flashing Cheat Sheet</a></li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Consumer Tech Experiments</h1>
+            <p>A centralized log of hardware modifications, custom firmware flashes, and local smart home integrations.</p>
+        </header>
+
+        <!-- Overview Section -->
+        <section id="overview">
+            <h2>Lab Overview</h2>
+            <p>This repository serves as technical documentation for exploratory testing on consumer off-the-shelf (COTS) hardware. The goal is to maximize device longevity, eliminate mandatory cloud dependencies, and unlock hidden software features.</p>
+
+            <div class="callout success">
+                <div class="callout-title">Core Lab Philosophy</div>
+                <p>If you can't open it, patch it, and run it completely offline, you don't truly own it.</p>
+            </div>
+        </section>
+
+        <!-- Experiment Section -->
+        <section id="exp-001">
+            <h2>EXP-001: Overclocking & Custom Firmware on Linksys EA7500</h2>
+            <p><strong>Date:</strong> June 2026 | <strong>Status:</strong> <span style="color: var(--success)">Stable</span></p>
+
+            <p>Replacing the restrictive OEM stock firmware with OpenWrt to enable wire-speed SQM (Smart Queue Management) bufferbloat mitigation and network-wide ad-blocking via AdGuard Home.</p>
+
+            <h3>Required Equipment</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Specification</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linksys EA7500</td>
+                        <td>Hardware Revision v2</td>
+                        <td>Target device</td>
+                    </tr>
+                    <tr>
+                        <td>FTDI USB-to-TTL Cable</td>
+                        <td>3.3V Logic Level</td>
+                        <td>Serial communication unbricking fallback</td>
+                    </tr>
+                    <tr>
+                        <td>Ethernet Cable</td>
+                        <td>Cat6 (1 meter)</td>
+                        <td>Direct TFTP deployment interface</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <div class="callout-title">Risk Assessment</div>
+                <p>Flashing partitions via command line runs the risk of corrupting the bootloader. Ensure a serial header is soldered onto the board before attempting partition modifications.</p>
+            </div>
+
+            <h3>Installation Procedure</h3>
+            <p>Execute the following steps over a wired connection with your host machine assigned a static IP address of <code>192.168.1.254</code>.</p>
+
+            <pre><code># Step 1: Boot router into TFTP listening mode
+# Hold down reset button while applying power for 12 seconds
+
+# Step 2: Push the custom factory image via terminal
+tftp 192.168.1.1
+tftp> mode octet
+tftp> put openwrt-23.05.0-mediatek-mt7621-linksys_ea7500-v2-squashfs-factory.bin
+tftp> quit
+
+# Step 3: Wait for system reboot (~3 minutes)
+ping 192.168.1.1</code></pre>
+
+            <h3>Key Findings & Benchmark Results</h3>
+            <ul>
+                <li><strong>Bufferbloat Rating:</strong> Improved from a grade of "C" to an "A+" under full load.</li>
+                <li><strong>Memory Overhead:</strong> OpenWrt utilizes 42MB of RAM idling, compared to 118MB under stock firmware.</li>
+                <li><strong>Wireless Stability:</strong> 5GHz transmission limits successfully adjusted to conform with local radio regulations without signal degradation.</li>
+            </ul>
+        </section>
+
+        <!-- Smart Mirror Placeholder -->
+        <section id="exp-002">
+            <h2>EXP-002: Low-Power Smart Mirror Pipeline</h2>
+            <p><strong>Date:</strong> Pending | <strong>Status:</strong> <span style="color: var(--warning)">In Progress</span></p>
+            <p>Developing a custom, ultra-thin e-ink display layout designed to run on a single 18650 lithium-ion cell for up to 6 months. Content updates will fetch directly from local Home Assistant webhooks.</p>
+        </section>
+    </main>
+
+</body>
+</html>

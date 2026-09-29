@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechForge • Consumer Tech Experiments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+
+        :root {
+            --primary: 234 179 8;
+        }
+
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .experiment-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .experiment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: rgb(234 179 8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .code-block {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+            <div class="p-6 border-b border-zinc-800">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 bg-yellow-500 rounded-2xl flex items-center justify-center text-zinc-950 font-bold text-2xl">⚡</div>
+                    <div>
+                        <span class="heading-font text-3xl font-semibold tracking-tighter">TechForge</span>
+                    </div>
+                </div>
+                <p class="text-zinc-500 text-sm mt-1">Consumer Tech Experiments</p>
+            </div>
+
+            <div class="p-4">
+                <nav class="space-y-1">
+                    <a href="#home" onclick="navigateTo('home')" class="nav-link flex items-center gap-x-3 px-4 py-3 text-zinc-300 hover:bg-zinc-800 rounded-2xl active">
+                        <i class="fa-solid fa-house w-5"></i>
+                        <span class="font-medium">Home</span>
+                    </a>
+                    <a href="#experiments" onclick="navigateTo('experiments')" class="nav-link flex items-center gap-x-3 px-4 py-3 text-zinc-300 hover:bg-zinc-800 rounded-2xl">
+                        <i class="fa-solid fa-flask w-5"></i>
+                        <span class="font-medium">Experiments</span>
+                    </a>
+                    <a href="#tools" onclick="navigateTo('tools')" class="nav-link flex items-center gap-x-3 px-4 py-3 text-zinc-300 hover:bg-zinc-800 rounded-2xl">
+                        <i class="fa-solid fa-screwdriver-wrench w-5"></i>
+                        <span class="font-medium">Tools &amp; Gear</span>
+                    </a>
+                    <a href="#log" onclick="navigateTo('log')" class="nav-link flex items-center gap-x-3 px-4 py-3 text-zinc-300 hover:bg-zinc-800 rounded-2xl">
+                        <i class="fa-solid fa-book w-5"></i>
+                        <span class="font-medium">Experiment Log</span>
+                    </a>
+                    <a href="#resources" onclick="navigateTo('resources')" class="nav-link flex items-center gap-x-3 px-4 py-3 text-zinc-300 hover:bg-zinc-800 rounded-2xl">
+                        <i class="fa-solid fa-link w-5"></i>
+                        <span class="font-medium">Resources</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="mt-auto p-6 border-t border-zinc-800">
+                <div class="bg-zinc-950 rounded-3xl p-5 text-xs">
+                    <div class="flex items-center gap-x-2 text-yellow-400 mb-3">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="font-medium">Last updated</span>
+                    </div>
+                    <div class="text-zinc-400">June 26, 2026</div>
+                    <div class="h-px bg-zinc-800 my-4"></div>
+                    <button onclick="addNewExperiment()"
+                            class="w-full bg-yellow-500 hover:bg-yellow-400 transition-colors text-zinc-950 font-semibold py-3 px-4 rounded-2xl flex items-center justify-center gap-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Experiment</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Nav -->
+            <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
+                <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
+                    <div class="flex items-center gap-x-8">
+                        <h1 id="page-title" class="heading-font text-3xl font-semibold tracking-tighter">Consumer Tech Experiments</h1>
+                    </div>
+
+                    <div class="flex items-center gap-x-4">
+                        <div class="bg-zinc-800 text-xs px-3 py-1.5 rounded-3xl flex items-center gap-x-2">
+                            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                            <span class="text-emerald-300">24 experiments documented</span>
+                        </div>
+
+                        <button onclick="toggleDarkMode()"
+                                class="w-10 h-10 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 rounded-2xl transition-colors">
+                            <i class="fa-solid fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- HOME SECTION -->
+            <section id="home-section" class="max-w-screen-2xl mx-auto px-8 py-12">
+                <div class="grid grid-cols-12 gap-8">
+                    <!-- Hero -->
+                    <div class="col-span-12 lg:col-span-8">
+                        <div class="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-yellow-500/20 rounded-3xl p-12">
+                            <div class="max-w-lg">
+                                <div class="inline-flex items-center gap-x-2 bg-yellow-500/10 text-yellow-400 text-sm font-medium px-5 py-2 rounded-3xl mb-6">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    HANDS-ON LEARNING
+                                </div>
+                                <h2 class="heading-font text-6xl leading-none font-semibold tracking-tighter mb-6">
+                                    Documenting the joy of breaking things (and putting them back together)
+                                </h2>
+                                <p class="text-xl text-zinc-400 mb-8">
+                                    A living archive of consumer tech experiments, mods, benchmarks, and unexpected discoveries.
+                                </p>
+                                <div class="flex items-center gap-x-4">
+                                    <button onclick="navigateTo('experiments')"
+                                            class="bg-yellow-500 hover:bg-yellow-400 transition-all text-zinc-950 font-semibold px-8 py-4 rounded-3xl flex items-center gap-x-3">
+                                        Browse Experiments
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                    <button onclick="window.open('https://github.com', '_blank')"
+                                            class="border border-zinc-700 hover:border-zinc-500 transition-all font-medium px-8 py-4 rounded-3xl flex items-center gap-x-3">
+                                        <i class="fa-brands fa-github"></i>
+                                        View on GitHub
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="col-span-12 lg:col-span-4 space-y-6">
+                        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                            <div class="text-5xl font-semibold text-yellow-400 mb-1">47</div>
+                            <div class="text-zinc-400">Hours logged this month</div>
+                        </div>
+                        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                            <div class="text-5xl font-semibold text-emerald-400 mb-1">18</div>
+                            <div class="text-zinc-400">Successful mods</div>
+                        </div>
+                        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+                            <div class="text-5xl font-semibold text-rose-400 mb-1">9</div>
+                            <div class="text-zinc-400">Devices bricked (temporarily)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Experiments -->
+                <div class="mt-16">
+                    <div class="flex items-end justify-between mb-8">
+                        <h2 class="heading-font text-4xl font-semibold tracking-tight">Featured Experiments</h2>
+                        <a href="#experiments" onclick="navigateTo('experiments')" class="text-yellow-400 hover:text-yellow-300 flex items-center gap-x-2 text-sm font-medium">
+                            See all <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="featured-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- EXPERIMENTS SECTION -->
+            <section id="experiments-section" class="max-w-screen-2xl mx-auto px-8 py-12 hidden">
+                <h2 class="heading-font text-4xl font-semibold tracking-tight mb-10">All Experiments</h2>
+
+                <div class="flex gap-3 mb-8 border-b border-zinc-800 pb-4 overflow-x-auto">
+                    <button onclick="filterCategory('all')" class="category-btn active px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">All</button>
+                    <button onclick="filterCategory('hardware')" class="category-btn px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">Hardware Mods</button>
+                    <button onclick="filterCategory('software')" class="category-btn px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">Software &amp; Firmware</button>
+                    <button onclick="filterCategory('smart')" class="category-btn px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">Smart Home</button>
+                    <button onclick="filterCategory('audio')" class="category-btn px-6 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-medium">Audio</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="experiments-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- TOOLS SECTION -->
+            <section id="tools-section" class="max-w-screen-2xl mx-auto px-8 py-12 hidden">
+                <h2 class="heading-font text-4xl font-semibold tracking-tight mb-8">Tools &amp; Gear</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div class="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
+                        <div class="text-4xl mb-4">🔧</div>
+                        <h4 class="font-semibold mb-1">Multimeter</h4>
+                        <p class="text-sm text-zinc-400">Uni-T UT139C - Essential for voltage &amp; continuity checks</p>
+                    </div>
+                    <div class="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
+                        <div class="text-4xl mb-4">🛠️</div>
+                        <h4 class="font-semibold mb-1">Soldering Station</h4>
+                        <p class="text-sm text-zinc-400">Pinecil V2 + TS100 tips</p>
+                    </div>
+                    <div class="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
+                        <div class="text-4xl mb-4">📷</div>
+                        <h4 class="font-semibold mb-1">iFixit Toolkit</h4>
+                        <p class="text-sm text-zinc-400">Pro Tech Toolkit - For safe device teardown</p>
+                    </div>
+                    <div class="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
+                        <div class="text-4xl mb-4">💻</div>
+                        <h4 class="font-semibold mb-1">Raspberry Pi 5</h4>
+                        <p class="text-sm text-zinc-400">8GB model - The brain of many experiments</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LOG SECTION -->
+            <section id="log-section" class="max-w-screen-2xl mx-auto px-8 py-12 hidden">
+                <h2 class="heading-font text-4xl font-semibold tracking-tight mb-8">Experiment Log</h2>
+                <div class="space-y-8">
+                    <div class="border-l-4 border-yellow-500 pl-6">
+                        <div class="text-xs text-zinc-500 mb-1">JUNE 22, 2026</div>
+                        <h4 class="font-semibold">Replaced thermal paste on RTX 4090</h4>
+                        <p class="text-zinc-400 text-sm">Temperature dropped 18°C under load. Used PTM7950 phase change pad.</p>
+                    </div>
+                    <div class="border-l-4 border-emerald-500 pl-6">
+                        <div class="text-xs text-zinc-500 mb-1">JUNE 18, 2026</div>
+                        <h4 class="font-semibold">Custom ESP32 Home Assistant Dashboard</h4>
+                        <p class="text-zinc-400 text-sm">Wall-mounted e-ink display showing power usage, weather, and door sensors.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RESOURCES SECTION -->
+            <section id="resources-section" class="max-w-screen-2xl mx-auto px-8 py-12 hidden">
+                <h2 class="heading-font text-4xl font-semibold tracking-tight mb-8">Resources</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-medium mb-4 flex items-center gap-x-3">
+                            <span class="text-yellow-400">📚</span> Recommended Reading
+                        </h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex justify-between"><span>The Art of Electronics</span><span class="text-zinc-500">Horowitz &amp; Hill</span></li>
+                            <li class="flex justify-between"><span>Hackaday</span><span class="text-zinc-500">Daily inspiration</span></li>
+                            <li class="flex justify-between"><span>iFixit Teardowns</span><span class="text-zinc-500">Learn device internals</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-4 flex items-center gap-x-3">
+                            <span class="text-yellow-400">🔗</span> Useful Links
+                        </h3>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="#" class="bg-zinc-900 hover:bg-zinc-800 px-5 py-3 rounded-3xl text-sm">r/electronics</a>
+                            <a href="#" class="bg-zinc-900 hover:bg-zinc-800 px-5 py-3 rounded-3xl text-sm">r/homelab</a>
+                            <a href="#" class="bg-zinc-900 hover:bg-zinc-800 px-5 py-3 rounded-3xl text-sm">EEVblog Forum</a>
+                            <a href="#" class="bg-zinc-900 hover:bg-zinc-800 px-5 py-3 rounded-3xl text-sm">Open Source Hardware</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button onclick="addNewExperiment()"
+            class="fixed bottom-8 right-8 w-16 h-16 bg-yellow-500 hover:bg-yellow-400 rounded-full flex items-center justify-center shadow-2xl shadow-yellow-500/30 text-3xl text-zinc-950 z-50 transition-all active:scale-95">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <script>
+        function navigateTo(section) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+
+            if (section === 'home') {
+                document.getElementById('home-section').classList.remove('hidden');
+                document.getElementById('page-title').textContent = 'Consumer Tech Experiments';
+            } else if (section === 'experiments') {
+                document.getElementById('experiments-section').classList.remove('hidden');
+                document.getElementById('page-title').textContent = 'Experiments';
+            } else if (section === 'tools') {
+                document.getElementById('tools-section').classList.remove('hidden');
+                document.getElementById('page-title').textContent = 'Tools & Gear';
+            } else if (section === 'log') {
+                document.getElementById('log-section').classList.remove('hidden');
+                document.getElementById('page-title').textContent = 'Experiment Log';
+            } else if (section === 'resources') {
+                document.getElementById('resources-section').classList.remove('hidden');
+                document.getElementById('page-title').textContent = 'Resources';
+            }
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'bg-zinc-800');
+                if (link.getAttribute('href') === `#${section}`) {
+                    link.classList.add('active', 'bg-zinc-800');
+                }
+            });
+        }
+
+        const experiments = [
+            { id: 1, title: "Raspberry Pi 5 Smart Mirror", category: "smart", difficulty: "Intermediate", time: "12 hours", status: "Completed", description: "Built a magic mirror with facial recognition, weather, calendar, and voice control.", image: "🪞", tags: ["Raspberry Pi", "Home Assistant"] },
+            { id: 2, title: "Custom 75% Mechanical Keyboard", category: "hardware", difficulty: "Advanced", time: "18 hours", status: "Completed", description: "Hand-wired with Kailh Choc switches and a custom 3D-printed case.", image: "⌨️", tags: ["Keyboard", "DIY"] },
+            { id: 3, title: "ESP32-C3 Plant Monitoring System", category: "smart", difficulty: "Beginner", time: "4 hours", status: "In Progress", description: "Soil moisture, light, and temperature sensors with Blynk dashboard.", image: "🪴", tags: ["ESP32", "IoT"] },
+            { id: 4, title: "Mac Mini M2 Pro to Hackintosh", category: "software", difficulty: "Advanced", time: "8 hours", status: "Completed", description: "Successfully running macOS Sonoma on non-Apple hardware with full GPU acceleration.", image: "💻", tags: ["Hackintosh", "macOS"] },
+            { id: 5, title: "Portable Retro Game Console", category: "hardware", difficulty: "Intermediate", time: "15 hours", status: "Completed", description: "Using a Raspberry Pi Zero 2W and a 4\" IPS display in a 3D printed case.", image: "🎮", tags: ["Retro", "Gaming"] }
+        ];
+
+        function renderExperiments(containerId, data = experiments) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            data.forEach(exp => {
+                const card = document.createElement('div');
+                card.className = `experiment-card bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden cursor-pointer`;
+                card.innerHTML = `
+                    <div class="h-48 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center text-7xl">
+                        ${exp.image}
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="inline-block px-3 py-1 text-xs font-medium rounded-3xl bg-zinc-800">${exp.category}</span>
+                            <span class="text-xs text-zinc-500">${exp.time}</span>
+                        </div>
+                        <h4 class="font-semibold text-lg leading-tight mb-2">${exp.title}</h4>
+                        <p class="text-zinc-400 text-sm line-clamp-2 mb-4">${exp.description}</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${exp.tags.map(tag => `<span class="text-[10px] px-2.5 py-1 bg-zinc-950 rounded-xl">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => showExperimentDetail(exp);
+                container.appendChild(card);
+            });
+        }
+
+        function showExperimentDetail(exp) {
+            const detailHTML = `
+                <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-6" onclick="if(event.target === this) this.remove()">
+                    <div class="bg-zinc-900 max-w-2xl w-full rounded-3xl overflow-hidden" onclick="event.stopImmediatePropagation()">
+                        <div class="h-64 bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center text-9xl border-b border-zinc-700">
+                            ${exp.image}
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center justify-between">
+                                <h2 class="heading-font text-4xl font-semibold">${exp.title}</h2>
+                                <button onclick="this.closest('.fixed').remove()" class="text-3xl text-zinc-400 hover:text-white">×</button>
+                            </div>
+                            <div class="flex gap-x-6 my-6 text-sm">
+                                <div><span class="text-zinc-500">Difficulty:</span> ${exp.difficulty}</div>
+                                <div><span class="text-zinc-500">Time:</span> ${exp.time}</div>
+                                <div><span class="text-emerald-400">●</span> ${exp.status}</div>
+                            </div>
+                            <p class="text-zinc-300 mb-8">${exp.description}</p>
+                            <div class="grid grid-cols-3 gap-4 text-center text-xs border-t border-zinc-800 pt-8">
+                                <div>
+                                    <div class="text-2xl">📸</div>
+                                    <div class="mt-2 font-medium">Photos</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl">📝</div>
+                                    <div class="mt-2 font-medium">Notes</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl">📊</div>
+                                    <div class="mt-2 font-medium">Results</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const modal = document.createElement('div');
+            modal.innerHTML = detailHTML;
+            document.body.appendChild(modal);
+        }
+
+        function filterCategory(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active', 'bg-yellow-500', 'text-zinc-950'));
+
+            const filtered = category === 'all' ? experiments : experiments.filter(exp => exp.category === category);
+            renderExperiments('experiments-grid', filtered);
+
+            event.currentTarget.classList.add('active', 'bg-yellow-500', 'text-zinc-950');
+        }
+
+        function addNewExperiment() {
+            const title = prompt("Experiment title:");
+            if (!title) return;
+            alert(`New experiment "${title}" created!\\n\\nOpen index.html in a text editor to add more details.`);
+        }
+
+        function toggleDarkMode() {
+            alert("🌙 This documentation site is permanently in dark mode — perfect for late-night tinkering sessions.");
+        }
+
+        window.onload = function() {
+            renderExperiments('featured-grid', experiments.slice(0, 3));
+            renderExperiments('experiments-grid');
+            navigateTo('home');
+            console.log('%c✅ TechForge ready for your next build!', 'color: #eab308; font-family: monospace');
+        };
+    </script>
+</body>
+</html>
