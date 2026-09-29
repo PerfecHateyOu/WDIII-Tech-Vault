@@ -33,6 +33,19 @@ app.use((req, res, next) => {
 });
 
 // ===== Security Middleware: Deny Access to Private & Sensitive Files =====
+// ===== FA-01 raw AI submissions =====
+// Raw HTML exactly as each AI model returned it, served for readers to inspect.
+// Only /fa01/round-<n>/<lowercase-name>.html is served, always inside a sandbox:
+// no allow-same-origin, so a submission's scripts run in an opaque origin and
+// cannot read this site's cookies, storage or signed-in session.
+const FA01_SUBMISSION_PATH = /^\/fa01\/round-\d{1,2}\/[a-z0-9][a-z0-9-]{0,40}\.html$/;
+const FA01_SUBMISSION_HEADERS = {
+  'Content-Security-Policy': "sandbox allow-scripts allow-popups allow-popups-to-escape-sandbox; frame-ancestors 'none'",
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'no-referrer',
+  'X-Robots-Tag': 'noindex, nofollow'
+};
+
 const SENSITIVE_PATTERNS = [
   /\/\./,                          // Dotfiles/dotdirs (.env, .git, etc.)
   /\.lock(\.json)?$/i,             // bun.lock, package-lock.json
@@ -78,7 +91,7 @@ app.use((req, res, next) => {
       '/experiment-12',
       '/experiment-12.html'
     ]);
-    if (!allowedHtmlPaths.has(decodedPath)) {
+    if (!allowedHtmlPaths.has(decodedPath) && !FA01_SUBMISSION_PATH.test(decodedPath)) {
       return res.status(404).send('Not found');
     }
   }
@@ -298,6 +311,21 @@ const staticOptions = {
   fallthrough: true,
   setHeaders: setCacheHeaders
 };
+
+// FA-01 submissions: strict path, sandbox headers, nothing else under /fa01 is served
+app.use('/fa01', (req, res, next) => {
+  let decodedPath;
+  try { decodedPath = decodeURIComponent(req.originalUrl.split('?')[0]); } catch { return res.status(404).send('Not found'); }
+  if (!FA01_SUBMISSION_PATH.test(decodedPath)) return res.status(404).send('Not found');
+  const filePath = path.join(__dirname, 'public', decodedPath);
+  if (!filePath.startsWith(path.join(__dirname, 'public', 'fa01') + path.sep) || !fs.existsSync(filePath)) {
+    return res.status(404).send('Not found');
+  }
+  for (const [key, value] of Object.entries(FA01_SUBMISSION_HEADERS)) res.setHeader(key, value);
+  res.setHeader('Cache-Control', 'no-cache');
+  res.type('html');
+  return res.sendFile(filePath, { cacheControl: false, dotfiles: 'deny' });
+});
 
 app.use(express.static(path.join(__dirname, 'public'), staticOptions));
 
