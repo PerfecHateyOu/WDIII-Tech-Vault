@@ -2,17 +2,19 @@
 
 A real-world archive of hands-on consumer tech research: device repairs, customer service tests, battery degradation, ecosystem switching, security audits, and AI software comparisons. Current version: **v6.1**.
 
+> New here, or starting a new chat? Read [HANDOFF.md](HANDOFF.md) first: architecture, workflow, content rules and current status.
+
 ## 📑 What's in the archive
 
 The site is a single-page app (`index.html`). The Fodder Archive lives inside it at `#/fodder`. Fodder Archive entries are rendered from their `sections` in `src/data/official-experiments.js`, so each entry has a single source.
 
 **Main experiments**
 - **Done:** EXP 1–7, the Samsung battery case study, and EXP 9 (Apple Ecosystem Security Audit)
-- **In progress:** EXP 12, iOS 27 performance and AI chatbot integration on iPhone 16e (standalone page at `/experiment-12`)
-- **Queued:** EXP 8 (cross-platform reliability and longevity) and EXP 10 (year-long iOS 26 vs iOS 27 survey)
+- **In progress:** EXP 8 (24-month cross-platform reliability and longevity study, day 0 completed 2026-09-27) and EXP 12 (iOS 27 performance and AI chatbot integration on iPhone 16e, standalone page at `/experiment-12`)
+- **Paused:** EXP 10 (year-long iOS 26 vs iOS 27 survey)
 
 **Fodder Archive**
-- **FA-01:** Which AI builds our website best? (blind evaluation of 5 LLMs)
+- **FA-01:** Which AI builds our website best? (Round 1, then a blind Round 2 with five current models)
 - **FA-02:** One month out of the Apple ecosystem
 - **FA-03:** Two months, two laptops (MacBook Pro 16" M2 Pro vs Acer Aspire 14 AI)
 
