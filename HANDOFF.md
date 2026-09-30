@@ -1,6 +1,6 @@
 # Handoff: WDIII Tech Vault
 
-*Reviewed 2026-09-29 (v6.1). Read this first if you are a new Claude chat, a new agent session, or a new contributor. It is a summary: the code, the tests and the commit messages hold the detail, and where this file and the code disagree, the code wins.*
+*Reviewed 2026-09-30 (v6.1.1). Read this first if you are a new Claude chat, a new agent session, or a new contributor. It is a summary: the code, the tests and the commit messages hold the detail, and where this file and the code disagree, the code wins.*
 
 ## What this is
 
