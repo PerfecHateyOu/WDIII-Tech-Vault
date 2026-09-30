@@ -117,7 +117,7 @@ const exp5 = OFFICIAL_EXPERIMENTS.find(e => e.id === 'exp5');
 assert(exp5.allowedMeasurementKeys.includes('screenOnTimeHours'), 'Exp 5 schema contains screenOnTimeHours metric');
 
 const exp9 = OFFICIAL_EXPERIMENTS.find(e => e.id === 'exp9');
-assert(exp9.allowedMeasurementKeys.includes('telemetryHostsContacted'), 'Exp 9 schema contains telemetryHostsContacted metric');
+assert(exp9.allowedMeasurementKeys.includes('airDropPhoneHashSeconds'), 'Exp 9 schema contains airDropPhoneHashSeconds metric');
 
 // --- Measurement validation gate ---
 console.log('\n--- 2A. Measurement Payload Validation ---');

@@ -953,55 +953,66 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "done",
     "statusLabel": "Done",
     "origin": "official_wdiii",
-    "researchQuestion": "What attack vectors, telemetry leaks, and permission bypasses exist across macOS, iOS, iCloud, and AirDrop in default consumer configurations?",
-    "objective": "Conduct an end-to-end security and privacy audit of default Apple ecosystem configurations, evaluating network telemetry, AirDrop vulnerability exposure, and iCloud Advanced Data Protection resilience.",
-    "methodology": "Packet capture with Wireshark on isolated gateway router, Bluetooth low-energy packet sniffing during AirDrop discovery, and penetration testing on iCloud keychain synchronization with and without Advanced Data Protection.",
-    "conditions": "Isolated VLAN network, default consumer Apple ID configurations, macOS Sonoma & iOS 18 test units.",
-    "protocol": "1. Capture 72 hours of idle background telemetry packets. 2. Sniff BLE broadcast frames during AirDrop 'Everyone' and 'Contacts Only' states. 3. Test sandbox escape mitigations in Safari WebKit. 4. Verify end-to-end encryption keys under iCloud ADP.",
+    "researchQuestion": "How resilient is the Apple consumer ecosystem to account takeover, device tracking and exposure, and local proximity wireless attacks?",
+    "objective": "Audit the Apple consumer ecosystem across 13 threat scenarios in three phases: authentication and recovery (5), location and tracking (4), and local wireless (4).",
+    "methodology": "Hands-on testing on physical Apple hardware, with monitor-mode Wi-Fi capture stations (AWDL frames over 5 GHz channels 44 and 149), Nordic nRF52840 BLE packet sniffers and a dedicated RF Faraday chamber (over 80 dB). Radio tests were repeated 6 times.",
+    "conditions": "34 calendar days (2026-08-07 to 2026-09-09), about 50 active testing hours. Devices: iPhone 16e, iPhone 13 and a MacBook Air host. OS versions: TBD.",
+    "protocol": "Phase 1, authentication and recovery (5 scenarios): standard trusted-device recovery, single-contact recovery, orphaned-account recovery, Face ID lockout, Stolen Device Protection. Phase 2, Find My and tracking (4): BLE key rotation, unknown-AirTag alert, remote Lost Mode, Faraday enclosure. Phase 3, AirDrop and local wireless (4): AirDrop hash reversal, mDNS/Bonjour enumeration, BLE Continuity leakage, AWDL AP-isolation bypass.",
     "measurements": {
-      "telemetryHostsContacted": "42 distinct Apple domains",
-      "airDropHashLeak": "Partial phone/email SHA256 hashes broadcast in BLE advertise packets",
-      "cloudADPEncryptionCoverage": "98% of data types encrypted (excluding metadata, mail, contacts, calendar)",
-      "gatekeeperBypassResistance": "High (quarantine attributes enforced)"
+      "recoveryTimeSeconds": "94 s (1 min 34 sec), standard trusted-device recovery",
+      "sdpDelayMinutes": "60 min (exactly)",
+      "bleKeyRotationSeconds": "920 s (15 min 20 s)",
+      "findMyLatencySeconds": "1125 s (18 min 45 s)",
+      "airTagAlertMinutes": "252 min (4 h 12 min)",
+      "lostModeSeconds": "1.4 s once the device regained connectivity",
+      "airDropPhoneHashSeconds": "1.8 s (rainbow table)",
+      "airDropEmailHashSeconds": "12.4 s (dictionary)",
+      "awdlBypassMbps": "248.5 Mbps while the infrastructure path showed 0 Kbps"
     },
-    "results": "Apple maintains industry-leading default endpoint security and sandbox isolation. However, AirDrop discovery broadcasts truncated cryptographic hashes of user phone numbers and emails, and default iCloud backups (without ADP enabled) allow Apple legal access to iMessage encryption keys.",
+    "results": "All 13 scenarios were completed and passed. Account recovery, Stolen Device Protection, Face ID lockout and Find My key rotation held up. Local wireless exposed more: AirDrop broadcast truncated SHA-256 hashes of the phone number and email address (reversed in 1.8 s and 12.4 s), BLE Continuity leaked lock state, clipboard sync flags and battery status, and AWDL bypassed access-point client isolation at 248.5 Mbps.",
     "observations": [
-      "AirDrop Hash Leakage: Passive BLE sniffers in public areas can harvest contact hashes to de-anonymize commuters.",
-      "Advanced Data Protection (ADP) is essential: Default iCloud backup leaves message keys vulnerable to subpoena compliance.",
-      "Background Telemetry: Apple devices ping analytics servers up to 600 times per hour even with analytics opt-outs checked."
+      "Account recovery: trusted-device recovery took 1 min 34 sec with zero credential exposure; orphaned-account recovery entered an automated 24-72 hour evaluation delay.",
+      "Stolen Device Protection enforced a 60-minute delay away from familiar locations.",
+      "AirDrop in Contacts Only mode still broadcast truncated SHA-256 hashes of the phone number and email address in AWDL probe frames.",
+      "AWDL bypassed AP client isolation at 248.5 Mbps while the infrastructure path showed 0 Kbps."
     ],
-    "limitations": "Tests conducted on consumer production firmware; internal diagnostic modes not evaluated.",
-    "verdict": "Apple provides robust consumer security, but privacy requires manual user intervention: users must enable Advanced Data Protection and set AirDrop to 'Contacts Only' or 'Off'.",
-    "devices": [],
+    "limitations": "OS versions are TBD. Radio tests were repeated 6 times. The packet dump shown on the page is a real capture with the phone number and email address replaced by example values. The raw captures and logs are not published.",
+    "verdict": "Apple's cryptographic core held up in this audit; the exposure is in local wireless features (AirDrop, AWDL, BLE Continuity), which trade isolation for convenience. Setting AirDrop to Receiving Off when not in use and enabling Stolen Device Protection reduce it.",
+    "devices": [
+      "apple-iphone-16e",
+      "apple-iphone-13"
+    ],
     "sources": [
-      "WDIII Security Lab Packet Captures",
-      "Wireshark Trace Dumps",
-      "Apple Security Whitepaper Verification"
+      "Direct hands-on testing (2026-08-07 to 2026-09-09)"
     ],
     "tags": [
       "Apple Security",
-      "AirDrop Vulnerability",
-      "iCloud ADP",
-      "Privacy Audit"
+      "AirDrop",
+      "Find My",
+      "Account Recovery"
     ],
-    "scope": "Cross-device ecosystem audit covering network, Bluetooth, and cloud layers",
-    "search": "exp-9 apple ecosystem security audit airdrop privacy icloud",
+    "scope": "Hands-on audit of the Apple consumer ecosystem: 13 scenarios across authentication and recovery, Find My and tracking, and local wireless",
+    "search": "exp-9 apple ecosystem security audit account recovery stolen device protection find my airdrop hash awdl ap isolation",
     "toc": [
       {
-        "id": "exp9-network",
-        "label": "Network Telemetry"
+        "id": "exp9-scenarios",
+        "label": "13-Scenario Matrix"
       },
       {
-        "id": "exp9-airdrop",
-        "label": "AirDrop BLE Audit"
+        "id": "exp9-phase1",
+        "label": "Authentication & Recovery"
       },
       {
-        "id": "exp9-cloud",
-        "label": "iCloud ADP Analysis"
+        "id": "exp9-phase2",
+        "label": "Find My & Tracking"
+      },
+      {
+        "id": "exp9-phase3",
+        "label": "AirDrop & Local Wireless"
       },
       {
         "id": "exp9-recommendations",
-        "label": "Security Hardening Guide"
+        "label": "Mitigations"
       }
     ],
     "relatedExperiments": [
@@ -1015,49 +1026,102 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-13T00:00:00.000Z",
+    "updatedAt": "2026-09-30T00:00:00.000Z",
     "protocolVersion": "1.0.0",
     "version": "1.0.0",
     "measurementSchema": [
       {
-        "key": "telemetryHostsContacted",
-        "label": "Telemetry Hosts Contacted",
+        "key": "recoveryTimeSeconds",
+        "label": "Trusted-device recovery time",
         "type": "number",
-        "unit": "Hosts",
-        "required": true,
-        "min": 0,
-        "max": 500
-      },
-      {
-        "key": "airDropHashLeak",
-        "label": "AirDrop SHA256 Hash Leak Observed",
-        "type": "boolean",
-        "required": true
-      },
-      {
-        "key": "cloudADPEncryptionCoverage",
-        "label": "Advanced Data Protection Coverage",
-        "type": "number",
-        "unit": "%",
-        "required": true,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "key": "gatekeeperBypassResistance",
-        "label": "Gatekeeper Bypass Resistance",
-        "type": "number",
-        "unit": "Score",
+        "unit": "Seconds",
         "required": false,
-        "min": 1,
-        "max": 10
+        "min": 0,
+        "max": 86400
+      },
+      {
+        "key": "sdpDelayMinutes",
+        "label": "Stolen Device Protection delay",
+        "type": "number",
+        "unit": "Minutes",
+        "required": false,
+        "min": 0,
+        "max": 1440
+      },
+      {
+        "key": "bleKeyRotationSeconds",
+        "label": "BLE public key rotation interval",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0,
+        "max": 86400
+      },
+      {
+        "key": "findMyLatencySeconds",
+        "label": "Find My mesh latency",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0,
+        "max": 86400
+      },
+      {
+        "key": "airTagAlertMinutes",
+        "label": "Unknown-AirTag alert time",
+        "type": "number",
+        "unit": "Minutes",
+        "required": false,
+        "min": 0,
+        "max": 1440
+      },
+      {
+        "key": "lostModeSeconds",
+        "label": "Remote Lost Mode execution time",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0,
+        "max": 3600
+      },
+      {
+        "key": "airDropPhoneHashSeconds",
+        "label": "AirDrop phone hash reversal time",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0,
+        "max": 3600
+      },
+      {
+        "key": "airDropEmailHashSeconds",
+        "label": "AirDrop email hash reversal time",
+        "type": "number",
+        "unit": "Seconds",
+        "required": false,
+        "min": 0,
+        "max": 3600
+      },
+      {
+        "key": "awdlBypassMbps",
+        "label": "AWDL AP-isolation bypass throughput",
+        "type": "number",
+        "unit": "Mbps",
+        "required": false,
+        "min": 0,
+        "max": 10000
       }
     ],
     "allowedMeasurementKeys": [
-      "telemetryHostsContacted",
-      "airDropHashLeak",
-      "cloudADPEncryptionCoverage",
-      "gatekeeperBypassResistance"
+      "recoveryTimeSeconds",
+      "sdpDelayMinutes",
+      "bleKeyRotationSeconds",
+      "findMyLatencySeconds",
+      "airTagAlertMinutes",
+      "lostModeSeconds",
+      "airDropPhoneHashSeconds",
+      "airDropEmailHashSeconds",
+      "awdlBypassMbps"
     ]
   },
   {

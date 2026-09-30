@@ -69,9 +69,10 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Category**: Ecosystem | **Status**: In Progress (protocol v1.0 approved 2026-09-27; day 0 and week 0 recorded 2026-09-27; no analysis yet)
 - **Objective**: Track cross-device feature reliability (clipboard sync, file transfer, phone-to-watch notifications, earbud audio switching) and hardware longevity for Apple, Google and Samsung, with a phone, laptop, watch and earbuds each, over 24 months.
 
-### Experiment 9: Network Telemetry & Background Data Auditing
+### Experiment 9: Comprehensive Apple Ecosystem Security Audit
 - **Category**: Software | **Status**: Completed (Done)
-- **Objective**: Packet inspection and DNS telemetry tracking of factory-reset smartphones during idle and active use.
+- **Target Hardware**: iPhone 16e, iPhone 13, MacBook Air host (OS versions TBD)
+- **Objective**: Hands-on audit of the Apple consumer ecosystem across 13 threat scenarios in three phases (authentication and recovery, Find My and tracking, local wireless), 2026-08-07 to 2026-09-09.
 
 ### Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e
 - **Category**: Software | **Status**: Paused (phase A on iOS 26 collected but not yet in the data log; phase B on iOS 27 not started; no comparison made)

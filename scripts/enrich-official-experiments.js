@@ -45,10 +45,15 @@ const SCHEMAS = {
     { key: "uiFluidity", label: "UI fluidity", type: "string", required: false }
   ],
   exp9: [
-    { key: "telemetryHostsContacted", label: "Telemetry Hosts Contacted", type: "number", unit: "Hosts", required: true, min: 0, max: 500 },
-    { key: "airDropHashLeak", label: "AirDrop SHA256 Hash Leak Observed", type: "boolean", required: true },
-    { key: "cloudADPEncryptionCoverage", label: "Advanced Data Protection Coverage", type: "number", unit: "%", required: true, min: 0, max: 100 },
-    { key: "gatekeeperBypassResistance", label: "Gatekeeper Bypass Resistance", type: "number", unit: "Score", required: false, min: 1, max: 10 }
+    { key: "recoveryTimeSeconds", label: "Trusted-device recovery time", type: "number", unit: "Seconds", required: false, min: 0, max: 86400 },
+    { key: "sdpDelayMinutes", label: "Stolen Device Protection delay", type: "number", unit: "Minutes", required: false, min: 0, max: 1440 },
+    { key: "bleKeyRotationSeconds", label: "BLE public key rotation interval", type: "number", unit: "Seconds", required: false, min: 0, max: 86400 },
+    { key: "findMyLatencySeconds", label: "Find My mesh latency", type: "number", unit: "Seconds", required: false, min: 0, max: 86400 },
+    { key: "airTagAlertMinutes", label: "Unknown-AirTag alert time", type: "number", unit: "Minutes", required: false, min: 0, max: 1440 },
+    { key: "lostModeSeconds", label: "Remote Lost Mode execution time", type: "number", unit: "Seconds", required: false, min: 0, max: 3600 },
+    { key: "airDropPhoneHashSeconds", label: "AirDrop phone hash reversal time", type: "number", unit: "Seconds", required: false, min: 0, max: 3600 },
+    { key: "airDropEmailHashSeconds", label: "AirDrop email hash reversal time", type: "number", unit: "Seconds", required: false, min: 0, max: 3600 },
+    { key: "awdlBypassMbps", label: "AWDL AP-isolation bypass throughput", type: "number", unit: "Mbps", required: false, min: 0, max: 10000 }
   ],
   'queued-exp8': [
     { key: "clipboardP2lSeconds", label: "Clipboard Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },

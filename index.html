@@ -1163,7 +1163,7 @@ function buildExp9() {
     categoryText: "Ecosystem Security",
     title: "Experiment 9: Comprehensive Apple Ecosystem Security Audit",
     status: "done",
-    tags: ["Complete — 13/13 Scenarios Passed", "Phases 1–3 Complete", "Authentication & Recovery", "Find My Mesh & Anti-Stalking", "AirDrop Hash Reversal & AWDL Bypass", "Publication-Ready"],
+    tags: ["Complete — 13/13 Scenarios Passed", "3 Phases Tested", "Authentication & Recovery", "Find My Mesh & Anti-Stalking", "AirDrop Hash Reversal & AWDL Bypass"],
     scope: "✅ Firsthand hands-on audit across 13 threat scenarios — raw PCAP packet logs, RF Faraday chamber (>80 dB), BLE sniffing & AWDL AP isolation bypass verification",
     search: "exp-9 experiment 9 comprehensive apple ecosystem security audit authentication stolen device protection find my airdrop hash reversal awdl ap isolation bypass pcap telemetry",
     toc: [
@@ -1178,24 +1178,23 @@ function buildExp9() {
       { id: "exp9-recommendations", label: "Actionable Mitigations" },
       { id: "exp9-artifacts", label: "Artifacts & Evidence" },
       { id: "exp9-methodology", label: "Methodology & Confidence" },
-      { id: "exp9-phases45", label: "Phases 4–5 & Next Steps" },
       { id: "exp9-conclusion", label: "Conclusion & Strategic Takeaways" }
     ],
     body: `
       <p style="color:var(--td-text-secondary); margin-bottom:1.5rem; line-height:1.7;">A comprehensive, firsthand empirical security audit of the Apple consumer ecosystem spanning 34 calendar days (August 7 – September 9, 2026) and ~50 active testing hours. Across 13 executed threat scenarios covering account authentication resilience, device tracking/location exposure, and local proximity wireless protocols (AirDrop/AWDL/BLE), all 13 tests concluded successfully with 100% scenario execution, verifiable packet logs, and telemetry.</p>
 
       <div style="background:var(--td-bg-surface-elevated); border-left:3px solid var(--td-info); padding:1rem 1.25rem; border-radius:0.375rem; margin-bottom:2rem; font-size:0.92rem; color:var(--td-text-secondary); line-height:1.6;">
-        <strong style="color:var(--td-info);">Methodology &amp; Rigor Note:</strong> All tests were conducted against dedicated physical Apple hardware running iOS 18.x and macOS Sequoia with a dedicated RF Faraday isolation chamber (&gt;80 dB attenuation), custom monitor-mode Wi-Fi capture stations (AWDL frames over 5 GHz Channel 44/149), and Nordic nRF52840 BLE packet sniffers. Findings strictly separate cryptographically defended core systems (which successfully resisted attacks) from unencrypted local wireless side-channels where identity and behavioral leaks persist as convenience trade-offs.
+        <strong style="color:var(--td-info);">Methodology &amp; Rigor Note:</strong> All tests were conducted against dedicated physical Apple hardware (an iPhone 16e, an iPhone 13 and a MacBook Air host; OS versions TBD) with a dedicated RF Faraday isolation chamber (&gt;80 dB attenuation), custom monitor-mode Wi-Fi capture stations (AWDL frames over 5 GHz Channel 44/149), and Nordic nRF52840 BLE packet sniffers. Findings strictly separate cryptographically defended core systems (which successfully resisted attacks) from unencrypted local wireless side-channels where identity and behavioral leaks persist as convenience trade-offs.
       </div>
 
-      ${sectionH3("exp9-overview", "Executive Summary: Phases 1–3 Complete")}
+      ${sectionH3("exp9-overview", "Executive Summary")}
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.25rem; margin-bottom:2rem;">
         <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; border-top:3px solid var(--td-success);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
             <h4 style="margin:0; color:#fff; font-size:1.05rem; font-weight:600;">Phase 1: Authentication</h4>
             <span style="display:inline-block; font-size:0.7rem; font-weight:700; text-transform:uppercase; padding:0.15rem 0.5rem; border-radius:9999px; background:var(--td-success-bg); color:var(--td-success); border:1px solid var(--td-success);">5/5 Passed (🟢)</span>
           </div>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; margin:0 0 0.75rem; line-height:1.5;">Robust account security. Stolen Device Protection (SDP) enforces a strict 1-hour biometric delay away from familiar locations. Trusted contact recovery completes in &lt;90s; orphaned account evaluation holds run 24–72 hours.</p>
+          <p style="color:var(--td-text-secondary); font-size:0.88rem; margin:0 0 0.75rem; line-height:1.5;">Robust account security. Stolen Device Protection (SDP) enforces a strict 1-hour biometric delay away from familiar locations. Trusted-device recovery completed in 1 min 34 sec; orphaned-account recovery enters an automated 24–72 hour evaluation delay.</p>
           <div style="font-size:0.8rem; color:var(--td-text-muted);">Risk Rating: <strong>Low / Green</strong></div>
         </div>
 
@@ -1213,7 +1212,7 @@ function buildExp9() {
             <h4 style="margin:0; color:#fff; font-size:1.05rem; font-weight:600;">Phase 3: Local Wireless</h4>
             <span style="display:inline-block; font-size:0.7rem; font-weight:700; text-transform:uppercase; padding:0.15rem 0.5rem; border-radius:9999px; background:var(--td-warning-bg); color:var(--td-warning); border:1px solid var(--td-warning);">4/4 Passed (🟡)</span>
           </div>
-          <p style="color:var(--td-text-secondary); font-size:0.88rem; margin:0 0 0.75rem; line-height:1.5;">Proximity vulnerability surface. AirDrop broadcasts truncated SHA-256 hashes reversible in &lt;3s. AWDL bypasses local AP Client Isolation at 248.5 Mbps. BLE Continuity leaks lock state and clipboard flags.</p>
+          <p style="color:var(--td-text-secondary); font-size:0.88rem; margin:0 0 0.75rem; line-height:1.5;">Proximity vulnerability surface. AirDrop broadcasts truncated SHA-256 hashes; the phone hash was reversed in 1.8 s and the email hash in 12.4 s. AWDL bypasses local AP Client Isolation at 248.5 Mbps. BLE Continuity leaks lock state and clipboard flags.</p>
           <div style="font-size:0.8rem; color:var(--td-text-muted);">Risk Rating: <strong>Moderate / Yellow</strong></div>
         </div>
       </div>
@@ -1227,7 +1226,6 @@ function buildExp9() {
           <span style="background:rgba(16,185,129,0.15); color:var(--td-success); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-success);">Duration: 34 Calendar Days (August 7 – September 9, 2026)</span>
           <span style="background:rgba(59,130,246,0.15); color:var(--td-info); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-info);">Active Hands-On Time: ~50 Hours</span>
           <span style="background:rgba(251,191,36,0.15); color:var(--td-warning); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-warning);">Overall Matrix Pass Rate: 13/13 (100%)</span>
-          <span style="background:rgba(168,85,247,0.15); color:#c084fc; padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid #c084fc;">Quality: Publication-Ready</span>
         </div>
       </div>
 
@@ -1251,7 +1249,7 @@ function buildExp9() {
               <td style="padding:0.6rem 0.85rem; color:var(--td-info); font-weight:600;">Phase 1</td>
               <td style="padding:0.6rem 0.85rem; font-family:monospace; color:#fff;">1.1.A</td>
               <td style="padding:0.6rem 0.85rem; color:var(--td-text-primary);">Standard Account Recovery Flow</td>
-              <td style="padding:0.6rem 0.85rem;">Initiated &amp; confirmed via trusted device in &lt;2 min; zero credential exposure</td>
+              <td style="padding:0.6rem 0.85rem;">Initiated &amp; confirmed via trusted device in 1 min 34 sec; zero credential exposure</td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-success); font-weight:700; font-size:0.8rem;">🟢 GREEN</span></td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-success); font-weight:700;">PASS</span></td>
             </tr>
@@ -1267,7 +1265,7 @@ function buildExp9() {
               <td style="padding:0.6rem 0.85rem; color:var(--td-info); font-weight:600;">Phase 1</td>
               <td style="padding:0.6rem 0.85rem; font-family:monospace; color:#fff;">1.1.C</td>
               <td style="padding:0.6rem 0.85rem; color:var(--td-text-primary);">Orphaned Account Recovery Flow</td>
-              <td style="padding:0.6rem 0.85rem;">24–72h automated security evaluation hold triggered; Apple Support cannot bypass</td>
+              <td style="padding:0.6rem 0.85rem;">Account recovery entered an automated 24–72 hour evaluation delay</td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-warning); font-weight:700; font-size:0.8rem;">🟡 YELLOW</span></td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-success); font-weight:700;">PASS</span></td>
             </tr>
@@ -1323,7 +1321,7 @@ function buildExp9() {
               <td style="padding:0.6rem 0.85rem; color:var(--td-warning); font-weight:600;">Phase 3</td>
               <td style="padding:0.6rem 0.85rem; font-family:monospace; color:#fff;">3.1</td>
               <td style="padding:0.6rem 0.85rem; color:var(--td-text-primary);">AirDrop Hash Leakage</td>
-              <td style="padding:0.6rem 0.85rem;">Truncated SHA-256 phone/email hashes broadcasted in AWDL probe frames; reversed in &lt;3s</td>
+              <td style="padding:0.6rem 0.85rem;">Truncated SHA-256 phone/email hashes broadcasted in AWDL probe frames; phone hash reversed in 1.8 s, email hash in 12.4 s</td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-warning); font-weight:700; font-size:0.8rem;">🟡 YELLOW</span></td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-success); font-weight:700;">PASS</span></td>
             </tr>
@@ -1363,7 +1361,7 @@ function buildExp9() {
       ${card("margin-bottom:1.5rem;",
         metric("Standard Trusted-Device Recovery","1 min 34 sec — instantaneous verification via push token to enrolled Mac/iPad","var(--td-success)") +
         metric("Single SMS Fallback Verification","Carrier SIM prompt required; 2FA prompt intercepted with no session hijacking","var(--td-success)") +
-        metric("Orphaned Account Recovery Hold","24 to 72 hours automated evaluation delay — zero Support agent override","var(--td-warning)") +
+        metric("Orphaned Account Recovery Hold","24 to 72 hours automated evaluation delay","var(--td-warning)") +
         metric("Biometric Fallback Lockout Threshold","Exactly 5 consecutive failed Face ID scans forces PIN entry","var(--td-success)") +
         metric("Stolen Device Protection (SDP) Delay","60-minute mandatory timer enforced away from familiar Wi-Fi/GPS coordinates","var(--td-success)")
       )}
@@ -1373,7 +1371,6 @@ function buildExp9() {
         <ul style="margin:0.5rem 0 0 1.25rem; color:var(--td-text-secondary); font-size:0.9rem; line-height:1.6; padding:0;">
           <li><strong>Stolen Device Protection (SDP):</strong> Solves the legacy "shoulder-surfing barista attack." Even if an attacker physically steals the phone and knows the 6-digit passcode, changing the Apple ID password, toggling Find My, or creating a recovery key requires biometric Face ID authentication plus a 1-hour delay when not at Home or Work.</li>
           <li><strong>Cryptographic Enclave Enforced Rate Limiting:</strong> After 5 failed biometric attempts, biometric hardware shuts down and delegates exclusively to PIN. After repeated PIN failures, exponentially escalating time penalties are enforced in hardware (up to 8 hours and automatic wiping after 10 failures if enabled).</li>
-          <li><strong>Support Bypass Elimination:</strong> Apple Support Tier 1, 2, and Senior Advisors have zero cryptographic capability to expedite or bypass the 24–72h automated account recovery waiting period.</li>
         </ul>
       </div>
 
@@ -1383,7 +1380,7 @@ function buildExp9() {
       </p>
 
       ${card("margin-bottom:1.5rem;",
-        metric("Find My Mesh Relay Latency","18 min 45 sec average to update location via stranger iOS nodes","var(--td-success)") +
+        metric("Find My Mesh Relay Latency","18 min 45 sec to update location via stranger iOS nodes","var(--td-success)") +
         metric("BLE Public Key Rotation Interval","15 min 20 sec — prevents fixed beacon tracking by third-party receivers","var(--td-success)") +
         metric("Anti-Stalking Background Trigger","4 hours 12 minutes until victim received native iOS sound/notification warning","var(--td-success)") +
         metric("Remote Lost Mode Execution Time","1.4 seconds upon device regaining network connectivity","var(--td-success)") +
@@ -1393,7 +1390,7 @@ function buildExp9() {
       <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; margin-bottom:2rem;">
         <h4 style="color:#fff; margin:0 0 0.5rem; font-size:0.95rem; font-weight:600;">Phase 2 Critical Findings</h4>
         <ul style="margin:0.5rem 0 0 1.25rem; color:var(--td-text-secondary); font-size:0.9rem; line-height:1.6; padding:0;">
-          <li><strong>No Real-Time Surveillance via Mesh:</strong> Because crowd-sourced Find My beacons require an intermediate Apple device to pass nearby, encrypt the observed advertisement, and relay it to Apple's servers, the median latency of ~18–20 minutes renders the mesh ineffective for real-time tactical pursuit of an individual.</li>
+          <li><strong>No Real-Time Surveillance via Mesh:</strong> Because crowd-sourced Find My beacons require an intermediate Apple device to pass nearby, encrypt the observed advertisement, and relay it to Apple's servers, the observed latency of ~18–20 minutes renders the mesh ineffective for real-time tactical pursuit of an individual.</li>
           <li><strong>Anti-Stalking Thresholds:</strong> An unknown AirTag traveling in proximity to a test iPhone triggered the native alert after 4 hours 12 minutes of continuous co-travel, followed by an audible chime when stationary.</li>
           <li><strong>Faraday Vulnerability:</strong> Enclosing the stolen device in an RF Faraday pouch (&gt;80 dB attenuation) completely suppressed all Find My beacons and remote wipe signals until removed, confirming that hardware RF isolation remains a viable physical vector for thieves to delay remote locks.</li>
         </ul>
@@ -1420,6 +1417,7 @@ function buildExp9() {
       <div style="background:#090d16; border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1rem; margin-bottom:1.5rem; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.82rem; overflow-x:auto; color:#94a3b8; line-height:1.6;">
         <div style="color:var(--td-info); font-weight:700; margin-bottom:0.5rem;">[PCAP CAPTURE] Interface en0 (AWDL Monitor Mode) | Frame #421 (142 bytes)</div>
         <div style="color:#64748b; margin-bottom:0.5rem;">Protocol: 802.11 Action Frame (Apple Wireless Direct Link - AWDL) | Subtype: AirDrop Probe Request</div>
+        <div style="color:var(--td-warning); margin-bottom:0.5rem;">Real capture; the phone number and email address are replaced with example values.</div>
         <div style="color:#cbd5e1;">0000  00 25 00 24 64 00 2c 00  08 00 00 00 00 00 00 00  .%.$d.,.........</div>
         <div style="color:#cbd5e1;">0010  10 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................</div>
         <div style="color:#cbd5e1;">0020  00 00 00 00 00 00 00 00  <span style="color:var(--td-error); font-weight:700;">8f a1 b2 c3 d4 e5 f6 07</span>  ........<span style="color:var(--td-error);">........</span></div>
@@ -1459,7 +1457,7 @@ function buildExp9() {
       </div>
 
       ${keyFinding("AirDrop 'Contacts Only' Leaks Phone Numbers and Email Addresses",
-        "AirDrop's mutual contact discovery relies on broadcasting truncated SHA-256 hashes of the sender and receiver's phone numbers. Because phone numbers have extremely low mathematical entropy, any passive radio observer within 20 meters running a pre-computed hash lookup table can resolve the phone number of the broadcasting iPhone in under 2 seconds without triggering any user alert."
+        "AirDrop's mutual contact discovery relies on broadcasting truncated SHA-256 hashes of the sender and receiver's phone numbers. Because phone numbers have extremely low mathematical entropy, any passive radio observer within 20 meters running a pre-computed hash lookup table can resolve the phone number of the broadcasting iPhone (1.8 seconds in this test) without triggering any user alert."
       )}
 
       ${sectionH3("exp9-scenario34", "Scenario 3.4 Technical Telemetry: AWDL Out-of-Band Network Bypass")}
@@ -1692,32 +1690,16 @@ function buildExp9() {
       </div>
 
       ${sectionH3("exp9-artifacts", "Artifacts &amp; Evidence Preservation")}
-      <p style="color:var(--td-text-secondary); line-height:1.6; margin-bottom:1rem;">
-        Complete packet captures, telemetry dumps, and testing logs have been archived for peer verification and responsible disclosure.
+      <p style="color:var(--td-text-secondary); line-height:1.6; margin-bottom:2rem;">
+        The packet captures (AWDL and mDNS traffic), telemetry files and analysis scripts from this audit are kept privately. They contain identifying network and device details, so file names, paths and sizes are not published.
       </p>
-
-      <div style="background:#090d16; border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1rem; margin-bottom:2rem; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.82rem; overflow-x:auto; color:#94a3b8; line-height:1.5;">
-        <div style="color:var(--td-info); font-weight:700; margin-bottom:0.5rem;">📁 /archive/research/exp9-ecosystem-security/</div>
-        <div>├── <span style="color:#fff;">pcap/</span></div>
-        <div>│   ├── airdrop_probe_hash_extraction_421.pcapng <span style="color:#64748b;">(Scenario 3.1 - 42.8 KB)</span></div>
-        <div>│   ├── awdl_isolation_bypass_stream.pcapng <span style="color:#64748b;">(Scenario 3.4 - 184.2 MB)</span></div>
-        <div>│   ├── ble_continuity_state_sniff.pcapng <span style="color:#64748b;">(Scenario 3.3 - 12.1 MB)</span></div>
-        <div>│   └── mdns_bonjour_enumeration.pcapng <span style="color:#64748b;">(Scenario 3.2 - 6.4 MB)</span></div>
-        <div>├── <span style="color:#fff;">telemetry/</span></div>
-        <div>│   ├── ble_key_rotation_intervals.csv <span style="color:#64748b;">(Scenario 2.1 - 1,440 data points)</span></div>
-        <div>│   ├── faraday_rf_attenuation_spectrogram.png <span style="color:#64748b;">(Scenario 2.4 - 80dB check)</span></div>
-        <div>│   └── sdp_delay_timer_enforcement_log.txt <span style="color:#64748b;">(Scenario 1.2.B - 3,600s timer)</span></div>
-        <div>└── <span style="color:#fff;">analysis/</span></div>
-        <div>    ├── sha256_airdrop_digest_rainbow_cracker.py <span style="color:#64748b;">(Reversal verification script)</span></div>
-        <div>    └── awdl_channel_hopping_analysis.ipynb <span style="color:#64748b;">(P2P state-machine validation)</span></div>
-      </div>
 
       ${sectionH3("exp9-methodology", "Methodology, Quality Metrics &amp; Confidence Levels")}
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
         <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
           <h4 style="margin:0 0 0.5rem; color:var(--td-info); font-size:0.95rem; font-weight:600;">Sample Size &amp; Reproducibility</h4>
           <p style="color:var(--td-text-secondary); font-size:0.86rem; line-height:1.5; margin:0;">
-            <strong>100% Deterministic Reproducibility:</strong> All radio-frequency tests (AirDrop hashes, AWDL bypass, BLE state) reproduce consistently on current iOS 18.x and macOS Sequoia hardware. Tests were repeated 5 times to confirm statistical stability.
+            <strong>100% Deterministic Reproducibility:</strong> All radio-frequency tests (AirDrop hashes, AWDL bypass, BLE state) reproduce consistently on the test hardware. Radio tests were repeated 6 times.
           </p>
         </div>
         <div style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem;">
@@ -1754,7 +1736,7 @@ function buildExp9() {
             <tr style="border-bottom:1px solid var(--td-border);">
               <td style="padding:0.6rem 0.85rem; color:var(--td-text-primary);">H3: Find My Mesh Beacon Latency</td>
               <td style="padding:0.6rem 0.85rem;">Location update latency &gt;15 minutes</td>
-              <td style="padding:0.6rem 0.85rem;">Median 18m 45s across test passes</td>
+              <td style="padding:0.6rem 0.85rem;">Observed 18m 45s</td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-success); font-weight:700;">High (95%)</span></td>
             </tr>
             <tr style="border-bottom:1px solid var(--td-border);">
@@ -1779,27 +1761,6 @@ function buildExp9() {
         </table>
       </div>
 
-      ${sectionH3("exp9-phases45", "What Phases 4–5 Will Cover")}
-      <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; margin-bottom:2rem;">
-        <p style="color:var(--td-text-secondary); font-size:0.92rem; line-height:1.6; margin:0 0 1rem;">
-          With Phases 1 through 3 publication-ready and archived, research resources are now being scheduled for the final two phases of the Apple Ecosystem Security Architecture project:
-        </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem;">
-          <div style="background:var(--td-bg-card); padding:1rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle);">
-            <strong style="color:var(--td-info); display:block; margin-bottom:0.25rem;">Phase 4: Cross-Device Sync &amp; Data Isolation</strong>
-            <p style="color:var(--td-text-secondary); font-size:0.85rem; line-height:1.5; margin:0;">
-              Auditing iCloud Keychain passkey synchronization boundaries, clipboard history isolation, third-party sandboxing permissions, and Universal Clipboard eavesdropping vectors.
-            </p>
-          </div>
-          <div style="background:var(--td-bg-card); padding:1rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle);">
-            <strong style="color:var(--td-warning); display:block; margin-bottom:0.25rem;">Phase 5: Ecosystem Lock-In &amp; Recovery Resilience</strong>
-            <p style="color:var(--td-text-secondary); font-size:0.85rem; line-height:1.5; margin:0;">
-              Testing multi-generational recovery fallback failure states, Family Sharing privilege escalation paths, and cross-platform data export boundaries under catastrophic account lockout.
-            </p>
-          </div>
-        </div>
-      </div>
-
       ${sectionH3("exp9-conclusion", "Conclusion &amp; Strategic Takeaways")}
       ${conclusion("Strategic Verdict: Apple's Fortress Has a Wireless Porch",
         "Apple's security architecture achieves gold-standard marks where cryptographic boundaries can be drawn cleanly: the hardware Secure Enclave, biometric lockout escalation, Stolen Device Protection delays, and end-to-end encrypted iCloud backups are virtually impenetrable to non-state actors. However, where convenience demands zero-configuration interoperability — AirDrop peer discovery, AWDL ad-hoc routing, and BLE Continuity — Apple trades cryptographic isolation for frictionless discovery. Users who turn off AirDrop when not in use and enable Stolen Device Protection retain the world's most resilient consumer mobile computing platform."
@@ -1813,7 +1774,7 @@ function buildExp9() {
         </div>
         <div>
           <span style="display:inline-flex; align-items:center; gap:0.35rem; color:var(--td-info);">
-            <span>🛡️</span> Archived Test Logs
+            <span>🛡️</span> Test Logs Kept Privately
           </span>
         </div>
       </div>
