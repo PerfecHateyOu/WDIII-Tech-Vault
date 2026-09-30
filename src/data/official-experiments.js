@@ -956,7 +956,7 @@ export const OFFICIAL_EXPERIMENTS = [
     "researchQuestion": "How resilient is the Apple consumer ecosystem to account takeover, device tracking and exposure, and local proximity wireless attacks?",
     "objective": "Audit the Apple consumer ecosystem across 13 threat scenarios in three phases: authentication and recovery (5), location and tracking (4), and local wireless (4).",
     "methodology": "Hands-on testing on physical Apple hardware, with monitor-mode Wi-Fi capture stations (AWDL frames over 5 GHz channels 44 and 149), Nordic nRF52840 BLE packet sniffers and a dedicated RF Faraday chamber (over 80 dB). Radio tests were repeated 6 times.",
-    "conditions": "34 calendar days (2026-08-07 to 2026-09-09), about 50 active testing hours. Devices: iPhone 16e, iPhone 13 and a MacBook Air host. OS versions: TBD.",
+    "conditions": "34 calendar days (2026-08-07 to 2026-09-09), about 50 active testing hours. Devices: iPhone 16e (iOS 27.0 beta), iPhone 13 (iOS 26.5) and a MacBook Air host (macOS Tahoe 26.x, model TBD).",
     "protocol": "Phase 1, authentication and recovery (5 scenarios): standard trusted-device recovery, single-contact recovery, orphaned-account recovery, Face ID lockout, Stolen Device Protection. Phase 2, Find My and tracking (4): BLE key rotation, unknown-AirTag alert, remote Lost Mode, Faraday enclosure. Phase 3, AirDrop and local wireless (4): AirDrop hash reversal, mDNS/Bonjour enumeration, BLE Continuity leakage, AWDL AP-isolation bypass.",
     "measurements": {
       "recoveryTimeSeconds": "94 s (1 min 34 sec), standard trusted-device recovery",
@@ -976,7 +976,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "AirDrop in Contacts Only mode still broadcast truncated SHA-256 hashes of the phone number and email address in AWDL probe frames.",
       "AWDL bypassed AP client isolation at 248.5 Mbps while the infrastructure path showed 0 Kbps."
     ],
-    "limitations": "OS versions are TBD. Radio tests were repeated 6 times. The packet dump shown on the page is a real capture with the phone number and email address replaced by example values. The raw captures and logs are not published.",
+    "limitations": "The MacBook Air model is TBD. The iPhone 16e ran a beta build of iOS 27.0. Radio tests were repeated 6 times. The packet dump shown on the page is a real capture with the phone number and email address replaced by example values. The raw captures and logs are not published.",
     "verdict": "Apple's cryptographic core held up in this audit; the exposure is in local wireless features (AirDrop, AWDL, BLE Continuity), which trade isolation for convenience. Setting AirDrop to Receiving Off when not in use and enabling Stolen Device Protection reduce it.",
     "devices": [
       "apple-iphone-16e",

@@ -71,7 +71,7 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 
 ### Experiment 9: Comprehensive Apple Ecosystem Security Audit
 - **Category**: Software | **Status**: Completed (Done)
-- **Target Hardware**: iPhone 16e, iPhone 13, MacBook Air host (OS versions TBD)
+- **Target Hardware**: iPhone 16e (iOS 27.0 beta), iPhone 13 (iOS 26.5), MacBook Air host (macOS Tahoe 26.x, model TBD)
 - **Objective**: Hands-on audit of the Apple consumer ecosystem across 13 threat scenarios in three phases (authentication and recovery, Find My and tracking, local wireless), 2026-08-07 to 2026-09-09.
 
 ### Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e
