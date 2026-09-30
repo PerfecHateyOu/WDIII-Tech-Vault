@@ -80,21 +80,6 @@ const INITIAL_SEED_COMMENTS = {
       likedBy: [],
       isEdited: false
     }
-  ],
-  "exp9": [
-    {
-      id: "seed-exp9-1",
-      experimentId: "exp9",
-      authorId: "seed-user-3",
-      authorDisplayName: "NetSec_Dev",
-      authorRole: "moderator",
-      authorPhotoURL: "",
-      content: "Valid findings on the AWDL packet broadcast interval. Even with AirDrop set to Contacts Only, periodic beacons remain observable on 5GHz channel 149.",
-      createdAt: "2026-09-20T11:45:00.000Z",
-      likesCount: 7,
-      likedBy: [],
-      isEdited: false
-    }
   ]
 };
 
