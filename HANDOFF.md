@@ -85,7 +85,8 @@ Raw HTML exactly as each model returned it: `public/fa01/round-<n>/<model>.html`
 
 ## Known gotchas
 
-- **Light theme.** `index.html` hard-codes white text (`color:#fff`) in about 100 places and the site's light theme has no rule for it. Main pages in light mode are probably hard to read. This has never been viewed; the Fodder page has a scoped override.
+- **Light theme.** `index.html` hard-codes white text (`color:#fff`) in about 100 places. Since v6.1.1 a site-wide rule in `public/css/style.css` switches it to the theme's text colour in light mode, except on elements filled with `background:var(--td-info)`, which must be written exactly that way (no space, not `background-color`) or their white text is darkened. The owner viewed light mode after the fix and it looks fine. The faint `rgba(255,255,255,…)` dividers and row tints are still white in light mode (cosmetic).
+- **Asset version.** When `public/` CSS or JS changes, bump the version so the `?v=` links and the import map in `index.html` move with `package.json` (`scripts/test-cache-headers.js` requires them to match). The displayed "v6.1" label is separate and was left alone.
 - **Rendered pages cannot be viewed from a chat sandbox.** Check structure and tests, say so plainly, and use previews.
 - **Line endings.** `* text=auto` normalises line endings for everything except the `binary` submissions.
 - **Project uploads.** HTML files uploaded to the Claude project (V0.1 to V6) are old versions. The repo is the source of truth.
