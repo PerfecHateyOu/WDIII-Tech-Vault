@@ -1163,7 +1163,7 @@ function buildExp9() {
     categoryText: "Ecosystem Security",
     title: "Experiment 9: Comprehensive Apple Ecosystem Security Audit",
     status: "done",
-    tags: ["Complete — 13/13 Scenarios Passed", "3 Phases Tested", "Authentication & Recovery", "Find My Mesh & Anti-Stalking", "AirDrop Hash Reversal & AWDL Bypass", "Publication-Ready"],
+    tags: ["Complete — 13/13 Scenarios Passed", "3 Phases Tested", "Authentication & Recovery", "Find My Mesh & Anti-Stalking", "AirDrop Hash Reversal & AWDL Bypass"],
     scope: "✅ Firsthand hands-on audit across 13 threat scenarios — raw PCAP packet logs, RF Faraday chamber (>80 dB), BLE sniffing & AWDL AP isolation bypass verification",
     search: "exp-9 experiment 9 comprehensive apple ecosystem security audit authentication stolen device protection find my airdrop hash reversal awdl ap isolation bypass pcap telemetry",
     toc: [
@@ -1226,7 +1226,6 @@ function buildExp9() {
           <span style="background:rgba(16,185,129,0.15); color:var(--td-success); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-success);">Duration: 34 Calendar Days (August 7 – September 9, 2026)</span>
           <span style="background:rgba(59,130,246,0.15); color:var(--td-info); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-info);">Active Hands-On Time: ~50 Hours</span>
           <span style="background:rgba(251,191,36,0.15); color:var(--td-warning); padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid var(--td-warning);">Overall Matrix Pass Rate: 13/13 (100%)</span>
-          <span style="background:rgba(168,85,247,0.15); color:#c084fc; padding:0.25rem 0.6rem; border-radius:0.25rem; border:1px solid #c084fc;">Quality: Publication-Ready</span>
         </div>
       </div>
 
@@ -1381,7 +1380,7 @@ function buildExp9() {
       </p>
 
       ${card("margin-bottom:1.5rem;",
-        metric("Find My Mesh Relay Latency","18 min 45 sec average to update location via stranger iOS nodes","var(--td-success)") +
+        metric("Find My Mesh Relay Latency","18 min 45 sec to update location via stranger iOS nodes","var(--td-success)") +
         metric("BLE Public Key Rotation Interval","15 min 20 sec — prevents fixed beacon tracking by third-party receivers","var(--td-success)") +
         metric("Anti-Stalking Background Trigger","4 hours 12 minutes until victim received native iOS sound/notification warning","var(--td-success)") +
         metric("Remote Lost Mode Execution Time","1.4 seconds upon device regaining network connectivity","var(--td-success)") +
@@ -1391,7 +1390,7 @@ function buildExp9() {
       <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; margin-bottom:2rem;">
         <h4 style="color:#fff; margin:0 0 0.5rem; font-size:0.95rem; font-weight:600;">Phase 2 Critical Findings</h4>
         <ul style="margin:0.5rem 0 0 1.25rem; color:var(--td-text-secondary); font-size:0.9rem; line-height:1.6; padding:0;">
-          <li><strong>No Real-Time Surveillance via Mesh:</strong> Because crowd-sourced Find My beacons require an intermediate Apple device to pass nearby, encrypt the observed advertisement, and relay it to Apple's servers, the median latency of ~18–20 minutes renders the mesh ineffective for real-time tactical pursuit of an individual.</li>
+          <li><strong>No Real-Time Surveillance via Mesh:</strong> Because crowd-sourced Find My beacons require an intermediate Apple device to pass nearby, encrypt the observed advertisement, and relay it to Apple's servers, the observed latency of ~18–20 minutes renders the mesh ineffective for real-time tactical pursuit of an individual.</li>
           <li><strong>Anti-Stalking Thresholds:</strong> An unknown AirTag traveling in proximity to a test iPhone triggered the native alert after 4 hours 12 minutes of continuous co-travel, followed by an audible chime when stationary.</li>
           <li><strong>Faraday Vulnerability:</strong> Enclosing the stolen device in an RF Faraday pouch (&gt;80 dB attenuation) completely suppressed all Find My beacons and remote wipe signals until removed, confirming that hardware RF isolation remains a viable physical vector for thieves to delay remote locks.</li>
         </ul>
@@ -1737,7 +1736,7 @@ function buildExp9() {
             <tr style="border-bottom:1px solid var(--td-border);">
               <td style="padding:0.6rem 0.85rem; color:var(--td-text-primary);">H3: Find My Mesh Beacon Latency</td>
               <td style="padding:0.6rem 0.85rem;">Location update latency &gt;15 minutes</td>
-              <td style="padding:0.6rem 0.85rem;">Median 18m 45s across test passes</td>
+              <td style="padding:0.6rem 0.85rem;">Observed 18m 45s</td>
               <td style="padding:0.6rem 0.85rem; text-align:center;"><span style="color:var(--td-success); font-weight:700;">High (95%)</span></td>
             </tr>
             <tr style="border-bottom:1px solid var(--td-border);">

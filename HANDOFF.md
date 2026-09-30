@@ -69,7 +69,7 @@ In September 2026 the owner found AI-written filler on the site (invented benchm
 |---|---|---|
 | Experiments 1–7, CS-01 | Done | Confirmed with the owner |
 | Experiment 8 | In progress | 24-month study, 12 owned devices; protocol in `data/exp-08/README.md`; day 0 completed 2026-09-27; weekly sessions continue |
-| Experiment 9 | Done | Confirmed real; device list still TBD |
+| Experiment 9 | Done | Owner's checklist answers applied 2026-09-30 (PR #57); devices are iPhone 16e, iPhone 13 and a MacBook Air host; OS versions and the MacBook Air model still TBD, so no registry entry for it |
 | Experiment 10 | Paused | iOS 26 phase collected; iOS 27 phase not started |
 | Experiment 12 | In progress | iOS 27.0 on an iPhone 16e; no results yet; the AI-chatbots-via-Siri part waits for third-party Siri support; headline features TBD |
 | FA-01 | Done | Round 1 (older models, records incomplete) and Round 2 (2026-09-28, blind) |
