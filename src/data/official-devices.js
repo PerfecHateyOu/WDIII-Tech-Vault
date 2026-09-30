@@ -142,7 +142,7 @@ export const OFFICIAL_DEVICES = [
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-13T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["exp5"]
+    experimentsInvolved: ["exp5", "exp9"]
   },
   {
     id: "apple-iphone-16e",
@@ -169,7 +169,7 @@ export const OFFICIAL_DEVICES = [
     createdAt: "2026-08-01T00:00:00.000Z",
     updatedAt: "2026-09-25T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["exp5", "fa02", "exp12", "queued-exp8"]
+    experimentsInvolved: ["exp5", "exp9", "fa02", "exp12", "queued-exp8"]
   },
   {
     id: "apple-iphone-16-pro-max",
