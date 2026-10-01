@@ -692,3 +692,25 @@ details > summary::-webkit-details-marker {
 /* index.html hard-codes white text inline in many places. In the light theme that is white on a pale background, so it switches to the theme's text colour. Buttons filled with the info blue keep their white text. */
 .light-theme [style*="color:#fff"]:not([style*="background:var(--td-info)"]),
 .light-theme [style*="color: #fff"]:not([style*="background:var(--td-info)"]) { color: var(--td-text-primary) !important; }
+
+/* Skip link: hidden until focused, then shown without animation or layout shift */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  z-index: 4000;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background: var(--td-bg-card);
+  color: var(--td-text-primary);
+  border: 2px solid var(--accent-color);
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* The skip link moves focus to the page container; it is not interactive, so no ring */
+main.page:focus {
+  outline: none;
+}
