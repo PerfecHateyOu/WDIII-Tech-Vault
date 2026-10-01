@@ -4,9 +4,9 @@
  */
 
 export const CONFIG = {
-  VERSION: 'v6.1.1',
-  LAST_UPDATED: 'September 30, 2026',
-  UPDATE_NOTE: 'v6.1.1 Update: Light theme styling and Experiment 9 verification updates',
+  VERSION: 'v6.1.2',
+  LAST_UPDATED: 'October 1, 2026',
+  UPDATE_NOTE: 'v6.1.2 Update: Accessibility enhancements, rate limiting, and input focus improvements',
   STORAGE_KEYS: {
     theme: 'ctd-theme',
     disclaimerAck: 'ctd-disclaimer-ack'
