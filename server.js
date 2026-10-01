@@ -284,48 +284,6 @@ app.get(['/download/logo.jpg', '/download/wdiii-logo.jpg'], (req, res) => {
   res.status(404).send('logo.jpg not found');
 });
 
-// ===== Public Zip Archive Downloads =====
-app.get(['/download/zip', '/download/vault.zip', '/download/wdiii-tech-vault.zip'], (req, res) => {
-  try {
-    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
-    const version = pkg.version || '6.1.1';
-    let filePath = path.join(__dirname, `wdiii-tech-vault-v${version}-full.zip`);
-    if (!fs.existsSync(filePath)) {
-      const zips = fs.readdirSync(__dirname).filter(f => f.startsWith('wdiii-tech-vault-') && f.endsWith('-full.zip'));
-      if (zips.length > 0) filePath = path.join(__dirname, zips[0]);
-    }
-    if (fs.existsSync(filePath)) {
-      res.setHeader('Content-Type', 'application/zip');
-      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
-      return res.sendFile(filePath);
-    }
-  } catch (err) {
-    console.error('Error serving zip:', err);
-  }
-  res.status(404).send('Archive zip not found. Run "npm run zip" first.');
-});
-
-app.get(['/download/complete-zip', '/download/wdiii-tech-vault-complete.zip'], (req, res) => {
-  try {
-    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
-    const version = pkg.version || '6.1.1';
-    let filePath = path.join(__dirname, `wdiii-tech-vault-v${version}-complete-with-dependencies.zip`);
-    if (!fs.existsSync(filePath)) {
-      const zips = fs.readdirSync(__dirname).filter(f => f.startsWith('wdiii-tech-vault-') && f.endsWith('-complete-with-dependencies.zip'));
-      if (zips.length > 0) filePath = path.join(__dirname, zips[0]);
-    }
-    if (fs.existsSync(filePath)) {
-      res.setHeader('Content-Type', 'application/zip');
-      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
-      return res.sendFile(filePath);
-    }
-  } catch (err) {
-    console.error('Error serving complete zip:', err);
-  }
-  res.status(404).send('Complete archive zip not found. Run "npm run zip" first.');
-});
-
-
 // Fallback for unmatched API routes to ensure JSON 404
 app.all('/api/*', (req, res) => {
   res.status(404).json({ error: `API route ${req.method} ${req.originalUrl} not found` });
