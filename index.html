@@ -50,8 +50,8 @@
   </script>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
-  <link rel="stylesheet" href="/css/style.css?v=6.1.4" />
-  <link rel="stylesheet" href="/css/preflight.css?v=6.1.4" />
+  <link rel="stylesheet" href="/css/style.css?v=6.1.5" />
+  <link rel="stylesheet" href="/css/preflight.css?v=6.1.5" />
 </head>
 <body>
 <a href="#" class="skip-link" id="skipToContent">Skip to main content</a>
@@ -553,7 +553,7 @@
 <!-- Serve app modules from a versioned path so browsers holding copies cached under the
      old year-long "immutable" header fetch the current code. Bump with each release. -->
 <script type="importmap">
-{ "imports": { "/src/": "/v/6.1.4/src/", "/js/": "/v/6.1.4/js/" } }
+{ "imports": { "/src/": "/v/6.1.5/src/", "/js/": "/v/6.1.5/js/" } }
 </script>
 <script>
 document.getElementById("skipToContent").addEventListener("click", function (e) {
@@ -769,7 +769,7 @@ function dataTable(caption, headers, rows, highlightRows) {
   let h = `<div style="background:var(--td-bg-card); border-radius:0.375rem; overflow:hidden; margin-bottom:2rem; overflow-x:auto;" class="td-scrollbar"><table style="width:100%; border-collapse:collapse; font-size:0.95rem;">`;
   if (caption) h += `<caption style="text-align:left; padding:0.5rem 1rem; color:var(--td-text-secondary); font-size:0.85rem;">${esc(caption)}</caption>`;
   h += `<thead><tr style="background:var(--td-bg-surface-elevated);">`;
-  headers.forEach(hdr => { h += `<th style="padding:0.5rem 1rem; text-align:${hdr.center?'center':'left'}; color:#fff; font-weight:600; border-bottom:2px solid var(--td-border-subtle);">${esc(hdr.label)}</th>`; });
+  headers.forEach(hdr => { h += `<th scope="col" style="padding:0.5rem 1rem; text-align:${hdr.center?'center':'left'}; color:#fff; font-weight:600; border-bottom:2px solid var(--td-border-subtle);">${esc(hdr.label)}</th>`; });
   h += `</tr></thead><tbody>`;
   const BADGE_COLOR = { success:"var(--td-success)", warning:"var(--td-warning)", error:"var(--td-error)", info:"var(--td-info)" };
   rows.forEach((row, ri) => {
@@ -1262,12 +1262,12 @@ function buildExp9() {
         <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.88rem;">
           <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
             <tr>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Phase</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Scenario ID</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Focus Area</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Critical Metric / Observation</th>
-              <th style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Risk Level</th>
-              <th style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Result</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Phase</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Scenario ID</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Focus Area</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Critical Metric / Observation</th>
+              <th scope="col" style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Risk Level</th>
+              <th scope="col" style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Result</th>
             </tr>
           </thead>
           <tbody>
@@ -1456,11 +1456,11 @@ function buildExp9() {
         <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.88rem;">
           <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
             <tr>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Extracted Payload</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Identifier Type</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Truncated Digest (SHA-256)</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Matching Attack Method</th>
-              <th style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Reversal Time</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Extracted Payload</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Identifier Type</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Truncated Digest (SHA-256)</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Matching Attack Method</th>
+              <th scope="col" style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Reversal Time</th>
             </tr>
           </thead>
           <tbody>
@@ -1520,11 +1520,11 @@ function buildExp9() {
         <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.88rem;">
           <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
             <tr>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Data Path</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Interface Used</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Addressing</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Observed Throughput</th>
-              <th style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Firewall Policy Status</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Data Path</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Interface Used</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Addressing</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Observed Throughput</th>
+              <th scope="col" style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Firewall Policy Status</th>
             </tr>
           </thead>
           <tbody>
@@ -1559,12 +1559,12 @@ function buildExp9() {
         <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.86rem;">
           <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
             <tr>
-              <th style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Threat Scenario</th>
-              <th style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Attack Vector</th>
-              <th style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Complexity</th>
-              <th style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Impact</th>
-              <th style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Apple Native Mitigation</th>
-              <th style="text-align:center; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Residual Risk</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Threat Scenario</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Attack Vector</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Complexity</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Impact</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Apple Native Mitigation</th>
+              <th scope="col" style="text-align:center; padding:0.6rem 0.8rem; color:#fff; font-weight:600;">Residual Risk</th>
             </tr>
           </thead>
           <tbody>
@@ -1740,10 +1740,10 @@ function buildExp9() {
         <table style="width:100%; border-collapse:collapse; color:var(--td-text-secondary); font-size:0.88rem;">
           <thead style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border-subtle);">
             <tr>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Tested Hypothesis</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Predicted Outcome</th>
-              <th style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Observed Outcome</th>
-              <th style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Confidence Level</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Tested Hypothesis</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Predicted Outcome</th>
+              <th scope="col" style="text-align:left; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Observed Outcome</th>
+              <th scope="col" style="text-align:center; padding:0.6rem 0.85rem; color:#fff; font-weight:600;">Confidence Level</th>
             </tr>
           </thead>
           <tbody>
