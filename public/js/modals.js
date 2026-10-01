@@ -36,12 +36,20 @@ class ModalManager {
       this.close(CONFIG.MODAL_IDS.disclaimer);
     });
 
-    // Logo modal open buttons
+    // Logo modal open buttons (the logo card is a role="button" div, so it needs Enter/Space too)
     document.querySelectorAll('.btnOpenLogoModal, #btnOpenLogoModal').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         this.open(CONFIG.MODAL_IDS.logo);
       });
+      if (btn.getAttribute('role') === 'button') {
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.open(CONFIG.MODAL_IDS.logo);
+          }
+        });
+      }
     });
 
     // Logo modal close buttons
@@ -69,6 +77,23 @@ class ModalManager {
     const closeBtns = modal.querySelectorAll('[data-modal-close], .btn-modal-close');
     closeBtns.forEach(btn => {
       btn.addEventListener('click', () => this.close(modal.id));
+    });
+
+    // Keep Tab / Shift+Tab inside the open modal
+    modal.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const items = Array.from(modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+        .filter(el => !el.disabled && el.offsetParent !== null);
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     });
 
     // Close on Escape key
