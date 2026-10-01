@@ -1,4 +1,5 @@
 import express from 'express';
+import { rateLimit as expressRateLimit } from 'express-rate-limit';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -15,6 +16,19 @@ const HOST = '0.0.0.0';
 app.set('trust proxy', true); // Behind Firebase Hosting / Cloud Run: use X-Forwarded-For for client IP
 
 app.use(express.json({ limit: '1mb' }));
+
+// ===== Global rate limit =====
+// Backstop for every route, including the ones that read files from disk.
+// Generous enough for a page load (many module requests) but stops floods.
+// trust proxy is permissive above, so the library's check for it is silenced.
+app.use(expressRateLimit({
+  windowMs: 60 * 1000,
+  limit: 600,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  validate: { trustProxy: false, xForwardedForHeader: false },
+  message: { error: 'Too many requests, slow down' }
+}));
 
 // ===== Universal CORS Middleware: External Tools, Fetchers & Scripts =====
 // Enables external tools, scripts, and AI agents to fetch, view, and summarize data
@@ -250,7 +264,7 @@ app.post(
     if (typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'message is required' });
     }
-    if (email !== undefined && (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+    if (email !== undefined && (typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
       return res.status(400).json({ error: 'Invalid email address' });
     }
     if (message.trim().length > 5000) {
