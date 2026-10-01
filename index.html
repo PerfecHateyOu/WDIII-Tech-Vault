@@ -50,11 +50,12 @@
   </script>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
-  <link rel="stylesheet" href="/css/style.css?v=6.1.6" />
-  <link rel="stylesheet" href="/css/preflight.css?v=6.1.6" />
+  <link rel="stylesheet" href="/css/style.css?v=6.1.7" />
+  <link rel="stylesheet" href="/css/preflight.css?v=6.1.7" />
 </head>
 <body>
 <a href="#" class="skip-link" id="skipToContent">Skip to main content</a>
+<div id="routeAnnouncer" class="sr-only" role="status" aria-live="polite"></div>
 
 <!-- Disclaimer Modal -->
 <div id="disclaimerModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:2rem; background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);">
@@ -536,7 +537,7 @@
 <!-- Serve app modules from a versioned path so browsers holding copies cached under the
      old year-long "immutable" header fetch the current code. Bump with each release. -->
 <script type="importmap">
-{ "imports": { "/src/": "/v/6.1.6/src/", "/js/": "/v/6.1.6/js/" } }
+{ "imports": { "/src/": "/v/6.1.7/src/", "/js/": "/v/6.1.7/js/" } }
 </script>
 <script>
 document.getElementById("skipToContent").addEventListener("click", function (e) {
@@ -2040,6 +2041,23 @@ function renderFodderArchive() {
 document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildQueued();
 document.getElementById("fodderContent").innerHTML = renderFodderArchive();
 
+// ===== Route announcements (screen readers) =====
+let firstRouteDone = false;
+function announceRoute(page, rendered) {
+  if (!page) return;
+  const announce = () => {
+    const heading = page.querySelector("h1");
+    const label = (heading?.textContent || "").trim() || page.id.replace("page-", "").replace(/-/g, " ");
+    document.getElementById("routeAnnouncer").textContent = label;
+  };
+  announce();
+  // Pages that render their content asynchronously get a second announcement once the real heading exists
+  if (rendered && typeof rendered.then === "function") rendered.then(announce, announce);
+  // Move focus to the new page, except on first load (the disclaimer modal owns focus) or while a modal is open
+  if (firstRouteDone && !modalManager.activeModal) page.focus({ preventScroll: true });
+  firstRouteDone = true;
+}
+
 // ===== Routing =====
 function showPage(hash) {
   startTopProgress(350);
@@ -2106,6 +2124,7 @@ function showPage(hash) {
   if (targetPage) targetPage.classList.add("active");
   window.scrollTo(0,0);
   setupScrollSpy(pageId);
+  announceRoute(targetPage, asyncRenderPromise);
 
   if (asyncRenderPromise && typeof asyncRenderPromise.then === "function") {
     asyncRenderPromise.finally(() => {
