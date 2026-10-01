@@ -27,8 +27,8 @@ const args = new Set(process.argv.slice(2));
 
 const CSS_FILE = 'public/css/style.css';
 const ASSETS = {
-  Logos: ['logo.svg', 'logo.jpg'],
-  Icons: ['icon-512.png', 'icon-192.png', 'apple-touch-icon.png'],
+  Logos: ['logo.svg', 'logo.jpg', 'fodder-archive-logo-dark.svg', 'fodder-archive-logo-light.svg'],
+  Icons: ['icon-512.png', 'icon-192.png', 'apple-touch-icon.png', 'fodder-archive-favicon.svg'],
 };
 const NAME_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/;
 const HEX_RE = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/;

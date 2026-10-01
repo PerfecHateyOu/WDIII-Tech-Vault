@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 100" width="460" height="100" fill="none" role="img" aria-label="Fodder Archive Logo">
+  <!-- Fodder Archive Shield Emblem (Dark Theme) -->
+  <g id="shield-emblem">
+    <!-- Outer Shield Crest -->
+    <path d="M 55 8 L 93 18 L 93 54 C 93 74 73 89 55 94 C 37 89 17 74 17 54 L 17 18 Z" 
+          stroke="#f1f5f9" 
+          stroke-width="5" 
+          stroke-linejoin="round" 
+          stroke-linecap="round" 
+          fill="none" />
+    
+    <!-- Top Drawer: Vibrant Accent Blue -->
+    <rect x="27" y="24" width="56" height="14" rx="2.5" fill="#4b96ff" />
+    <rect x="47" y="29.5" width="16" height="2.8" rx="1.4" fill="#08182b" />
+    
+    <!-- Middle Drawer: Crisp Light Silver -->
+    <rect x="27" y="43" width="56" height="14" rx="2.5" fill="#e2e8f0" />
+    <rect x="47" y="48.5" width="16" height="2.8" rx="1.4" fill="#08182b" />
+    
+    <!-- Bottom Drawer: Tapered Width -->
+    <rect x="35" y="62" width="40" height="13" rx="2.5" fill="#e2e8f0" />
+    <rect x="49" y="67" width="12" height="2.6" rx="1.3" fill="#08182b" />
+  </g>
+
+  <!-- Typography -->
+  <!-- Wordmark: FODDER -->
+  <text x="126" y="58" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+        font-size="48" 
+        font-weight="700" 
+        letter-spacing="0.05em" 
+        fill="#f8fafc">FODDER</text>
+  
+  <!-- Subtitle: ARCHIVE (Wide Tracked) -->
+  <text x="128" y="83" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+        font-size="16" 
+        font-weight="700" 
+        letter-spacing="0.45em" 
+        fill="#60a5fa">ARCHIVE</text>
+</svg>

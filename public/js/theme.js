@@ -58,6 +58,11 @@ class ThemeManager {
       btn.textContent = isLight ? '☀️ Light' : '🌙 Dark';
       btn.setAttribute('aria-label', `Switch to ${isLight ? 'dark' : 'light'} mode`);
     });
+
+    const fodderLogo = document.getElementById('fodderArchiveHeaderLogo');
+    if (fodderLogo) {
+      fodderLogo.src = isLight ? '/fodder-archive-logo-light.svg' : '/fodder-archive-logo-dark.svg';
+    }
   }
 
   attachToggleListener() {

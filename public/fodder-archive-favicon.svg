@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none" role="img" aria-label="Fodder Archive Favicon">
+  <!-- Solid Dark Navy Shield Body -->
+  <path d="M 64 8 L 118 22 L 118 68 C 118 94 92 113 64 120 C 36 113 10 94 10 68 L 10 22 Z" 
+        fill="#08182b" />
+  
+  <!-- Top Drawer Block: Sky Blue -->
+  <rect x="28" y="32" width="72" height="22" rx="4" fill="#4b96ff" />
+  
+  <!-- Bottom Drawer Block: Pure White -->
+  <rect x="28" y="60" width="72" height="22" rx="4" fill="#ffffff" />
+</svg>

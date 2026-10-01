@@ -141,10 +141,10 @@ app.get('/api/firebase-config', (req, res) => {
 app.get('/api/summary', (req, res) => {
   const summaryPayload = {
     title: 'Consumer Tech Documentation — WDIII Tech Vault',
-    version: 'v6.1.2',
+    version: 'v6.2',
     lastUpdated: 'October 1, 2026',
-    updateType: 'patch',
-    updateNote: 'v6.1.2 Update: Accessibility enhancements, rate limiting, and input focus improvements',
+    updateType: 'minor',
+    updateNote: 'v6.2 Update: Official Fodder Archive brand marks and logos, accessibility enhancements, and global rate limiting',
     description: 'Empirical experiments, hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, ecosystem integrations, and mobile AI.',
     author: 'WDIII',
     stats: {
@@ -296,6 +296,36 @@ app.get(['/download/logo.jpg', '/download/wdiii-logo.jpg'], (req, res) => {
     return res.sendFile(filePath);
   }
   res.status(404).send('logo.jpg not found');
+});
+
+app.get(['/download/fodder-archive-logo-dark.svg', '/download/fodder-logo-dark.svg'], (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'fodder-archive-logo-dark.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="fodder-archive-logo-dark.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('fodder-archive-logo-dark.svg not found');
+});
+
+app.get(['/download/fodder-archive-logo-light.svg', '/download/fodder-logo-light.svg'], (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'fodder-archive-logo-light.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="fodder-archive-logo-light.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('fodder-archive-logo-light.svg not found');
+});
+
+app.get(['/download/fodder-archive-favicon.svg', '/download/fodder-favicon.svg'], (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'fodder-archive-favicon.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="fodder-archive-favicon.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('fodder-archive-favicon.svg not found');
 });
 
 // Fallback for unmatched API routes to ensure JSON 404
