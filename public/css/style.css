@@ -103,6 +103,18 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+/* Soft animated focus ring for the search and contact inputs (inline styles set their borders) */
+:is(#searchHome, #searchFodder, #contactName, #contactEmail, #contactMessage) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+:is(#searchHome, #searchFodder, #contactName, #contactEmail, #contactMessage):focus-visible {
+  outline-color: var(--accent-color);
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22);
+}
+
 details > summary {
   list-style: none;
 }
