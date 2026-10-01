@@ -163,6 +163,26 @@ details > summary::-webkit-details-marker {
 /* ==========================================================================
    3. LAYOUT & SPA PAGES
    ========================================================================== */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  z-index: 4000;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background: var(--td-bg-card);
+  color: var(--td-text-primary);
+  border: 2px solid var(--accent-color);
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+.page:focus {
+  outline: none;
+}
+
 .page {
   display: none;
 }

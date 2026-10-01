@@ -50,10 +50,11 @@
   </script>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
-  <link rel="stylesheet" href="/css/style.css?v=6.1.1" />
-  <link rel="stylesheet" href="/css/preflight.css?v=6.1.1" />
+  <link rel="stylesheet" href="/css/style.css?v=6.1.2" />
+  <link rel="stylesheet" href="/css/preflight.css?v=6.1.2" />
 </head>
 <body>
+<a href="#" class="skip-link" id="skipToContent">Skip to main content</a>
 
 <!-- Disclaimer Modal -->
 <div id="disclaimerModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:2rem; background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);">
@@ -127,7 +128,7 @@
 <button id="scrollTopBtn" aria-label="Scroll to top" style="position:fixed; bottom:2rem; right:2rem; width:3rem; height:3rem; border-radius:9999px; background:var(--td-info); color:#fff; font-size:1.5rem; border:none; cursor:pointer; z-index:1000; box-shadow:0 4px 12px rgba(96,165,250,0.3); opacity:0; pointer-events:none; transition:opacity 0.3s;">↑</button>
 
 <!-- ===================== HOME PAGE ===================== -->
-<div class="page" id="page-home">
+<main class="page" id="page-home" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="display:flex; justify-content:center; align-items:center; margin-bottom:1.25rem;">
       <div id="btnOpenLogoModal" class="wdiii-logo-card" role="button" tabindex="0" title="Click to view official WDIII© brand assets">
@@ -157,7 +158,7 @@
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
-        <input id="searchHome" type="text" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem; outline:none;" />
+        <input id="searchHome" type="text" aria-label="Search experiments" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
         <button id="searchClearHome" style="display:none; position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--td-text-muted); cursor:pointer;">✕</button>
       </div>
       <p id="searchNoMatchHome" style="display:none; text-align:center; color:var(--td-text-muted); font-size:0.85rem; padding:0.5rem;">No experiments match your search.</p>
@@ -192,10 +193,10 @@
     </p>
     <p style="margin:0.5rem 0 0; font-size:0.8rem; opacity:0.85;">*Experiment 8 is in progress: protocol v1.0 approved and day 0 completed 2026-09-27.</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== FODDER PAGE ===================== -->
-<div class="page" id="page-fodder">
+<main class="page" id="page-fodder" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="font-size:1.875rem; margin-bottom:0.5rem;">🗂️</div>
     <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Fodder Archive</h1>
@@ -221,7 +222,7 @@
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
-        <input id="searchFodder" type="text" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem; outline:none;" />
+        <input id="searchFodder" type="text" aria-label="Search Fodder Archive entries" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
         <button id="searchClearFodder" style="display:none; position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--td-text-muted); cursor:pointer;">✕</button>
       </div>
     </div>
@@ -249,10 +250,10 @@
     </nav>
     <p style="margin:0;">Fodder Archive — Side experiments and informal observations | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== ABOUT PAGE ===================== -->
-<div class="page" id="page-about">
+<main class="page" id="page-about" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="font-size:1.875rem; margin-bottom:0.5rem;">📖</div>
     <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">About TechStack Archive</h1>
@@ -284,10 +285,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== CONTACT PAGE ===================== -->
-<div class="page" id="page-contact">
+<main class="page" id="page-contact" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="font-size:1.875rem; margin-bottom:0.5rem;">✉️</div>
     <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Contact</h1>
@@ -306,16 +307,16 @@
     </div>
     <form id="contactForm" style="display:flex; flex-direction:column; gap:1rem;">
       <div>
-        <label style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Name</label>
-        <input id="contactName" type="text" placeholder="Your name" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); outline:none;" />
+        <label for="contactName" style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Name</label>
+        <input id="contactName" type="text" placeholder="Your name" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary);" />
       </div>
       <div>
-        <label style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Email (optional)</label>
-        <input id="contactEmail" type="email" placeholder="you@example.com" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); outline:none;" />
+        <label for="contactEmail" style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Email (optional)</label>
+        <input id="contactEmail" type="email" placeholder="you@example.com" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary);" />
       </div>
       <div>
-        <label style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Message</label>
-        <textarea id="contactMessage" placeholder="What's on your mind?" required rows="5" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); outline:none; resize:vertical;"></textarea>
+        <label for="contactMessage" style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Message</label>
+        <textarea id="contactMessage" placeholder="What's on your mind?" required rows="5" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); resize:vertical;"></textarea>
       </div>
       <button type="submit" style="padding:0.625rem 1.25rem; border-radius:0.375rem; font-weight:600; font-size:0.92rem; border:none; cursor:pointer; background:var(--td-info); color:#fff; align-self:flex-start;">Send Message</button>
     </form>
@@ -330,10 +331,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== METHODOLOGY PAGE ===================== -->
-<div class="page" id="page-methodology">
+<main class="page" id="page-methodology" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="font-size:1.875rem; margin-bottom:0.5rem;">🔬</div>
     <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Testing Methodology</h1>
@@ -366,10 +367,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== USER PROFILE PAGE ===================== -->
-<div class="page" id="page-profile">
+<main class="page" id="page-profile" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="font-size:1.875rem; margin-bottom:0.5rem;">👤</div>
     <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Contributor Profile</h1>
@@ -396,10 +397,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== DEVICE CATALOG PAGE ===================== -->
-<div class="page" id="page-devices">
+<main class="page" id="page-devices" tabindex="-1">
   <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
     <div style="font-size:1.875rem; margin-bottom:0.5rem;">📱</div>
     <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Hardware Registry</h1>
@@ -439,10 +440,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== DEVICE DETAIL PAGE ===================== -->
-<div class="page" id="page-device-detail">
+<main class="page" id="page-device-detail" tabindex="-1">
   <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
     <div style="display:flex; align-items:center; gap:0.75rem;">
       <a href="#/devices" class="wdiii-mini-badge" title="Hardware Registry" style="text-decoration:none;">
@@ -469,10 +470,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== EXPERIMENT DETAIL PAGE ===================== -->
-<div class="page" id="page-experiment-detail">
+<main class="page" id="page-experiment-detail" tabindex="-1">
   <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
     <div style="display:flex; align-items:center; gap:0.75rem;">
       <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
@@ -499,10 +500,10 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- ===================== DEVICE COMPARISON PAGE ===================== -->
-<div class="page" id="page-compare">
+<main class="page" id="page-compare" tabindex="-1">
   <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
     <div style="display:flex; align-items:center; gap:0.75rem;">
       <a href="#/" class="wdiii-mini-badge" title="Consumer Tech Documentation" style="text-decoration:none;">
@@ -529,12 +530,19 @@
     </nav>
     <p style="margin:0;">Consumer Tech Documentation — Real-world experiments and findings | © WDIII</p>
   </footer>
-</div>
+</main>
 
 <!-- Serve app modules from a versioned path so browsers holding copies cached under the
      old year-long "immutable" header fetch the current code. Bump with each release. -->
 <script type="importmap">
-{ "imports": { "/src/": "/v/6.1.1/src/", "/js/": "/v/6.1.1/js/" } }
+{ "imports": { "/src/": "/v/6.1.2/src/", "/js/": "/v/6.1.2/js/" } }
+</script>
+<script>
+document.getElementById("skipToContent").addEventListener("click", function (e) {
+  e.preventDefault();
+  var m = document.querySelector("main.page.active");
+  if (m) m.focus();
+});
 </script>
 <script type="module">
 import app, { themeManager, modalManager, formManager, navigationManager, showToast, escapeHTML } from "/js/main.js";
