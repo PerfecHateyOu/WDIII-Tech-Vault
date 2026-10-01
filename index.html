@@ -50,11 +50,12 @@
   </script>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://project-95f7ca57-6daa-40f6-90b.web.app/" />
-  <link rel="stylesheet" href="/css/style.css?v=6.1.6" />
-  <link rel="stylesheet" href="/css/preflight.css?v=6.1.6" />
+  <link rel="stylesheet" href="/css/style.css?v=6.1.9" />
+  <link rel="stylesheet" href="/css/preflight.css?v=6.1.9" />
 </head>
 <body>
 <a href="#" class="skip-link" id="skipToContent">Skip to main content</a>
+<div id="routeAnnouncer" class="sr-only" role="status" aria-live="polite"></div>
 
 <!-- Disclaimer Modal -->
 <div id="disclaimerModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:2rem; background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);">
@@ -159,7 +160,7 @@
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
-        <input id="searchHome" type="text" aria-label="Search experiments" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
+        <input id="searchHome" type="text" aria-label="Search experiments" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
         <button id="searchClearHome" style="display:none; position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--td-text-muted); cursor:pointer;">✕</button>
       </div>
       <p id="searchNoMatchHome" style="display:none; text-align:center; color:var(--td-text-muted); font-size:0.85rem; padding:0.5rem;">No experiments match your search.</p>
@@ -223,7 +224,7 @@
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
-        <input id="searchFodder" type="text" aria-label="Search Fodder Archive entries" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
+        <input id="searchFodder" type="text" aria-label="Search Fodder Archive entries" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
         <button id="searchClearFodder" style="display:none; position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--td-text-muted); cursor:pointer;">✕</button>
       </div>
     </div>
@@ -309,15 +310,15 @@
     <form id="contactForm" style="display:flex; flex-direction:column; gap:1rem;">
       <div>
         <label for="contactName" style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Name</label>
-        <input id="contactName" type="text" placeholder="Your name" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary);" />
+        <input id="contactName" type="text" placeholder="Your name" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary);" />
       </div>
       <div>
         <label for="contactEmail" style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Email (optional)</label>
-        <input id="contactEmail" type="email" placeholder="you@example.com" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary);" />
+        <input id="contactEmail" type="email" placeholder="you@example.com" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary);" />
       </div>
       <div>
         <label for="contactMessage" style="display:block; font-size:0.85rem; color:var(--td-text-secondary); margin-bottom:0.375rem; font-weight:600;">Message</label>
-        <textarea id="contactMessage" placeholder="What's on your mind?" required rows="5" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); color:var(--td-text-primary); resize:vertical;"></textarea>
+        <textarea id="contactMessage" placeholder="What's on your mind?" required rows="5" style="width:100%; padding:0.625rem 0.75rem; border-radius:0.375rem; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary); resize:vertical;"></textarea>
       </div>
       <button type="submit" style="padding:0.625rem 1.25rem; border-radius:0.375rem; font-weight:600; font-size:0.92rem; border:none; cursor:pointer; background:var(--td-info); color:#fff; align-self:flex-start;">Send Message</button>
     </form>
@@ -536,7 +537,7 @@
 <!-- Serve app modules from a versioned path so browsers holding copies cached under the
      old year-long "immutable" header fetch the current code. Bump with each release. -->
 <script type="importmap">
-{ "imports": { "/src/": "/v/6.1.6/src/", "/js/": "/v/6.1.6/js/" } }
+{ "imports": { "/src/": "/v/6.1.9/src/", "/js/": "/v/6.1.9/js/" } }
 </script>
 <script>
 document.getElementById("skipToContent").addEventListener("click", function (e) {
@@ -2040,6 +2041,23 @@ function renderFodderArchive() {
 document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildQueued();
 document.getElementById("fodderContent").innerHTML = renderFodderArchive();
 
+// ===== Route announcements (screen readers) =====
+let firstRouteDone = false;
+function announceRoute(page, rendered) {
+  if (!page) return;
+  const announce = () => {
+    const heading = page.querySelector("h1");
+    const label = (heading?.textContent || "").trim() || page.id.replace("page-", "").replace(/-/g, " ");
+    document.getElementById("routeAnnouncer").textContent = label;
+  };
+  announce();
+  // Pages that render their content asynchronously get a second announcement once the real heading exists
+  if (rendered && typeof rendered.then === "function") rendered.then(announce, announce);
+  // Move focus to the new page, except on first load (the disclaimer modal owns focus) or while a modal is open
+  if (firstRouteDone && !modalManager.activeModal) page.focus({ preventScroll: true });
+  firstRouteDone = true;
+}
+
 // ===== Routing =====
 function showPage(hash) {
   startTopProgress(350);
@@ -2106,6 +2124,7 @@ function showPage(hash) {
   if (targetPage) targetPage.classList.add("active");
   window.scrollTo(0,0);
   setupScrollSpy(pageId);
+  announceRoute(targetPage, asyncRenderPromise);
 
   if (asyncRenderPromise && typeof asyncRenderPromise.then === "function") {
     asyncRenderPromise.finally(() => {

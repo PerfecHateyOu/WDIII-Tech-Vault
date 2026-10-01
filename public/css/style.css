@@ -14,9 +14,10 @@
   --td-bg-card: #252525;
   --td-text-primary: #e0e0e0;
   --td-text-secondary: #d0d0d0; /* WCAG AA enhanced contrast (>= 4.5:1) */
-  --td-text-muted: #888888;
+  --td-text-muted: #999999;
   --td-border: #333333;
   --td-border-subtle: #444444;
+  --td-border-control: #757575;
   --td-success: #4ade80;
   --td-success-bg: #1a2e1f;
   --td-error: #ef4444;
@@ -42,12 +43,13 @@
   --td-bg-card: #ffffff;
   --td-text-primary: #1f2937;
   --td-text-secondary: #4b5563; /* WCAG AA compliant */
-  --td-text-muted: #6b7280;
+  --td-text-muted: #525866;
   --td-border: #cccccc;
   --td-border-subtle: #bbbbbb;
+  --td-border-control: #8a8a8a;
   --td-info: #2563eb;
   --td-info-bg: #e3f0ff;
-  --td-success: #15803d;
+  --td-success: #136f36;
   --td-success-bg: #e8f5e9;
   --td-error: #dc2626;
   --td-error-bg: #ffebee;
@@ -713,4 +715,17 @@ details > summary::-webkit-details-marker {
 /* The skip link moves focus to the page container; it is not interactive, so no ring */
 main.page:focus {
   outline: none;
+}
+
+/* Visually hidden but still read by screen readers (route announcer) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
