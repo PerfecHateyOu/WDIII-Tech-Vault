@@ -13,6 +13,7 @@ It is **personal-only**: no submissions, uploads or moderation. Visitors can rea
 ```bash
 npm ci
 npm start &            # http://localhost:3000
+npm run zip            # package full-source and complete-dependency zip archives
 npm test               # all suites (18 scripts); the server must be running
 npm run test:rules     # Firestore rules; needs the Firebase CLI and Java (emulator)
 npm run deploy         # Cloud Run first, then Hosting

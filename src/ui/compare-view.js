@@ -605,16 +605,16 @@ export async function renderCompareView(container) {
         
         <!-- Table Scroll Container -->
         <div style="overflow-x:auto;" class="td-scrollbar">
-          <table aria-label="Device comparison" style="width:100%; border-collapse:collapse; min-width:${entries.length * 280 + 220}px;">
+          <table style="width:100%; border-collapse:collapse; min-width:${entries.length * 280 + 220}px;">
             
             <!-- Sticky / Dominant Header with Devices Info -->
             <thead>
               <tr style="background:var(--td-bg-surface-elevated); border-bottom:2px solid var(--td-border);">
-                <th scope="col" style="width:220px; padding:1.25rem 1.5rem; text-align:left; vertical-align:bottom; color:var(--td-text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em;">
+                <th style="width:220px; padding:1.25rem 1.5rem; text-align:left; vertical-align:bottom; color:var(--td-text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em;">
                   Metric / Domain
                 </th>
                 ${entries.map(({ device, sampleSize }) => `
-                  <th scope="col" style="width:${colWidthPct}%; padding:1.25rem 1.25rem; text-align:left; vertical-align:top; border-left:1px solid var(--td-border-subtle);">
+                  <th style="width:${colWidthPct}%; padding:1.25rem 1.25rem; text-align:left; vertical-align:top; border-left:1px solid var(--td-border-subtle);">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.35rem;">
                       <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-info);">
                         ${esc(device.brand)}
@@ -649,7 +649,7 @@ export async function renderCompareView(container) {
             <!-- Section 1: OVERVIEW -->
             <thead class="compare-section-header">
               <tr style="background:rgba(255,255,255,0.03); border-top:2px solid var(--td-border); border-bottom:1px solid var(--td-border-subtle);">
-                <th scope="colgroup" colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-text-primary); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                <th colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-text-primary); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
                   1. OVERVIEW <span style="font-size:0.72rem; font-weight:600; color:var(--td-text-muted); text-transform:none; margin-left:0.5rem;">[${DATA_PROVENANCE.PUBLISHED_SPECIFICATION}]</span>
                 </th>
               </tr>
@@ -665,7 +665,7 @@ export async function renderCompareView(container) {
             <!-- Section 2: HARDWARE -->
             <thead class="compare-section-header">
               <tr style="background:rgba(255,255,255,0.03); border-top:2px solid var(--td-border); border-bottom:1px solid var(--td-border-subtle);">
-                <th scope="colgroup" colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-text-primary); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                <th colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-text-primary); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
                   2. HARDWARE <span style="font-size:0.72rem; font-weight:600; color:var(--td-text-muted); text-transform:none; margin-left:0.5rem;">[${DATA_PROVENANCE.PUBLISHED_SPECIFICATION}]</span>
                 </th>
               </tr>
@@ -696,7 +696,7 @@ export async function renderCompareView(container) {
             <!-- Section 3: OFFICIAL WDIII RESULTS -->
             <thead class="compare-section-header">
               <tr style="background:rgba(96,165,250,0.06); border-top:2px solid var(--td-border); border-bottom:1px solid var(--td-border-subtle);">
-                <th scope="colgroup" colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-info); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                <th colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-info); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
                   3. OFFICIAL WDIII RESULTS <span style="font-size:0.72rem; font-weight:600; color:var(--td-info); text-transform:none; margin-left:0.5rem;">[${DATA_PROVENANCE.WDIII_OFFICIAL}]</span>
                 </th>
               </tr>
@@ -717,7 +717,7 @@ export async function renderCompareView(container) {
             <!-- Section 4: VERIFIED COMMUNITY RESULTS -->
             <thead class="compare-section-header">
               <tr style="background:rgba(52,211,153,0.06); border-top:2px solid var(--td-border); border-bottom:1px solid var(--td-border-subtle);">
-                <th scope="colgroup" colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-success); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                <th colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-success); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
                   4. VERIFIED COMMUNITY RESULTS <span style="font-size:0.72rem; font-weight:600; color:var(--td-success); text-transform:none; margin-left:0.5rem;">[${DATA_PROVENANCE.VERIFIED_COMMUNITY}]</span>
                 </th>
               </tr>
@@ -734,7 +734,7 @@ export async function renderCompareView(container) {
             <!-- Section 5: TRANSPARENT CATEGORY SCORES -->
             <thead class="compare-section-header">
               <tr style="background:rgba(255,255,255,0.03); border-top:2px solid var(--td-border); border-bottom:1px solid var(--td-border-subtle);">
-                <th scope="colgroup" colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-text-primary); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                <th colspan="${entries.length + 1}" style="padding:0.75rem 1.25rem; text-align:left; color:var(--td-text-primary); font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
                   5. CATEGORY SCORES <span style="font-size:0.72rem; font-weight:400; color:var(--td-text-muted); text-transform:none; margin-left:0.5rem;">(Derived purely from comparable verified data)</span>
                 </th>
               </tr>
