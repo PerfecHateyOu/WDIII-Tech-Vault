@@ -1,6 +1,6 @@
 {
   "name": "consumer-tech-documentation",
-  "version": "6.1.3",
+  "version": "6.1.4",
   "description": "Consumer Tech Documentation - Real-world experiments and case studies",
   "type": "module",
   "scripts": {
