@@ -328,6 +328,56 @@ app.get(['/download/fodder-archive-favicon.svg', '/download/fodder-favicon.svg']
   res.status(404).send('fodder-archive-favicon.svg not found');
 });
 
+app.get('/download/wdiii-techvault-logo-dark.svg', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-logo-dark.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="wdiii-techvault-logo-dark.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('wdiii-techvault-logo-dark.svg not found');
+});
+
+app.get('/download/wdiii-techvault-logo-light.svg', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-logo-light.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="wdiii-techvault-logo-light.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('wdiii-techvault-logo-light.svg not found');
+});
+
+app.get('/download/wdiii-techvault-emblem-dark.svg', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-emblem-dark.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="wdiii-techvault-emblem-dark.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('wdiii-techvault-emblem-dark.svg not found');
+});
+
+app.get('/download/wdiii-techvault-emblem-light.svg', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-emblem-light.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="wdiii-techvault-emblem-light.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('wdiii-techvault-emblem-light.svg not found');
+});
+
+app.get('/download/wdiii-techvault-favicon.svg', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-favicon.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Disposition', 'attachment; filename="wdiii-techvault-favicon.svg"');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('wdiii-techvault-favicon.svg not found');
+});
+
 // Fallback for unmatched API routes to ensure JSON 404
 app.all('/api/*', (req, res) => {
   res.status(404).json({ error: `API route ${req.method} ${req.originalUrl} not found` });

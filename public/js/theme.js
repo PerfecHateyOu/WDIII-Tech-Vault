@@ -63,6 +63,11 @@ class ThemeManager {
     if (fodderLogo) {
       fodderLogo.src = isLight ? '/fodder-archive-logo-light.svg' : '/fodder-archive-logo-dark.svg';
     }
+
+    const homeVaultLogo = document.getElementById('homeVaultLogo');
+    if (homeVaultLogo) {
+      homeVaultLogo.src = isLight ? '/wdiii-techvault-logo-light.svg' : '/wdiii-techvault-logo-dark.svg';
+    }
   }
 
   attachToggleListener() {
