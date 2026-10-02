@@ -282,6 +282,16 @@ app.post(
   }
 );
 
+// ===== Favicon & Brand Asset Routes =====
+app.get('/favicon.ico', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-favicon.svg');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    return res.sendFile(filePath);
+  }
+  res.status(404).end();
+});
+
 // ===== Explicit Brand Asset Download Routes =====
 app.get(['/download/logo.svg', '/download/wdiii-logo.svg'], (req, res) => {
   const filePath = path.join(__dirname, 'public', 'logo.svg');

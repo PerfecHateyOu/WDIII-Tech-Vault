@@ -68,6 +68,11 @@ class ThemeManager {
     if (homeVaultLogo) {
       homeVaultLogo.src = isLight ? '/wdiii-techvault-logo-light.svg' : '/wdiii-techvault-logo-dark.svg';
     }
+
+    const navVaultEmblem = document.getElementById('navVaultEmblemHome');
+    if (navVaultEmblem) {
+      navVaultEmblem.src = isLight ? '/wdiii-techvault-emblem-light.svg' : '/wdiii-techvault-emblem-dark.svg';
+    }
   }
 
   attachToggleListener() {
