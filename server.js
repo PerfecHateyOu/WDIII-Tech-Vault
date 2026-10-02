@@ -13,20 +13,25 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000; // Cloud Run injects PORT (8080)
 const HOST = '0.0.0.0';
 
-app.set('trust proxy', true); // Behind Firebase Hosting / Cloud Run: use X-Forwarded-For for client IP
+// Behind Firebase Hosting -> Cloud Run, a visitor's address sits a fixed number of hops from the RIGHT of
+// X-Forwarded-For; every entry to its left is supplied by the client and must never be trusted (with
+// `trust proxy: true`, req.ip is the leftmost entry, so a rotating header dodged every rate limit).
+// Default 2 = Hosting + Cloud Run's front end. If the real chain differs, set TRUST_PROXY_HOPS and check with
+//   node scripts/check-rate-limit.mjs https://<hosting-url>      (see HANDOFF.md)
+const parsedHops = Number.parseInt(process.env.TRUST_PROXY_HOPS ?? '', 10);
+const TRUST_PROXY_HOPS = Number.isInteger(parsedHops) && parsedHops >= 0 ? parsedHops : 2;
+app.set('trust proxy', TRUST_PROXY_HOPS);
 
 app.use(express.json({ limit: '1mb' }));
 
 // ===== Global rate limit =====
 // Backstop for every route, including the ones that read files from disk.
 // Generous enough for a page load (many module requests) but stops floods.
-// trust proxy is permissive above, so the library's check for it is silenced.
 app.use(expressRateLimit({
   windowMs: 60 * 1000,
   limit: 600,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
-  validate: { trustProxy: false, xForwardedForHeader: false },
   message: { error: 'Too many requests, slow down' }
 }));
 

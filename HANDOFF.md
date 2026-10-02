@@ -13,9 +13,10 @@ It is **personal-only**: no submissions, uploads or moderation. Visitors can rea
 ```bash
 npm ci
 npm start &            # http://localhost:3000
-npm test               # all suites (18 scripts); the server must be running
+npm test               # all suites (19 scripts); the server must be running
 npm run test:rules     # Firestore rules; needs the Firebase CLI and Java (emulator)
 npm run deploy         # Cloud Run first, then Hosting
+node scripts/check-rate-limit.mjs https://<hosting-url>    # after a deploy: confirms fake X-Forwarded-For values cannot dodge the rate limit
 firebase deploy --only firestore:rules,storage    # rules deploy separately
 ```
 
@@ -88,6 +89,9 @@ Raw HTML exactly as each model returned it: `public/fa01/round-<n>/<model>.html`
 - **Light theme.** `index.html` hard-codes white text (`color:#fff`) in about 100 places. Since v6.1.1 a site-wide rule in `public/css/style.css` switches it to the theme's text colour in light mode, except on elements filled with `background:var(--td-info)`, which must be written exactly that way (no space, not `background-color`) or their white text is darkened. The owner viewed light mode after the fix and it looks fine. The faint `rgba(255,255,255,…)` dividers and row tints are still white in light mode (cosmetic).
 - **Asset version.** When `public/` CSS or JS changes, bump the version so the `?v=` links and the import map in `index.html` move with `package.json` (`scripts/test-cache-headers.js` requires them to match). The displayed "v6.1" label is separate and was left alone.
 - **Rendered pages cannot be viewed from a chat sandbox.** Check structure and tests, say so plainly, and use previews.
+- **Client IP and rate limits.** Behind Hosting and Cloud Run, only the rightmost entries of `X-Forwarded-For` can be trusted. `server.js` trusts `TRUST_PROXY_HOPS` hops (default 2: Hosting plus Cloud Run's front end); with `trust proxy: true`, a rotating header dodged every limit. After changing anything near it, deploy and run `scripts/check-rate-limit.mjs` against the Hosting URL. If it says FAIL, set the real hop count: `gcloud run services update wdiii-tech-vault --region us-central1 --set-env-vars TRUST_PROXY_HOPS=<n>`. The direct `run.app` address has one hop fewer, so it can still be spoofed. `scripts/test-rate-limit-client-ip.js` covers the local behaviour.
+- **No archives in git.** Zip files are git-ignored and docker-ignored: the committed v6.1.1 zips stayed in history and made every clone about 11 MB heavier.
+- **Dev-tool advisories.** `package.json` overrides `@grpc/grpc-js` (pulled in by the Firestore test tooling, which pins a vulnerable 1.9.x) to `~1.13.6`. Production dependencies are separate and audited with `npm audit --omit=dev`; run `npm run test:rules` after touching the override.
 - **Line endings.** `* text=auto` normalises line endings for everything except the `binary` submissions.
 - **Project uploads.** HTML files uploaded to the Claude project (V0.1 to V6) are old versions. The repo is the source of truth.
 - **`archive/`.** Legacy HTML kept for reference; never served.

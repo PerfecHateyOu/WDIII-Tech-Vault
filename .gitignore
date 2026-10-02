@@ -196,3 +196,6 @@ cython_debug/
 
 # Design system rebuild output
 design-system/out/
+
+# Archives are never committed (they bloat every clone)
+/*.zip
