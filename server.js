@@ -284,9 +284,9 @@ app.post(
 
 // ===== Favicon & Brand Asset Routes =====
 app.get('/favicon.ico', (req, res) => {
-  const filePath = path.join(__dirname, 'public', 'wdiii-techvault-favicon.svg');
+  const filePath = path.join(__dirname, 'public', 'favicon.ico');
   if (fs.existsSync(filePath)) {
-    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Content-Type', 'image/x-icon');
     return res.sendFile(filePath);
   }
   res.status(404).end();
