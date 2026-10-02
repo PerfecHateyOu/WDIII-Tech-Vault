@@ -312,19 +312,56 @@ details > summary::-webkit-details-marker {
   transform: translateY(-2px);
 }
 
+/* Home Hero Header */
+.home-hero-header {
+  background: linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated));
+  border-bottom: 1px solid var(--td-border);
+  padding: 2.75rem 1.5rem 2rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 /* WDIII Official Brand & Logo */
 .wdiii-logo-card {
   display: inline-flex;
   align-items: center;
-  gap: 0.875rem;
+  justify-content: center;
+  gap: 0.75rem;
   background: #08111e;
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-radius: 0.75rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.5rem 1.15rem;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   color: #f8fafc;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.wdiii-logo-card img#homeVaultLogo {
+  height: 40px;
+  width: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.wdiii-card-divider {
+  height: 22px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.wdiii-card-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--td-text-secondary);
+  white-space: nowrap;
 }
 
 .wdiii-logo-card:hover {
@@ -340,27 +377,94 @@ details > summary::-webkit-details-marker {
   color: #08182b;
 }
 
+.light-theme .wdiii-card-divider {
+  background: #cbd5e1;
+}
+
+.light-theme .wdiii-card-tag {
+  color: #475569;
+}
+
 .wdiii-mini-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 0.375rem;
-  padding: 0.25rem 0.625rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  color: #0c2340;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  color: var(--td-text-primary);
+  flex-shrink: 0;
 }
 
 .wdiii-mini-badge:hover {
   transform: scale(1.05);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-color: rgba(96, 165, 250, 0.4);
 }
 
 .light-theme .wdiii-mini-badge {
   background: #ffffff;
   border-color: #cbd5e1;
+  color: #0c2340;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Home Update Banner Pill */
+.home-update-banner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.875rem;
+  border-radius: 9999px;
+  background: rgba(96, 165, 250, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  font-size: 0.8rem;
+  color: var(--td-info);
+  font-weight: 600;
+  max-width: 100%;
+  box-sizing: border-box;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.home-update-banner-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--td-info);
+  flex-shrink: 0;
+}
+
+/* Home Subheader Action Bar */
+.home-subheader-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 1.5rem;
+  background: var(--td-bg-surface);
+  border-bottom: 1px solid var(--td-border);
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  box-sizing: border-box;
+}
+
+.home-subheader-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.82rem;
+  color: var(--td-text-muted);
+}
+
+.home-subheader-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
 }
 
 /* Section Navigation Tabs Container */
@@ -581,14 +685,64 @@ details > summary::-webkit-details-marker {
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior: contain !important;
   }
+  .home-hero-header {
+    padding: 1.5rem 1rem 1.25rem !important;
+  }
+  .wdiii-logo-card {
+    padding: 0.375rem 0.75rem !important;
+    gap: 0.5rem !important;
+    max-width: calc(100vw - 2rem) !important;
+    box-sizing: border-box !important;
+  }
+  .wdiii-logo-card img#homeVaultLogo {
+    height: 30px !important;
+    max-width: 140px !important;
+    width: auto !important;
+  }
+  .wdiii-card-divider {
+    height: 16px !important;
+  }
+  .wdiii-card-tag {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.05em !important;
+  }
+  .home-update-banner {
+    font-size: 0.74rem !important;
+    padding: 0.35rem 0.65rem !important;
+    border-radius: 0.625rem !important;
+    text-align: center !important;
+  }
+  .home-subheader-bar {
+    padding: 0.625rem 0.875rem !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+  }
+  .home-subheader-title {
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 0.76rem !important;
+  }
+  .home-subheader-actions {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.45rem !important;
+  }
+  .home-subheader-actions button,
+  .home-subheader-actions .themeToggleBtn {
+    padding: 0.35rem 0.7rem !important;
+    font-size: 0.8rem !important;
+    min-height: 36px !important;
+  }
   .td-section-tab {
     display: flex !important;
     align-items: center !important;
     gap: 0.45rem !important;
     padding: 0.45rem 0.6rem !important;
     border-radius: 0.5rem !important;
-    min-height: 44px !important;
+    min-height: 48px !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
   .td-tab-icon {
     font-size: 1.1rem !important;
@@ -601,14 +755,24 @@ details > summary::-webkit-details-marker {
   }
   .td-tab-sub {
     font-size: 0.68rem !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
     overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    line-height: 1.2 !important;
   }
 }
 
 /* Breakpoint 3: Narrow mobile screens (max-width: 480px) */
 @media (max-width: 480px) {
+  .wdiii-logo-card img#homeVaultLogo {
+    height: 27px !important;
+    max-width: 125px !important;
+  }
+  .wdiii-card-tag {
+    font-size: 0.62rem !important;
+  }
   .td-page-container {
     padding: 0.75rem 0.375rem;
   }
