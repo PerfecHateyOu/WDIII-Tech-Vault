@@ -200,3 +200,33 @@ export function sanitizeObject(data, maxDepth = 5) {
   
   return null;
 }
+
+/**
+ * Avatars come from comment documents that any signed-in visitor can write, so an avatar URL must never
+ * be rendered or stored as-is: a hostile URL would make every viewer's browser contact the attacker.
+ *
+ * Only Google-hosted profile photos (https://lh3.googleusercontent.com/...) are ever stored. The same
+ * pattern is enforced by firestore.rules (a little looser there); keep the two in step.
+ * Rendering also accepts site-relative assets (seed comments and the default icon use them).
+ */
+const GOOGLE_AVATAR_REGEX = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com\/[^\s"'<>\\]*$/i;
+const SITE_ASSET_REGEX = /^\/(?:public|src)\/[A-Za-z0-9._\/-]{1,200}$/;
+
+export function isGoogleAvatarUrl(url) {
+  return typeof url === 'string' && url.length <= 500 && GOOGLE_AVATAR_REGEX.test(url);
+}
+
+/** For rendering: a Google-hosted photo or a site asset, otherwise '' (the caller shows an initial instead). */
+export function safeAvatarUrl(url) {
+  if (typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (isGoogleAvatarUrl(trimmed)) return trimmed;
+  if (SITE_ASSET_REGEX.test(trimmed) && !trimmed.includes('..')) return trimmed;
+  return '';
+}
+
+/** For saving: only Google-hosted photos; anything else is stored as an empty string. */
+export function storableAvatarUrl(url) {
+  const trimmed = typeof url === 'string' ? url.trim() : '';
+  return isGoogleAvatarUrl(trimmed) ? trimmed : '';
+}

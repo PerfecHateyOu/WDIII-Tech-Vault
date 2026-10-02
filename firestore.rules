@@ -220,6 +220,14 @@ service cloud.firestore {
                     && request.resource.data.authorDisplayName is string
                     && request.resource.data.authorDisplayName.size() >= 1
                     && request.resource.data.authorDisplayName.size() <= 80
+                    // Avatar: absent, empty, or an https URL on *.googleusercontent.com (Google profile photos).
+                    // Anything else would make every viewer's browser contact the poster's own server.
+                    // Keep in step with GOOGLE_AVATAR_REGEX in src/utils/sanitize.js.
+                    && (!('authorPhotoURL' in request.resource.data)
+                        || (request.resource.data.authorPhotoURL is string
+                            && request.resource.data.authorPhotoURL.size() <= 500
+                            && (request.resource.data.authorPhotoURL == ''
+                                || request.resource.data.authorPhotoURL.matches('^https://[a-zA-Z0-9-]+\\.googleusercontent\\.com/.*'))))
                     && request.resource.data.experimentId is string
                     && request.resource.data.content is string
                     && request.resource.data.content.size() >= 1

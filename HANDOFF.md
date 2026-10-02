@@ -13,10 +13,11 @@ It is **personal-only**: no submissions, uploads or moderation. Visitors can rea
 ```bash
 npm ci
 npm start &            # http://localhost:3000
-npm test               # all suites (19 scripts); the server must be running
+npm test               # all suites (22 scripts); the server must be running
 npm run test:rules     # Firestore rules; needs the Firebase CLI and Java (emulator)
 npm run deploy         # Cloud Run first, then Hosting
 node scripts/check-rate-limit.mjs https://<hosting-url>    # after a deploy: confirms fake X-Forwarded-For values cannot dodge the rate limit
+node scripts/check-live-headers.mjs https://<hosting-url>    # after a deploy: confirms the security headers arrived and /fa01/ is still sandboxed
 firebase deploy --only firestore:rules,storage    # rules deploy separately
 ```
 
@@ -90,6 +91,9 @@ Raw HTML exactly as each model returned it: `public/fa01/round-<n>/<model>.html`
 - **Asset version.** When `public/` CSS or JS changes, bump the version so the `?v=` links and the import map in `index.html` move with `package.json` (`scripts/test-cache-headers.js` requires them to match). The displayed "v6.1" label is separate and was left alone.
 - **Rendered pages cannot be viewed from a chat sandbox.** Check structure and tests, say so plainly, and use previews.
 - **Client IP and rate limits.** Behind Hosting and Cloud Run, only the rightmost entries of `X-Forwarded-For` can be trusted. `server.js` trusts `TRUST_PROXY_HOPS` hops (default 2: Hosting plus Cloud Run's front end); with `trust proxy: true`, a rotating header dodged every limit. After changing anything near it, deploy and run `scripts/check-rate-limit.mjs` against the Hosting URL. If it says FAIL, set the real hop count: `gcloud run services update wdiii-tech-vault --region us-central1 --set-env-vars TRUST_PROXY_HOPS=<n>`. The direct `run.app` address has one hop fewer, so it can still be spoofed. `scripts/test-rate-limit-client-ip.js` covers the local behaviour.
+- **Security headers.** `server.js` sends nosniff, `X-Frame-Options`, a referrer and permissions policy, and a deliberately narrow CSP (`frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'`) on every response; it does not restrict scripts or styles because the pages use inline code. `/fa01/` submissions override these with their own sandbox headers. In `firebase.json`, only `/experiment-12.html` and `/fa01/**` may set a CSP and `/fa01/**` must stay the last header rule, or a broader Hosting rule could weaken the sandbox (`scripts/test-security-headers.js` enforces both).
+- **Avatars.** A comment's `authorPhotoURL` must be empty or an `https://*.googleusercontent.com/` URL: `storableAvatarUrl()` on save, `safeAvatarUrl()` on render, and the same pattern in `firestore.rules`. Otherwise a visitor could make every viewer's browser contact their own server. Run `npm run test:rules` after touching the pattern, before deploying rules.
+- **Lockfile and overrides.** Regenerating `package-lock.json` has twice dropped the `overrides` and brought back vulnerable `@grpc/grpc-js` 1.9.x while `npm ci` still passed; `scripts/test-lockfile-overrides.js` now fails on it.
 - **No archives in git.** Zip files are git-ignored and docker-ignored: the committed v6.1.1 zips stayed in history and made every clone about 11 MB heavier.
 - **Dev-tool advisories.** `package.json` overrides `@grpc/grpc-js` (pulled in by the Firestore test tooling, which pins a vulnerable 1.9.x) to `~1.13.6`. Production dependencies are separate and audited with `npm audit --omit=dev`; run `npm run test:rules` after touching the override.
 - **Line endings.** `* text=auto` normalises line endings for everything except the `binary` submissions.

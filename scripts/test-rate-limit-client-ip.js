@@ -26,14 +26,20 @@ const send = (path, headers, method = 'GET', body) => new Promise((resolve) => {
   req.end();
 });
 
-// Random addresses from TEST-NET-3 (RFC 5737) so reruns never share a counter
-const octet = () => 100 + Math.floor(Math.random() * 150);
+// Random private addresses (16 million possible), forced to be different from each other, so reruns and the
+// three simulated clients below can never share a counter. (A 150-value pool collided about 1 run in 150.)
+const used = new Set();
+const randomClient = () => {
+  let ip;
+  do { ip = `10.${1 + Math.floor(Math.random() * 254)}.${1 + Math.floor(Math.random() * 254)}.${1 + Math.floor(Math.random() * 254)}`; } while (used.has(ip));
+  used.add(ip); return ip;
+};
 const PROXY = '198.51.100.7';
 const chain = (spoof, real) => ({ 'X-Forwarded-For': `${spoof}, ${real}, ${PROXY}` });
 
 console.log('\n=== RATE LIMIT CLIENT-IP AUDIT ===');
 
-const realA = `203.0.113.${octet()}`;
+const realA = randomClient();
 let limited = 0, ok = 0;
 for (let i = 0; i < 640; i++) {
   const code = await send('/api/summary', chain(`10.${Math.floor(i / 250)}.${i % 250}.1`, realA));
@@ -42,10 +48,10 @@ for (let i = 0; i < 640; i++) {
 check('one real client with 640 different spoofed headers is rate limited', limited > 0, `429s: ${limited}, 200s: ${ok}`);
 check('the limit is applied after the allowance (about 600 requests/min)', ok >= 590 && ok <= 610, `200s: ${ok}`);
 
-const realB = `203.0.113.${octet()}`;
+const realB = randomClient();
 check('a different real client is not affected', (await send('/api/summary', chain('10.99.0.1', realB))) === 200);
 
-const realC = `203.0.113.${octet()}`;
+const realC = randomClient();
 const codes = [];
 for (let i = 0; i < 7; i++) codes.push(await send('/api/submit', chain(`10.77.0.${i + 1}`, realC), 'POST', { message: 'rate limit test' }));
 check('contact form: first 5 posts accepted', codes.slice(0, 5).every((c) => c === 202), codes.join(','));
