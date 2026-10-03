@@ -43,6 +43,19 @@ await t('Guest cannot post', () => assertFails(setDoc(doc(guest(), 'comments/g1'
 await t('Anonymous account cannot post', () => assertFails(setDoc(doc(anon('anon1'), 'comments/a1'), base('anon1'))));
 await t('Unverified email account cannot post', () => assertFails(setDoc(doc(unverified('u1'), 'comments/u1'), base('u1'))));
 await t('Google user can post', () => assertSucceeds(setDoc(doc(google('alice'), 'comments/c1'), base('alice'))));
+const PHOTO = 'https://lh3.googleusercontent.com/a/ACg8ocJExample=s96-c';
+await t('Avatar: a Google-hosted photo is accepted', () => assertSucceeds(setDoc(doc(google('alice'), 'comments/p1'), base('alice', { authorPhotoURL: PHOTO }))));
+await t('Avatar: the field may be left out', async () => { const d = base('alice'); delete d.authorPhotoURL; await assertSucceeds(setDoc(doc(google('alice'), 'comments/p2'), d)); });
+for (const [i, [label, value]] of [['another site', 'https://evil.example/pixel.png'], ['plain http', 'http://lh3.googleusercontent.com/a'],
+  ['look-alike host', 'https://lh3.googleusercontent.com.evil.example/a'], ['host hidden in the query', 'https://evil.example/?x=.googleusercontent.com/a'],
+  ['javascript: URL', 'javascript:alert(1)'], ['relative path', '/public/icon.png'], ['too long', 'https://lh3.googleusercontent.com/' + 'a'.repeat(600)],
+  ['null', null], ['a number', 42]].entries()) {
+  await t(`Avatar rejected: ${label}`, () => assertFails(setDoc(doc(google('alice'), `comments/pbad${i}`), base('alice', { authorPhotoURL: value }))));
+}
+await t('Avatar cannot be changed later by editing the comment', async () => {
+  await seed('pe1', base('alice'));
+  await assertFails(updateDoc(doc(google('alice'), 'comments/pe1'), { authorPhotoURL: 'https://evil.example/pixel.png' }));
+});
 await t('Cannot post as someone else', () => assertFails(setDoc(doc(google('alice'), 'comments/c2'), base('bob'))));
 await t('Cannot store authorEmail', () => assertFails(setDoc(doc(google('alice'), 'comments/c3'), base('alice', { authorEmail: 'alice@example.com' }))));
 await t('Non-owner cannot claim owner badge', () => assertFails(setDoc(doc(google('alice'), 'comments/c4'), base('alice', { authorRole: 'owner' }))));

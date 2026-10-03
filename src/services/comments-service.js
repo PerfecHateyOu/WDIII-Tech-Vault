@@ -12,7 +12,7 @@
  */
 
 import { getDb, getCurrentUser, getCurrentProfile, isSystemOwner, isFirebaseReady } from "./firebase.js";
-import { sanitizeText } from "../utils/sanitize.js";
+import { sanitizeText, storableAvatarUrl } from "../utils/sanitize.js";
 
 // Lazy-loaded Firestore SDK
 let fsModule = null;
@@ -257,7 +257,7 @@ export async function addComment({ experimentId, content }) {
     experimentId: String(experimentId),
     authorId: currentUser.uid,
     authorDisplayName: profile?.displayName || currentUser.displayName || "Registered Researcher",
-    authorPhotoURL: currentUser.photoURL || profile?.photoURL || "",
+    authorPhotoURL: storableAvatarUrl(currentUser.photoURL || profile?.photoURL || ""), // only Google photos; firestore.rules enforces it
     authorRole: role,
     content: sanitizedContent,
     createdAt: now,

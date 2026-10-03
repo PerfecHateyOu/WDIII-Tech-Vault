@@ -24,7 +24,7 @@ import {
   onAuthChange,
   isSystemOwner
 } from "../services/firebase.js";
-import { escapeHtml } from "../utils/sanitize.js";
+import { escapeHtml, safeAvatarUrl } from "../utils/sanitize.js";
 
 /**
  * Format relative time (e.g. "5m ago", "2h ago", or formatted date)
@@ -193,14 +193,14 @@ export function initCommentsSection(container, experimentId) {
     // Registered user input form
     const authorName = profile?.displayName || user.displayName || "Contributor";
     const authorRole = profile?.role || (isOwner ? "owner" : "contributor");
-    const avatarUrl = user.photoURL || profile?.photoURL || "";
+    const avatarUrl = safeAvatarUrl(user.photoURL || profile?.photoURL || "");
 
     inputAreaEl.innerHTML = `
       <form id="commentPostForm" style="margin:0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
           <div style="display:flex; align-items:center; gap:0.6rem;">
             ${avatarUrl ? `
-              <img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(authorName)}" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid var(--td-border);" />
+              <img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(authorName)}" referrerpolicy="no-referrer" decoding="async" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid var(--td-border);" />
             ` : `
               <div style="width:28px; height:28px; border-radius:50%; background:var(--td-info-bg); color:var(--td-info); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem;">
                 ${escapeHtml(authorName.charAt(0).toUpperCase())}
@@ -337,8 +337,8 @@ export function initCommentsSection(container, experimentId) {
               <!-- Comment Header -->
               <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                  ${comment.authorPhotoURL ? `
-                    <img src="${escapeHtml(comment.authorPhotoURL)}" alt="${escapeHtml(comment.authorDisplayName || "User")}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--td-border);" />
+                  ${safeAvatarUrl(comment.authorPhotoURL) ? `
+                    <img src="${escapeHtml(safeAvatarUrl(comment.authorPhotoURL))}" alt="${escapeHtml(comment.authorDisplayName || "User")}" referrerpolicy="no-referrer" loading="lazy" decoding="async" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid var(--td-border);" />
                   ` : `
                     <div style="width:32px; height:32px; border-radius:50%; background:var(--td-info-bg); color:var(--td-info); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; border:1px solid rgba(56,189,248,0.3);">
                       ${escapeHtml((comment.authorDisplayName || "C").charAt(0).toUpperCase())}

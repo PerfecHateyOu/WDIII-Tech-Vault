@@ -22,6 +22,23 @@ const parsedHops = Number.parseInt(process.env.TRUST_PROXY_HOPS ?? '', 10);
 const TRUST_PROXY_HOPS = Number.isInteger(parsedHops) && parsedHops >= 0 ? parsedHops : 2;
 app.set('trust proxy', TRUST_PROXY_HOPS);
 
+// ===== Security headers (every response, including errors and 429s) =====
+// The CSP is deliberately narrow: it forbids framing by other sites, plugins, <base> and cross-origin
+// form targets, and does not restrict scripts or styles (the pages rely on inline code). /fa01/ submissions
+// replace these with their own, much stricter, sandbox headers in their route below.
+app.disable('x-powered-by');
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'Content-Security-Policy': "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+};
+app.use((req, res, next) => {
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) res.setHeader(key, value);
+  next();
+});
+
 app.use(express.json({ limit: '1mb' }));
 
 // ===== Global rate limit =====

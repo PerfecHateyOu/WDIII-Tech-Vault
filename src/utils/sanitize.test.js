@@ -1,7 +1,7 @@
 /**
  * Automated test suite for WDIII Tech Vault input sanitization and anti-XSS utilities.
  */
-import { escapeHtml, escapeAttribute, sanitizeText, sanitizeUrl, safeHtml, sanitizeObject } from './sanitize.js';
+import { escapeHtml, escapeAttribute, sanitizeText, sanitizeUrl, safeHtml, sanitizeObject, isGoogleAvatarUrl, safeAvatarUrl, storableAvatarUrl } from './sanitize.js';
 
 let passed = 0;
 let failed = 0;
@@ -73,6 +73,29 @@ assert(cleanedObj.deviceName === 'iPhone 15 &lt;script&gt;', 'Sanitizes top-leve
 assert(cleanedObj.metrics.cycles === 42, 'Preserves numeric metrics intact');
 assert(!cleanedObj.notes.includes('<script>'), 'Recursively cleans nested string notes');
 assert(!cleanedObj.metrics.comment.includes('<b'), 'Recursively cleans child object properties');
+
+// ---- avatar URLs (visitor-controlled; must not make viewers contact other sites) ----
+console.log('\nAvatar URLs:');
+const GOOD = 'https://lh3.googleusercontent.com/a/ACg8ocJExample=s96-c';
+assert(isGoogleAvatarUrl(GOOD), 'Accepts a Google-hosted profile photo');
+assert(safeAvatarUrl(GOOD) === GOOD && storableAvatarUrl(GOOD) === GOOD, 'Renders and stores a Google photo');
+assert(safeAvatarUrl('/public/icon.png') === '/public/icon.png', 'Renders the default site icon');
+assert(safeAvatarUrl('/src/assets/images/wdiii_logo_1789060991252.jpg') !== '', 'Renders the seed comment logo');
+assert(storableAvatarUrl('/public/icon.png') === '', 'Never stores a relative path');
+for (const bad of [
+  'https://evil.example/pixel.png',
+  'http://lh3.googleusercontent.com/a/x',
+  'https://lh3.googleusercontent.com.evil.example/a',
+  'https://evil.example/?x=.googleusercontent.com/a',
+  'https://evil.example/.googleusercontent.com/a',
+  'https://user@lh3.googleusercontent.com/a',
+  'https://a.b.googleusercontent.com/a',
+  'javascript:alert(1)', 'data:image/svg+xml,<svg onload=alert(1)>', '//evil.example/x.png',
+  '/public/../../etc/passwd', '/other/path.png', 'https://lh3.googleusercontent.com/a" onerror="alert(1)',
+  'https://lh3.googleusercontent.com/a b', 'https://lh3.googleusercontent.com/' + 'a'.repeat(600), '', null, undefined, 42, {}
+]) {
+  assert(safeAvatarUrl(bad) === '' && storableAvatarUrl(bad) === '', `Rejects ${String(typeof bad === 'string' ? bad.slice(0, 48) : bad)}`);
+}
 
 console.log(`\nTests Completed: ${passed} passed, ${failed} failed.`);
 if (failed > 0) {
