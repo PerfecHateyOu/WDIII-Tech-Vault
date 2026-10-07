@@ -1,0 +1,102 @@
+/* ==========================================================================
+   Theme: Opus 5.5 "Bench Notes" for standalone pages (experiment-12.html).
+   The SPA shell gets theme-opus.css; this page has its own inline <style> and
+   variables, so this file remaps those variables to the same palette and
+   restyles its few components. Loaded after the inline <style>.
+   Dark is the default; the site's saved choice (ctd-theme) adds .light-theme.
+   ========================================================================== */
+
+:root {
+  --bn-bg: #121A26;
+  --bn-paper: #1A2433;
+  --bn-paper-2: #202B3C;
+  --bn-ink: #E6ECF3;
+  --bn-muted: #9AA8B8;
+  --bn-line: #2C3A4D;
+  --bn-mark: #E8BD3A;
+  --bn-win: #4FB8A6;
+  --bn-grid: rgba(230, 236, 243, .05);
+
+  --bg-dark: var(--bn-bg);
+  --bg-secondary: var(--bn-paper);
+  --bg-tertiary: var(--bn-paper-2);
+  --text-primary: var(--bn-ink);
+  --text-secondary: var(--bn-muted);
+  --accent-orange: var(--bn-win);
+  --accent-orange-dim: var(--bn-win);
+  --border-color: var(--bn-line);
+  --status-in-progress: #6CC57A;
+  --status-queued: #E8A04A;
+  --status-paused: var(--bn-mark);
+
+  --bn-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --bn-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+.light-theme {
+  --bn-bg: #EEF1F4;
+  --bn-paper: #FFFFFF;
+  --bn-paper-2: #F6F8FA;
+  --bn-ink: #1B2A41;
+  --bn-muted: #5B6B7F;
+  --bn-line: #D5DCE4;
+  --bn-win: #1A7466;
+  --bn-grid: rgba(27, 42, 65, .06);
+
+  --status-in-progress: #2A7430;
+  --status-queued: #A9520C;
+  --status-paused: #836300;
+}
+
+html, body {
+  font-family: var(--bn-body);
+  font-size: 17px;
+  line-height: 1.55;
+  background-color: var(--bn-bg);
+}
+body {
+  background-image:
+    linear-gradient(var(--bn-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bn-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+h1, h2, h3, h4 { font-family: var(--bn-display); letter-spacing: -.01em; }
+h1 { font-weight: 800; letter-spacing: -.025em; line-height: 1.04; }
+h2 { font-weight: 700; letter-spacing: -.015em; }
+
+:focus-visible { outline: 3px solid var(--bn-ink); outline-offset: 2px; }
+::selection { background: var(--bn-mark); color: #121A26; }
+
+.top-nav, .header, .content, .footer { max-width: 1040px; }
+.top-nav a { text-decoration: underline; text-underline-offset: 3px; }
+
+.status-badge { border-radius: 6px; background-color: var(--bn-paper); }
+.status-badge::before { border-radius: 2px; }
+
+h2 { border-bottom-width: 3px; }
+
+code { border-radius: 4px; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.metadata-value, .footer-version { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+
+.subsection, .test-procedure, .empty-state {
+  background-color: var(--bn-paper);
+  border-radius: 8px;
+}
+.test-procedure { border: 1px solid var(--bn-line); }
+.subsection { border-left-width: 4px; }
+
+/* The limitation box becomes a highlighter note */
+.limitation-box {
+  background-color: color-mix(in srgb, var(--bn-mark) 14%, transparent);
+  border-left: 4px solid var(--bn-mark);
+  border-radius: 6px;
+}
+.light-theme .limitation-box { border-left-color: #836300; }
+.limitation-box li::before { color: inherit; }
+
+.top-nav, .footer { text-align: left; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
