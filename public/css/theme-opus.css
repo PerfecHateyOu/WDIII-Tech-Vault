@@ -1,0 +1,321 @@
+/* ==========================================================================
+   Theme: Opus 5.5 — "Bench Notes" visual language (FA-01 Round 2, file D)
+   Loaded after style.css and preflight.css. It remaps the --td-* tokens and
+   restyles shared components; page markup and content are unchanged.
+   Inline styles in index.html win over normal rules, so overrides of inline
+   values use !important on purpose.
+   ========================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+:root,
+.dark-theme {
+  --bn-bg: #121A26;
+  --bn-paper: #1A2433;
+  --bn-paper-2: #202B3C;
+  --bn-ink: #E6ECF3;
+  --bn-ink-2: #C9D3DE;
+  --bn-muted: #9AA8B8;
+  --bn-line: #2C3A4D;
+  --bn-bar: #4A5D75;
+  --bn-mark: #E8BD3A;
+  --bn-mark-ink: #121A26;
+  --bn-win: #4FB8A6;
+  --bn-grid: rgba(230, 236, 243, .05);
+
+  --td-bg-base: var(--bn-bg);
+  --td-bg-surface: var(--bn-bg);
+  --td-bg-surface-elevated: var(--bn-paper-2);
+  --td-bg-card: var(--bn-paper);
+  --td-text-primary: var(--bn-ink);
+  --td-text-secondary: var(--bn-ink-2);
+  --td-text-muted: var(--bn-muted);
+  --td-border: var(--bn-line);
+  --td-border-subtle: var(--bn-line);
+  --td-border-control: var(--bn-bar);
+  --td-info: var(--bn-win);
+  --td-info-bg: rgba(79, 184, 166, .12);
+  --td-success: #6CC57A;
+  --td-success-bg: rgba(108, 197, 122, .12);
+  --td-warning: var(--bn-mark);
+  --td-warning-bg: rgba(232, 189, 58, .12);
+  --td-pending: #E8A04A;
+  --td-pending-bg: rgba(232, 160, 74, .12);
+  --td-ecosystem: var(--bn-mark);
+  --td-ecosystem-bg: rgba(232, 189, 58, .12);
+  --td-error: #F07A6E;
+  --td-error-bg: rgba(240, 122, 110, .12);
+  --td-ai: #A99BF0;
+  --td-ai-bg: rgba(169, 155, 240, .12);
+  --accent-color: var(--bn-mark);
+
+  --bn-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --bn-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+.light-theme {
+  --bn-bg: #EEF1F4;
+  --bn-paper: #FFFFFF;
+  --bn-paper-2: #F6F8FA;
+  --bn-ink: #1B2A41;
+  --bn-ink-2: #33435A;
+  --bn-muted: #5B6B7F;
+  --bn-line: #D5DCE4;
+  --bn-bar: #9FB0C3;
+  --bn-mark: #F2C94C;
+  --bn-mark-ink: #1B2A41;
+  --bn-win: #1F7A6D;
+  --bn-grid: rgba(27, 42, 65, .06);
+
+  --td-bg-base: var(--bn-bg);
+  --td-bg-surface: var(--bn-bg);
+  --td-bg-surface-elevated: var(--bn-paper-2);
+  --td-bg-card: var(--bn-paper);
+  --td-text-primary: var(--bn-ink);
+  --td-text-secondary: var(--bn-ink-2);
+  --td-text-muted: var(--bn-muted);
+  --td-border: var(--bn-line);
+  --td-border-subtle: var(--bn-line);
+  --td-border-control: var(--bn-bar);
+  --td-info: var(--bn-win);
+  --td-info-bg: #E3F1EE;
+  --td-success: #2E7D32;
+  --td-success-bg: #E6F2E7;
+  --td-warning: #8A6A00;
+  --td-warning-bg: #FBF1CF;
+  --td-pending: #A9520C;
+  --td-pending-bg: #FCEBDA;
+  --td-ecosystem: #8A6A00;
+  --td-ecosystem-bg: #FBF1CF;
+  --td-error: #C0392B;
+  --td-error-bg: #FBE6E3;
+  --td-ai: #5B45C2;
+  --td-ai-bg: #ECE8FA;
+  --accent-color: var(--bn-ink);
+}
+
+/* ---------- 2. Base ---------- */
+body {
+  font-family: var(--bn-body);
+  font-size: 17px;
+  line-height: 1.55;
+  background-color: var(--bn-bg);
+  background-image:
+    linear-gradient(var(--bn-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bn-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+h1, h2, h3, h4, h5,
+.td-tab-label, .fa-title {
+  font-family: var(--bn-display) !important;
+  letter-spacing: -.01em;
+}
+h1 { font-weight: 800 !important; letter-spacing: -.025em; line-height: 1.04 !important; }
+h2 { font-weight: 700 !important; letter-spacing: -.015em; }
+
+:focus-visible,
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--bn-mark) !important;
+  outline-offset: 2px;
+}
+::selection { background: var(--bn-mark); color: var(--bn-mark-ink); }
+
+/* Flat paper: no drop shadows, no gradient washes */
+[style*="box-shadow"] { box-shadow: none !important; }
+[style*="linear-gradient"]:not(.skeleton) { background-image: none !important; }
+
+/* ---------- 3. Page headers ---------- */
+main.page > header,
+.home-hero-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--bn-line) !important;
+  text-align: left !important;
+  padding: 3.5rem max(1.25rem, calc((100% - 1040px) / 2)) 2.25rem !important;
+}
+main.page > header > div:first-child { justify-content: flex-start !important; }
+main.page > header h1 {
+  color: var(--bn-ink) !important;
+  font-size: clamp(2.2rem, 5.2vw, 3.75rem) !important;
+  margin: 0 0 .9rem !important;
+  max-width: 18ch;
+}
+main.page > header p {
+  color: var(--bn-muted) !important;
+  max-width: 52ch;
+  font-size: 1.1rem !important;
+}
+
+.wdiii-logo-card,
+.light-theme .wdiii-logo-card {
+  background: var(--bn-paper);
+  border: 1px solid var(--bn-line);
+  border-radius: 10px;
+  box-shadow: none;
+  color: var(--bn-ink);
+}
+.wdiii-logo-card:hover { transform: none; box-shadow: none; border-color: var(--bn-ink); }
+.wdiii-card-divider, .light-theme .wdiii-card-divider { background: var(--bn-line); }
+.wdiii-card-tag, .light-theme .wdiii-card-tag {
+  color: var(--bn-muted); text-transform: none; letter-spacing: 0; font-weight: 600; font-size: .85rem;
+}
+.wdiii-mini-badge, .light-theme .wdiii-mini-badge {
+  background: var(--bn-paper); border-color: var(--bn-line); box-shadow: none; border-radius: 6px;
+}
+.wdiii-mini-badge:hover { transform: none; box-shadow: none; border-color: var(--bn-ink); }
+
+/* Release note: a highlighter stripe instead of a blue pill */
+.home-update-banner {
+  background: var(--bn-mark);
+  color: var(--bn-mark-ink);
+  border: 0;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.home-update-banner-dot { background: var(--bn-mark-ink); }
+
+/* Utility bars under the header, aligned to the content column */
+.home-subheader-bar,
+main.page > header + div {
+  padding-left: max(1.25rem, calc((100% - 1040px) / 2)) !important;
+  padding-right: max(1.25rem, calc((100% - 1040px) / 2)) !important;
+  background: var(--bn-bg) !important;
+  border-bottom: 1px solid var(--bn-line) !important;
+}
+
+/* ---------- 4. Sticky navigation ---------- */
+[id^="nav"][style*="sticky"] {
+  background: var(--bn-bg) !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid var(--bn-line) !important;
+}
+[id^="sectionsToggle"] {
+  color: var(--bn-ink) !important; font-weight: 600;
+  padding-left: max(1.25rem, calc((100% - 1040px) / 2)) !important;
+  padding-right: max(1.25rem, calc((100% - 1040px) / 2)) !important;
+}
+
+.td-sections-nav { justify-content: flex-start; padding: .75rem max(1.25rem, calc((100% - 1040px) / 2)); gap: .4rem; }
+.td-section-tab {
+  border-radius: 6px;
+  border-color: var(--bn-line);
+  background: var(--bn-paper);
+  color: var(--bn-muted);
+}
+.td-section-tab:hover { background: var(--bn-paper); border-color: var(--bn-ink); color: var(--bn-ink); }
+.td-section-tab.active {
+  background: var(--bn-ink);
+  border-color: var(--bn-ink);
+  color: var(--bn-bg);
+}
+.td-section-tab.active .td-tab-sub { color: var(--bn-bg) !important; opacity: .75; }
+.td-tab-label { font-weight: 700; }
+
+/* Pills become squared tags */
+[style*="border-radius:9999px"], [style*="border-radius: 9999px"] { border-radius: 6px !important; }
+#scrollTopBtn { border-radius: 6px !important; background: var(--bn-ink) !important; color: var(--bn-bg) !important; }
+
+/* Inputs */
+input[type="text"], input[type="search"], input[type="email"], select, textarea {
+  border-radius: 8px !important;
+  background: var(--bn-paper) !important;
+  border: 1px solid var(--bn-line) !important;
+  color: var(--bn-ink) !important;
+  font-family: var(--bn-body);
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible { border-color: var(--bn-ink) !important; }
+:is(#searchHome, #searchFodder, #contactName, #contactEmail, #contactMessage):focus-visible { box-shadow: none; }
+
+/* Primary buttons: ink on paper, like the Bench Notes CTA */
+button[style*="background:var(--td-info)"],
+a[style*="background:var(--td-info)"] {
+  background: var(--bn-ink) !important;
+  color: var(--bn-bg) !important;
+  border-radius: 6px !important;
+}
+.themeToggleBtn {
+  background: transparent !important;
+  border: 1px solid var(--bn-line) !important;
+  border-radius: 6px !important;
+  color: var(--bn-ink) !important;
+}
+
+/* ---------- 5. Content ---------- */
+.td-page-container { max-width: 1080px; }
+
+.td-experiment {
+  background: var(--bn-paper);
+  border: 1px solid var(--bn-line);
+  border-radius: 10px;
+}
+.td-experiment-header {
+  background: var(--bn-paper) !important;
+  border-bottom: 1px solid var(--bn-line) !important;
+}
+.td-experiment-header h2, .td-experiment-header h3 {
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem) !important;
+  line-height: 1.15 !important;
+}
+.td-experiment-body { background: var(--bn-paper); }
+
+/* Cards inside entries: quiet panels separated by rules */
+.td-card, .td-comparison-card, .td-ranking-row, .td-queued-card, .td-device-card, .preset-card {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+[style*="border-radius:0.75rem"], [style*="border-radius: 0.75rem"],
+[style*="border-radius:0.5rem"], [style*="border-radius: 0.5rem"] { border-radius: 8px !important; }
+
+/* Findings read like the verdict rule in Bench Notes */
+.td-key-finding, .td-conclusion {
+  background: transparent !important;
+  border: 0 !important;
+  border-left: 4px solid var(--bn-win) !important;
+  border-radius: 0 !important;
+  padding: .25rem 0 .25rem 1rem !important;
+}
+.td-insight-card { border-radius: 8px !important; }
+
+/* Tables: muted headers, single rules, tabular figures */
+table { font-variant-numeric: tabular-nums; }
+.td-scrollbar table th, table th {
+  background: transparent !important;
+  color: var(--bn-muted) !important;
+  font-weight: 500 !important;
+  border-bottom: 1px solid var(--bn-line) !important;
+}
+.td-scrollbar table td, table td { border-bottom: 1px solid var(--bn-line) !important; }
+
+/* Fodder entries */
+.fa-entry > summary:hover { background: var(--bn-paper-2); }
+.fa-entry > summary:hover .fa-title { color: var(--bn-ink); }
+.fa-pill { border-radius: 6px; }
+.fa-submission-link { border-radius: 6px; }
+
+/* Links that use the info token get an underline so they don't rely on colour */
+.td-experiment-body a[style*="color:var(--td-info)"] { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- 6. Footer, toasts, modals ---------- */
+main.page > footer {
+  text-align: left !important;
+  padding: 1.75rem max(1.25rem, calc((100% - 1040px) / 2)) 2.5rem !important;
+  border-top: 1px solid var(--bn-line) !important;
+  color: var(--bn-muted) !important;
+}
+main.page > footer nav { justify-content: flex-start !important; }
+main.page > footer p { justify-content: flex-start !important; }
+
+.toast { border-radius: 8px; box-shadow: none; background: var(--bn-paper); }
+[role="dialog"] > div { border-radius: 10px !important; background: var(--bn-paper) !important; border: 1px solid var(--bn-line) !important; }
+[role="dialog"] { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+@media (max-width: 640px) {
+  .home-update-banner { border-radius: 4px !important; text-align: left !important; justify-content: flex-start !important; }
+  .home-subheader-title { justify-content: flex-start !important; text-align: left !important; }
+  .home-subheader-actions { justify-content: flex-start !important; }
+  main.page > header, .home-hero-header { padding: 2rem 1rem 1.5rem !important; }
+  .td-section-tab { border-radius: 6px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
