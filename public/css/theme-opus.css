@@ -311,7 +311,30 @@ main.page > footer p { justify-content: flex-start !important; }
 [role="dialog"] > div { border-radius: 10px !important; background: var(--bn-paper) !important; border: 1px solid var(--bn-line) !important; }
 [role="dialog"] { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 
+/* ---------- 7. Phones ---------- */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+a, button, summary, [role="button"], input, select, textarea { touch-action: manipulation; }
+h1, h2, h3, p, li { overflow-wrap: break-word; }
 @media (max-width: 640px) {
+  body { font-size: 16px; }
+  /* 16px stops iOS Safari zooming the page when a field gets focus */
+  input[type="text"], input[type="search"], input[type="email"], select, textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+  /* 44px touch targets (style.css leaves the header actions at 36px) */
+  .home-subheader-actions button,
+  .home-subheader-actions .themeToggleBtn,
+  .themeToggleBtn,
+  [id^="sectionsToggle"],
+  #scrollTopBtn { min-height: 44px !important; min-width: 44px; }
+  main.page > header h1 { font-size: clamp(1.9rem, 9vw, 2.4rem) !important; max-width: none; }
+  main.page > header p { font-size: 1rem !important; max-width: none; }
+  main.page > footer { padding: 1.5rem 1rem 2rem !important; }
+  .td-sections-nav { padding: .5rem 1rem; }
+  .td-experiment-header h2, .td-experiment-header h3 { font-size: 1.3rem !important; }
+  /* Pointer-only hover states should not stick after a tap */
+  .wdiii-logo-card:hover, .wdiii-mini-badge:hover { border-color: var(--bn-line); }
   .home-update-banner { border-radius: 4px !important; text-align: left !important; justify-content: flex-start !important; }
   .home-subheader-title { justify-content: flex-start !important; text-align: left !important; }
   .home-subheader-actions { justify-content: flex-start !important; }

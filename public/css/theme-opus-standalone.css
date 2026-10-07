@@ -97,6 +97,20 @@ code { border-radius: 4px; font-family: ui-monospace, "SFMono-Regular", Menlo, m
 
 .top-nav, .footer { text-align: left; }
 
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+a { touch-action: manipulation; }
+h1, h2, h3, p, li { overflow-wrap: break-word; }
+pre, table { max-width: 100%; overflow-x: auto; }
+
+@media (max-width: 640px) {
+  html, body { font-size: 16px; }
+  body { padding: 1rem; }
+  /* 44px tap target for the back link */
+  .top-nav a { min-height: 44px; }
+  .top-nav { gap: .75rem; flex-wrap: wrap; }
+  h2 { display: block; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
