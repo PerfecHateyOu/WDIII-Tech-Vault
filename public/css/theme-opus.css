@@ -16,7 +16,7 @@
   --bn-ink-2: #C9D3DE;
   --bn-muted: #9AA8B8;
   --bn-line: #2C3A4D;
-  --bn-bar: #4A5D75;
+  --bn-bar: #6B7F99;
   --bn-mark: #E8BD3A;
   --bn-mark-ink: #121A26;
   --bn-win: #4FB8A6;
@@ -60,10 +60,10 @@
   --bn-ink-2: #33435A;
   --bn-muted: #5B6B7F;
   --bn-line: #D5DCE4;
-  --bn-bar: #9FB0C3;
+  --bn-bar: #728499;
   --bn-mark: #F2C94C;
   --bn-mark-ink: #1B2A41;
-  --bn-win: #1F7A6D;
+  --bn-win: #1A7466;
   --bn-grid: rgba(27, 42, 65, .06);
 
   --td-bg-base: var(--bn-bg);
@@ -78,13 +78,13 @@
   --td-border-control: var(--bn-bar);
   --td-info: var(--bn-win);
   --td-info-bg: #E3F1EE;
-  --td-success: #2E7D32;
+  --td-success: #2A7430;
   --td-success-bg: #E6F2E7;
-  --td-warning: #8A6A00;
+  --td-warning: #836300;
   --td-warning-bg: #FBF1CF;
   --td-pending: #A9520C;
   --td-pending-bg: #FCEBDA;
-  --td-ecosystem: #8A6A00;
+  --td-ecosystem: #836300;
   --td-ecosystem-bg: #FBF1CF;
   --td-error: #C0392B;
   --td-error-bg: #FBE6E3;
@@ -116,14 +116,16 @@ h2 { font-weight: 700 !important; letter-spacing: -.015em; }
 :focus-visible,
 button:focus-visible, a:focus-visible, input:focus-visible,
 select:focus-visible, textarea:focus-visible {
-  outline: 3px solid var(--bn-mark) !important;
+  /* --accent-color is the highlighter in dark and ink in light; the yellow alone is 1.4:1 on the light ground */
+  outline: 3px solid var(--accent-color) !important;
   outline-offset: 2px;
 }
 ::selection { background: var(--bn-mark); color: var(--bn-mark-ink); }
 
 /* Flat paper: no drop shadows, no gradient washes */
-[style*="box-shadow"] { box-shadow: none !important; }
-[style*="linear-gradient"]:not(.skeleton) { background-image: none !important; }
+/* The top loading bar and the auth progress fill are gradients/glows that carry meaning; leave them alone.
+   The page-header gradients are already cleared by the header rule in section 3. */
+[style*="box-shadow"]:not(#appTopProgressBar) { box-shadow: none !important; }
 
 /* ---------- 3. Page headers ---------- */
 main.page > header,
@@ -176,7 +178,7 @@ main.page > header p {
 
 /* Utility bars under the header, aligned to the content column */
 .home-subheader-bar,
-main.page > header + div {
+main.page > header + div[style*="justify-content:space-between"] { /* only the utility bars, not the 800px content wrappers on About/Privacy/Terms/Contact */
   padding-left: max(1.25rem, calc((100% - 1040px) / 2)) !important;
   padding-right: max(1.25rem, calc((100% - 1040px) / 2)) !important;
   background: var(--bn-bg) !important;
@@ -219,7 +221,7 @@ main.page > header + div {
 input[type="text"], input[type="search"], input[type="email"], select, textarea {
   border-radius: 8px !important;
   background: var(--bn-paper) !important;
-  border: 1px solid var(--bn-line) !important;
+  border: 1px solid var(--td-border-control) !important; /* form controls need 3:1 (1.4.11); --bn-line is ~1.4:1 */
   color: var(--bn-ink) !important;
   font-family: var(--bn-body);
 }
