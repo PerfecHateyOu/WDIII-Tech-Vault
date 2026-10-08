@@ -301,24 +301,24 @@
 
 <!-- ===================== FODDER PAGE ===================== -->
 <main class="page" id="page-fodder" tabindex="-1">
-  <header style="background:linear-gradient(to bottom right, var(--td-bg-surface), var(--td-bg-surface-elevated)); border-bottom:1px solid var(--td-border); padding:3rem 2rem 2rem; text-align:center;">
+  <header class="home-hero-header fodder-hero-header">
     <div style="display:flex; justify-content:center; align-items:center; margin-bottom:1rem;">
-      <a href="#/logo" class="btnOpenLogoModal" title="Click to view Fodder Archive brand marks &amp; assets" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; border-radius:0.75rem; border:1px solid var(--td-border-subtle); background:var(--td-bg-card); box-shadow:0 4px 16px rgba(0,0,0,0.2);">
-        <img id="fodderArchiveHeaderLogo" src="/fodder-archive-logo-dark.svg" alt="Fodder Archive" loading="lazy" style="height:48px; width:auto; max-width:100%; display:block;" />
+      <a href="#/logo" class="btnOpenLogoModal fodder-logo-card" title="Click to view Fodder Archive brand marks &amp; assets">
+        <img id="fodderArchiveHeaderLogo" src="/fodder-archive-logo-dark.svg" alt="Fodder Archive" loading="lazy" />
       </a>
     </div>
-    <h1 style="color:#fff; font-weight:700; margin:0 0 0.25rem; font-size:clamp(1.6rem,4vw+0.5rem,2.5rem);">Fodder Archive</h1>
-    <p style="color:var(--td-text-secondary); font-size:1.125rem; margin:0;">Side experiments and informal notes that don't fit the main documentation. Overhauled in v6 with streamlined evaluation records. Open any entry to read it here.</p>
+    <h1 style="color:#fff; font-weight:700; margin:0 0 0.35rem; font-size:clamp(1.5rem,4vw+0.5rem,2.5rem);">Fodder Archive</h1>
+    <p class="fodder-hero-desc">Side experiments and informal notes that don't fit the main documentation. Overhauled in v6 with streamlined evaluation records. Open any entry to read it here.</p>
   </header>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; padding:0.375rem 1.5rem; background:var(--td-bg-surface); border-bottom:1px solid var(--td-border); flex-wrap:wrap; gap:0.5rem;">
-    <div style="display:flex; align-items:center; gap:0.75rem;">
+  <div class="home-subheader-bar">
+    <div class="home-subheader-title">
       <a href="#/fodder" class="wdiii-mini-badge" title="Fodder Archive Official Emblem" style="text-decoration:none;">
-        <img src="/fodder-archive-favicon.svg" alt="Fodder Archive" loading="lazy" style="height:14px; width:auto; display:block;" />
+        <img src="/fodder-archive-favicon.svg" alt="Fodder Archive" loading="lazy" style="height:18px; width:18px; display:block;" />
       </a>
-      <span style="font-size:0.8rem; color:var(--td-text-muted);">v6.2 Update — Side experiments and observations</span>
+      <span>v6.2 Update — Side experiments and observations</span>
     </div>
-    <div style="display:flex; align-items:center; gap:0.75rem;">
+    <div class="home-subheader-actions">
       <div id="authHeaderContainerFodder"></div>
       <button id="themeToggleFodder" class="themeToggleBtn" style="background:var(--td-bg-card); border:1px solid var(--td-border-subtle); border-radius:9999px; padding:0.375rem 0.875rem; color:var(--td-text-secondary); font-size:0.85rem; cursor:pointer;">🌙 Dark</button>
     </div>
@@ -330,7 +330,7 @@
     <div style="padding:0 1.5rem 0.5rem;">
       <div style="position:relative; max-width:420px; margin:0 auto;">
         <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--td-text-muted); pointer-events:none;">🔍</span>
-        <input id="searchFodder" type="text" aria-label="Search Fodder Archive entries" placeholder="Search experiments by title, category, or tag…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
+        <input id="searchFodder" type="text" aria-label="Search Fodder Archive entries" placeholder="Search Fodder Archive…" style="width:100%; padding:0.5rem 2.5rem 0.5rem 2.25rem; border-radius:9999px; border:1px solid var(--td-border-control); background:var(--td-bg-card); color:var(--td-text-primary); font-size:0.88rem;" />
         <button id="searchClearFodder" style="display:none; position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--td-text-muted); cursor:pointer;">✕</button>
       </div>
     </div>
