@@ -3,39 +3,39 @@
   <g id="shield-emblem">
     <!-- Outer Shield Crest -->
     <path d="M 55 8 L 93 18 L 93 54 C 93 74 73 89 55 94 C 37 89 17 74 17 54 L 17 18 Z" 
-          stroke="#0c2340" 
+          stroke="#1B2A41" 
           stroke-width="5" 
           stroke-linejoin="round" 
           stroke-linecap="round" 
           fill="none" />
     
-    <!-- Top Drawer: Vibrant Blue -->
-    <rect x="27" y="24" width="56" height="14" rx="2.5" fill="#2563eb" />
+    <!-- Top Drawer: Bench Notes Light Teal Win Accent -->
+    <rect x="27" y="24" width="56" height="14" rx="2.5" fill="#1A7466" />
     <rect x="47" y="29.5" width="16" height="2.8" rx="1.4" fill="#ffffff" />
     
-    <!-- Middle Drawer: Deep Brand Navy -->
-    <rect x="27" y="43" width="56" height="14" rx="2.5" fill="#0c2340" />
+    <!-- Middle Drawer: Deep Brand Navy Slate -->
+    <rect x="27" y="43" width="56" height="14" rx="2.5" fill="#1B2A41" />
     <rect x="47" y="48.5" width="16" height="2.8" rx="1.4" fill="#ffffff" />
     
-    <!-- Bottom Drawer: Tapered Deep Navy -->
-    <rect x="35" y="62" width="40" height="13" rx="2.5" fill="#0c2340" />
+    <!-- Bottom Drawer: Warm Gold Mark -->
+    <rect x="35" y="62" width="40" height="13" rx="2.5" fill="#836300" />
     <rect x="49" y="67" width="12" height="2.6" rx="1.3" fill="#ffffff" />
   </g>
 
   <!-- Typography -->
-  <!-- Wordmark: FODDER -->
+  <!-- Wordmark: FODDER (Bricolage Grotesque) -->
   <text x="126" y="58" 
-        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+        font-family="'Bricolage Grotesque', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
         font-size="48" 
-        font-weight="700" 
-        letter-spacing="0.05em" 
-        fill="#0c2340">FODDER</text>
+        font-weight="800" 
+        letter-spacing="-0.01em" 
+        fill="#1B2A41">FODDER</text>
   
-  <!-- Subtitle: ARCHIVE (Wide Tracked) -->
+  <!-- Subtitle: ARCHIVE (Instrument Sans) -->
   <text x="128" y="83" 
-        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
-        font-size="16" 
+        font-family="'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" 
+        font-size="15" 
         font-weight="700" 
-        letter-spacing="0.45em" 
-        fill="#2563eb">ARCHIVE</text>
+        letter-spacing="0.44em" 
+        fill="#1A7466">ARCHIVE</text>
 </svg>

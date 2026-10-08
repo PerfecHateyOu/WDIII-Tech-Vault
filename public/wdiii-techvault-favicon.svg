@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 115" width="100" height="115" fill="none" role="img" aria-label="WDIII Tech Vault Favicon">
-  <!-- Solid Dark Navy Shield Body -->
+  <!-- Solid Bench Notes Dark Shield Body -->
   <path d="M 50 6 L 94 16 L 94 56 L 50 108 L 6 56 L 6 16 Z" 
-        fill="#08182b" />
+        fill="#121A26" />
+  
+  <!-- Stylized Tech Vault Center Dot (Bench Notes Gold Mark) -->
+  <circle cx="50" cy="22" r="4.2" fill="#E8BD3A" />
   
   <!-- High-Contrast Bold White 'W' (Optimized for 16px-48px favicon visibility) -->
   <path d="M 27 34 L 34 31 L 44 63 L 50 36 L 56 63 L 66 31 L 73 34 L 59 91 L 50 60 L 41 91 Z" 

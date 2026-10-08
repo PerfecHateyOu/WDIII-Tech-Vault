@@ -56,11 +56,11 @@ W_POLY = [
 
 DOT_CX, DOT_CY, DOT_R = 0.50, 0.245, 0.034
 
-# Brand Colors (RGB)
-BG_COLOR = (10, 13, 20)      # #0a0d14
-SHIELD_COLOR = (216, 220, 226) # #d8dce2
-W_COLOR = (15, 23, 42)        # #0f172a
-DOT_COLOR = (37, 99, 235)     # #2563eb
+# Brand Colors (RGB) - Bench Notes Visual Language (v6.3 / v6.3.1)
+BG_COLOR = (18, 26, 38)        # #121A26 (Bench Notes dark base)
+SHIELD_COLOR = (230, 236, 243) # #E6ECF3 (Bench Notes crisp ink)
+W_COLOR = (18, 26, 38)         # #121A26 (Bench Notes dark base)
+DOT_COLOR = (232, 189, 58)     # #E8BD3A (Bench Notes hallmark warm amber gold)
 
 def render_image(width, height):
     # 2x2 sub-sampling for clean anti-aliasing
@@ -167,6 +167,10 @@ def main():
         path = os.path.join(public_dir, name)
         with open(path, 'wb') as f:
             f.write(png)
+        root_path = os.path.join(root, name)
+        if os.path.exists(root_path):
+            with open(root_path, 'wb') as f:
+                f.write(png)
         print(f'  Saved {path} ({len(png)} bytes)')
         if w == 32 and h == 32:
             png_32 = png
@@ -176,6 +180,10 @@ def main():
         ico_path = os.path.join(public_dir, 'favicon.ico')
         with open(ico_path, 'wb') as f:
             f.write(ico)
+        root_ico = os.path.join(root, 'favicon.ico')
+        if os.path.exists(root_ico):
+            with open(root_ico, 'wb') as f:
+                f.write(ico)
         print(f'  Saved {ico_path} ({len(ico)} bytes)')
 
 if __name__ == '__main__':
