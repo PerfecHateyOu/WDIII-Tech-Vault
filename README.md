@@ -1,6 +1,6 @@
 # WDIII Tech Vault — Consumer Tech Documentation
 
-A real-world archive of hands-on consumer tech research: device repairs, customer service tests, battery degradation, ecosystem switching, security audits, and AI software comparisons. Current version: **v6.3**.
+A real-world archive of hands-on consumer tech research: device repairs, customer service tests, battery degradation, ecosystem switching, security audits, and AI software comparisons. Current version: **v6.3.1**.
 
 > New here, or starting a new chat? Read [HANDOFF.md](HANDOFF.md) first: architecture, workflow, content rules and current status.
 

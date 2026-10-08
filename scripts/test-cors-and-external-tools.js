@@ -92,7 +92,7 @@ async function runTests() {
   
   const summaryData = JSON.parse(summaryRes.body);
   check('Summary includes site title', summaryData.title && summaryData.title.includes('WDIII Tech Vault'));
-  check('Summary includes version', summaryData.version === 'v6.3');
+  check('Summary includes version', summaryData.version === 'v6.3.1');
   check('Summary includes lastUpdated', summaryData.lastUpdated === 'October 8, 2026');
   check('Summary includes totalExperiments >= 14', summaryData.stats.totalExperiments >= 14);
   check('Summary includes totalDevices >= 30', summaryData.stats.totalDevices >= 30);

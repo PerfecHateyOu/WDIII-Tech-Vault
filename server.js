@@ -163,10 +163,10 @@ app.get('/api/firebase-config', (req, res) => {
 app.get('/api/summary', (req, res) => {
   const summaryPayload = {
     title: 'Consumer Tech Documentation — WDIII Tech Vault',
-    version: 'v6.3',
+    version: 'v6.3.1',
     lastUpdated: 'October 8, 2026',
-    updateType: 'minor',
-    updateNote: 'v6.3 Update: Bench Notes visual language theme and style overhaul, accessibility enhancements, and global rate limiting',
+    updateType: 'patch',
+    updateNote: 'v6.3.1 Update: Bench Notes visual language theme and style overhaul, accessibility enhancements, and global rate limiting',
     description: 'Empirical experiments, hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, ecosystem integrations, and mobile AI.',
     author: 'WDIII',
     stats: {

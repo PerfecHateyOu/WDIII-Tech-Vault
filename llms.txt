@@ -2,12 +2,12 @@
 > Real-world experiments, empirical hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, hardware teardowns, ecosystem integrations, and mobile AI.
 
 - **Author**: WDIII
-- **Version**: v6.3
+- **Version**: v6.3.1
 - **Last Updated**: October 8, 2026
 - **Status**: Live Independent Research Archive
 
 ## Overview
-The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consumer electronic hardware and operating systems under controlled laboratory and real-world conditions. **Version 6.3 (v6.3)** introduces the complete Opus 5.5 "Bench Notes" visual language overhaul with bespoke typography (Bricolage Grotesque and Instrument Sans), elevated paper card structures, comprehensive security headers with strict CSP and sandbox controls, accessibility enhancements, route announcements, global rate limiting, input focus improvements, updated light theme styling, verified Experiment 9 hardware details and metrics, refreshed methodologies, expanded hardware datasets, unified measurement schemas, and verified empirical verdicts. Every experiment includes explicit methodology, test parameters, quantitative measurements, observations, and conclusive verdicts.
+The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consumer electronic hardware and operating systems under controlled laboratory and real-world conditions. **Version 6.3.1 (v6.3.1)** introduces the complete Opus 5.5 "Bench Notes" visual language overhaul with bespoke typography (Bricolage Grotesque and Instrument Sans), elevated paper card structures, comprehensive security headers with strict CSP and sandbox controls, accessibility enhancements, route announcements, global rate limiting, input focus improvements, updated light theme styling, verified Experiment 9 hardware details and metrics, refreshed methodologies, expanded hardware datasets, unified measurement schemas, and verified empirical verdicts. Every experiment includes explicit methodology, test parameters, quantitative measurements, observations, and conclusive verdicts.
 
 ## Official Experiments & Findings
 
