@@ -32,7 +32,7 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'SAMEORIGIN',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-  'Content-Security-Policy': "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+  'Content-Security-Policy': "frame-ancestors 'self' https://*.google.com https://localhost.corp.google.com:26001; object-src 'none'; base-uri 'self'; form-action 'self'"
 };
 app.use((req, res, next) => {
   for (const [key, value] of Object.entries(SECURITY_HEADERS)) res.setHeader(key, value);
@@ -163,10 +163,10 @@ app.get('/api/firebase-config', (req, res) => {
 app.get('/api/summary', (req, res) => {
   const summaryPayload = {
     title: 'Consumer Tech Documentation — WDIII Tech Vault',
-    version: 'v6.2',
-    lastUpdated: 'October 1, 2026',
+    version: 'v6.3',
+    lastUpdated: 'October 8, 2026',
     updateType: 'minor',
-    updateNote: 'v6.2 Update: Official Fodder Archive brand marks and logos, accessibility enhancements, and global rate limiting',
+    updateNote: 'v6.3 Update: Bench Notes visual language theme and style overhaul, accessibility enhancements, and global rate limiting',
     description: 'Empirical experiments, hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, ecosystem integrations, and mobile AI.',
     author: 'WDIII',
     stats: {

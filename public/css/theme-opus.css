@@ -149,14 +149,17 @@ main.page > header p {
 }
 
 .wdiii-logo-card,
-.light-theme .wdiii-logo-card {
-  background: var(--bn-paper);
-  border: 1px solid var(--bn-line);
-  border-radius: 10px;
-  box-shadow: none;
-  color: var(--bn-ink);
+.light-theme .wdiii-logo-card,
+.fodder-logo-card,
+.light-theme .fodder-logo-card {
+  background: var(--bn-paper) !important;
+  border: 1px solid var(--bn-line) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  color: var(--bn-ink) !important;
 }
-.wdiii-logo-card:hover { transform: none; box-shadow: none; border-color: var(--bn-ink); }
+.wdiii-logo-card:hover,
+.fodder-logo-card:hover { transform: none !important; box-shadow: none !important; border-color: var(--bn-ink) !important; }
 .wdiii-card-divider, .light-theme .wdiii-card-divider { background: var(--bn-line); }
 .wdiii-card-tag, .light-theme .wdiii-card-tag {
   color: var(--bn-muted); text-transform: none; letter-spacing: 0; font-weight: 600; font-size: .85rem;
@@ -334,7 +337,7 @@ h1, h2, h3, p, li { overflow-wrap: break-word; }
   .td-sections-nav { padding: .5rem 1rem; }
   .td-experiment-header h2, .td-experiment-header h3 { font-size: 1.3rem !important; }
   /* Pointer-only hover states should not stick after a tap */
-  .wdiii-logo-card:hover, .wdiii-mini-badge:hover { border-color: var(--bn-line); }
+  .wdiii-logo-card:hover, .fodder-logo-card:hover, .wdiii-mini-badge:hover { border-color: var(--bn-line); }
   .home-update-banner { border-radius: 4px !important; text-align: left !important; justify-content: flex-start !important; }
   .home-subheader-title { justify-content: flex-start !important; text-align: left !important; }
   .home-subheader-actions { justify-content: flex-start !important; }
