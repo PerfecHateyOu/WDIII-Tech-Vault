@@ -17,6 +17,8 @@ The site is a single-page app (`index.html`). The Fodder Archive lives inside it
 - **FA-01:** Which AI builds our website best? (Round 1, then a blind Round 2 with five current models)
 - **FA-02:** One month out of the Apple ecosystem
 - **FA-03:** Two months, two laptops (MacBook Pro 16" M2 Pro vs Acer Aspire 14 AI)
+- **FA-04 (queued):** Mac Studio vs MacBook Pro M2 Pro (32GB): local AI, C++ builds and Final Cut exports
+- **FA-05:** Soundcore P40i "already shipped" cancellation dispute (resolved, full refund)
 
 ## ✨ Platform features
 

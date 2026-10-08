@@ -2878,6 +2878,912 @@ export const OFFICIAL_EXPERIMENTS = [
     }
   },
   {
+    "id": "fa04",
+    "experimentNumber": "FA-04",
+    "title": "FA-04 — Mac Studio vs. MacBook Pro M2 Pro (32GB): Local AI, Builds and Video Export",
+    "category": "hardware",
+    "status": "queued",
+    "statusLabel": "Queued",
+    "origin": "official_wdiii",
+    "researchQuestion": "How much faster is the newly received Mac Studio than a MacBook Pro M2 Pro (32GB) at local AI, C++ builds and Final Cut Pro exports, and how close were the owner's predictions?",
+    "objective": "Measure both Macs on the same tests, with predictions locked before the first result, to see whether the Mac Studio delivers for local AI, heavy multitasking and creative/video work.",
+    "methodology": "Planned. Same tests on both Macs: a clean llama.cpp build (same commit on both), llama.cpp's built-in benchmark on a small (~8B) and a large (~70B) model in GGUF Q4_K_M, and Final Cut Pro exports of the same project as H.264 and ProRes 422. Predictions are entered first and lock when the first result is recorded. Each test runs 3 times, alternating machines, and the median and range are reported.",
+    "conditions": "Two owned Macs. Mac Studio configuration TBD until read from About This Mac.",
+    "protocol": "Setup (record both configurations, llama.cpp commit and model file hashes) → predictions locked → 3 alternating runs per test with cool-downs → medians, ranges and speedups compared against predictions.",
+    "measurements": null,
+    "results": "Not started. No measurements yet.",
+    "observations": [],
+    "limitations": "One machine of each (n=1). Mac Studio configuration TBD. Results apply to the tested llama.cpp commit, models and Final Cut Pro version.",
+    "verdict": "TBD — not yet tested.",
+    "devices": [
+      "apple-macbook-pro-m2-pro"
+    ],
+    "sources": [
+      "Owner's FA-04 test plan"
+    ],
+    "tags": [
+      "Queued",
+      "Local AI",
+      "llama.cpp",
+      "Final Cut Pro"
+    ],
+    "scope": "📋 n=1 per machine — planned, no results yet",
+    "search": "fa-04 mac studio macbook pro m2 pro 32gb local ai llama.cpp benchmark c++ build final cut pro export h.264 prores queued",
+    "toc": [
+      {
+        "id": "fa04-setup",
+        "label": "Setup"
+      },
+      {
+        "id": "fa04-tests",
+        "label": "Planned Tests"
+      },
+      {
+        "id": "fa04-status",
+        "label": "Status"
+      }
+    ],
+    "relatedExperiments": [
+      "fa03",
+      "queued-exp8"
+    ],
+    "createdAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-08T00:00:00.000Z",
+    "protocolVersion": "1.0.0",
+    "version": "1.0.0",
+    "measurementSchema": [
+      {
+        "key": "buildSeconds",
+        "label": "llama.cpp clean build",
+        "type": "number",
+        "unit": "seconds",
+        "required": false,
+        "min": 0,
+        "max": 36000
+      },
+      {
+        "key": "smallPromptTokensPerSecond",
+        "label": "Small model prompt processing (pp512)",
+        "type": "number",
+        "unit": "tokens/s",
+        "required": false,
+        "min": 0,
+        "max": 100000
+      },
+      {
+        "key": "smallGenTokensPerSecond",
+        "label": "Small model text generation (tg128)",
+        "type": "number",
+        "unit": "tokens/s",
+        "required": false,
+        "min": 0,
+        "max": 10000
+      },
+      {
+        "key": "h264ExportSeconds",
+        "label": "Final Cut export, H.264",
+        "type": "number",
+        "unit": "seconds",
+        "required": false,
+        "min": 0,
+        "max": 36000
+      },
+      {
+        "key": "prores422ExportSeconds",
+        "label": "Final Cut export, ProRes 422",
+        "type": "number",
+        "unit": "seconds",
+        "required": false,
+        "min": 0,
+        "max": 36000
+      }
+    ],
+    "allowedMeasurementKeys": [
+      "buildSeconds",
+      "smallPromptTokensPerSecond",
+      "smallGenTokensPerSecond",
+      "h264ExportSeconds",
+      "prores422ExportSeconds"
+    ],
+    "sections": [
+      {
+        "type": "notice",
+        "html": "⏳ Queued — test plan ready, no results yet"
+      },
+      {
+        "type": "paragraph",
+        "variant": "lead",
+        "html": "A measured comparison of the newly received Mac Studio against the MacBook Pro M2 Pro (32GB). The Studio is meant for local AI, heavy multitasking and creative/video work, so the tests cover exactly those. Predictions are recorded before any result."
+      },
+      {
+        "type": "heading",
+        "id": "fa04-setup",
+        "text": "Setup"
+      },
+      {
+        "type": "table",
+        "caption": "Machines",
+        "headers": [
+          {
+            "label": "Spec"
+          },
+          {
+            "label": "Mac Studio"
+          },
+          {
+            "label": "MacBook Pro M2 Pro"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Chip"
+            },
+            {
+              "text": "TBD"
+            },
+            {
+              "text": "Apple M2 Pro"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Memory"
+            },
+            {
+              "text": "TBD"
+            },
+            {
+              "text": "32GB"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Storage"
+            },
+            {
+              "text": "TBD"
+            },
+            {
+              "text": "1TB"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Role"
+            },
+            {
+              "text": "New desktop for local AI, multitasking and video"
+            },
+            {
+              "text": "Comparison machine"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "paragraph",
+        "variant": "note",
+        "html": "Mac Studio specs will be filled in from About This Mac, not from a summary or a spec sheet."
+      },
+      {
+        "type": "heading",
+        "id": "fa04-tests",
+        "text": "Planned Tests"
+      },
+      {
+        "type": "table",
+        "caption": "Each test runs 3 times per machine; median and range reported",
+        "headers": [
+          {
+            "label": "Test"
+          },
+          {
+            "label": "What is measured"
+          },
+          {
+            "label": "Better"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "1. C++ build"
+            },
+            {
+              "text": "Clean build of llama.cpp at one fixed commit, wall-clock time"
+            },
+            {
+              "text": "Lower"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "2a. Small model, prompt"
+            },
+            {
+              "text": "llama-bench pp512 on a ~8B Q4_K_M model, tokens/s"
+            },
+            {
+              "text": "Higher"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "2b. Small model, generation"
+            },
+            {
+              "text": "llama-bench tg128 on the same model, tokens/s"
+            },
+            {
+              "text": "Higher"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "3. Large model"
+            },
+            {
+              "text": "A ~70B Q4_K_M model; whether it loads and runs on each machine is the result"
+            },
+            {
+              "text": "—"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "4a. Final Cut, H.264"
+            },
+            {
+              "text": "Export of the same project, stopwatch time"
+            },
+            {
+              "text": "Lower"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "4b. Final Cut, ProRes 422"
+            },
+            {
+              "text": "Same project and steps, ProRes 422"
+            },
+            {
+              "text": "Lower"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "title": "Rules for a fair run",
+        "paragraphs": [
+          "Predictions (how many times faster the Studio will be on each test) are entered first and lock when the first result is recorded.",
+          "Same llama.cpp commit and identical model files (checked by hash) on both Macs. AI numbers come from llama.cpp's own benchmark, not estimates.",
+          "Runs alternate between machines with cool-downs, so time of day and heat do not favour one Mac.",
+          "Experiment 8 safeguard: the MacBook's battery cycle count is logged before and after, and testing avoids weekly-session days."
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa04-status",
+        "text": "Status"
+      },
+      {
+        "type": "paragraph",
+        "html": "Setup in progress. Results, the prediction scorecard and a verdict will be added once all runs are recorded. Until then every result is TBD."
+      },
+      {
+        "type": "footnote",
+        "html": "<strong>FA-04</strong> | Status: Queued<br> Source: owner's test plan. No measurements have been taken; none are claimed."
+      },
+      {
+        "type": "related",
+        "items": [
+          {
+            "id": "fa03",
+            "label": "💻 Also see: FA-03 — Two Months, Two Laptops"
+          },
+          {
+            "to": "#/experiments/queued-exp8",
+            "label": "🔄 Also see: Experiment 8 — Cross-Platform Ecosystem Reliability"
+          }
+        ]
+      }
+    ],
+    "nav": {
+      "icon": "🖥️",
+      "label": "Mac Studio"
+    }
+  },
+  {
+    "id": "fa05",
+    "experimentNumber": "FA-05",
+    "title": "FA-05 — Soundcore P40i: The \"Already Shipped\" Cancellation Dispute",
+    "category": "support",
+    "status": "done",
+    "statusLabel": "Resolved",
+    "origin": "official_wdiii",
+    "researchQuestion": "When a retailer refuses a cancellation because an order has \"already shipped\", what does each support channel actually do, and what does it take to get the money back?",
+    "objective": "Record, with dates, what each Soundcore support channel said and did after a cancellation was refused on a false \"already shipped\" claim, and compare how the channels performed.",
+    "methodology": "Case record built from the owner's dated screenshots, emails, call logs and Cash App records (16 exhibits). One order, one customer, one retailer.",
+    "conditions": "Refurbished Soundcore P40i ordered Sep 26, 2026 from the Soundcore official store for $34.23 after a discount code, standard shipping (product page estimate: delivery within 3–7 business days).",
+    "protocol": "Log every contact by channel and time, keep the written statements, then reconcile the charge against the refunds.",
+    "measurements": {
+      "Order value": "$34.23",
+      "Cancellation request to full refund": "9 days",
+      "Support channels used": 5,
+      "Working tracking numbers": "0 of 1",
+      "Amount returned": "$34.23"
+    },
+    "results": "Soundcore refused the Sep 28 cancellation because the order had \"already been shipped\" and offered $4.80 to keep it. On Oct 5 it stated in writing that the order had not shipped. After a cancellation request and a live phone call, the remaining $29.43 was refunded on Oct 7, about 16 hours after the live agent's confirmation email. The full $34.23 came back; no package was ever received.",
+    "observations": [
+      "The \"already shipped\" claim was false, and it cost the customer the choice to cancel outright.",
+      "The tracking number from the automated phone agent never validated with USPS.",
+      "The only channel that clearly moved things was a live phone agent reached inside support hours.",
+      "The escalation form's promised 24-hour manager reply never arrived."
+    ],
+    "limitations": "One order, one customer, one retailer. The record shows the claim was false, not why it was made, and cannot prove which contact triggered the refund.",
+    "verdict": "Resolved: full $34.23 refunded. Soundcore's \"already shipped\" refusal was false, and only a live agent reached during support hours got it fixed.",
+    "devices": [],
+    "sources": [
+      "Owner's case file: emails, call logs, order page and Cash App records (16 exhibits, not published)"
+    ],
+    "tags": [
+      "Resolved",
+      "Customer Service",
+      "n=1 Case"
+    ],
+    "scope": "📋 n=1 — one order, one customer, one retailer",
+    "search": "fa-05 soundcore p40i anker already shipped cancellation refund dispute customer service support refurbished earbuds tracking escalation",
+    "toc": [
+      {
+        "id": "fa05-glance",
+        "label": "Result at a Glance"
+      },
+      {
+        "id": "fa05-background",
+        "label": "Background"
+      },
+      {
+        "id": "fa05-timeline",
+        "label": "Timeline"
+      },
+      {
+        "id": "fa05-findings",
+        "label": "Key Findings"
+      },
+      {
+        "id": "fa05-channels",
+        "label": "Support Channels"
+      },
+      {
+        "id": "fa05-takeaways",
+        "label": "Resolution & Takeaways"
+      },
+      {
+        "id": "fa05-limits",
+        "label": "Limits"
+      }
+    ],
+    "relatedExperiments": [
+      "exp3"
+    ],
+    "createdAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-08T00:00:00.000Z",
+    "protocolVersion": "1.0.0",
+    "version": "1.0.0",
+    "measurementSchema": [
+      {
+        "key": "daysToFullRefund",
+        "label": "Cancellation request to full refund",
+        "type": "number",
+        "unit": "days",
+        "required": true,
+        "min": 0,
+        "max": 365
+      },
+      {
+        "key": "supportChannelsUsed",
+        "label": "Support channels used",
+        "type": "number",
+        "required": false,
+        "min": 1,
+        "max": 20
+      }
+    ],
+    "allowedMeasurementKeys": [
+      "daysToFullRefund",
+      "supportChannelsUsed"
+    ],
+    "sections": [
+      {
+        "type": "paragraph",
+        "variant": "lead",
+        "html": "A retailer told a customer a $34.23 order had \"already shipped\" and could not be cancelled. Seven days later it admitted in writing that the order had never shipped, and the full amount was refunded two days after that."
+      },
+      {
+        "type": "heading",
+        "id": "fa05-glance",
+        "text": "Result at a Glance"
+      },
+      {
+        "type": "table",
+        "caption": "Status: resolved, October 2026",
+        "headers": [
+          {
+            "label": "Measure"
+          },
+          {
+            "label": "Value"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Order value"
+            },
+            {
+              "text": "$34.23 (refurbished earbuds, official brand store)"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Cancellation request to full refund"
+            },
+            {
+              "text": "9 days (Sep 28 to Oct 7)"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Support channels used"
+            },
+            {
+              "text": "5 (email, automated phone agent, live phone agent, web escalation form, SMS from an AI agent)"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Contradictory statements about shipping"
+            },
+            {
+              "text": "2 (\"already shipped\" on Sep 28, \"not shipped yet\" on Oct 5)"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Tracking numbers that worked"
+            },
+            {
+              "badge": "error",
+              "text": "0 of 1"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Package received"
+            },
+            {
+              "text": "None"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Final outcome"
+            },
+            {
+              "badge": "success",
+              "text": "$34.23 returned in full ($4.80 + $29.43)"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa05-background",
+        "text": "Background"
+      },
+      {
+        "type": "paragraph",
+        "html": "On Sep 26 a refurbished Soundcore P40i was ordered from the Soundcore official store for $34.23 after a discount code, with free standard shipping estimated at 3 to 7 business days. On Sep 28 the customer asked to cancel after finding it cheaper elsewhere. The order was not late at that point, so the case is about what Soundcore said in response, not about slow delivery."
+      },
+      {
+        "type": "paragraph",
+        "variant": "small",
+        "html": "This entry covers one order, one customer and one retailer. It records what each support channel said and did, with dates, and compares how the channels performed."
+      },
+      {
+        "type": "heading",
+        "id": "fa05-timeline",
+        "text": "Timeline"
+      },
+      {
+        "type": "table",
+        "caption": "Newest first; order, ticket and tracking numbers omitted",
+        "headers": [
+          {
+            "label": "Date"
+          },
+          {
+            "label": "Event"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Oct 7, 12:04 PM"
+            },
+            {
+              "text": "Cash App shows the $29.43 refund as Complete, about 16 hours after the live agent's email"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 6, 7:56 PM"
+            },
+            {
+              "text": "Live agent emails that the full amount will be refunded in 5–7 business days (no dollar figure given)"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 6, 7:15 PM"
+            },
+            {
+              "text": "34-minute call reaches a live agent, who confirms the order is canceled and the refund is being sent"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 6, 5:56 AM"
+            },
+            {
+              "text": "Email reply: the order \"is currently canceled\"; no refund amount or date"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 5, ~5 PM"
+            },
+            {
+              "text": "Escalation form submitted; the promised manager reply within 24 hours never arrives"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 5, 2:56 PM"
+            },
+            {
+              "text": "Written cancellation and refund request for the remaining $29.43"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 5, 6:58 AM"
+            },
+            {
+              "text": "Soundcore admits in writing the order \"has actually not been shipped out yet\""
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 4, 9:56 PM"
+            },
+            {
+              "text": "Automated phone agent gives a tracking number; USPS does not recognize it"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Oct 2"
+            },
+            {
+              "text": "Tracking request by email; only an automatic acknowledgment comes back"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Sep 30"
+            },
+            {
+              "text": "$4.80 partial refund arrives"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Sep 29"
+            },
+            {
+              "text": "Customer accepts the $4.80 offer, believing the order has shipped"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Sep 28"
+            },
+            {
+              "text": "Cancellation refused: order \"has already been shipped\"; $4.80 offered to keep it"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Sep 26"
+            },
+            {
+              "text": "Order placed, $34.23 charged"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa05-findings",
+        "text": "Key Findings"
+      },
+      {
+        "type": "group",
+        "layout": "stack",
+        "children": [
+          {
+            "type": "insight",
+            "tone": "error",
+            "title": "1. The \"already shipped\" claim was false",
+            "body": "Soundcore said so on Sep 28 and contradicted itself in writing on Oct 5. The order was never dispatched. Why it said so is not documented here."
+          },
+          {
+            "type": "insight",
+            "tone": "error",
+            "title": "2. A false claim cost the customer a choice",
+            "body": "The customer accepted a $4.80 credit to keep an order that, it turned out, had not shipped and could have been cancelled outright. Asking for tracking before accepting any \"keep it\" offer would have caught this."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "3. The phone tracking number did not validate",
+            "body": "An automated phone agent gave a number that USPS did not recognize, and no reference number was issued."
+          },
+          {
+            "type": "insight",
+            "tone": "warning",
+            "title": "4. Status sources disagreed",
+            "body": "On Oct 6 an email said the order was canceled while the order page still read \"Partially Refunded\" and no refund had appeared."
+          },
+          {
+            "type": "insight",
+            "tone": "success",
+            "title": "5. Refund timing beat the promise",
+            "body": "The email said 5–7 business days; the money posted about 16 hours later."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa05-channels",
+        "text": "Support Channels Compared"
+      },
+      {
+        "type": "table",
+        "caption": "What each channel did",
+        "headers": [
+          {
+            "label": "Channel"
+          },
+          {
+            "label": "What happened"
+          },
+          {
+            "label": "Useful?"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Email, ticket thread"
+            },
+            {
+              "text": "The admission came about 9 hours after a follow-up; the cancellation was confirmed about 15 hours after the written request. The Oct 2 tracking request got only an automatic acknowledgment."
+            },
+            {
+              "badge": "warning",
+              "text": "Partly: admission and cancellation, but no refund amount or date"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Automated phone agent"
+            },
+            {
+              "text": "Gave a tracking number USPS did not recognize on Oct 4 or Oct 5; said only live agents can create case numbers. Reached again after hours and again gave no case number."
+            },
+            {
+              "badge": "error",
+              "text": "No"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Live phone agent"
+            },
+            {
+              "text": "Reached Oct 6 at 7:15 PM, inside support hours (12 PM to 7:45 PM ET). Confirmed the cancellation and full refund by voice, then emailed 7 minutes after the call ended."
+            },
+            {
+              "badge": "success",
+              "text": "Yes: the refund posted about 16 hours later"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Web escalation form"
+            },
+            {
+              "text": "Confirmation promised a manager reply within 24 hours (Mon–Fri). None arrived."
+            },
+            {
+              "badge": "error",
+              "text": "No"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "SMS from an AI agent"
+            },
+            {
+              "text": "Asked for the account email address, which was sent. No follow-up recorded."
+            },
+            {
+              "badge": "error",
+              "text": "No"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "paragraph",
+        "variant": "note",
+        "html": "The refund followed the live call closely, but the record cannot show which contact actually triggered it."
+      },
+      {
+        "type": "heading",
+        "id": "fa05-takeaways",
+        "text": "Resolution & Takeaways"
+      },
+      {
+        "type": "keyFinding",
+        "title": "Resolved without a payment dispute",
+        "body": "The order was cancelled and the remaining $29.43 refunded on Oct 7, with no Cash App dispute needed. Together with the earlier $4.80, the full $34.23 came back."
+      },
+      {
+        "type": "callout",
+        "title": "What to do in the same situation",
+        "paragraphs": [
+          "<strong>Ask for proof before accepting a credit.</strong> A tracking number that works is easy to verify; an offer to \"keep it for a discount\" is not.",
+          "<strong>Write from the account address, on the ticket thread.</strong> A request sent from a different address opened a separate ticket and split the record.",
+          "<strong>Call during support hours.</strong> The only live human was reached inside the posted hours; the after-hours call reached only an automated agent.",
+          "<strong>Get the promise in writing.</strong> The live agent's email was the first document stating a full refund to the original payment method.",
+          "<strong>Keep dated screenshots.</strong> The contradiction in this case is only provable because both statements were saved with timestamps."
+        ]
+      },
+      {
+        "type": "heading",
+        "id": "fa05-limits",
+        "text": "Limits"
+      },
+      {
+        "type": "table",
+        "caption": "What this case can and cannot show",
+        "headers": [
+          {
+            "label": "Limit"
+          },
+          {
+            "label": "Detail"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "One case"
+            },
+            {
+              "text": "One order, one customer, one retailer; no conclusion about how Soundcore treats other customers."
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Motive unknown"
+            },
+            {
+              "text": "The record shows the claim was false, not why it was made. A dispatch backlog is one possibility, since Soundcore's own email cites high shipment volume."
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Timestamps"
+            },
+            {
+              "text": "Taken from the customer's screenshots and call logs. Some mail arrived late through forwarding, so times for received emails are as seen by the customer."
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Cause of the refund"
+            },
+            {
+              "text": "Not proven. It followed the live call and email closely, but several requests were pending at once."
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Shipping estimate"
+            },
+            {
+              "text": "The 3–7 business day figure comes from the store's shipping info, captured on Oct 8, after the order."
+            }
+          ]
+        ]
+      },
+      {
+        "type": "footnote",
+        "html": "<strong>FA-05</strong> | Status: Resolved, October 2026<br> Source: owner's case file of 16 exhibits (order confirmation, the contradicting emails, call logs, the escalation confirmation, and Cash App records for the charge and both refunds). Exhibits are not published yet; they will be added once redacted."
+      },
+      {
+        "type": "related",
+        "items": [
+          {
+            "id": "exp3",
+            "label": "🎧 Also see: Experiment 3 — Customer Service Quality Test"
+          }
+        ]
+      }
+    ],
+    "nav": {
+      "icon": "🎧",
+      "label": "Soundcore Dispute"
+    }
+  },
+  {
     "id": "exp12",
     "experimentNumber": "12",
     "title": "Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e",
