@@ -340,6 +340,8 @@ h1, h2, h3, p, li { overflow-wrap: break-word; }
   .home-subheader-actions { justify-content: flex-start !important; }
   main.page > header, .home-hero-header { padding: 2rem 1rem 1.5rem !important; }
   .td-section-tab { border-radius: 6px !important; }
+  /* Sign-in buttons + theme toggle sit in an inline nowrap flex row that is wider than a phone */
+  div:has(> .themeToggleBtn) { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
