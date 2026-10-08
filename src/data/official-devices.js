@@ -761,9 +761,9 @@ export const OFFICIAL_DEVICES = [
     origin: "official_wdiii",
     sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
     createdAt: "2026-09-27T00:00:00.000Z",
-    updatedAt: "2026-09-27T00:00:00.000Z",
+    updatedAt: "2026-10-08T00:00:00.000Z",
     status: "active",
-    experimentsInvolved: ["queued-exp8"]
+    experimentsInvolved: ["queued-exp8", "fa04"]
   },
   {
     id: "apple-watch-se-3",

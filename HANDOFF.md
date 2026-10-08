@@ -52,7 +52,7 @@ If you change `public/` or `firebase.json`, deploy both parts.
 ## Where content lives
 
 - **Main experiments** (1–7, CS-01, 8, 9, 10, 12): the visible pages are hand-written builders in `index.html` (`buildExp1()` and so on), and each has a summary entry in the data file. **Nothing keeps the two in step**; that is how invented data sat in the data file unnoticed. Change both, and re-read them side by side.
-- **Fodder Archive** (FA-01 to FA-03): rendered entirely from each entry's `sections` in the data file. One source. Block types are listed in `renderSections()` in `index.html` and `.claude/agents/experiment-drafter.md`; `scripts/test-fodder-single-source.js` checks the structure.
+- **Fodder Archive** (FA-01 to FA-05): rendered entirely from each entry's `sections` in the data file. One source. Block types are listed in `renderSections()` in `index.html` and `.claude/agents/experiment-drafter.md`; `scripts/test-fodder-single-source.js` checks the structure.
 - **Full-page view** (`#/experiments/<id>`): summary from the data, body copied from the page article when there is one.
 - **Experiment logs**: `data/exp-08/` and `data/exp-10/` (CSV plus a README with the protocol). Validated by `npm test`. The site entry summarises the log and never replaces it.
 - **Device registry**: `scripts/test-registry-integrity.js` checks that every device an experiment lists exists and that links point both ways.
@@ -76,6 +76,8 @@ In September 2026 the owner found AI-written filler on the site (invented benchm
 | Experiment 12 | In progress | iOS 27.0 on an iPhone 16e; no results yet; the AI-chatbots-via-Siri part waits for third-party Siri support; headline features TBD |
 | FA-01 | Done | Round 1 (older models, records incomplete) and Round 2 (2026-09-28, blind) |
 | FA-02, FA-03 | Done | Personal impressions, no benchmarks |
+| FA-04 | Queued | Mac Studio vs MacBook Pro M2 Pro (32GB); test plan only, Studio specs TBD, all results null until measured |
+| FA-05 | Done (resolved) | Soundcore P40i cancellation dispute, text only; the 16 exhibits stay unpublished until the owner redacts them |
 
 ## Site changes since v6.1 (code is the source of truth)
 

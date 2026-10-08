@@ -308,7 +308,7 @@ console.log("\n--- Requirement 25: Fodder Archive Functional ---");
 // FA entries are rendered from their `sections` in src/data/official-experiments.js
 const { OFFICIAL_EXPERIMENTS: __faSource } = await import("../src/data/official-experiments.js");
 assert(indexHtmlSrc.includes('renderFodderArchive()'), "Fodder page rendered from data in index.html");
-for (const faId of ["fa01", "fa02", "fa03"]) {
+for (const faId of ["fa01", "fa02", "fa03", "fa04", "fa05"]) {
   const fa = __faSource.find(e => e.id === faId);
   assert(Boolean(fa && Array.isArray(fa.sections) && fa.sections.length > 0), `Fodder entry ${faId.toUpperCase().replace("FA", "FA-")} intact in the data file`);
 }
