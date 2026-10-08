@@ -342,6 +342,13 @@ h1, h2, h3, p, li { overflow-wrap: break-word; }
   .td-section-tab { border-radius: 6px !important; }
   /* Sign-in buttons + theme toggle sit in an inline nowrap flex row that is wider than a phone */
   div:has(> .themeToggleBtn) { flex-wrap: wrap; }
+  /* Controls that were 23-37px tall */
+  .btn-google-signin, .btn-visitor-signin, .device-filter-cat, .device-filter-os,
+  .btn-remove-slot, .btn-change-slot, .btn-add-slot, .btn-mobile-tab, .td-btn-secondary { min-height: 44px; }
+  nav a, .fa-pill, .fa-submission-link, .btnOpenLogoModal { display: inline-flex; align-items: center; min-height: 44px; }
+  /* Reference chips on device cards: 32px clears the WCAG 2.2 24px minimum without bloating the cards */
+  .td-device-card a { display: inline-flex; align-items: center; min-height: 32px; }
+  summary { padding-block: .75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
