@@ -13,7 +13,7 @@ It is **personal-only**: no submissions, uploads or moderation. Visitors can rea
 ```bash
 npm ci
 npm start &            # http://localhost:3000
-npm test               # all suites (22 scripts); the server must be running
+npm test               # all suites (22 scripts); the server must be running. Browser-driven checks (e.g. Playwright) can trip the 600/min rate limit; restart the server before npm test
 npm run test:rules     # Firestore rules; needs the Firebase CLI and Java (emulator)
 npm run deploy         # Cloud Run first, then Hosting
 node scripts/check-rate-limit.mjs https://<hosting-url>    # after a deploy: confirms fake X-Forwarded-For values cannot dodge the rate limit
@@ -65,7 +65,7 @@ In September 2026 the owner found AI-written filler on the site (invented benchm
 - Keep "planned", "owned" and "measured" separate. Results stay `null` until there is data.
 - AI comparisons run cold: a fresh chat with memory off, the identical prompt, no follow-ups, outputs saved unedited. Score blind (files shuffled to letters, key sealed until every assessment is recorded), and the Claude assessment also runs blind in a separate fresh chat.
 
-## Status (2026-09-29)
+## Status (experiments as of 2026-09-29; site changes through 2026-10-08)
 
 | Entry | Status | Notes |
 |---|---|---|
@@ -76,6 +76,14 @@ In September 2026 the owner found AI-written filler on the site (invented benchm
 | Experiment 12 | In progress | iOS 27.0 on an iPhone 16e; no results yet; the AI-chatbots-via-Siri part waits for third-party Siri support; headline features TBD |
 | FA-01 | Done | Round 1 (older models, records incomplete) and Round 2 (2026-09-28, blind) |
 | FA-02, FA-03 | Done | Personal impressions, no benchmarks |
+
+## Site changes since v6.1 (code is the source of truth)
+
+- **Accessibility pass (v6.1.x):** animated focus rings, form labels, skip link and `<main>` landmark on every page, table header scopes, route announcements (live region and focus on route change), modal Tab trap and logo-card Enter/Space, contrast tokens. It first shipped all at once (#61), felt choppy and was reverted (#62), then was redone piecemeal. Keep a11y changes small and check the animation still feels smooth.
+- **Zip downloads removed:** the archive card, footer links, routes and packaging script are gone.
+- **Security:** global rate limit (600/min/IP), email length cap of 254, rate limits keyed on the visitor address (`TRUST_PROXY_HOPS`), response headers, avatar URL validation.
+- **Bench Notes theme (v6.3):** whole-site reskin in the Opus 5.5 "Bench Notes" style (PR #78), including `experiment-12.html`, tuned for phones (44px controls, 32px card chips; the sign-in/theme row wraps at 375px). Checked with Playwright screenshots only, not on real devices or in dark mode on a phone.
+- **Fodder Archive header and hero:** inline CSS moved into `public/css/style.css`; hero made responsive.
 
 ## FA-01 submissions
 
@@ -88,12 +96,12 @@ Raw HTML exactly as each model returned it: `public/fa01/round-<n>/<model>.html`
 ## Known gotchas
 
 - **Light theme.** `index.html` hard-codes white text (`color:#fff`) in about 100 places. Since v6.1.1 a site-wide rule in `public/css/style.css` switches it to the theme's text colour in light mode, except on elements filled with `background:var(--td-info)`, which must be written exactly that way (no space, not `background-color`) or their white text is darkened. The owner viewed light mode after the fix and it looks fine. The faint `rgba(255,255,255,…)` dividers and row tints are still white in light mode (cosmetic).
-- **Asset version.** When `public/` CSS or JS changes, bump the version so the `?v=` links and the import map in `index.html` move with `package.json` (`scripts/test-cache-headers.js` requires them to match). The displayed "v6.1" label is separate and was left alone.
+- **Asset version.** When `public/` CSS or JS changes, bump the version so the `?v=` links and the import map in `index.html` move with `package.json` (`scripts/test-cache-headers.js` requires them to match). The displayed version label in `index.html` ("v6.3" in the JSON-LD, banner, footer and side-experiments heading) is edited by hand and is not covered by that test.
 - **Rendered pages cannot be viewed from a chat sandbox.** Check structure and tests, say so plainly, and use previews.
 - **Client IP and rate limits.** Behind Hosting and Cloud Run, only the rightmost entries of `X-Forwarded-For` can be trusted. `server.js` trusts `TRUST_PROXY_HOPS` hops (default 2: Hosting plus Cloud Run's front end); with `trust proxy: true`, a rotating header dodged every limit. After changing anything near it, deploy and run `scripts/check-rate-limit.mjs` against the Hosting URL. If it says FAIL, set the real hop count: `gcloud run services update wdiii-tech-vault --region us-central1 --set-env-vars TRUST_PROXY_HOPS=<n>`. The direct `run.app` address has one hop fewer, so it can still be spoofed. `scripts/test-rate-limit-client-ip.js` covers the local behaviour.
 - **Security headers.** `server.js` sends nosniff, `X-Frame-Options`, a referrer and permissions policy, and a deliberately narrow CSP (`frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'`) on every response; it does not restrict scripts or styles because the pages use inline code. `/fa01/` submissions override these with their own sandbox headers. In `firebase.json`, only `/experiment-12.html` and `/fa01/**` may set a CSP and `/fa01/**` must stay the last header rule, or a broader Hosting rule could weaken the sandbox (`scripts/test-security-headers.js` enforces both).
 - **Avatars.** A comment's `authorPhotoURL` must be empty or an `https://*.googleusercontent.com/` URL: `storableAvatarUrl()` on save, `safeAvatarUrl()` on render, and the same pattern in `firestore.rules`. Otherwise a visitor could make every viewer's browser contact their own server. Run `npm run test:rules` after touching the pattern, before deploying rules.
-- **Lockfile and overrides.** Regenerating `package-lock.json` has twice dropped the `overrides` and brought back vulnerable `@grpc/grpc-js` 1.9.x while `npm ci` still passed; `scripts/test-lockfile-overrides.js` now fails on it.
+- **Lockfile and overrides.** Commit fe3e57d ("downgrade @grpc/grpc-js") touched the lockfile; it still passes `test-lockfile-overrides.js` (1.13.6), but re-run that test after any dependency change. Regenerating `package-lock.json` has twice dropped the `overrides` and brought back vulnerable `@grpc/grpc-js` 1.9.x while `npm ci` still passed; `scripts/test-lockfile-overrides.js` now fails on it.
 - **No archives in git.** Zip files are git-ignored and docker-ignored: the committed v6.1.1 zips stayed in history and made every clone about 11 MB heavier.
 - **Dev-tool advisories.** `package.json` overrides `@grpc/grpc-js` (pulled in by the Firestore test tooling, which pins a vulnerable 1.9.x) to `~1.13.6`. Production dependencies are separate and audited with `npm audit --omit=dev`; run `npm run test:rules` after touching the override.
 - **Line endings.** `* text=auto` normalises line endings for everything except the `binary` submissions.
