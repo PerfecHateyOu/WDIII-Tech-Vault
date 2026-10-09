@@ -166,7 +166,7 @@ app.get('/api/summary', (req, res) => {
     version: 'v6.3.1',
     lastUpdated: 'October 8, 2026',
     updateType: 'patch',
-    updateNote: 'v6.3.1 Update: Bench Notes visual language theme and style overhaul, accessibility enhancements, and global rate limiting',
+    updateNote: 'v6.3.1 Update: refreshed and optimized application icons and logos, plus FA-04 and FA-05 added to the Fodder Archive',
     description: 'Empirical experiments, hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, ecosystem integrations, and mobile AI.',
     author: 'WDIII',
     stats: {

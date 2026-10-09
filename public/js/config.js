@@ -6,7 +6,7 @@
 export const CONFIG = {
   VERSION: 'v6.3.1',
   LAST_UPDATED: 'October 8, 2026',
-  UPDATE_NOTE: 'v6.3.1 Update: Bench Notes visual language theme and style overhaul, accessibility enhancements, and global rate limiting',
+  UPDATE_NOTE: 'v6.3.1 Update: refreshed and optimized application icons and logos, plus FA-04 and FA-05 added to the Fodder Archive',
   STORAGE_KEYS: {
     theme: 'ctd-theme',
     disclaimerAck: 'ctd-disclaimer-ack'
