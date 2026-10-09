@@ -1,5 +1,6 @@
 import express from 'express';
 import { rateLimit as expressRateLimit } from 'express-rate-limit';
+import crypto from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -513,6 +514,16 @@ app.get(['/experiment-12', '/experiment-12.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'experiment-12.html'));
 });
 
+// ===== Trial script policy (report-only) =====
+// Hashes every inline <script> in index.html (not JSON-LD, not src=) so the policy can be
+// tightened later. Report-only: it logs violations and blocks nothing. Sent on the SPA
+// routes only; /fa01 submissions keep their own sandbox policy.
+const INDEX_HTML = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const INLINE_SCRIPT_HASHES = [...INDEX_HTML.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  .filter((m) => !/\bsrc\s*=/i.test(m[1]) && !/application\/ld\+json/i.test(m[1]))
+  .map((m) => `'sha256-${crypto.createHash('sha256').update(m[2], 'utf8').digest('base64')}'`);
+const TRIAL_SCRIPT_POLICY = `script-src 'self' https://www.gstatic.com ${INLINE_SCRIPT_HASHES.join(' ')}`;
+
 // ===== Root SPA Route & Approved Legacy Aliases =====
 app.get([
   '/',
@@ -528,6 +539,7 @@ app.get([
 ], (req, res) => {
   // index.html carries the import map, so it must always be revalidated.
   setCacheHeaders(res, 'index.html');
+  res.setHeader('Content-Security-Policy-Report-Only', TRIAL_SCRIPT_POLICY);
   res.sendFile(path.join(__dirname, 'index.html'), { cacheControl: false });
 });
 
