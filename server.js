@@ -97,7 +97,12 @@ const SENSITIVE_PATTERNS = [
 ];
 
 app.use((req, res, next) => {
-  const decodedPath = decodeURIComponent(req.path);
+  let decodedPath;
+  try {
+    decodedPath = decodeURIComponent(req.path);
+  } catch {
+    return res.status(404).send('Not found'); // malformed %-escape, e.g. /%E0%A4%A
+  }
 
   // 1. Prevent directory traversal attacks
   if (decodedPath.includes('..') || decodedPath.includes('\\')) {
@@ -478,7 +483,7 @@ function serveSrc(req, res, next) {
   const safeRelativePath = path.normalize(req.path).replace(/^(\.\.[\/\\])+/, '');
   const absolutePath = path.join(__dirname, 'src', safeRelativePath);
   
-  if (!absolutePath.startsWith(path.join(__dirname, 'src'))) {
+  if (!absolutePath.startsWith(path.join(__dirname, 'src') + path.sep)) {
     return res.status(404).send('Not found');
   }
 
@@ -529,6 +534,15 @@ app.get([
 // ===== Final 404 Catch-All Handler =====
 app.use((req, res) => {
   res.status(404).type('text/plain').send('Not found');
+});
+
+// ===== Final Error Handler =====
+// Never send stack traces or internal messages, whatever NODE_ENV is set to.
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const status = Number.isInteger(err?.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
+  if (status === 500) console.error('[server error]', req.method, req.path, err);
+  res.status(status).type('text/plain').send(status === 500 ? 'Internal Server Error' : 'Bad request');
 });
 
 app.listen(PORT, HOST, () => {
