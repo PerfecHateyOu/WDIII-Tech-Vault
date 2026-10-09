@@ -3226,7 +3226,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "Working tracking numbers": "0 of 1",
       "Amount returned": "$34.23"
     },
-    "results": "Soundcore refused the Sep 28 cancellation because the order had \"already been shipped\" and offered $4.80 to keep it. On Oct 5 it stated in writing that the order had not shipped. After a cancellation request and a live phone call, the remaining $29.43 was refunded on Oct 7, about 16 hours after the live agent's confirmation email. The full $34.23 came back; no package was ever received.",
+    "results": "Soundcore refused the Sep 28 cancellation because the order had \"already been shipped\" and offered $4.80 to keep it. On Oct 5 it stated in writing that the order had not shipped. After a cancellation request and a live phone call, the remaining $29.43 was refunded on Oct 7, about 16 hours after the live agent's confirmation email. The full $34.23 came back; no package from that order was ever received. A replacement P31i bought through Soundcore's TikTok Shop store had valid tracking and was delivered on Oct 9.",
     "observations": [
       "The \"already shipped\" claim was false, and it cost the customer the choice to cancel outright.",
       "The tracking number from the automated phone agent never validated with USPS.",
@@ -3245,7 +3245,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "n=1 Case"
     ],
     "scope": "📋 n=1 — one order, one customer, one retailer",
-    "search": "fa-05 soundcore p40i anker already shipped cancellation refund dispute customer service support refurbished earbuds tracking escalation",
+    "search": "fa-05 soundcore p40i anker already shipped cancellation refund dispute customer service support refurbished earbuds tracking escalation p31i tiktok shop replacement follow-up",
     "toc": [
       {
         "id": "fa05-glance",
@@ -3272,6 +3272,10 @@ export const OFFICIAL_EXPERIMENTS = [
         "label": "Resolution & Takeaways"
       },
       {
+        "id": "fa05-followup",
+        "label": "Follow-up: Replacement"
+      },
+      {
         "id": "fa05-limits",
         "label": "Limits"
       }
@@ -3280,9 +3284,9 @@ export const OFFICIAL_EXPERIMENTS = [
       "exp3"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-09T00:00:00.000Z",
     "protocolVersion": "1.0.0",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "measurementSchema": [
       {
         "key": "daysToFullRefund",
@@ -3381,7 +3385,7 @@ export const OFFICIAL_EXPERIMENTS = [
               "text": "Package received"
             },
             {
-              "text": "None"
+              "text": "None from this order (a replacement bought separately arrived Oct 9; see Follow-up)"
             }
           ],
           [
@@ -3427,6 +3431,15 @@ export const OFFICIAL_EXPERIMENTS = [
           }
         ],
         "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Oct 9, 3:59 PM"
+            },
+            {
+              "text": "Follow-up, separate order: the replacement P31i from Soundcore's TikTok Shop store is delivered to the mailbox (USPS: \"Delivered, In/At Mailbox\")"
+            }
+          ],
           [
             {
               "primary": true,
@@ -3702,6 +3715,97 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "type": "heading",
+        "id": "fa05-followup",
+        "text": "Follow-up: Replacement Purchase"
+      },
+      {
+        "type": "paragraph",
+        "html": "The customer bought a replacement, a soundcore P31i (new, White), through the official Soundcore.US shop on TikTok Shop instead of the Soundcore website, for $33.53 with free shipping. The seller is still Soundcore; only the purchase channel changed."
+      },
+      {
+        "type": "table",
+        "caption": "The two orders side by side",
+        "headers": [
+          {
+            "label": "Measure"
+          },
+          {
+            "label": "First order (P40i, Soundcore website)"
+          },
+          {
+            "label": "Replacement (P31i, TikTok Shop)"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "primary": true,
+              "text": "Price paid"
+            },
+            {
+              "text": "$34.23 (refunded in full)"
+            },
+            {
+              "text": "$33.53, free shipping"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Tracking number"
+            },
+            {
+              "badge": "error",
+              "text": "Not recognized by USPS"
+            },
+            {
+              "badge": "success",
+              "text": "Valid; scans updated in transit"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Shipping claims"
+            },
+            {
+              "badge": "error",
+              "text": "\"Already shipped,\" later retracted in writing"
+            },
+            {
+              "text": "None; tracking matched delivery"
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Package"
+            },
+            {
+              "text": "Never received"
+            },
+            {
+              "badge": "success",
+              "text": "Delivered to the mailbox Oct 9, 3:59 PM"
+            }
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "title": "First impression of the P31i",
+        "paragraphs": [
+          "A lot less muddy and bumpy than the customer's previous P30i, with a very clear, balanced sound. This is one listener's impression, not a measurement.",
+          "Setup before listening: firmware updated and EQ adjusted in the Soundcore app."
+        ]
+      },
+      {
+        "type": "paragraph",
+        "variant": "note",
+        "html": "The contrast suggests the problem with the first order was specific to that order or channel, not to the product. One purchase on each channel is not enough to say the channels differ."
+      },
+      {
+        "type": "heading",
         "id": "fa05-limits",
         "text": "Limits"
       },
@@ -3723,7 +3827,7 @@ export const OFFICIAL_EXPERIMENTS = [
               "text": "One case"
             },
             {
-              "text": "One order, one customer, one retailer; no conclusion about how Soundcore treats other customers."
+              "text": "One disputed order, one customer, one retailer; no conclusion about how Soundcore treats other customers."
             }
           ],
           [
@@ -3760,6 +3864,15 @@ export const OFFICIAL_EXPERIMENTS = [
             },
             {
               "text": "The 3–7 business day figure comes from the store's shipping info, captured on Oct 8, after the order."
+            }
+          ],
+          [
+            {
+              "primary": true,
+              "text": "Follow-up"
+            },
+            {
+              "text": "A single purchase; it shows that order worked, not that TikTok Shop is more reliable than the Soundcore website."
             }
           ]
         ]
