@@ -3216,7 +3216,7 @@ export const OFFICIAL_EXPERIMENTS = [
     "origin": "official_wdiii",
     "researchQuestion": "When a retailer refuses a cancellation because an order has \"already shipped\", what does each support channel actually do, and what does it take to get the money back?",
     "objective": "Record, with dates, what each Soundcore support channel said and did after a cancellation was refused on a false \"already shipped\" claim, and compare how the channels performed.",
-    "methodology": "Case record built from the owner's dated screenshots, emails, call logs and Cash App records (16 exhibits). One order, one customer, one retailer.",
+    "methodology": "Case record built from the owner's dated screenshots, emails, call logs and Cash App records (16 exhibits). One disputed order, one customer, one retailer, plus a follow-up purchase from the same seller.",
     "conditions": "Refurbished Soundcore P40i ordered Sep 26, 2026 from the Soundcore official store for $34.23 after a discount code, standard shipping (product page estimate: delivery within 3–7 business days).",
     "protocol": "Log every contact by channel and time, keep the written statements, then reconcile the charge against the refunds.",
     "measurements": {
@@ -3237,14 +3237,15 @@ export const OFFICIAL_EXPERIMENTS = [
     "verdict": "Resolved: full $34.23 refunded. Soundcore's \"already shipped\" refusal was false, and only a live agent reached during support hours got it fixed.",
     "devices": [],
     "sources": [
-      "Owner's case file: emails, call logs, order page and Cash App records (16 exhibits, not published)"
+      "Owner's case file: emails, call logs, order page and Cash App records (16 exhibits, not published)",
+      "Owner's USPS tracking record and order details for the replacement purchase (delivered Oct 9, 2026, 3:59 PM)"
     ],
     "tags": [
       "Resolved",
       "Customer Service",
       "n=1 Case"
     ],
-    "scope": "📋 n=1 — one order, one customer, one retailer",
+    "scope": "📋 n=1 — one disputed order, one customer, one retailer (plus a follow-up purchase)",
     "search": "fa-05 soundcore p40i anker already shipped cancellation refund dispute customer service support refurbished earbuds tracking escalation p31i tiktok shop replacement follow-up",
     "toc": [
       {
@@ -3412,7 +3413,7 @@ export const OFFICIAL_EXPERIMENTS = [
       {
         "type": "paragraph",
         "variant": "small",
-        "html": "This entry covers one order, one customer and one retailer. It records what each support channel said and did, with dates, and compares how the channels performed."
+        "html": "This entry covers one disputed order, one customer and one retailer, plus a follow-up purchase from the same seller. It records what each support channel said and did, with dates, and compares how the channels performed."
       },
       {
         "type": "heading",
@@ -3795,14 +3796,14 @@ export const OFFICIAL_EXPERIMENTS = [
         "type": "callout",
         "title": "First impression of the P31i",
         "paragraphs": [
-          "A lot less muddy and bumpy than the customer's previous P30i, with a very clear, balanced sound. This is one listener's impression, not a measurement.",
+          "A lot less muddy and bumpy than the P30i the customer had worn for two years, with a very clear, balanced sound. This is one listener's impression, not a measurement.",
           "Setup before listening: firmware updated and EQ adjusted in the Soundcore app."
         ]
       },
       {
         "type": "paragraph",
         "variant": "note",
-        "html": "The contrast suggests the problem with the first order was specific to that order or channel, not to the product. One purchase on each channel is not enough to say the channels differ."
+        "html": "The replacement arrived with working tracking. That is one order, so it says nothing about why the first order failed or whether the channels differ."
       },
       {
         "type": "heading",
@@ -3879,7 +3880,7 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "type": "footnote",
-        "html": "<strong>FA-05</strong> | Status: Resolved, October 2026<br> Source: owner's case file of 16 exhibits (order confirmation, the contradicting emails, call logs, the escalation confirmation, and Cash App records for the charge and both refunds). Exhibits are not published yet; they will be added once redacted."
+        "html": "<strong>FA-05</strong> | Status: Resolved, October 2026<br> Source: owner's case file of 16 exhibits (order confirmation, the contradicting emails, call logs, the escalation confirmation, and Cash App records for the charge and both refunds). Exhibits are not published yet; they will be added once redacted. The follow-up section relies on the owner's USPS tracking record and order details for the replacement purchase."
       },
       {
         "type": "related",
