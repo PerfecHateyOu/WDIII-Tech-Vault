@@ -83,13 +83,20 @@ const FA01_SUBMISSION_HEADERS = {
   'X-Robots-Tag': 'noindex, nofollow'
 };
 
+// A JSON path with `name` anywhere before its ".json" ending. Same paths as `/name.*\.json$/i`, but
+// linear time: that unanchored greedy `.*` is retried from every occurrence of `name`, which is O(n^2)
+// on a long crafted URL (CodeQL js/polynomial-redos). Stricter only on paths containing a line break.
+const jsonPathContaining = (name) => ({
+  test: (p) => /\.json$/i.test(p) && p.slice(0, -'.json'.length).toLowerCase().includes(name)
+});
+
 const SENSITIVE_PATTERNS = [
   /\/\./,                          // Dotfiles/dotdirs (.env, .git, etc.)
   /\.lock(\.json)?$/i,             // bun.lock, package-lock.json
   /package(-lock)?\.json$/i,       // package.json
-  /tsconfig.*\.json$/i,            // tsconfig
+  jsonPathContaining('tsconfig'),  // tsconfig
   /server\.js$/i,                  // Backend server source
-  /firebase.*\.json$/i,            // Direct access to firebase credentials/configs
+  jsonPathContaining('firebase'),  // Direct access to firebase credentials/configs
   /metadata\.json$/i,              // Platform metadata
   /\.rules$/i,                     // firestore.rules, storage.rules
   /\.ya?ml$/i,                     // Config YAMLs
