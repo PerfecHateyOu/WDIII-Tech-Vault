@@ -77,7 +77,7 @@ In September 2026 the owner found AI-written filler on the site (invented benchm
 | FA-01 | Done | Round 1 (older models, records incomplete) and Round 2 (2026-09-28, blind) |
 | FA-02, FA-03 | Done | Personal impressions, no benchmarks |
 | FA-04 | Queued | Mac Studio vs MacBook Pro M2 Pro (32GB); test plan only, Studio specs TBD, all results null until measured |
-| FA-05 | Done (resolved) | Soundcore P40i cancellation dispute, text only; the 16 exhibits stay unpublished until the owner redacts them |
+| FA-05 | Done (resolved) | Soundcore P40i cancellation dispute, text only; the 16 exhibits stay unpublished until the owner redacts them. v1.1.0 (2026-10-09) adds a follow-up: a replacement P31i bought through Soundcore's TikTok Shop store, delivered Oct 9 (USPS tracking). It is a separate order and a first impression only; scope reads "one disputed order ... plus a follow-up purchase" and the case is not a channel comparison. No registry entry for the P31i |
 
 ## Site changes since v6.1 (code is the source of truth)
 
