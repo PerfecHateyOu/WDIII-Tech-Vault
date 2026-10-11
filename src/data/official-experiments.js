@@ -3223,7 +3223,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "Order value": "$34.23",
       "Cancellation request to full refund": "9 days",
       "Support channels used": 5,
-      "Working tracking numbers": "0 of 1",
+      "Working tracking numbers (first order)": "0 of 1",
       "Amount returned": "$34.23"
     },
     "results": "Soundcore refused the Sep 28 cancellation because the order had \"already been shipped\" and offered $4.80 to keep it. On Oct 5 it stated in writing that the order had not shipped. After a cancellation request and a live phone call, the remaining $29.43 was refunded on Oct 7, about 16 hours after the live agent's confirmation email. The full $34.23 came back; no package from that order was ever received. A replacement P31i bought through Soundcore's TikTok Shop store had valid tracking and was delivered on Oct 9.",
@@ -3233,7 +3233,7 @@ export const OFFICIAL_EXPERIMENTS = [
       "The only channel that clearly moved things was a live phone agent reached inside support hours.",
       "The escalation form's promised 24-hour manager reply never arrived."
     ],
-    "limitations": "One order, one customer, one retailer. The record shows the claim was false, not why it was made, and cannot prove which contact triggered the refund.",
+    "limitations": "One disputed order, one customer, one retailer. The record shows the claim was false, not why it was made, and cannot prove which contact triggered the refund.",
     "verdict": "Resolved: full $34.23 refunded. Soundcore's \"already shipped\" refusal was false, and only a live agent reached during support hours got it fixed.",
     "devices": [],
     "sources": [
@@ -3372,7 +3372,7 @@ export const OFFICIAL_EXPERIMENTS = [
           [
             {
               "primary": true,
-              "text": "Tracking numbers that worked"
+              "text": "Tracking numbers that worked (first order)"
             },
             {
               "badge": "error",
@@ -3720,7 +3720,7 @@ export const OFFICIAL_EXPERIMENTS = [
       },
       {
         "type": "paragraph",
-        "html": "The customer bought a replacement, a soundcore P31i (new, White), through the official Soundcore.US shop on TikTok Shop instead of the Soundcore website, for $33.53 with free shipping. The seller is still Soundcore; only the purchase channel changed."
+        "html": "The customer bought a replacement, a Soundcore P31i (new, White), through the official Soundcore.US shop on TikTok Shop instead of the Soundcore website, for $33.53 with free shipping. The seller is still Soundcore; only the purchase channel changed."
       },
       {
         "type": "table",
