@@ -316,6 +316,15 @@ export async function signInWithGoogle() {
       const userErr = new Error("A network error occurred. Please check your internet connection.");
       userErr.code = "NETWORK_ERROR";
       throw userErr;
+    } else if (
+      err.code === "auth/unauthorized-domain" ||
+      (typeof err.code === "string" && err.code.includes("requests-from-referer")) ||
+      (typeof err.message === "string" && (err.message.includes("requests-from-referer") || err.message.includes("API_KEY_HTTP_REFERRER_BLOCKED")))
+    ) {
+      const domain = typeof window !== "undefined" ? window.location.hostname : "current domain";
+      const userErr = new Error(`Domain (${domain}) is blocked by Google API Key HTTP referrer restrictions. Use Visitor Mode or add this domain to Google Cloud credentials.`);
+      userErr.code = "DOMAIN_RESTRICTED";
+      throw userErr;
     } else {
       const userErr = new Error(err.message || "Failed to sign in with Google.");
       userErr.code = err.code || "AUTH_FAILED";

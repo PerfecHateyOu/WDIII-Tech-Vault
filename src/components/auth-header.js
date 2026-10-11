@@ -153,6 +153,11 @@ export function initAuthHeader(target) {
         errorMsg = "Sign-in cancelled.";
       } else if (err.code === "POPUP_BLOCKED") {
         errorMsg = "Popup was blocked. Please allow popups for Google sign-in.";
+      } else if (err.code === "DOMAIN_RESTRICTED") {
+        errorMsg = "Domain not allowed by API key restrictions. Switching to Visitor Mode...";
+        setTimeout(() => {
+          btnVisitor?.click();
+        }, 1200);
       }
       if (typeof window.showToast === "function") {
         window.showToast(errorMsg, err.code === "POPUP_CLOSED" ? "info" : "error");
