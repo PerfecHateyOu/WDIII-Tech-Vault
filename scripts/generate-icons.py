@@ -56,7 +56,7 @@ W_POLY = [
 
 DOT_CX, DOT_CY, DOT_R = 0.50, 0.245, 0.034
 
-# Brand Colors (RGB) - Bench Notes Visual Language (v6.3 / v6.3.1)
+# Brand Colors (RGB) - Bench Notes Visual Language (v6.3 / v6.3.2)
 BG_COLOR = (18, 26, 38)        # #121A26 (Bench Notes dark base)
 SHIELD_COLOR = (230, 236, 243) # #E6ECF3 (Bench Notes crisp ink)
 W_COLOR = (18, 26, 38)         # #121A26 (Bench Notes dark base)
