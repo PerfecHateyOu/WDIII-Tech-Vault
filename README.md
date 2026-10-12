@@ -71,6 +71,7 @@ Requires the `gcloud` and `firebase` CLIs, logged in to the project in `.firebas
 | `public/` | **All** static assets (CSS, JS, icons, manifest, `llms.txt`, `robots.txt`, sitemap, `experiment-12.html`) |
 | `src/` | Frontend modules: `components/`, `data/`, `services/`, `ui/`, `utils/`, `types/` |
 | `scripts/` | Security and integration test suites |
+| `docs/architecture.md` | Module and request-flow diagram (Mermaid), traced from the imports |
 | `firestore.rules`, `storage.rules`, `firestore.indexes.json` | Firebase security and index config |
 | `archive/legacy-html/` | Superseded standalone HTML builds and FA-01 raw submissions. Kept for reference, never served |
 
