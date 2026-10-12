@@ -34,7 +34,11 @@ check(`import map /js/ points at /v/${version}/js/`, map['/js/'] === `/v/${versi
 check('import map comes before the module script', html.indexOf('type="importmap"') < html.indexOf('<script type="module">'));
 check(`stylesheet link is versioned ?v=${version}`, html.includes(`/css/style.css?v=${version}`));
 check(`preflight link is versioned ?v=${version} and follows style.css`, html.includes(`/css/preflight.css?v=${version}`) && html.indexOf('/css/style.css') < html.indexOf('/css/preflight.css'));
-check('Tailwind Play CDN is not loaded', !html.includes('cdn.tailwindcss.com'));
+// Compare parsed hostnames exactly; a substring match on the host can be fooled.
+const urlHosts = (html.match(/(?:https?:)?\/\/[^\s"'<>()]+/g) || []).map((u) => {
+  try { return new URL(u, 'http://localhost').hostname; } catch { return ''; }
+});
+check('Tailwind Play CDN is not loaded', !urlHosts.includes('cdn.tailwindcss.com'));
 
 const firebase = fs.readFileSync('firebase.json', 'utf8');
 check('firebase.json no longer marks assets immutable', !firebase.includes('immutable'));

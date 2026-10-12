@@ -190,7 +190,7 @@ export async function getDeviceById(deviceId) {
         }
       }
     } catch (err) {
-      console.warn(`Firestore getDeviceById(${deviceId}) error:`, err);
+      console.warn('Firestore getDeviceById(%s) error:', deviceId, err);
     }
   }
 
@@ -301,7 +301,7 @@ export async function getExperimentById(experimentId) {
         }
       }
     } catch (err) {
-      console.warn(`Firestore getExperimentById(${experimentId}) error:`, err);
+      console.warn('Firestore getExperimentById(%s) error:', experimentId, err);
     }
   }
 
