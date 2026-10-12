@@ -38,7 +38,7 @@ check(`preflight link is versioned ?v=${version} and follows style.css`, html.in
 const urlHosts = (html.match(/(?:https?:)?\/\/[^\s"'<>()]+/g) || []).map((u) => {
   try { return new URL(u, 'http://localhost').hostname; } catch { return ''; }
 });
-check('Tailwind Play CDN is not loaded', !urlHosts.includes('cdn.tailwindcss.com'));
+check('Tailwind Play CDN is not loaded', !urlHosts.some((host) => host === 'cdn.tailwindcss.com'));
 
 const firebase = fs.readFileSync('firebase.json', 'utf8');
 check('firebase.json no longer marks assets immutable', !firebase.includes('immutable'));
