@@ -34,6 +34,8 @@ Agents never push, merge or deploy without the owner saying so in that conversat
 
 ## Architecture
 
+The module-level diagram is in [docs/architecture.md](docs/architecture.md).
+
 | Piece | Where | Notes |
 |---|---|---|
 | Single-page app | `index.html` | Hash routes (`#/`, `#/devices`, `#/compare`, `#/fodder`, `#/experiments/<id>`) |
