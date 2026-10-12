@@ -299,7 +299,16 @@ const RESEND_API_URL = process.env.RESEND_API_URL || 'https://api.resend.com/ema
 const RESEND_TIMEOUT_MS = Number.parseInt(process.env.RESEND_TIMEOUT_MS ?? '', 10) || 8000;
 const CONTACT_TO_EMAIL = (process.env.CONTACT_TO_EMAIL || '').trim();
 const CONTACT_FROM_EMAIL = (process.env.CONTACT_FROM_EMAIL || 'WDIII Tech Vault <onboarding@resend.dev>').trim();
-const SUBMIT_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Same rule as the old /^[^\s@]+@[^\s@]+\.[^\s@]+$/ (one @, no whitespace, a dot inside the domain), written
+// without a backtracking regex so a long hostile string can't slow the server (CodeQL js/polynomial-redos).
+function isEmail(value) {
+  if (typeof value !== 'string' || value.length > 254 || /\s/.test(value)) return false;
+  const at = value.indexOf('@');
+  if (at < 1 || at !== value.lastIndexOf('@')) return false;
+  const domain = value.slice(at + 1);
+  const dot = domain.indexOf('.', 1);
+  return dot !== -1 && dot < domain.length - 1;
+}
 
 // Plain-text only: drop control characters (keeping newlines and tabs) and normalise line endings.
 function plainText(value, max) {
@@ -313,9 +322,10 @@ function plainText(value, max) {
 async function emailSubmission({ type, email, message }) {
   const apiKey = (process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) return { attempted: false, reason: 'off' };
-  if (!SUBMIT_EMAIL_RE.test(CONTACT_TO_EMAIL.replace(/^.*<([^>]+)>\s*$/, '$1'))) return { attempted: false, reason: 'off:no-recipient' };
+  const toAddress = CONTACT_TO_EMAIL.includes('<') ? CONTACT_TO_EMAIL.slice(CONTACT_TO_EMAIL.lastIndexOf('<') + 1).replace('>', '').trim() : CONTACT_TO_EMAIL;
+  if (!isEmail(toAddress)) return { attempted: false, reason: 'off:no-recipient' };
   const isNewsletter = type === 'newsletter';
-  const visitor = email && SUBMIT_EMAIL_RE.test(email) ? email : '';
+  const visitor = isEmail(email) ? email : '';
   const text = [
     isNewsletter ? 'New newsletter signup from the WDIII Tech Vault site.' : 'New contact form message from the WDIII Tech Vault site.',
     '',
@@ -356,7 +366,7 @@ app.post(
     if (typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'message is required' });
     }
-    if (email !== undefined && (typeof email !== 'string' || email.length > 254 || !SUBMIT_EMAIL_RE.test(email))) {
+    if (email !== undefined && !isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email address' });
     }
     if (message.trim().length > 5000) {
