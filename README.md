@@ -62,6 +62,29 @@ npm run deploy           # both, in order
 
 Requires the `gcloud` and `firebase` CLIs, logged in to the project in `.firebaserc`. The Cloud Run service name and region must match the `run` rewrite in `firebase.json`.
 
+### 📬 Contact form email (Resend)
+
+`POST /api/submit` emails each contact message or newsletter signup to you through [Resend](https://resend.com) when these environment variables are set on the Cloud Run service. Without `RESEND_API_KEY` and `CONTACT_TO_EMAIL` nothing is emailed: the server answers `delivered: false` and the contact form opens the visitor's mail app instead, as before.
+
+| Variable | Required | Default | What it is |
+|---|---|---|---|
+| `RESEND_API_KEY` | yes, to turn email on | none | Your Resend API key (`re_...`). Keep it secret; never commit it. |
+| `CONTACT_TO_EMAIL` | yes, with the key | none | Where submissions are sent. **Set it to the email address your Resend account is signed up with.** Without it nothing is emailed (the form falls back to the visitor's mail app). There's no default, so no private address is kept in this public repo. |
+| `CONTACT_FROM_EMAIL` | no | `WDIII Tech Vault <onboarding@resend.dev>` | The sender. Resend's test sender `onboarding@resend.dev` only delivers to the email address your Resend account is signed up with, so `CONTACT_TO_EMAIL` must be that same address until you verify your own domain in Resend and use a sender on it (e.g. `WDIII Tech Vault <contact@yourdomain.com>`). |
+
+Replies go straight to the visitor: the email's Reply-To is the address they typed. If Resend fails or times out (8 s), the server answers `502` and the contact form falls back to the visitor's mail app, so a message is never silently lost.
+
+**Setting them on Cloud Run (Console):** Cloud Run → service `wdiii-tech-vault` (region `us-central1`) → **Edit & deploy new revision** → **Variables & Secrets** tab → **Add variable** for each name above → **Deploy**. For the key, the safer option is **Reference a secret** (stored in Secret Manager) instead of a plain variable; the server reads it the same way.
+
+**From the CLI** (use `--update-env-vars`, which adds or changes only the names you give; `--set-env-vars` replaces *every* variable on the service and would wipe the others):
+
+```bash
+gcloud run services update wdiii-tech-vault --region us-central1 \
+  --update-env-vars RESEND_API_KEY=re_xxx,CONTACT_TO_EMAIL=your-resend-login@example.com
+```
+
+Variables set this way survive later `npm run deploy:run` deploys: `gcloud run deploy --source .` keeps the service's existing variables because it passes no env flags.
+
 ## 📁 Structure
 
 | Path | Purpose |
