@@ -292,7 +292,7 @@ function rateLimit({ windowMs, max, key }) {
 // Validates, then (when RESEND_API_KEY is set) emails the submission to CONTACT_TO_EMAIL through Resend's
 // REST API. Nothing is persisted. No PII is logged: never the message, the visitor's email or Resend's reply body.
 //   RESEND_API_KEY      Resend API key (re_...). Unset = no email; the route answers delivered:false as before.
-//   CONTACT_TO_EMAIL    Where submissions go (required with the key; no default, so no private address lives in
+//   CONTACT_TO_EMAIL    Plain address submissions go to (required with the key; no default, so no private address lives in
 //                       this public repo). With Resend's test sender it must be the Resend account's own email.
 //   CONTACT_FROM_EMAIL  Sender. Default Resend's test sender, which only delivers to the Resend account's own address.
 const RESEND_API_URL = process.env.RESEND_API_URL || 'https://api.resend.com/emails'; // override for tests only
@@ -322,8 +322,7 @@ function plainText(value, max) {
 async function emailSubmission({ type, email, message }) {
   const apiKey = (process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) return { attempted: false, reason: 'off' };
-  const toAddress = CONTACT_TO_EMAIL.includes('<') ? CONTACT_TO_EMAIL.slice(CONTACT_TO_EMAIL.lastIndexOf('<') + 1).replace('>', '').trim() : CONTACT_TO_EMAIL;
-  if (!isEmail(toAddress)) return { attempted: false, reason: 'off:no-recipient' };
+  if (!isEmail(CONTACT_TO_EMAIL)) return { attempted: false, reason: 'off:no-recipient' }; // a plain address
   const isNewsletter = type === 'newsletter';
   const visitor = isEmail(email) ? email : '';
   const text = [
