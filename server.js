@@ -526,7 +526,7 @@ app.get(['/experiment-12', '/experiment-12.html'], (req, res) => {
 // tightened later. Report-only: it logs violations and blocks nothing. Sent on the SPA
 // routes only; /fa01 submissions keep their own sandbox policy.
 const INDEX_HTML = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-const INLINE_SCRIPT_HASHES = [...INDEX_HTML.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+const INLINE_SCRIPT_HASHES = [...INDEX_HTML.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\b[^>]*>/gi)]
   .filter((m) => !/\bsrc\s*=/i.test(m[1]) && !/application\/ld\+json/i.test(m[1]))
   .map((m) => `'sha256-${crypto.createHash('sha256').update(m[2], 'utf8').digest('base64')}'`);
 const TRIAL_SCRIPT_POLICY = `script-src 'self' https://www.gstatic.com ${INLINE_SCRIPT_HASHES.join(' ')}`;

@@ -28,9 +28,15 @@ check('policy allows own origin and the Firebase SDK host', /script-src 'self' h
 check('the enforced CSP does not restrict scripts yet', !/script-src/.test(home.headers['content-security-policy'] || ''));
 
 const html = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const inline = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+// End tag: browsers also close a script on `</script >` or `</SCRIPT foo>`, so the pattern accepts those too.
+const SCRIPT_RE = /<script\b([^>]*)>([\s\S]*?)<\/script\b[^>]*>/gi;
+const inline = [...html.matchAll(SCRIPT_RE)]
   .filter((m) => !/\bsrc\s*=/i.test(m[1]) && !/application\/ld\+json/i.test(m[1]));
 check('index.html has inline scripts to cover', inline.length >= 3, `found ${inline.length}`);
+const listed = ro.match(/'sha256-[A-Za-z0-9+/=]+'/g) || [];
+check('policy lists exactly one hash per inline script', listed.length === inline.length, `listed ${listed.length}, inline ${inline.length}`);
+const ends = [...'<script>a</script ><SCRIPT>b</SCRIPT\n><script>c</script foo>'.matchAll(SCRIPT_RE)].map((m) => m[2]).join('');
+check('script pattern closes on spaced and upper-case end tags', ends === 'abc', ends);
 for (const [i, m] of inline.entries()) {
   const hash = `'sha256-${crypto.createHash('sha256').update(m[2], 'utf8').digest('base64')}'`;
   check(`inline script ${i + 1} (${m[2].trim().slice(0, 30).replace(/\s+/g, ' ')}…) is listed`, ro.includes(hash));
