@@ -114,3 +114,106 @@ pre, table { max-width: 100%; overflow-x: auto; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* ===== Interactive Screen Print Version Adjustments ===== */
+.btn-print-version {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--bg-secondary, #1A2433);
+  border: 1px solid var(--border-color, #2C3A4D);
+  color: var(--text-secondary, #9AA8B8);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  line-height: 1.2;
+  font-family: inherit;
+}
+
+.btn-print-version:hover {
+  background: var(--bg-tertiary, #202B3C);
+  color: var(--text-primary, #E6ECF3);
+}
+
+.btn-print-version.is-active,
+.btn-print-version[aria-pressed="true"] {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+body.print-version-active,
+.content.print-version-active {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #111111 !important;
+}
+
+.print-version-active *:not(.btn-print-version):not(.print-version-banner *):not(.btn-print-now) {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  color: #1a1a1a !important;
+}
+
+.print-version-active h1,
+.print-version-active h2,
+.print-version-active h3,
+.print-version-active h4 {
+  color: #000000 !important;
+}
+
+.print-version-active .header {
+  border-bottom: 2px solid #222222 !important;
+  padding-bottom: 1rem !important;
+}
+
+.print-version-active .top-nav,
+.print-version-active .status-badge {
+  display: none !important;
+}
+
+.print-version-active .subsection,
+.print-version-active .test-procedure,
+.print-version-active .empty-state,
+.print-version-active .limitation-box {
+  background: #ffffff !important;
+  border: 1px solid #dcdcdc !important;
+  box-shadow: none !important;
+}
+
+.print-version-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: #f3f4f6 !important;
+  border: 1px dashed #4b5563 !important;
+  border-radius: 4px;
+  padding: 0.5rem 0.875rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.8rem;
+  color: #1f2937 !important;
+}
+
+.btn-print-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.65rem;
+  background: #111827 !important;
+  color: #ffffff !important;
+  border: 1px solid #111827 !important;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+

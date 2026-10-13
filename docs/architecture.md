@@ -1,6 +1,6 @@
 # Architecture
 
-Traced from the actual `import` statements, `index.html`, the `server.js` routes, `firebase.json` and the `Dockerfile` (v6.3.2, 2026-10-12). Every arrow maps to a line of code. Dashed arrows are optional at runtime.
+Traced from the actual `import` statements, `index.html`, the `server.js` routes, `firebase.json` and the `Dockerfile` (v6.3.3, 2026-10-12). Every arrow maps to a line of code. Dashed arrows are optional at runtime.
 
 When you add, remove or rewire a module, update this diagram in the same PR.
 

@@ -140,27 +140,53 @@ export function initAuthHeader(target) {
       authModal.updateStage(2, 55, "Verifying OAuth credentials & contributor identity...");
       const signInPromise = signInWithGoogle();
       authModal.updateStage(3, 85, "Synchronizing contributor profile & research history...");
-      await signInPromise;
+      const res = await signInPromise;
       authModal.complete();
       if (typeof window.showToast === "function") {
-        window.showToast("Signed in successfully with Google", "success");
+        const isVisitor = res?.user?.isVisitor || false;
+        window.showToast(
+          isVisitor ? "Activated Guest Visitor Mode (API key awaiting cloud renewal)" : "Signed in successfully with Google",
+          isVisitor ? "info" : "success"
+        );
       }
     } catch (err) {
-      console.error("Sign-in error:", err);
+      const isKnownFallback = err.code === "POPUP_CLOSED" ||
+                              err.code === "DOMAIN_RESTRICTED" ||
+                              err.code === "API_KEY_EXPIRED" ||
+                              (typeof err.message === "string" && (
+                                err.message.includes("api-key-expired") ||
+                                err.message.includes("requests-from-referer")
+                              ));
+
+      if (isKnownFallback) {
+        console.warn("Sign-in notice:", err.message || err.code);
+      } else {
+        console.error("Sign-in error:", err);
+      }
+
       authModal.error(err);
       let errorMsg = err.message || "Failed to sign in.";
       if (err.code === "POPUP_CLOSED") {
         errorMsg = "Sign-in cancelled.";
       } else if (err.code === "POPUP_BLOCKED") {
         errorMsg = "Popup was blocked. Please allow popups for Google sign-in.";
-      } else if (err.code === "DOMAIN_RESTRICTED") {
-        errorMsg = "Domain not allowed by API key restrictions. Switching to Visitor Mode...";
+      } else if (
+        err.code === "DOMAIN_RESTRICTED" ||
+        err.code === "API_KEY_EXPIRED" ||
+        (typeof err.message === "string" && (
+          err.message.includes("api-key-expired") ||
+          err.message.includes("requests-from-referer")
+        ))
+      ) {
+        errorMsg = (err.code === "API_KEY_EXPIRED" || (err.message && err.message.includes("api-key-expired")))
+          ? "API key awaiting renewal on Google Cloud. Switching to Visitor Mode..."
+          : "Domain not allowed by API key restrictions. Switching to Visitor Mode...";
         setTimeout(() => {
           btnVisitor?.click();
-        }, 1200);
+        }, 500);
       }
       if (typeof window.showToast === "function") {
-        window.showToast(errorMsg, err.code === "POPUP_CLOSED" ? "info" : "error");
+        window.showToast(errorMsg, err.code === "POPUP_CLOSED" ? "info" : "warning");
       }
     } finally {
       btnGoogle.disabled = false;

@@ -336,6 +336,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" />
   <link rel="stylesheet" href="/css/theme-opus-standalone.css?v=6.3.3" />
+  <link rel="stylesheet" href="/css/print.css?v=6.3.3" media="print" />
   <script>try{if(localStorage.getItem('ctd-theme')==='light')document.documentElement.classList.add('light-theme')}catch(e){}</script>
 </head>
 <body>
@@ -347,7 +348,12 @@
   <div class="header">
     <div class="header-top">
       <h1>Experiment 12</h1>
-      <span class="status-badge">In Progress</span>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button type="button" class="btn-print-version" id="btnPrintVersionExp12" aria-pressed="false" title="Toggle printer-friendly version">
+          <span>🖨️</span> <span>Print Version</span>
+        </button>
+        <span class="status-badge">In Progress</span>
+      </div>
     </div>
     <h2 style="border: none; padding: 0; margin: 0; font-size: 1.5rem;">iOS 27 Performance &amp; AI Chatbot Integration on iPhone 16e</h2>
     
@@ -457,5 +463,17 @@
       <p>Independent research documentation. Not affiliated with Apple Inc.</p>
     </div>
   </div>
+  <script>
+    const btnPrint = document.getElementById("btnPrintVersionExp12");
+    if (btnPrint) {
+      btnPrint.addEventListener("click", () => {
+        document.body.classList.toggle("print-version-active");
+        const active = document.body.classList.contains("print-version-active");
+        btnPrint.setAttribute("aria-pressed", active ? "true" : "false");
+        btnPrint.classList.toggle("is-active", active);
+        btnPrint.innerHTML = active ? "<span>✓</span> <span>Print Version (Active)</span>" : "<span>🖨️</span> <span>Print Version</span>";
+      });
+    }
+  </script>
 </body>
 </html>

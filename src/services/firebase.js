@@ -318,13 +318,33 @@ export async function signInWithGoogle() {
       throw userErr;
     } else if (
       err.code === "auth/unauthorized-domain" ||
-      (typeof err.code === "string" && err.code.includes("requests-from-referer")) ||
-      (typeof err.message === "string" && (err.message.includes("requests-from-referer") || err.message.includes("API_KEY_HTTP_REFERRER_BLOCKED")))
+      err.code === "auth/api-key-expired" ||
+      err.code === "auth/invalid-api-key" ||
+      (typeof err.code === "string" && (
+        err.code.includes("requests-from-referer") ||
+        err.code.includes("api-key-expired") ||
+        err.code.includes("invalid-api-key")
+      )) ||
+      (typeof err.message === "string" && (
+        err.message.includes("requests-from-referer") ||
+        err.message.includes("API_KEY_HTTP_REFERRER_BLOCKED") ||
+        err.message.includes("api-key-expired") ||
+        err.message.includes("API_KEY_EXPIRED") ||
+        err.message.includes("invalid-api-key")
+      ))
     ) {
+      const isApiKeyExpired = (typeof err.code === "string" && err.code.includes("api-key-expired")) ||
+        (typeof err.message === "string" && (err.message.includes("api-key-expired") || err.message.includes("API_KEY_EXPIRED")));
       const domain = typeof window !== "undefined" ? window.location.hostname : "current domain";
-      const userErr = new Error(`Domain (${domain}) is blocked by Google API Key HTTP referrer restrictions. Use Visitor Mode or add this domain to Google Cloud credentials.`);
-      userErr.code = "DOMAIN_RESTRICTED";
-      throw userErr;
+
+      console.warn(
+        isApiKeyExpired
+          ? "Google Cloud API key is expired or awaiting renewal in preview container; seamlessly activating Visitor Mode."
+          : `Domain (${domain}) is restricted by Google API Key referrer settings; activating Visitor Mode.`
+      );
+
+      // Gracefully switch to Visitor Mode so the session is never blocked
+      return await signInAsVisitor();
     } else {
       const userErr = new Error(err.message || "Failed to sign in with Google.");
       userErr.code = err.code || "AUTH_FAILED";
