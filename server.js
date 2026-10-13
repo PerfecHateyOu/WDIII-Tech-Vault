@@ -55,7 +55,10 @@ app.use(expressRateLimit({
 
 // ===== Universal CORS Middleware: External Tools, Fetchers & Scripts =====
 // Enables external tools, scripts, and AI agents to fetch, view, and summarize data
+// /api/submit is the one write endpoint: it gets no CORS headers, so other sites' scripts cannot post through
+// their visitors' browsers (each visitor would bring a fresh IP and sidestep the per-IP limit). See sameOrigin().
 app.use((req, res, next) => {
+  if (req.path === '/api/submit') return req.method === 'OPTIONS' ? res.status(204).end() : next();
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control, Pragma, User-Agent');
@@ -303,6 +306,7 @@ const CONTACT_FROM_EMAIL = (process.env.CONTACT_FROM_EMAIL || 'WDIII Tech Vault 
 // without a backtracking regex so a long hostile string can't slow the server (CodeQL js/polynomial-redos).
 function isEmail(value) {
   if (typeof value !== 'string' || value.length > 254 || /\s/.test(value)) return false;
+  if (/[<>"(),;:\\[\]]/.test(value)) return false; // no display names ("CEO<a@b.c>"), lists or comments: it becomes Reply-To
   const at = value.indexOf('@');
   if (at < 1 || at !== value.lastIndexOf('@')) return false;
   const domain = value.slice(at + 1);
@@ -319,10 +323,34 @@ function plainText(value, max) {
     .slice(0, max);
 }
 
+// Total emails per hour across all visitors, so many IPs together cannot flood the inbox or burn the Resend quota.
+const CONTACT_MAX_PER_HOUR = Number.parseInt(process.env.CONTACT_MAX_PER_HOUR ?? '', 10) > 0 ? Number.parseInt(process.env.CONTACT_MAX_PER_HOUR, 10) : 30;
+const emailTimes = [];
+function emailCapReached() {
+  const cutoff = Date.now() - 60 * 60 * 1000;
+  while (emailTimes.length && emailTimes[0] < cutoff) emailTimes.shift();
+  if (emailTimes.length >= CONTACT_MAX_PER_HOUR) return true;
+  emailTimes.push(Date.now());
+  return false;
+}
+
+// Browsers send Origin on cross-site POSTs. Accept the site's own host (as the browser saw it, via Firebase Hosting's
+// X-Forwarded-Host, or the direct Host) and any origins listed in ALLOWED_ORIGINS. No Origin = not a browser form post.
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map((o) => o.trim().toLowerCase()).filter(Boolean);
+function sameOrigin(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  let host;
+  try { host = new URL(origin).host.toLowerCase(); } catch { return false; }
+  const own = [req.headers['x-forwarded-host'], req.headers.host].filter(Boolean).map((h) => String(h).split(',')[0].trim().toLowerCase());
+  return own.includes(host) || ALLOWED_ORIGINS.includes(origin.toLowerCase());
+}
+
 async function emailSubmission({ type, email, message }) {
   const apiKey = (process.env.RESEND_API_KEY || '').trim();
   if (!apiKey) return { attempted: false, reason: 'off' };
   if (!isEmail(CONTACT_TO_EMAIL)) return { attempted: false, reason: 'off:no-recipient' }; // a plain address
+  if (emailCapReached()) return { attempted: false, reason: 'capped' };
   const isNewsletter = type === 'newsletter';
   const visitor = isEmail(email) ? email : '';
   const text = [
@@ -360,6 +388,7 @@ app.post(
   '/api/submit',
   rateLimit({ windowMs: 10 * 60 * 1000, max: 5, key: (req) => `submit:${req.ip}` }),
   async (req, res) => {
+    if (!sameOrigin(req)) return res.status(403).json({ error: 'Cross-site submissions are not accepted' });
     const { email, message, type } = req.body || {};
 
     if (typeof message !== 'string' || !message.trim()) {
@@ -375,6 +404,10 @@ app.post(
     const safeType = (typeof type === 'string' ? type.replace(/[^a-z_-]/gi, '').slice(0, 32) : '') || 'contact';
     const sent = await emailSubmission({ type: safeType, email, message });
     console.log(`[/api/submit] type=${safeType} length=${message.trim().length} email=${sent.attempted ? (sent.delivered ? 'sent' : `failed:${sent.status}`) : sent.reason}`);
+    if (sent.reason === 'capped') {
+      res.setHeader('Retry-After', '600');
+      return res.status(429).json({ ok: false, delivered: false, error: 'Too many messages right now. Please try again later or email us directly.' });
+    }
     if (sent.attempted && !sent.delivered) {
       return res.status(502).json({ ok: false, delivered: false, error: 'We could not send your message right now. Please try again or email us directly.' });
     }
