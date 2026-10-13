@@ -6,7 +6,7 @@
 export const CONFIG = {
   VERSION: 'v6.3.3',
   LAST_UPDATED: 'October 13, 2026',
-  UPDATE_NOTE: 'v6.3.3 Update: contact and newsletter forms now submit through the site (mail-app fallback), more CodeQL fixes, and the legacy V5.5.4 page removed',
+  UPDATE_NOTE: 'v6.3.3 Update: contact and newsletter forms now submit through the site (mail-app fallback), more CodeQL fixes, stricter contact form checks, and the legacy V5.5.4 page removed',
   STORAGE_KEYS: {
     theme: 'ctd-theme',
     disclaimerAck: 'ctd-disclaimer-ack'
