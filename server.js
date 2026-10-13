@@ -176,10 +176,10 @@ app.get('/api/firebase-config', (req, res) => {
 app.get('/api/summary', (req, res) => {
   const summaryPayload = {
     title: 'Consumer Tech Documentation — WDIII Tech Vault',
-    version: 'v6.3.2',
-    lastUpdated: 'October 11, 2026',
+    version: 'v6.3.3',
+    lastUpdated: 'October 13, 2026',
     updateType: 'patch',
-    updateNote: 'v6.3.2 Update: Bench Notes visual language theme, CodeQL security hardening, linear-time path matching, and global rate limiting',
+    updateNote: 'v6.3.3 Update: contact and newsletter forms now submit through the site (mail-app fallback), more CodeQL fixes, and the legacy V5.5.4 page removed',
     description: 'Empirical experiments, hardware benchmarks, and documented consumer tech findings across repair, customer service, software performance, ecosystem integrations, and mobile AI.',
     author: 'WDIII',
     stats: {
