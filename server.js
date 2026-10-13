@@ -289,26 +289,99 @@ function rateLimit({ windowMs, max, key }) {
 }
 
 // ===== Contact / General Form Submission =====
-// Validates and acknowledges only; nothing is persisted yet. No PII is logged.
+// Validates, then (when RESEND_API_KEY is set) emails the submission to CONTACT_TO_EMAIL through Resend's
+// REST API. Nothing is persisted. No PII is logged: never the message, the visitor's email or Resend's reply body.
+//   RESEND_API_KEY      Resend API key (re_...). Unset = no email; the route answers delivered:false as before.
+//   CONTACT_TO_EMAIL    Plain address submissions go to (required with the key; no default, so no private address lives in
+//                       this public repo). With Resend's test sender it must be the Resend account's own email.
+//   CONTACT_FROM_EMAIL  Sender. Default Resend's test sender, which only delivers to the Resend account's own address.
+const RESEND_API_URL = process.env.RESEND_API_URL || 'https://api.resend.com/emails'; // override for tests only
+const RESEND_TIMEOUT_MS = Number.parseInt(process.env.RESEND_TIMEOUT_MS ?? '', 10) || 8000;
+const CONTACT_TO_EMAIL = (process.env.CONTACT_TO_EMAIL || '').trim();
+const CONTACT_FROM_EMAIL = (process.env.CONTACT_FROM_EMAIL || 'WDIII Tech Vault <onboarding@resend.dev>').trim();
+// Same rule as the old /^[^\s@]+@[^\s@]+\.[^\s@]+$/ (one @, no whitespace, a dot inside the domain), written
+// without a backtracking regex so a long hostile string can't slow the server (CodeQL js/polynomial-redos).
+function isEmail(value) {
+  if (typeof value !== 'string' || value.length > 254 || /\s/.test(value)) return false;
+  const at = value.indexOf('@');
+  if (at < 1 || at !== value.lastIndexOf('@')) return false;
+  const domain = value.slice(at + 1);
+  const dot = domain.indexOf('.', 1);
+  return dot !== -1 && dot < domain.length - 1;
+}
+
+// Plain-text only: drop control characters (keeping newlines and tabs) and normalise line endings.
+function plainText(value, max) {
+  return String(value)
+    .replace(/\r\n?/g, '\n')
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u2028\u2029]/g, '')
+    .slice(0, max);
+}
+
+async function emailSubmission({ type, email, message }) {
+  const apiKey = (process.env.RESEND_API_KEY || '').trim();
+  if (!apiKey) return { attempted: false, reason: 'off' };
+  if (!isEmail(CONTACT_TO_EMAIL)) return { attempted: false, reason: 'off:no-recipient' }; // a plain address
+  const isNewsletter = type === 'newsletter';
+  const visitor = isEmail(email) ? email : '';
+  const text = [
+    isNewsletter ? 'New newsletter signup from the WDIII Tech Vault site.' : 'New contact form message from the WDIII Tech Vault site.',
+    '',
+    `Type: ${isNewsletter ? 'newsletter' : 'contact'}`,
+    `From: ${visitor || '(no email given)'}`,
+    `Received: ${new Date().toISOString()}`,
+    '',
+    'Message:',
+    plainText(message.trim(), 5000)
+  ].join('\n');
+  const payload = {
+    from: CONTACT_FROM_EMAIL,
+    to: [CONTACT_TO_EMAIL],
+    subject: isNewsletter ? 'New newsletter signup' : 'New contact form message',
+    text
+  };
+  if (visitor) payload.reply_to = visitor;
+  try {
+    const r = await fetch(RESEND_API_URL, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS)
+    });
+    await r.arrayBuffer().catch(() => {}); // drain; the body is never logged (it can echo addresses)
+    return { attempted: true, delivered: r.ok, status: r.status };
+  } catch (err) {
+    return { attempted: true, delivered: false, status: err && err.name === 'TimeoutError' ? 'timeout' : 'network' };
+  }
+}
+
 app.post(
   '/api/submit',
   rateLimit({ windowMs: 10 * 60 * 1000, max: 5, key: (req) => `submit:${req.ip}` }),
-  (req, res) => {
+  async (req, res) => {
     const { email, message, type } = req.body || {};
 
     if (typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'message is required' });
     }
-    if (email !== undefined && (typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+    if (email !== undefined && !isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email address' });
     }
     if (message.trim().length > 5000) {
       return res.status(400).json({ error: 'Message exceeds 5000 character limit' });
     }
 
-    const safeType = typeof type === 'string' ? type.replace(/[^a-z_-]/gi, '').slice(0, 32) : 'contact';
-    console.log(`[/api/submit] type=${safeType || 'contact'} length=${message.trim().length}`);
-    return res.status(202).json({ ok: true, persisted: false, message: 'Submission received' });
+    const safeType = (typeof type === 'string' ? type.replace(/[^a-z_-]/gi, '').slice(0, 32) : '') || 'contact';
+    const sent = await emailSubmission({ type: safeType, email, message });
+    console.log(`[/api/submit] type=${safeType} length=${message.trim().length} email=${sent.attempted ? (sent.delivered ? 'sent' : `failed:${sent.status}`) : sent.reason}`);
+    if (sent.attempted && !sent.delivered) {
+      return res.status(502).json({ ok: false, delivered: false, error: 'We could not send your message right now. Please try again or email us directly.' });
+    }
+    if (sent.delivered) {
+      return res.status(200).json({ ok: true, delivered: true, persisted: false, message: 'Message sent' });
+    }
+    return res.status(202).json({ ok: true, delivered: false, persisted: false, message: 'Submission received' });
   }
 );
 

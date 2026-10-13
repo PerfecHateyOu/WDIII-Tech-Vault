@@ -88,7 +88,7 @@ const contactFields = { '#contactName': 'Sam', '#contactEmail': 'sam@example.com
 
 // Contact: success
 {
-  const h = harness({ status: 202, json: { ok: true, persisted: false, message: 'Submission received' } });
+  const h = harness({ status: 202, json: { ok: true, delivered: false, persisted: false, message: 'Submission received' } });
   const form = fakeForm(contactFields); h.setForm(form);
   await h.fm.handleContactForm({ preventDefault() {}, target: form });
   const c = h.calls[0];
@@ -97,15 +97,31 @@ const contactFields = { '#contactName': 'Sam', '#contactEmail': 'sam@example.com
   check('…with type contact, the email and the message', c && c.body.type === 'contact' && c.body.email === 'sam@example.com' && c.body.message.startsWith('Hello there'));
   check('Button disabled while sending, re-enabled after', h.busy() === true && form.button.disabled === false);
   check('Success toast only after 2xx, form reset', h.toasts.length === 1 && h.toasts[0].type === 'success' && form.resetCount === 1);
-  check('Email hand-off kept while the server stores nothing (persisted:false)', h.navs.length === 1 && h.navs[0].startsWith('mailto:'));
+  check('Email hand-off (mailto) when the server did not email it (delivered:false)', h.navs.length === 1 && h.navs[0].startsWith('mailto:williamdebe06@icloud.com?'));
 }
 
-// Contact: success where the server says it stored the message → no mailto
+// Contact: the server emailed it (delivered:true) → success, reset, no mail app
 {
-  const h = harness({ status: 200, json: { ok: true, persisted: true } });
+  const h = harness({ status: 200, json: { ok: true, delivered: true, persisted: false, message: 'Message sent' } });
   const form = fakeForm(contactFields); h.setForm(form);
   await h.fm.handleContactForm({ preventDefault() {}, target: form });
-  check('No email hand-off once the server persists submissions', h.navs.length === 0 && h.toasts[0].type === 'success');
+  check('delivered:true → success toast + reset, no mailto', h.navs.length === 0 && h.toasts.length === 1 && h.toasts[0].type === 'success' && form.resetCount === 1);
+}
+
+// Contact: older server reply without the flag → still hands off (never silently drops a message)
+{
+  const h = harness({ status: 202, json: { ok: true } });
+  const form = fakeForm(contactFields); h.setForm(form);
+  await h.fm.handleContactForm({ preventDefault() {}, target: form });
+  check('No delivered flag → mailto hand-off kept', h.navs.length === 1 && h.navs[0].startsWith('mailto:'));
+}
+
+// Contact: the server could not email it (502) → fall back to the mail app, form kept
+{
+  const h = harness({ status: 502, json: { ok: false, delivered: false, error: 'We could not send your message right now.' } });
+  const form = fakeForm(contactFields); h.setForm(form);
+  await h.fm.handleContactForm({ preventDefault() {}, target: form });
+  check('502 (email failed) → warning toast + mailto fallback, no reset', h.navs.length === 1 && h.navs[0].startsWith('mailto:') && h.toasts.length === 1 && h.toasts[0].type === 'warning' && form.resetCount === 0 && form.button.disabled === false);
 }
 
 // Contact: empty message never reaches the network
@@ -129,7 +145,7 @@ const contactFields = { '#contactName': 'Sam', '#contactEmail': 'sam@example.com
   const h = harness({ status: 429, json: { error: 'Too many requests, slow down' } });
   const form = fakeForm(contactFields); h.setForm(form);
   await h.fm.handleContactForm({ preventDefault() {}, target: form });
-  check('429 shows the rate-limit message', h.toasts.length === 1 && /Too many requests/.test(h.toasts[0].message) && h.toasts[0].type !== 'success' && form.resetCount === 0);
+  check('429 shows the rate-limit message, no mailto', h.toasts.length === 1 && /Too many requests/.test(h.toasts[0].message) && h.toasts[0].type !== 'success' && form.resetCount === 0 && h.navs.length === 0);
 }
 
 // Contact: network failure
@@ -137,7 +153,7 @@ const contactFields = { '#contactName': 'Sam', '#contactEmail': 'sam@example.com
   const h = harness(new Error('offline'));
   const form = fakeForm(contactFields); h.setForm(form);
   await h.fm.handleContactForm({ preventDefault() {}, target: form });
-  check('Network failure shows the generic error and re-enables the button', h.toasts[0].message === STRINGS.TOASTS.FORM_ERROR && form.button.disabled === false);
+  check('Network failure → mailto fallback, button re-enabled, no reset', h.navs.length === 1 && h.navs[0].startsWith('mailto:') && h.toasts[0].type === 'warning' && form.resetCount === 0 && form.button.disabled === false);
 }
 
 // Newsletter: success
