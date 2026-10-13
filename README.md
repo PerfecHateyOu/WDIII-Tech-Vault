@@ -71,6 +71,8 @@ Requires the `gcloud` and `firebase` CLIs, logged in to the project in `.firebas
 | `RESEND_API_KEY` | yes, to turn email on | none | Your Resend API key (`re_...`). Keep it secret; never commit it. |
 | `CONTACT_TO_EMAIL` | yes, with the key | none | Where submissions are sent, as a plain address (`you@example.com`). **Set it to the email address your Resend account is signed up with.** Without it nothing is emailed (the form falls back to the visitor's mail app). There's no default, so no private address is kept in this public repo. |
 | `CONTACT_FROM_EMAIL` | no | `WDIII Tech Vault <onboarding@resend.dev>` | The sender. Resend's test sender `onboarding@resend.dev` only delivers to the email address your Resend account is signed up with, so `CONTACT_TO_EMAIL` must be that same address until you verify your own domain in Resend and use a sender on it (e.g. `WDIII Tech Vault <contact@yourdomain.com>`). |
+| `CONTACT_MAX_PER_HOUR` | no | `30` | The most emails the whole site sends per hour, across all visitors (on top of the 5-per-10-minutes limit per visitor). Past it, `/api/submit` answers `429` and sends nothing. |
+| `ALLOWED_ORIGINS` | no | none | Extra origins (comma-separated, e.g. `https://www.example.com`) allowed to post to `/api/submit` from a browser. The site's own address is always allowed; other sites get `403`. |
 
 Replies go straight to the visitor: the email's Reply-To is the address they typed. If Resend fails or times out (8 s), the server answers `502` and the contact form falls back to the visitor's mail app, so a message is never silently lost.
 
