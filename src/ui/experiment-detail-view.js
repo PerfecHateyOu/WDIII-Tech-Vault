@@ -109,9 +109,6 @@ export async function renderExperimentDetail(container, experimentId) {
               ` : ""}
             </div>
             <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-              <button type="button" class="btn-print-version" data-action="toggle-print" data-target="${esc(exp.id)}" aria-pressed="false" title="Toggle printer-friendly version">
-                <span>🖨️</span> <span>Print Version</span>
-              </button>
               <a href="#experimentCommentsContainer" class="btn-jump-discussion" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:600; color:var(--td-info); text-decoration:none; padding:0.25rem 0.65rem; background:var(--td-info-bg); border:1px solid var(--td-info); border-radius:9999px; transition:opacity 0.15s;">
                 <span>💬</span> <span>Peer Findings &amp; Discussion ↓</span>
               </a>
@@ -245,24 +242,6 @@ export async function renderExperimentDetail(container, experimentId) {
     const section = container.querySelector("#experimentCommentsContainer");
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  });
-
-  // Wire up Print Version toggle button
-  const printBtn = container.querySelector(".btn-print-version");
-  printBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (typeof window.handlePrintVersionToggle === "function") {
-      window.handlePrintVersionToggle(printBtn);
-    } else {
-      const art = container.querySelector("article.td-experiment");
-      if (art) {
-        art.classList.toggle("print-version-active");
-        const active = art.classList.contains("print-version-active");
-        printBtn.setAttribute("aria-pressed", active ? "true" : "false");
-        printBtn.classList.toggle("is-active", active);
-        printBtn.innerHTML = active ? `<span>✓</span> <span>Print Version (Active)</span>` : `<span>🖨️</span> <span>Print Version</span>`;
-      }
     }
   });
 }

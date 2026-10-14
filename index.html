@@ -64,7 +64,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" />
   <link rel="stylesheet" href="/css/theme-opus.css?v=6.3.3" />
-  <link rel="stylesheet" href="/css/print.css?v=6.3.3" media="print" />
 </head>
 <body>
 <a href="#" class="skip-link" id="skipToContent">Skip to main content</a>
@@ -942,7 +941,6 @@ function experimentShell(opts) {
   h += `</div>`;
   h += `<div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">`;
   if (opts.actions) h += opts.actions;
-  h += `<button type="button" class="btn-print-version" data-action="toggle-print" data-target="${opts.id}" aria-pressed="false" title="Toggle printer-friendly version"><span>🖨️</span> <span>Print Version</span></button>`;
   h += `<a href="#/experiments/${opts.id}#comments" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-info); font-size:0.78rem; text-decoration:none; font-weight:600;" title="Discuss findings with registered researchers"><span>💬 Discuss</span> ↗</a>`;
   h += `<a href="#/experiments/${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-info); font-size:0.78rem; text-decoration:none; font-weight:600;" title="Open isolated research protocol report"><span>🔬 Protocol Details</span> ↗</a>`;
   h += `<a href="#${opts.id}" data-scroll="${opts.id}" style="display:inline-flex; align-items:center; gap:0.375rem; padding:0.35rem 0.75rem; border-radius:9999px; background:var(--td-bg-card); border:1px solid var(--td-border-subtle); color:var(--td-text-muted); font-size:0.78rem; text-decoration:none;" title="Direct anchor link"><span>🔗</span> #${opts.id}</a>`;
@@ -1938,10 +1936,7 @@ function buildQueued() {
         <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
           <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-info-bg); color:var(--td-info); border:1px solid var(--td-info);">Active Testing</span>
           <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Experiment 8: Cross-Platform Ecosystem Reliability &amp; Hardware Longevity Protocol</h3>
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="btn-print-version" data-action="toggle-print" data-target="queue1" aria-pressed="false" title="Toggle printer-friendly version"><span>🖨️</span> <span>Print Version</span></button>
-            ${statusBadge("progress","In Progress")}
-          </div>
+          ${statusBadge("progress","In Progress")}
         </div>
         <div class="td-experiment-body">
           <h4 style="color:#fff; margin:1rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Question</h4>
@@ -1980,10 +1975,7 @@ function buildQueued() {
         <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
           <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-warning-bg); color:var(--td-warning); border:1px solid var(--td-warning);">Paused</span>
           <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Paused Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e</h3>
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="btn-print-version" data-action="toggle-print" data-target="queue2" aria-pressed="false" title="Toggle printer-friendly version"><span>🖨️</span> <span>Print Version</span></button>
-            ${statusBadge("paused","Paused")}
-          </div>
+          ${statusBadge("paused","Paused")}
         </div>
         <div class="td-experiment-body">
           <h4 style="color:#fff; margin:1rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Question</h4>
@@ -2021,10 +2013,7 @@ function buildQueued() {
         <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
           <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-info-bg); color:var(--td-info); border:1px solid var(--td-info);">Active Testing</span>
           <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Experiment 12: iOS 27 Performance &amp; AI Chatbot Integration on iPhone 16e</h3>
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="btn-print-version" data-action="toggle-print" data-target="queue3" aria-pressed="false" title="Toggle printer-friendly version"><span>🖨️</span> <span>Print Version</span></button>
-            ${statusBadge("progress","In Progress")}
-          </div>
+          ${statusBadge("progress","In Progress")}
         </div>
         <div class="td-experiment-body">
           <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; margin:1.5rem 0; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
@@ -2139,11 +2128,7 @@ function renderFodderArchive() {
             ${categoryLabel(e.category)}
             <h2 class="fa-title" style="font-size:clamp(1.25rem,2.5vw+0.4rem,1.8rem); color:#fff; margin:0 0 0.5rem; font-weight:700;">${esc(e.title)}</h2>
             ${e.verdict ? `<span class="fa-verdict" style="display:block; color:var(--td-text-secondary); font-size:0.95rem;"><strong style="color:var(--td-text-primary);">Verdict:</strong> ${esc(e.verdict)}</span>` : ""}
-          </span>
-          <span style="display:inline-flex; align-items:center; gap:0.5rem;">
-            <button type="button" class="btn-print-version" data-action="toggle-print" data-target="${e.id}" aria-pressed="false" title="Toggle printer-friendly version"><span>🖨️</span> <span>Print Version</span></button>
-            <span class="fa-toggle" aria-hidden="true"></span>
-          </span>
+          <span class="fa-toggle" aria-hidden="true"></span>
         </span>
         <span style="display:flex; flex-wrap:wrap; gap:0.375rem; align-items:center; margin-top:0.5rem;">
           ${statusBadge(e.status, e.statusLabel)}${(e.tags || []).map(tag).join("")}
@@ -2383,71 +2368,8 @@ function collapseNavs() {
   }
 });
 
-// ===== Print Version Toggle Handler =====
-function handlePrintVersionToggle(btn) {
-  const targetId = btn.getAttribute("data-target");
-  let article = btn.closest(".td-experiment, .fa-article, article, details.fa-entry");
-  if (!article && targetId) {
-    article = document.getElementById(targetId);
-  }
-  if (!article) return;
-
-  const isAlreadyActive = article.classList.contains("print-version-active");
-  if (isAlreadyActive) {
-    article.classList.remove("print-version-active");
-    btn.classList.remove("is-active");
-    btn.setAttribute("aria-pressed", "false");
-    btn.innerHTML = `<span>🖨️</span> <span>Print Version</span>`;
-    const banner = article.querySelector(".print-version-banner");
-    if (banner) banner.remove();
-  } else {
-    article.classList.add("print-version-active");
-    btn.classList.add("is-active");
-    btn.setAttribute("aria-pressed", "true");
-    btn.innerHTML = `<span>✓</span> <span>Print Version (Active)</span>`;
-    
-    // Automatically open all details within this article so findings are fully visible
-    if (article.tagName === 'DETAILS') article.open = true;
-    article.querySelectorAll("details").forEach(d => d.open = true);
-    
-    // Prepend archival banner if not present
-    if (!article.querySelector(".print-version-banner")) {
-      const banner = document.createElement("div");
-      banner.className = "print-version-banner";
-      banner.innerHTML = `
-        <div style="display:flex; align-items:center; gap:0.5rem; font-weight:600;">
-          <span>🖨️</span>
-          <span>Print Version Active — Backgrounds, gradients, and navigation elements suppressed for clean printing.</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <button type="button" class="btn-print-now" title="Send to browser print dialog">🖨️ Print Now</button>
-        </div>
-      `;
-      const header = article.querySelector(".td-experiment-header, .header");
-      if (header && header.nextSibling) {
-        article.insertBefore(banner, header.nextSibling);
-      } else {
-        article.prepend(banner);
-      }
-    }
-  }
-}
-
-// ===== Smooth scroll for internal anchors & Print Version click delegation =====
+// ===== Smooth scroll for internal anchors =====
 document.addEventListener("click", (e) => {
-  const printBtn = e.target.closest(".btn-print-version, [data-action='toggle-print']");
-  if (printBtn) {
-    e.preventDefault();
-    e.stopPropagation();
-    handlePrintVersionToggle(printBtn);
-    return;
-  }
-  const printNowBtn = e.target.closest(".btn-print-now");
-  if (printNowBtn) {
-    e.preventDefault();
-    window.print();
-    return;
-  }
   const el = e.target.closest("[data-scroll]");
   if (el) {
     const id = el.getAttribute("data-scroll");
@@ -2476,8 +2398,17 @@ window.showToast = showToast;
 window.esc = escapeHtml || escapeHTML;
 window.openLogoModal = () => modalManager.open('logoModal');
 window.closeLogoModal = () => modalManager.close('logoModal');
-window.handlePrintVersionToggle = handlePrintVersionToggle;
-window.togglePrintVersion = handlePrintVersionToggle;
+
+// ===== Printing Disabled =====
+window.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "P")) {
+    e.preventDefault();
+  }
+});
+window.addEventListener("beforeprint", (e) => {
+  e.preventDefault();
+});
+window.print = () => {};
 
 // ===== Init SPA Routing =====
 window.addEventListener("hashchange", () => showPage(window.location.hash));
