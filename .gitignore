@@ -199,3 +199,8 @@ design-system/out/
 
 # Archives are never committed (they bloat every clone)
 /*.zip
+
+# Local env files with real secrets (FIREBASE_API_KEY, RESEND_API_KEY)
+.env
+.env.*
+!.env.example

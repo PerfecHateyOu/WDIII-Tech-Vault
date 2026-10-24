@@ -159,7 +159,8 @@ app.get('/api/firebase-config', (req, res) => {
     if (fs.existsSync(configPath)) {
       const fullConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       const safePublicConfig = {
-        apiKey: fullConfig.apiKey || '',
+        // The Firebase web API key comes from the FIREBASE_API_KEY env var (Cloud Run), not the committed file.
+        apiKey: (process.env.FIREBASE_API_KEY || fullConfig.apiKey || '').trim(),
         authDomain: fullConfig.authDomain || '',
         projectId: fullConfig.projectId || '',
         storageBucket: fullConfig.storageBucket || '',
