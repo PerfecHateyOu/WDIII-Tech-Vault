@@ -74,6 +74,19 @@ console.log("\n--- 5. Official Experiment Cross-Linking ---");
 const sharedExps = (dev1.experimentsInvolved || []).filter(e => (dev2.experimentsInvolved || []).includes(e));
 assert(sharedExps.includes("exp1"), "Device comparison correctly identifies shared WDIII Experiment 1 (Apple vs Samsung Repair)");
 
+// 6. Every compare preset references a real device
+console.log("\n--- 6. Compare Preset Device IDs Resolve ---");
+const compareSrc = readFileSync(new URL("../src/ui/compare-view.js", import.meta.url), "utf8");
+const presetBlock = compareSrc.match(/const PRESETS = \[([\s\S]*?)\n\];/);
+assert(!!presetBlock, "PRESETS array found in compare-view.js");
+const presetIds = [...(presetBlock?.[1] || "").matchAll(/devices:\s*\[([^\]]*)\]/g)]
+  .flatMap(m => [...m[1].matchAll(/"([^"]+)"/g)].map(x => x[1]));
+assert(presetIds.length > 0, "PRESETS reference at least one device");
+for (const id of presetIds) {
+  const d = await getDeviceById(id);
+  assert(d !== null && d !== undefined, `Preset device '${id}' exists in official-devices.js`);
+}
+
 console.log("\n======================================================");
 console.log(`Comparison Audit Results: ${passed} Passed, ${failed} Failed`);
 console.log("======================================================");

@@ -55,13 +55,6 @@ const PRESETS = [
     description: "Pixel 8 Pro vs Pixel 9 Pro vs Pixel 10 Pro",
     devices: ["google-pixel-8-pro", "google-pixel-9-pro", "google-pixel-10-pro"],
     badge: "Generational"
-  },
-  {
-    id: "pro-laptops",
-    title: "Apple Silicon Pro Workstations",
-    description: "MacBook Pro 16\" (M4 Max) vs MacBook Pro 14\" (M3 Max)",
-    devices: ["apple-macbook-pro-16-m4-max", "apple-macbook-pro-14-m3-max"],
-    badge: "Pro Compute"
   }
 ];
 

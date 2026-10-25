@@ -354,6 +354,7 @@ export function initCommentsSection(container, experimentId) {
                     <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.78rem; color:var(--td-text-muted); margin-top:0.15rem;">
                       <span>${formatTime(comment.createdAt)}</span>
                       ${comment.isEdited ? `<span>• (edited)</span>` : ""}
+                      ${comment.isSeed ? `<span title="Example discussion, not a real comment">• Example</span>` : ""}
                     </div>
                   </div>
                 </div>
