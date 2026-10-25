@@ -127,15 +127,26 @@ export async function getComments(experimentId) {
     }
   }
 
-  // If cached in memory, return it
-  if (cached && cached.length > 0) {
-    return cached;
+  // hasRealData: real or pending comments in memory win over seeds
+  const realCached = (cached || []).filter(c => !c.isSeed && !isSeedId(c.id));
+  if (realCached.length > 0) {
+    return realCached;
   }
 
-  // Fallback to initial seeds
-  const seeds = INITIAL_SEED_COMMENTS[experimentId] || [];
-  commentsCache.set(experimentId, [...seeds]);
-  return [...seeds];
+  // Fallback to initial seeds (never cached as real data)
+  return getSeedComments(experimentId);
+}
+
+/**
+ * Seed comments are example discussion only. They are clearly marked
+ * (isSeed: true), never written to the cache, and never mixed with real data.
+ */
+function getSeedComments(experimentId) {
+  return (INITIAL_SEED_COMMENTS[experimentId] || []).map(c => ({ ...c, likedBy: [...(c.likedBy || [])], isSeed: true }));
+}
+
+function isSeedId(commentId) {
+  return typeof commentId === "string" && commentId.startsWith("seed-");
 }
 
 /**
@@ -187,14 +198,19 @@ export async function subscribeToComments(experimentId, onUpdate, onError = null
           // Sort chronologically
           liveComments.sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime());
 
-          // If remote is empty, we keep our seed discussions visible so users have context
-          const seeds = INITIAL_SEED_COMMENTS[experimentId] || [];
-          const combined = liveComments.length > 0 
-            ? liveComments 
-            : [...seeds];
-
-          commentsCache.set(experimentId, combined);
-          onUpdate(combined);
+          // hasRealData: remote comments only; otherwise seeds only if nothing is pending
+          if (liveComments.length > 0) {
+            commentsCache.set(experimentId, liveComments);
+            onUpdate(liveComments);
+            return;
+          }
+          const pending = (commentsCache.get(experimentId) || []).filter(c => !c.isSeed && !isSeedId(c.id));
+          if (pending.length > 0) {
+            onUpdate(pending);
+            return;
+          }
+          commentsCache.delete(experimentId);
+          onUpdate(getSeedComments(experimentId));
         },
         (error) => {
           console.warn("Real-time comments subscription notice:", error.message);
@@ -282,7 +298,7 @@ export async function addComment({ experimentId, content }) {
     }
   } else {
     // If offline/demo mode, save to in-memory cache
-    const current = commentsCache.get(experimentId) || [];
+    const current = (commentsCache.get(experimentId) || []).filter(c => !c.isSeed && !isSeedId(c.id));
     current.push({ id: docId, ...commentPayload });
     commentsCache.set(experimentId, current);
   }
@@ -317,6 +333,10 @@ export async function updateComment(commentId, experimentId, newContent) {
 
   const fs = await getFs();
   const db = getDb();
+
+  if (isSeedId(commentId)) {
+    throw new Error("Example comments can't be edited.");
+  }
 
   if (fs && db && isFirebaseReady()) {
     const commentRef = fs.doc(db, "comments", commentId);
@@ -361,6 +381,10 @@ export async function deleteComment(commentId, experimentId, authorId) {
 
   if (!isAuthor && !isPrivileged) {
     throw new Error("You do not have permission to delete this comment.");
+  }
+
+  if (isSeedId(commentId)) {
+    throw new Error("Example comments can't be deleted.");
   }
 
   const fs = await getFs();

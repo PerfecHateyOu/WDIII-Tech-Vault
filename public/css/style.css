@@ -985,3 +985,10 @@ main.page:focus {
   }
 }
 
+
+/* Mobile: hide the search bar with the collapsed Sections menu; it returns when the menu is reopened. */
+@media (max-width: 768px) {
+  .td-sections-nav.is-collapsed + .td-nav-search {
+    display: none;
+  }
+}

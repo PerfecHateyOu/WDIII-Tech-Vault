@@ -88,6 +88,7 @@ code { border-radius: 4px; font-family: ui-monospace, "SFMono-Regular", Menlo, m
 
 /* The limitation box becomes a highlighter note */
 .limitation-box {
+  background-color: rgba(232, 189, 58, 0.14);
   background-color: color-mix(in srgb, var(--bn-mark) 14%, transparent);
   border-left: 4px solid var(--bn-mark);
   border-radius: 6px;
