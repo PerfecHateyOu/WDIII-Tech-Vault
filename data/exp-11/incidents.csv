@@ -1,0 +1,5 @@
+datetime,device,feature,description,resolution,minutes_lost
+,googlebook,Wi-Fi,Frequent connectivity issues.,,
+,googlebook,Interface,Crashing interfaces.,,
+,googlebook,Clipboard,Poor clipboard management.,,
+,both,Phone Integration,App streaming and task continuation remain highly inconsistent and restricted to specific devices.,,
