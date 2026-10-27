@@ -80,9 +80,10 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Objective**: Compare standby battery drain, built-in app launch times and stability on the same iPhone 16e before (iOS 26) and after (iOS 27) the major update, then track iOS 27 point updates for a year.
 
 ### Experiment 11: Lenovo Googlebook 15 & Google Pixel Integration
-- **Category**: Software | **Status**: In Progress (first session logged; no timed trials yet)
-- **Target Hardware**: Lenovo Googlebook 15 (Google Book OS) paired with a Pixel 10 Pro (Android 17)
-- **Objective**: Assess how well the Lenovo Googlebook 15 integrates with a Google Pixel.
+- **Category**: Software | **Status**: Done (plain review)
+- **Target Hardware**: Lenovo Googlebook 15 (Google Book OS), featuring a magnesium alloy build, soft-touch finish, and 2.8K OLED display, paired with a Pixel 10 Pro with Android 17
+- **Objective**: A plain review of how well the Lenovo Googlebook 15 integrates with a Google Pixel.
+- **Features that failed**: Wi-Fi connectivity, clipboard management, cross-device app streaming, and task continuation.
 
 ### Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e
 - **Category**: Software / AI | **Status**: In Progress (testing underway on iOS 27.0; no results yet)

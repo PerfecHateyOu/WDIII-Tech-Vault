@@ -1403,27 +1403,28 @@ export const OFFICIAL_EXPERIMENTS = [
     "experimentNumber": "11",
     "title": "Experiment 11: Lenovo Googlebook 15 & Google Pixel Integration",
     "category": "software",
-    "status": "progress",
-    "statusLabel": "In Progress",
+    "status": "done",
+    "statusLabel": "Done",
     "origin": "official_wdiii",
     "researchQuestion": "How well does the Lenovo Googlebook 15 integrate with a Google Pixel 10 Pro?",
-    "objective": "Log setup, weekly integration trials, reliability, battery, updates and incidents for one Lenovo Googlebook 15 paired with a Pixel 10 Pro.",
-    "methodology": "One Lenovo Googlebook 15 (the only laptop in the study) paired with a Pixel 10 Pro on Android 17. Weekly integration trials (phone unlock, hotspot connect, notification delay, message send, Quick Share, photo access, call audio switch; 3 timed trials each), weekly reliability counts, an optional monthly battery reading per device, and every OS update and incident when it happens. Raw data lives in data/exp-11/*.csv (trials.csv, reliability.csv, monthly.csv, updates.csv, incidents.csv).",
-    "conditions": "Lenovo Googlebook 15 (magnesium alloy build, soft-touch finish, 2.8K OLED display) on Google Book OS; Pixel 10 Pro on Android 17, noted as the OS required for cross-device functionality. Session date TBD.",
-    "protocol": "Protocol v1.0 (data/exp-11/README.md), filled in with the Experiment 11 session sheet.",
+    "objective": "A plain review of how well the Lenovo Googlebook 15 integrates with a Pixel 10 Pro.",
+    "methodology": "Plain review. Googlebook OS version: Google Book OS. Android version: Android 17 (noted as the operating system required for cross-device functionality). Phone: Pixel 10 Pro with Android 17.",
+    "conditions": "Googlebook model / config: Lenovo Googlebook 15, featuring a magnesium alloy build, soft-touch finish, and 2.8K OLED display.",
+    "protocol": "Plain review (data/exp-11/README.md).",
     "measurements": null,
-    "results": "First session logged. Features that failed: Wi-Fi connectivity, clipboard management, cross-device app streaming and task continuation. Phone integration setup proved \"very janky\" and inconsistent. No timed trials have been logged yet.",
+    "results": "Features that failed: Wi-Fi connectivity, clipboard management, cross-device app streaming, and task continuation. Phone integration setup proved \"very janky\" and inconsistent. The OS lacks desktop-class application support, forcing users to rely on mobile apps stretched for large screens rather than full-featured professional tools.",
     "observations": [
-      "The OS lacks desktop-class application support, forcing users to rely on mobile apps stretched for large screens rather than full-featured professional tools.",
-      "AI integrations like the \"wiggle to activate\" Gemini shortcut and on-device file descriptions are neat but not competitive \"killer apps.\"",
-      "At a price point of $900 to $1,300, the platform feels like a first-generation product that is currently only suitable for dedicated early adopters, struggling to compete with established options like macOS."
+      "Wi-Fi: Frequent connectivity issues.",
+      "Interface: Crashing interfaces.",
+      "Clipboard: Poor clipboard management.",
+      "Phone Integration: App streaming and task continuation remain highly inconsistent and restricted to specific devices.",
+      "AI integrations like the \"wiggle to activate\" Gemini shortcut and on-device file descriptions are neat but not competitive \"killer apps.\" At a price point of $900 to $1,300, the platform feels like a first-generation product that is currently only suitable for dedicated early adopters, struggling to compete with established options like macOS."
     ],
-    "limitations": "One laptop and one phone (n=1). No timed trials, battery readings or update history logged yet. Session date, Googlebook OS build, and disconnect/sync error counts are TBD.",
-    "verdict": "TBD — no timed trials yet.",
+    "limitations": null,
+    "verdict": null,
     "devices": [],
     "sources": [
-      "data/exp-11/README.md (protocol v1.0)",
-      "data/exp-11/trials.csv, reliability.csv, monthly.csv, updates.csv, incidents.csv (raw data log)"
+      "data/exp-11/README.md (review)"
     ],
     "tags": [
       "Googlebook",
@@ -1431,8 +1432,8 @@ export const OFFICIAL_EXPERIMENTS = [
       "Cross-Device Integration",
       "Android 17"
     ],
-    "scope": "Single Lenovo Googlebook 15 paired with a Pixel 10 Pro (n=1)",
-    "search": "exp-11 experiment 11 lenovo googlebook 15 google book os google pixel 10 pro android 17 integration quick share clipboard wifi app streaming gemini",
+    "scope": "Lenovo Googlebook 15 paired with a Pixel 10 Pro",
+    "search": "exp-11 experiment 11 review lenovo googlebook 15 google book os google pixel 10 pro android 17 integration clipboard wifi app streaming task continuation gemini",
     "toc": [],
     "relatedExperiments": [],
     "createdAt": "2026-10-27T00:00:00.000Z",
