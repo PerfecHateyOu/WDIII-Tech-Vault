@@ -66,8 +66,10 @@ The WDIII Tech Vault documents rigorous, firsthand, empirical testing of consume
 - **Verdict**: Buy the 10 Pro, keep the 8 Pro, skip the rest.
 
 ### Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity
-- **Category**: Ecosystem | **Status**: In Progress (protocol v1.0 approved 2026-09-27; day 0 and week 0 recorded 2026-09-27; no analysis yet)
-- **Objective**: Track cross-device feature reliability (clipboard sync, file transfer, phone-to-watch notifications, earbud audio switching) and hardware longevity for Apple, Google and Samsung, with a phone, laptop, watch and earbuds each, over 24 months.
+- **Category**: Ecosystem | **Status**: In Progress (plain review)
+- **Devices**: Apple (iPhone 16e, MacBook Pro M2 Pro, Apple Watch SE 3, AirPods 5), Samsung (Galaxy S26 Ultra, Galaxy Book4 Edge, Galaxy Watch8, Galaxy Buds4 Pro), Google (Pixel 10 Pro, Galaxy Chromebook Plus, Pixel Watch 4, Pixel Buds Pro 2)
+- **Objective**: A plain review of how smoothly clipboard, file transfers, watch notifications and earbud switching behave in each setup.
+- **Current ranking**: Right now, if I had to rank how smoothly the cross-device stuff is behaving, it’s Apple, then Samsung, then Google. Two months isn’t long, but the pattern already feels consistent.
 
 ### Experiment 9: Comprehensive Apple Ecosystem Security Audit
 - **Category**: Software | **Status**: Completed (Done)

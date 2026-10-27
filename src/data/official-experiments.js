@@ -1018,7 +1018,7 @@ export const OFFICIAL_EXPERIMENTS = [
     "relatedExperiments": [
       {
         "id": "queued-exp8",
-        "label": "🧪 Exp 8 — Ecosystem Reliability Protocol (In Progress)"
+        "label": "🧪 Exp 8 — Ecosystem Reliability Review (In Progress)"
       },
       {
         "id": "fa02",
@@ -1132,16 +1132,21 @@ export const OFFICIAL_EXPERIMENTS = [
     "status": "progress",
     "statusLabel": "In Progress",
     "origin": "official_wdiii",
-    "researchQuestion": "Over 24 months, how smoothly and reliably does each of three ecosystems (Apple, Google, Samsung) perform its cross-device features (clipboard sync, file transfer, phone-to-watch notifications and earbud audio switching), and how do battery health and physical condition of the 12 devices change over the same period?",
-    "objective": "Track cross-device feature reliability and hardware longevity for three four-device ecosystems (phone, laptop, watch, earbuds each) over 24 months, using a fixed weekly, monthly and checkpoint protocol.",
-    "methodology": "Stationary setup: all 12 devices are used under the same stationary conditions. The study measures whether each ecosystem performs its cross-device features smoothly, not raw performance. Weekly timed trials per ecosystem: clipboard phone to laptop (5 trials) and laptop to phone (5), a 50MB file transfer phone to laptop via AirDrop or Quick Share (3), phone-to-watch notification delivery (5) and automatic earbud audio switching from phone to laptop (3). Each trial is logged as success (1/0) and, when successful, seconds. Timing uses a stopwatch, so resolution is about ±1 s; the same method is kept for all 24 months. Monthly battery health, cycle count and issue logging per device; full checkpoints at months 6, 12, 18 and 24. Raw data lives in data/exp-08/*.csv (devices.csv, weekly.csv, health.csv, incidents.csv).",
-    "conditions": "12 owned devices in a stationary setup, single owner, single location. 24-month observation window starting at day 0 (completed 2026-09-27). Each device is updated to the current stable OS and firmware at day 0, and OS and firmware versions are logged in every session. The same standard 50MB test file is used on every phone and laptop.",
-    "protocol": "Protocol v1.0, approved 2026-09-27 (data/exp-08/README.md). DAY 0 (baseline, once, before any weekly data counts): for every device, record acquired_date and os_at_baseline in devices.csv, update to the current stable OS and firmware and note the versions, log a health.csv row with checkpoint m00, and take condition photos (front, back, edges, screen on white). For each ecosystem, unpair and re-pair every accessory from scratch and note friction, confirm clipboard sync, file sharing, phone-to-laptop notifications and audio auto-switch are on, place the standard 50MB test file on every phone and laptop, and run one full weekly session (week 0). WEEKLY (about 15 minutes per ecosystem): one weekly.csv row per trial for clipboard_p2l (5 trials), clipboard_l2p (5), file_transfer (3), notif_watch (5, with dismiss sync Y/N in notes) and audio_switch (3), recording phone OS, laptop OS and accessory firmware versions. MONTHLY (about 10 minutes): one health.csv row per device with battery health and cycle count where the OS exposes them (not_exposed otherwise, never estimated) and any issues noticed. CHECKPOINTS at months 6, 12, 18 and 24 (about 1 hour hands-on, plus several hours of battery rundowns running in the background): full battery rundown on each phone and laptop, condition photos in the day-0 views, unpair and re-pair every accessory, plus the monthly measurements and one weekly session. INCIDENTS (whenever they happen): one incidents.csv row per sync failure, dropout, crash or forced re-pair.",
+    "researchQuestion": "How smoothly do the cross-device features behave across Apple, Samsung and Google setups?",
+    "objective": "A plain review of how smoothly the cross-device features behave across Apple, Samsung and Google setups (one phone, laptop, watch and pair of earbuds each).",
+    "methodology": "Plain review.",
+    "conditions": "I set everything up the same way: one phone, laptop, watch, and pair of earbuds for each ecosystem, all sitting on the same desk, same Wi-Fi, same daily routine. No travel, no pockets, no drops—just normal use. Clipboard, file transfers, watch notifications, and earbud switching are the things I’m watching.",
+    "protocol": "Plain review (data/exp-08/README.md).",
     "measurements": null,
-    "results": "Data collection is under way. Day 0 (device baseline) and the week-0 session were recorded on 2026-09-27; raw data is in data/exp-08/*.csv. No analysis yet.",
-    "observations": [],
-    "limitations": "The laptops are in different hardware tiers (MacBook Pro M2 Pro, Galaxy Chromebook Plus, Galaxy Book4 Edge); this is a disclosure only, since the study measures ecosystem smoothness, not power. The Google-ecosystem laptop is Samsung hardware running ChromeOS. Battery health and cycle count are not exposed on some watches and earbuds; those values are recorded as not_exposed rather than estimated. OS and firmware updates over 24 months are a confound; versions are logged in every session so update effects can be traced. Single owner, single location. Stopwatch timing limits resolution to about ±1 s.",
-    "verdict": "TBD — requires analysis of the 24-month data; collection started 2026-09-27.",
+    "results": "We’ve only been a couple of months into this, and already the differences are pretty clear. Right now, if I had to rank how smoothly the cross-device stuff is behaving, it’s Apple, then Samsung, then Google. Two months isn’t long, but the pattern already feels consistent.",
+    "observations": [
+      "Apple side (iPhone 16e, MacBook Pro, Watch SE 3, AirPods 5) has been the least eventful, which is the point. Copy something on the phone and it just shows up on the Mac almost every time. AirDrop feels instant. The watch gets notifications without me thinking about it. The AirPods switch when I start playing something on the laptop or take a call on the phone—most of the time I don’t even notice the handoff. A couple of times after an update the clipboard needed a Bluetooth toggle, but that’s been rare. So far it just works.",
+      "Samsung (S26 Ultra, Galaxy Book, Watch8, Buds4 Pro) is close behind. Quick Share and the continuity stuff between the phone and Book are solid. Phone Link handles clipboard and notifications to Windows well enough that I stopped noticing the extra step. The Buds auto-switch between the phone and the Book without much fuss once I had them signed into the same account. Watch notifications have been reliable. It’s not quite as invisible as Apple, but nothing has broken yet.",
+      "Google (Pixel 10 Pro, Chromebook Plus, Pixel Watch 4, Pixel Buds Pro 2) is the one I’m still actively managing. Phone Hub on the Chromebook has already dropped the connection a few times and needed a re-pair. Clipboard isn’t a real continuous thing yet—I end up using Drive or just sending the file. Quick Share works when it works. The watch notifications are fine, and the Buds switch okay, but the whole setup still feels like separate devices that happen to share an account rather than one system. It’s usable, just more visible.",
+      "Batteries are still essentially new on everything—nothing has moved more than a point or two. Physical condition is identical: they all look like they did on day one, which makes sense given they’ve barely left the desk."
+    ],
+    "limitations": null,
+    "verdict": null,
     "devices": [
       "apple-iphone-16e",
       "apple-macbook-pro-m2-pro",
@@ -1157,31 +1162,22 @@ export const OFFICIAL_EXPERIMENTS = [
       "samsung-galaxy-buds4-pro"
     ],
     "sources": [
-      "data/exp-08/README.md (protocol v1.0, day-0 checklist)",
-      "data/exp-08/devices.csv (device list)",
-      "data/exp-08/weekly.csv, health.csv, incidents.csv (raw data log, empty until day 0)"
+      "data/exp-08/README.md (review)"
     ],
     "tags": [
       "Ecosystem Reliability",
-      "Hardware Longevity",
       "Cross-Device Features",
-      "Active Study"
+      "Review"
     ],
-    "scope": "24-month study of 12 owned devices (phone, laptop, watch and earbuds for Apple, Google and Samsung) in a stationary setup",
-    "search": "exp-8 in-progress active cross-platform ecosystem reliability hardware longevity apple google samsung clipboard file transfer airdrop quick share notifications watch earbuds audio switch battery health",
-    "toc": [
-      {
-        "id": "q8-setup",
-        "label": "Devices & Setup"
-      },
-      {
-        "id": "q8-protocol",
-        "label": "Protocol Cadence"
-      },
-      {
-        "id": "q8-limitations",
-        "label": "Limitations"
-      }
+    "scope": "One phone, laptop, watch and pair of earbuds each for Apple, Samsung and Google, on the same desk",
+    "search": "exp-8 in-progress review cross-platform ecosystem reliability apple google samsung clipboard file transfer airdrop quick share phone link phone hub notifications watch earbuds audio switch battery",
+        "toc": [
+      {"id": "q8-setup", "label": "Setup"},
+      {"id": "q8-apple", "label": "Apple"},
+      {"id": "q8-samsung", "label": "Samsung"},
+      {"id": "q8-google", "label": "Google"},
+      {"id": "q8-condition", "label": "Batteries & Condition"},
+      {"id": "q8-ranking", "label": "Ranking"}
     ],
     "relatedExperiments": [
       {
@@ -1194,76 +1190,26 @@ export const OFFICIAL_EXPERIMENTS = [
       }
     ],
     "createdAt": "2026-08-01T00:00:00.000Z",
-    "updatedAt": "2026-09-27T00:00:00.000Z",
+    "updatedAt": "2026-10-27T00:00:00.000Z",
     "protocolVersion": "1.0",
     "version": "1.0.0",
     "measurementSchema": [
       {
-        "key": "clipboardP2lSeconds",
-        "label": "Clipboard Phone → Laptop",
+        "key": "primaryScore",
+        "label": "Primary Metric",
         "type": "number",
-        "unit": "Seconds",
-        "required": false,
-        "min": 0
+        "required": true
       },
       {
-        "key": "clipboardL2pSeconds",
-        "label": "Clipboard Laptop → Phone",
-        "type": "number",
-        "unit": "Seconds",
-        "required": false,
-        "min": 0
-      },
-      {
-        "key": "fileTransferSeconds",
-        "label": "50MB File Transfer Phone → Laptop",
-        "type": "number",
-        "unit": "Seconds",
-        "required": false,
-        "min": 0
-      },
-      {
-        "key": "notifWatchSeconds",
-        "label": "Phone → Watch Notification Delivery",
-        "type": "number",
-        "unit": "Seconds",
-        "required": false,
-        "min": 0
-      },
-      {
-        "key": "audioSwitchSeconds",
-        "label": "Earbud Audio Auto-Switch Phone → Laptop",
-        "type": "number",
-        "unit": "Seconds",
-        "required": false,
-        "min": 0
-      },
-      {
-        "key": "batteryHealthPct",
-        "label": "Battery Health (where exposed)",
-        "type": "number",
-        "unit": "%",
-        "required": false,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "key": "cycleCount",
-        "label": "Battery Cycle Count (where exposed)",
-        "type": "number",
-        "unit": "Cycles",
-        "required": false,
-        "min": 0
+        "key": "notes",
+        "label": "Observation Notes",
+        "type": "string",
+        "required": false
       }
     ],
     "allowedMeasurementKeys": [
-      "clipboardP2lSeconds",
-      "clipboardL2pSeconds",
-      "fileTransferSeconds",
-      "notifWatchSeconds",
-      "audioSwitchSeconds",
-      "batteryHealthPct",
-      "cycleCount"
+      "primaryScore",
+      "notes"
     ]
   },
   {
