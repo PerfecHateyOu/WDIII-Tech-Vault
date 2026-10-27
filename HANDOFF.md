@@ -56,7 +56,7 @@ If you change `public/` or `firebase.json`, deploy both parts.
 - **Main experiments** (1–7, CS-01, 8, 9, 10, 12): the visible pages are hand-written builders in `index.html` (`buildExp1()` and so on), and each has a summary entry in the data file. **Nothing keeps the two in step**; that is how invented data sat in the data file unnoticed. Change both, and re-read them side by side.
 - **Fodder Archive** (FA-01 to FA-05): rendered entirely from each entry's `sections` in the data file. One source. Block types are listed in `renderSections()` in `index.html` and `.claude/agents/experiment-drafter.md`; `scripts/test-fodder-single-source.js` checks the structure.
 - **Full-page view** (`#/experiments/<id>`): summary from the data, body copied from the page article when there is one.
-- **Experiment logs**: `data/exp-08/` and `data/exp-10/` (CSV plus a README with the protocol). Validated by `npm test`. The site entry summarises the log and never replaces it.
+- **Experiment logs**: `data/exp-10/` (CSV plus a README with the protocol); `data/exp-08/` and `data/exp-11/` are plain reviews (README only). Validated by `npm test`. The site entry summarises the log and never replaces it.
 - **Device registry**: `scripts/test-registry-integrity.js` checks that every device an experiment lists exists and that links point both ways.
 
 ## Content rules
@@ -72,7 +72,7 @@ In September 2026 the owner found AI-written filler on the site (invented benchm
 | Entry | Status | Notes |
 |---|---|---|
 | Experiments 1–7, CS-01 | Done | Confirmed with the owner |
-| Experiment 8 | In progress | 24-month study, 12 owned devices; protocol in `data/exp-08/README.md`; day 0 completed 2026-09-27; weekly sessions continue |
+| Experiment 8 | In progress | Plain review of 12 owned devices (Apple, Samsung, Google); notes in `data/exp-08/README.md` |
 | Experiment 9 | Done | Owner's checklist answers applied 2026-09-30 (PR #57); devices are iPhone 16e (iOS 27.0 beta), iPhone 13 (iOS 26.5) and a MacBook Air host (macOS Tahoe 26.x); the MacBook Air model is still TBD, so no registry entry for it |
 | Experiment 10 | Paused | iOS 26 phase collected; iOS 27 phase not started |
 | Experiment 12 | In progress | iOS 27.0 on an iPhone 16e; no results yet; the AI-chatbots-via-Siri part waits for third-party Siri support; headline features TBD |

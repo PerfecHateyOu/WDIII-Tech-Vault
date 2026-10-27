@@ -1,96 +1,37 @@
-# Experiment 8: data log
+# Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol
 
-Cross-platform ecosystem reliability and hardware longevity. A 24-month study of 12 owned devices in a stationary setup.
-
-This folder is the raw record. The site entry in `src/data/official-experiments.js` summarises it; it never replaces it. `npm test` validates every file here (`scripts/test-exp08-data.js`).
+A plain review of how smoothly the cross-device features behave across three setups. Status: in progress.
 
 ## Devices
 
-Three ecosystems, four first-party devices each. The full list is in `devices.csv`.
+- Apple: iPhone 16e (iOS 27.0), MacBook Pro M2 Pro (macOS 27.0), Apple Watch SE 3 (watchOS 27.0), AirPods 5
+- Samsung: Galaxy S26 Ultra (One UI 9), Galaxy Book4 Edge (Windows 11 Home 26H2), Galaxy Watch8, Galaxy Buds4 Pro
+- Google: Pixel 10 Pro (Android 17), Galaxy Chromebook Plus (ChromeOS 150), Pixel Watch 4, Pixel Buds Pro 2
 
-| Category | Apple | Google | Samsung |
-|---|---|---|---|
-| Phone | iPhone 16e | Pixel 10 Pro | Galaxy S26 Ultra |
-| Laptop | MacBook Pro M2 Pro | Galaxy Chromebook Plus 15.6" (ChromeOS) | Galaxy Book4 Edge 15.6" (Windows 11) |
-| Watch | Apple Watch SE 3 | Pixel Watch 4 | Galaxy Watch8 |
-| Earbuds | AirPods 5 | Pixel Buds Pro 2 | Galaxy Buds4 Pro |
+## Overview
 
-The laptops are in different hardware tiers. The study measures whether each ecosystem performs its cross-device features smoothly, not raw performance.
+We’ve only been a couple of months into this, and already the differences are pretty clear.
 
-## Day 0 (baseline), done once before any weekly data counts
+## Setup
 
-For every device:
-- [ ] Fill in `acquired_date` and `os_at_baseline` in `devices.csv`.
-- [ ] Update to the current stable OS and firmware, then note the versions.
-- [ ] Log a `health.csv` row with `checkpoint` = `m00`.
-- [ ] Take condition photos (front, back, edges, screen on white). Name them `m00_<device_id>_<view>.jpg` and store them outside the repo; note where in the row's `notes`.
+I set everything up the same way: one phone, laptop, watch, and pair of earbuds for each ecosystem, all sitting on the same desk, same Wi-Fi, same daily routine. No travel, no pockets, no drops—just normal use. Clipboard, file transfers, watch notifications, and earbud switching are the things I’m watching.
 
-For each ecosystem:
-- [ ] Unpair every accessory, then pair it again from scratch. Note any friction.
-- [ ] Confirm the continuity features are switched on: clipboard sync, file sharing, phone-to-laptop notifications, and audio auto-switch.
-- [ ] Put the standard 50MB test file on every phone and laptop (same file everywhere; record its name in the notes).
-- [ ] Run one full weekly session. It counts as week 0.
+## Apple
 
-## Weekly: about 15 minutes per ecosystem
+Apple side (iPhone 16e, MacBook Pro, Watch SE 3, AirPods 5) has been the least eventful, which is the point. Copy something on the phone and it just shows up on the Mac almost every time. AirDrop feels instant. The watch gets notifications without me thinking about it. The AirPods switch when I start playing something on the laptop or take a call on the phone—most of the time I don’t even notice the handoff. A couple of times after an update the clipboard needed a Bluetooth toggle, but that’s been rare. So far it just works.
 
-One `weekly.csv` row per trial.
+## Samsung
 
-| `test` value | What to do | Trials |
-|---|---|---|
-| `clipboard_p2l` | Copy text on the phone and paste it on the laptop. Time from copy until it pastes | 5 |
-| `clipboard_l2p` | Copy on the laptop and paste on the phone | 5 |
-| `file_transfer` | Send the 50MB test file phone → laptop with AirDrop or Quick Share. Time from send until it arrives | 3 |
-| `notif_watch` | Trigger a phone notification. Time until it shows on the watch; put `dismiss_sync=Y` or `N` in `notes` | 5 |
-| `audio_switch` | Play audio on the phone, then start playback on the laptop. Time until the earbuds switch on their own | 3 |
+Samsung (S26 Ultra, Galaxy Book, Watch8, Buds4 Pro) is close behind. Quick Share and the continuity stuff between the phone and Book are solid. Phone Link handles clipboard and notifications to Windows well enough that I stopped noticing the extra step. The Buds auto-switch between the phone and the Book without much fuss once I had them signed into the same account. Watch notifications have been reliable. It’s not quite as invisible as Apple, but nothing has broken yet.
 
-- `success` is `1` or `0`. `seconds` is empty when `success` = `0`.
-- Timing uses a stopwatch, so resolution is about ±1 s. Stick to that method for all 24 months.
-- `phone_os`, `laptop_os` and `accessory_fw` record the versions on the day, so update effects can be traced.
+## Google
 
-## Monthly: about 10 minutes
+Google (Pixel 10 Pro, Chromebook Plus, Pixel Watch 4, Pixel Buds Pro 2) is the one I’m still actively managing. Phone Hub on the Chromebook has already dropped the connection a few times and needed a re-pair. Clipboard isn’t a real continuous thing yet—I end up using Drive or just sending the file. Quick Share works when it works. The watch notifications are fine, and the Buds switch okay, but the whole setup still feels like separate devices that happen to share an account rather than one system. It’s usable, just more visible.
 
-One `health.csv` row per device, with `checkpoint` = `monthly`.
+## Batteries & Condition
 
-- **Battery health and cycle count:** fill them in where the OS shows them. For example: iPhone under Settings → Battery; macOS in System Information → Power; Windows via `powercfg /batteryreport`. Where a device doesn't expose them (common for watches and earbuds), write `not_exposed` rather than estimating.
-- **`issues`:** anything noticed since last month; details go in `incidents.csv`.
+Batteries are still essentially new on everything—nothing has moved more than a point or two. Physical condition is identical: they all look like they did on day one, which makes sense given they’ve barely left the desk.
 
-## Checkpoints at months 6, 12, 18 and 24: about 1 hour hands-on, plus the battery rundowns
+## Ranking
 
-`health.csv` rows use `checkpoint` = `m06`, `m12`, `m18` or `m24`.
-
-The hands-on work (measurements, photos, re-pairing, the weekly session) takes about 1 hour. The battery rundowns take several hours on top of that; they can run in parallel in the background.
-
-- A full battery rundown on each phone and laptop, recorded in the row's `notes`.
-- Condition photos, same views as day 0.
-- Unpair and re-pair every accessory; note friction.
-- Run the monthly measurements plus one weekly session.
-
-## Incidents: whenever they happen
-
-One `incidents.csv` row per sync failure, dropout, crash or forced re-pair.
-
-## Status
-
-- Protocol approved: 2026-09-27
-- Day 0: complete, 2026-09-27. Device baseline in `devices.csv` and `health.csv` (m00); per-ecosystem record below; week 0 in `weekly.csv`.
-
-## Day 0 record (2026-09-27)
-
-Standard test file on every phone and laptop: `test_payload_50mb.mp4`. All OS and firmware versions were unchanged from the baseline in `devices.csv`. Every continuity feature (clipboard sync, file sharing, phone-to-laptop notifications, audio auto-switch) was confirmed on in all three ecosystems, and the test file was on each phone and laptop.
-
-Notes are Bill's, as recorded.
-
-### Apple
-- **Re-pairing:** Apple Watch SE 3: scanned pairing graphic; required 45-second backup restore prompt. AirPods 5: none; instant proximity pop-up card and single-tap setup.
-- **Continuity notes:** None; full iCloud continuity suite active across devices.
-- **Week 0 notes:** First clipboard copy was about 1 s slower than subsequent runs. AirDrop transfer speeds hovered around 10–13 MB/s. AirPods switching to MacBook was seamless once media playback initiated.
-
-### Google
-- **Re-pairing:** Pixel Watch 4: required system app update check in Watch app before finalizing sync. Pixel Buds Pro 2: none; Fast Pair banner popped up immediately upon opening case.
-- **Continuity notes:** Phone Hub clipboard requires active local Wi-Fi or Bluetooth connection.
-- **Week 0 notes:** Quick Share trial 1 prompted for receiver approval on screen before setting device to trusted status. Audio switching across Android and ChromeOS via Multipoint had ~3 s transition delay.
-
-### Samsung
-- **Re-pairing:** Galaxy Watch8: brief delay initializing Galaxy Wearable plugin on S26 Ultra. Galaxy Buds4 Pro: none; automatic popup card via Samsung Seamless Connectivity.
-- **Continuity notes:** Link to Windows and Samsung Account sync active across all endpoints.
-- **Week 0 notes:** Quick Share transfers averaged ~13.1 MB/s across all runs. Galaxy Buds audio routing transitioned reliably between S26 Ultra and Galaxy Book4 Edge.
+Right now, if I had to rank how smoothly the cross-device stuff is behaving, it’s Apple, then Samsung, then Google. Two months isn’t long, but the pattern already feels consistent.

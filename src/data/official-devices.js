@@ -759,7 +759,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-10-08T00:00:00.000Z",
     status: "active",
@@ -786,7 +786,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -813,7 +813,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -840,7 +840,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -867,7 +867,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -894,7 +894,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -921,7 +921,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -948,7 +948,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",
@@ -975,7 +975,7 @@ export const OFFICIAL_DEVICES = [
       connectivity: "TBD"
     },
     origin: "official_wdiii",
-    sources: ["WDIII Experiment 8 device list (data/exp-08/devices.csv)"],
+    sources: ["WDIII Experiment 8 device list (data/exp-08/README.md)"],
     createdAt: "2026-09-27T00:00:00.000Z",
     updatedAt: "2026-09-27T00:00:00.000Z",
     status: "active",

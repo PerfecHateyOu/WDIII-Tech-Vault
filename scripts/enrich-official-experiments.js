@@ -55,15 +55,6 @@ const SCHEMAS = {
     { key: "airDropEmailHashSeconds", label: "AirDrop email hash reversal time", type: "number", unit: "Seconds", required: false, min: 0, max: 3600 },
     { key: "awdlBypassMbps", label: "AWDL AP-isolation bypass throughput", type: "number", unit: "Mbps", required: false, min: 0, max: 10000 }
   ],
-  'queued-exp8': [
-    { key: "clipboardP2lSeconds", label: "Clipboard Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },
-    { key: "clipboardL2pSeconds", label: "Clipboard Laptop → Phone", type: "number", unit: "Seconds", required: false, min: 0 },
-    { key: "fileTransferSeconds", label: "50MB File Transfer Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },
-    { key: "notifWatchSeconds", label: "Phone → Watch Notification Delivery", type: "number", unit: "Seconds", required: false, min: 0 },
-    { key: "audioSwitchSeconds", label: "Earbud Audio Auto-Switch Phone → Laptop", type: "number", unit: "Seconds", required: false, min: 0 },
-    { key: "batteryHealthPct", label: "Battery Health (where exposed)", type: "number", unit: "%", required: false, min: 0, max: 100 },
-    { key: "cycleCount", label: "Battery Cycle Count (where exposed)", type: "number", unit: "Cycles", required: false, min: 0 }
-  ],
   'queued-exp10': [
     { key: "standbyDrainPctPerHour", label: "Overnight Standby Drain", type: "number", unit: "%/hour", required: false, min: 0, max: 100 },
     { key: "appLaunchSeconds", label: "Built-in App Launch Time (mean of 15 trials)", type: "number", unit: "Seconds", required: false, min: 0, max: 60 },
