@@ -153,9 +153,11 @@ export function initAuthHeader(target) {
       const isKnownFallback = err.code === "POPUP_CLOSED" ||
                               err.code === "DOMAIN_RESTRICTED" ||
                               err.code === "API_KEY_EXPIRED" ||
+                              err.code === "CONFIG_MISSING" ||
                               (typeof err.message === "string" && (
                                 err.message.includes("api-key-expired") ||
-                                err.message.includes("requests-from-referer")
+                                err.message.includes("requests-from-referer") ||
+                                err.message.includes("configuration received")
                               ));
 
       if (isKnownFallback) {
@@ -173,14 +175,16 @@ export function initAuthHeader(target) {
       } else if (
         err.code === "DOMAIN_RESTRICTED" ||
         err.code === "API_KEY_EXPIRED" ||
+        err.code === "CONFIG_MISSING" ||
         (typeof err.message === "string" && (
           err.message.includes("api-key-expired") ||
-          err.message.includes("requests-from-referer")
+          err.message.includes("requests-from-referer") ||
+          err.message.includes("configuration received")
         ))
       ) {
         errorMsg = (err.code === "API_KEY_EXPIRED" || (err.message && err.message.includes("api-key-expired")))
           ? "API key awaiting renewal on Google Cloud. Switching to Visitor Mode..."
-          : "Domain not allowed by API key restrictions. Switching to Visitor Mode...";
+          : "Authentication awaiting cloud setup. Switching to Visitor Mode...";
         setTimeout(() => {
           btnVisitor?.click();
         }, 500);

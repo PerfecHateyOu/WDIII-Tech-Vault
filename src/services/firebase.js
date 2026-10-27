@@ -61,8 +61,17 @@ export async function initFirebase() {
   initPromise = (async () => {
     try {
       const config = await fetchConfig();
-      if (!config || !config.apiKey || !config.projectId) {
-        throw new Error("Invalid or incomplete Firebase client configuration received.");
+      if (!config || !config.projectId) {
+        throw new Error("Invalid or incomplete Firebase client configuration received: missing projectId.");
+      }
+
+      if (!config.apiKey) {
+        console.warn("Firebase web API key is not configured; running in Guest/Visitor mode.");
+        isInitialized = true;
+        currentUser = null;
+        userProfile = null;
+        notifyAuthStateListeners({ user: null, profile: null, loading: false });
+        return { app: null, auth: null, db: null, isVisitorOnly: true };
       }
 
       const firebaseConfig = {
@@ -289,7 +298,10 @@ export async function syncUserProfile(user) {
  */
 export async function signInWithGoogle() {
   await initFirebase();
-  if (!auth) throw new Error("Firebase Auth is not initialized");
+  if (!auth) {
+    console.warn("Firebase Auth is not initialized (no active API key); seamlessly activating Visitor Mode.");
+    return await signInAsVisitor();
+  }
 
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });

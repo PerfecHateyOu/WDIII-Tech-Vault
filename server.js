@@ -10,6 +10,18 @@ import { OFFICIAL_DEVICES } from './src/data/official-devices.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Load environment variables from local .env if present (supported natively in Node 20.6+)
+if (typeof process.loadEnvFile === 'function') {
+  const envPath = path.join(__dirname, '.env');
+  if (fs.existsSync(envPath)) {
+    try {
+      process.loadEnvFile(envPath);
+    } catch (e) {
+      // .env is optional
+    }
+  }
+}
+
 const app = express();
 const PORT = Number(process.env.PORT) || 3000; // Cloud Run injects PORT (8080)
 const HOST = '0.0.0.0';
