@@ -50,7 +50,7 @@
       { "@type": "TechArticle", "name": "Experiment 9: Comprehensive Apple Ecosystem Security Audit" },
       { "@type": "TechArticle", "name": "Experiment 8: Cross-Platform Ecosystem Reliability & Hardware Longevity Protocol", "disambiguatingDescription": "In Progress. Protocol v1.0 approved 2026-09-27; day 0 completed 2026-09-27." },
       { "@type": "TechArticle", "name": "Paused Experiment 10: Year-Long iOS 26 vs iOS 27 Survey on iPhone 16e", "disambiguatingDescription": "Paused. Before/after survey of one iPhone 16e on iOS 26 and iOS 27; phase A collected, phase B not started." },
-      { "@type": "TechArticle", "name": "Experiment 11: Lenovo Googlebook 15 and Google Pixel Integration", "disambiguatingDescription": "In progress. How well the Lenovo Googlebook 15 (Google Book OS) integrates with a Pixel 10 Pro on Android 17; first session logged, no timed trials yet." },
+      { "@type": "TechArticle", "name": "Experiment 11: Lenovo Googlebook 15 and Google Pixel Integration", "disambiguatingDescription": "Done. A plain review of how well the Lenovo Googlebook 15 (Google Book OS) integrates with a Pixel 10 Pro on Android 17." },
       { "@type": "TechArticle", "name": "Experiment 12: iOS 27 Performance & AI Chatbot Integration on iPhone 16e", "disambiguatingDescription": "In progress. Testing Apple iOS 27 claims on iPhone 16e (launch times, standby drain, crash counts); Gemini, Claude and ChatGPT via Siri once third-party support ships." },
       { "@type": "TechArticle", "name": "FA-04: Mac Studio vs MacBook Pro M2 Pro (32GB) Benchmark Test Plan", "disambiguatingDescription": "Queued. Local AI, C++ builds and Final Cut Pro exports test plan." },
       { "@type": "TechArticle", "name": "FA-05: Soundcore P40i Cancellation Dispute Case Study", "disambiguatingDescription": "Resolved. Customer support dispute and full refund resolution record." }
@@ -803,6 +803,7 @@ const HOME_TABS = [
   { id: "exp6", icon: "🏪", label: "Exp 6", sub: "AASP Repair Test", search: "exp-6 aasp repair test ifix authorized" },
   { id: "exp7", icon: "📷", label: "Exp 7", sub: "Pixel Pro Generations", search: "exp-7 pixel pro generation comparison tensor chip camera" },
   { id: "exp9", icon: "🔐", label: "Exp 9", sub: "Apple Security Audit", search: "exp-9 apple ecosystem security audit authentication find my airdrop awdl" },
+  { id: "exp11", icon: "💻", label: "Exp 11", sub: "Googlebook & Pixel Review", search: "exp-11 lenovo googlebook 15 google book os pixel 10 pro android 17 review" },
   { id: "queued", icon: "⏳", label: "Queued", sub: "Upcoming Research", search: "queued pending upcoming experiments security ios survey exp 8 experiment 8 in progress" },
   { to: "#/fodder", icon: "🗂️", label: "Fodder", sub: "Side Experiments ↗", search: "fodder archive side experiments ai comparison ecosystem exit" },
 ];
@@ -1909,6 +1910,40 @@ function buildExp9() {
   });
 }
 
+function buildExp11() {
+  const li = (t) => `<li style="margin-bottom:0.375rem;">${t}</li>`;
+  const ul = (items) => `<ul style="margin:0.5rem 0 1.5rem; margin-left:1.5rem; color:var(--td-text-secondary); list-style:disc; line-height:1.6;">${items.map(li).join("")}</ul>`;
+  return experimentShell({
+    id:"exp11", category:"software", title:"Experiment 11: Lenovo Googlebook 15 &amp; Google Pixel Integration",
+    status:"done", statusLabel:"Done", tags:["Lenovo Googlebook 15","Pixel 10 Pro","Android 17","Review"],
+    search:"exp-11 experiment 11 review googlebook lenovo googlebook 15 google book os pixel 10 pro android 17 phone integration wi-fi clipboard app streaming task continuation gemini oled",
+    toc:[{id:"exp11-setup",label:"Session &amp; Setup"},{id:"exp11-reliability",label:"Reliability"},{id:"exp11-incidents",label:"Incidents"},{id:"exp11-notes",label:"Notes"}],
+    body: `
+      ${sectionH3("exp11-setup","Session &amp; Setup")}
+      ${ul([
+        "<strong>Googlebook OS version:</strong> Google Book OS.",
+        "<strong>Android version:</strong> Android 17 (noted as the operating system required for cross-device functionality).",
+        "<strong>Googlebook model / config:</strong> Lenovo Googlebook 15, featuring a magnesium alloy build, soft-touch finish, and 2.8K OLED display.",
+        "<strong>Phone:</strong> Pixel 10 Pro with Android 17."
+      ])}
+      ${sectionH3("exp11-reliability","Reliability")}
+      ${ul([
+        "<strong>Features that failed:</strong> Wi-Fi connectivity, clipboard management, cross-device app streaming, and task continuation.",
+        "<strong>Notes:</strong> Phone integration setup proved &quot;very janky&quot; and inconsistent. The OS lacks desktop-class application support, forcing users to rely on mobile apps stretched for large screens rather than full-featured professional tools."
+      ])}
+      ${sectionH3("exp11-incidents","Incidents")}
+      ${ul([
+        "<strong>Wi-Fi:</strong> Frequent connectivity issues.",
+        "<strong>Interface:</strong> Crashing interfaces.",
+        "<strong>Clipboard:</strong> Poor clipboard management.",
+        "<strong>Phone Integration:</strong> App streaming and task continuation remain highly inconsistent and restricted to specific devices."
+      ])}
+      ${sectionH3("exp11-notes","Notes")}
+      <p style="color:var(--td-text-secondary); line-height:1.6; margin:0 0 1.5rem;">AI integrations like the &quot;wiggle to activate&quot; Gemini shortcut and on-device file descriptions are neat but not competitive &quot;killer apps.&quot; At a price point of $900 to $1,300, the platform feels like a first-generation product that is currently only suitable for dedicated early adopters, struggling to compete with established options like macOS.</p>
+    `
+  });
+}
+
 function buildQueued() {
   function queuedLabel() { return `<span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-pending-bg); color:var(--td-pending); border:1px solid var(--td-pending);">Queued</span>`; }
   function queuedCard(borderColor, title, tag, inner) {
@@ -2008,53 +2043,6 @@ function buildQueued() {
           </ul>
 
           ${statusBox("var(--td-warning)","Paused. Phase A (iOS 26) was collected but is not in the data log yet. Phase B (iOS 27) has not started, and no comparison has been made.")}
-        </div>
-      </article>
-      <article id="queue4" data-search="in-progress active experiment 11 googlebook lenovo googlebook 15 google book os pixel 10 pro android 17 phone integration wi-fi clipboard app streaming task continuation gemini oled" class="td-experiment" style="border-left:4px solid var(--td-info); opacity:0.95; margin-top:2.5rem;">
-        <div class="td-experiment-header" style="border-bottom:2px solid var(--td-border-subtle); display:flex; align-items:baseline; gap:1.5rem; flex-wrap:wrap;">
-          <span style="display:inline-block; text-transform:uppercase; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; padding:0.25rem 0.625rem; border-radius:3px; margin-bottom:0.375rem; background:var(--td-info-bg); color:var(--td-info); border:1px solid var(--td-info);">Active Testing</span>
-          <h3 style="flex:1; margin:0; color:#fff; font-size:1.3rem; font-weight:700;">Experiment 11: Lenovo Googlebook 15 &amp; Google Pixel Integration</h3>
-          ${statusBadge("progress","In Progress")}
-        </div>
-        <div class="td-experiment-body">
-          <div style="background:var(--td-bg-surface-elevated); border:1px solid var(--td-border-subtle); border-radius:0.375rem; padding:1.25rem; margin:1.5rem 0; display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
-            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Laptop</span><span style="font-size:0.95rem; color:#fff; font-weight:500;">Lenovo Googlebook 15</span></div>
-            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Laptop OS</span><span style="font-size:0.95rem; color:#fff; font-weight:500;">Google Book OS</span></div>
-            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Phone</span><span style="font-size:0.95rem; color:#fff; font-weight:500;">Pixel 10 Pro</span></div>
-            <div><span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--td-text-muted); font-weight:600; display:block;">Phone OS</span><span style="font-size:0.95rem; color:#fff; font-weight:500;">Android 17</span></div>
-          </div>
-
-          <h4 style="color:#fff; margin:1.5rem 0 0.5rem; font-size:1rem; font-weight:600;">Research Objective</h4>
-          <p style="color:var(--td-text-secondary); margin:0 0 1.5rem; line-height:1.6;">How well the Lenovo Googlebook 15 integrates with a Google Pixel. The Lenovo Googlebook 15 (magnesium alloy build, soft-touch finish, 2.8K OLED display) is the only laptop in this study; Android 17 is the operating system required for cross-device functionality.</p>
-
-          <h4 style="color:#fff; margin:2rem 0 0.5rem; font-size:1rem; font-weight:600;">First Session Findings</h4>
-          ${queuedCard("var(--td-error)","A. Failed Features","Reliability",`
-            <ul style="color:var(--td-text-secondary); font-size:0.9rem; margin:0; padding-left:1.25rem;">
-              <li><strong>Wi-Fi:</strong> frequent connectivity issues.</li>
-              <li><strong>Interface:</strong> crashing interfaces.</li>
-              <li><strong>Clipboard:</strong> poor clipboard management.</li>
-              <li><strong>Phone integration:</strong> app streaming and task continuation remain highly inconsistent and restricted to specific devices.</li>
-            </ul>
-          `)}
-          ${queuedCard("var(--td-warning)","B. Platform Notes","Observations",`
-            <ul style="color:var(--td-text-secondary); font-size:0.9rem; margin:0; padding-left:1.25rem;">
-              <li>Phone integration setup proved "very janky" and inconsistent.</li>
-              <li>The OS lacks desktop-class application support, relying on mobile apps stretched for large screens rather than full-featured professional tools.</li>
-            </ul>
-          `)}
-          ${queuedCard("var(--td-ai)","C. AI Features","Observations",`
-            <p style="color:var(--td-text-secondary); font-size:0.9rem; margin:0;">The "wiggle to activate" Gemini shortcut and on-device file descriptions are neat but not competitive "killer apps."</p>
-          `)}
-
-          <div style="background:rgba(255,149,0,0.08); border-left:3px solid var(--td-warning); padding:1rem 1.25rem; border-radius:0.25rem; margin:1.5rem 0;">
-            <p style="margin:0; font-size:0.875rem; color:var(--td-warning);"><strong>⚠️ Early Verdict:</strong> At $900 to $1,300, the platform feels like a first-generation product currently only suitable for dedicated early adopters, struggling to compete with established options like macOS. Timed integration trials have not been run yet.</p>
-          </div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--td-border-subtle);">
-            <div style="font-size:0.85rem; color:var(--td-text-muted);">
-              <strong>Status:</strong> <span style="color:var(--td-info);">⚡ First session logged, no timed trials yet</span> · Lenovo Googlebook 15 · Pixel 10 Pro (Android 17)
-            </div>
-          </div>
         </div>
       </article>
       <article id="queue3" data-search="queued in-progress active experiment 12 ios 27 performance siri ai chatbot integration iphone 16e gemini claude chatgpt responsiveness battery apple c1" class="td-experiment" style="border-left:4px solid var(--td-info); opacity:0.95; margin-top:2.5rem;">
@@ -2194,7 +2182,7 @@ function renderFodderArchive() {
 }
 
 // ===== Render content =====
-document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildQueued();
+document.getElementById("homeContent").innerHTML = buildExp1()+buildExp2()+buildExp3()+buildExp4()+buildCaseStudy()+buildExp5()+buildExp6()+buildExp7()+buildExp9()+buildExp11()+buildQueued();
 document.getElementById("fodderContent").innerHTML = renderFodderArchive();
 
 // ===== Route announcements (screen readers) =====
